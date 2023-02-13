@@ -6,11 +6,25 @@ from publicaciones.pub_2023 import convert_fecha_hora, orden_emitida, orden_emit
 from wipo.ipas import Insert_Action, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
 
 
-app = FastAPI() 
+description = """
+Version 2023 
+
+## Métodos para consultar e insertar eventos de Orden de Publicación 
+
+las rutas reciben un objeto **JSON** como parametro y retornar un objeto **JSON**.
+
+"""
+
+app = FastAPI(
+	title="Api Publicaciones ",
+	description=description,
+	version="3.0.1",
+	openapi_url="/Sprint/v2/openapi.json"
+)
 
 
-@app.post('/api/markgetlist')
-def getMarkGetList(exp: str):
+@app.post('/api/markgetlist', tags=["MarkGetList por expediente"])
+def mark_get_list(exp: str):
 	try:
 		for x in mark_getlist(exp):
 			respuesta = {
@@ -25,11 +39,13 @@ def getMarkGetList(exp: str):
 	except Exception as e:
 		return ({'res':''})
 
-#Consultar Emitidas
-@app.post('/api/orden_pub_emitida')
-def pub_emitir(fecha:str,user_id:str):#{"fecha":"2022-12-19","user_id":"89"}
+class publicacion_Emision(BaseModel):
+	fecha:str = ""
+	user_id: str = ""
+@app.post('/api/orden_pub_emitida', tags=["Consulta los eventos Emisión Orden Publicación, 2da. Emisión Orden Publicación y Informe de renovación por fecha y id de usuario"])
+def Emisión_Orden_Publicacion(item: publicacion_Emision):#{"fecha":"2022-12-19","user_id":"89"}
 	catch_exp = []
-	obj_dat = orden_emitida(fecha,user_id)
+	obj_dat = orden_emitida(item.fecha,item.user_id)
 	for i in range(0,len(obj_dat)):
 		if obj_dat[i].lastActionName == 'Emisión Orden Publicación' or obj_dat[i].lastActionName == '2da. Emisión Orden Publicación' or obj_dat[i].lastActionName == 'Informe de renovación':
 			try:
@@ -149,15 +165,13 @@ def pub_emitir(fecha:str,user_id:str):#{"fecha":"2022-12-19","user_id":"89"}
 							})
 	return(catch_exp)
 
-
-class emicion(BaseModel):
-    fileNbr:str = ""
-    fileSeq: str = ""
-    fileSeries: str = ""
-    fileType: str = ""
-
-@app.post('/api/orden_pub_emitida_exp')
-def pub_emitir_exp(item: emicion):#{"fileNbr":"21104495","fileSeq":"PY","fileSeries":"2021","fileType":"M"}
+class primera_emicion(BaseModel):
+	fileNbr:str = ""
+	fileSeq: str = ""
+	fileSeries: str = ""
+	fileType: str = ""
+@app.post('/api/orden_pub_emitida_exp', tags=["Consulta el evento Emisión Orden Publicación por expediente"])
+def Emisión_Orden_Publicacion(item: primera_emicion):
 	catch_exp = []
 	obj_dat = orden_emitida_exp(item.fileNbr,item.fileSeq,item.fileSeries,item.fileType)
 	for i in range(0,len(obj_dat)):
@@ -279,11 +293,15 @@ def pub_emitir_exp(item: emicion):#{"fileNbr":"21104495","fileSeq":"PY","fileSer
 							})
 	return(catch_exp)
 
-#Consultar 2da. Emisión Orden Publicación
-@app.post('/api/orden_pub_2da_emitida_exp')
-def pub_emitir_2da_exp(fileNbr:str,fileSeq:str,fileSeries:str,fileType:str):#{"fileNbr":"21104495","fileSeq":"PY","fileSeries":"2021","fileType":"M"}
+class segunda_emicion(BaseModel):
+	fileNbr:str = ""
+	fileSeq: str = ""
+	fileSeries: str = ""
+	fileType: str = ""
+@app.post('/api/orden_pub_2da_emitida_exp', tags=["Consulta el evento 2da. Emisión Orden Publicación por expediente"])
+def Emision_2da__Orden_Publicacion(item: segunda_emicion):
 	catch_exp = []
-	obj_dat = orden_emitida_exp(fileNbr,fileSeq,fileSeries,fileType)
+	obj_dat = orden_emitida_exp(item.fileNbr,item.fileSeq,item.fileSeries,item.fileType)
 	for i in range(0,len(obj_dat)):
 		if obj_dat[i].lastActionName == '2da. Emisión Orden Publicación':
 			try:
@@ -403,16 +421,21 @@ def pub_emitir_2da_exp(fileNbr:str,fileSeq:str,fileSeries:str,fileType:str):#{"f
 							})
 	return(catch_exp)
 
-#Enviar Emitida
-@app.post('/api/enviar_orden_pub')
-def enviar_orden(): #{"exp":"","pago":"","userid":"","nota":"","evento":"554"}
-	return(str(Insert_Action(request.json["exp"],request.json["pago"],request.json["userid"],'Sprint V2-2023 OP','554')))
+class enviar_orden(BaseModel):
+	exp:str = ""
+	pago: str = ""
+	user_Id: str = ""	
+@app.post('/api/enviar_orden_pub', tags=["Inserta el evento (554 - Orden de Publicación enviada) "])
+def insert_Action_(item: enviar_orden): 
+	return(str(Insert_Action(item.exp,item.pago,item.user_Id,'Sprint V2 OP','554')))
 
-#Consultar enviadas
-@app.post('/api/Orden_pub_enviada')
-def pub_enviada():#{"fecha":"2022-12-19","user_id":"89"}
+class publicacion_enviada(BaseModel):
+	fecha:str = ""
+	user_id: str = ""
+@app.post('/api/Orden_pub_enviada', tags=["Consulta el evento Orden de Publicación enviada por fecha y id de usuario"])
+def Orden_de_Publicacion_enviada(item: publicacion_enviada):
 	catch_exp = []
-	obj_dat = orden_emitida(request.json["fecha"],request.json["user_id"])
+	obj_dat = orden_emitida(item.fecha,item.user_id)
 	for i in range(0,len(obj_dat)):
 		if obj_dat[i].lastActionName == 'Orden de Publicación enviada':
 			try:
@@ -532,11 +555,15 @@ def pub_enviada():#{"fecha":"2022-12-19","user_id":"89"}
 							})
 	return(catch_exp)
 
-#Consultar Emitidas expediente
-@app.post('/api/orden_pub_enviada_exp')
-def pub_enviar_exp():#{"fileNbr":"21104495","fileSeq":"PY","fileSeries":"2021","fileType":"M"}
+class Publicacion_enviada(BaseModel):
+	fileNbr:str = ""
+	fileSeq: str = ""
+	fileSeries: str = ""
+	fileType: str = ""
+@app.post('/api/orden_pub_enviada_exp', tags=["Consulta el evento Orden de Publicación enviada por expediente"])
+def Publicacion_enviada_(item: Publicacion_enviada):
 	catch_exp = []
-	obj_dat = orden_emitida_exp(request.json["fileNbr"],request.json["fileSeq"],request.json["fileSeries"],request.json["fileType"])
+	obj_dat = orden_emitida_exp(item.fileNbr,item.fileSeq,item.fileSeries,item.fileType)
 	for i in range(0,len(obj_dat)):
 		if obj_dat[i].lastActionName == 'Orden de Publicación enviada':
 			try:
@@ -656,8 +683,11 @@ def pub_enviar_exp():#{"fileNbr":"21104495","fileSeq":"PY","fileSeries":"2021","
 							})
 	return(catch_exp)
 
-#Publicado en REDPI
-@app.post('/api/publicado_redpi')
-def PUB_REDPI(): #{"exp":"","pago":"","userid":"","nota":"","evento":"554"}
-	return(str(Insert_Action('22105981','2023-01-24','89','Publicado en REDPI V2-2023','573')))
+class redpi(BaseModel):
+	exp:str = ""
+	pago: str = ""
+	user_Id: str = ""
+@app.post('/api/publicado_redpi', tags=["Inserta el evento (573 - Publicado en REDPI)"])
+def PUB_REDPI(item: redpi):
+	return(str(Insert_Action(item.exp,item.pago,item.user_Id,'Publicado en REDPI','573')))
 

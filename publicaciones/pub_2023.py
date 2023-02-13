@@ -6,7 +6,6 @@ from time import sleep
 from click import File
 from zeep import Client
 from io import BytesIO, FileIO
-from flask import jsonify
 from io import open
 import tools.connect as conn_serv
 
