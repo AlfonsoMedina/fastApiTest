@@ -2,8 +2,7 @@ from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
 from publicaciones.pub_2023 import convert_fecha_hora, orden_emitida, orden_emitida_exp
-
-from wipo.ipas import Insert_Action, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
+from wipo.ipas import Insert_Action, fetch_all_do_edoc_nuxeo, fetch_all_officdoc_nuxeo, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
 
 
 description = """
@@ -23,8 +22,8 @@ app = FastAPI(
 )
 
 
-@app.post('/api/markgetlist', tags=["MarkGetList por expediente"])
-def mark_get_list(exp: str):
+@app.post('/api/markgetlist', tags=["MarkGetList por expediente"], summary="#", description="Consulta una marca por su numero de expediente, devuelve parametros utiles para otros metodos")
+async def mark_get_list(exp: str):
 	try:
 		for x in mark_getlist(exp):
 			respuesta = {
@@ -42,8 +41,8 @@ def mark_get_list(exp: str):
 class publicacion_Emision(BaseModel):
 	fecha:str = ""
 	user_id: str = ""
-@app.post('/api/orden_pub_emitida', tags=["Consulta los eventos Emisión Orden Publicación, 2da. Emisión Orden Publicación y Informe de renovación por fecha y id de usuario"])
-def Emisión_Orden_Publicacion(item: publicacion_Emision):#{"fecha":"2022-12-19","user_id":"89"}
+@app.post('/api/orden_pub_emitida', description="Devuelve los expedientes con los eventos 549, 550, 560, en funcion de una fecha  **(2022-12-19)** y id de usuario **(89)** ", tags=["Consulta los eventos Emisión Orden Publicación, 2da. Emisión Orden Publicación e Informe de renovación por fecha y id de usuario"])
+async def Emisión_Orden_Publicacion(item: publicacion_Emision):#{"fecha":"2022-12-19","user_id":"89"}
 	catch_exp = []
 	obj_dat = orden_emitida(item.fecha,item.user_id)
 	for i in range(0,len(obj_dat)):
@@ -171,7 +170,7 @@ class primera_emicion(BaseModel):
 	fileSeries: str = ""
 	fileType: str = ""
 @app.post('/api/orden_pub_emitida_exp', tags=["Consulta el evento Emisión Orden Publicación por expediente"])
-def Emisión_Orden_Publicacion(item: primera_emicion):
+async def Emisión_Orden_Publicacion(item: primera_emicion):
 	catch_exp = []
 	obj_dat = orden_emitida_exp(item.fileNbr,item.fileSeq,item.fileSeries,item.fileType)
 	for i in range(0,len(obj_dat)):
@@ -299,7 +298,7 @@ class segunda_emicion(BaseModel):
 	fileSeries: str = ""
 	fileType: str = ""
 @app.post('/api/orden_pub_2da_emitida_exp', tags=["Consulta el evento 2da. Emisión Orden Publicación por expediente"])
-def Emision_2da__Orden_Publicacion(item: segunda_emicion):
+async def Emision_2da__Orden_Publicacion(item: segunda_emicion):
 	catch_exp = []
 	obj_dat = orden_emitida_exp(item.fileNbr,item.fileSeq,item.fileSeries,item.fileType)
 	for i in range(0,len(obj_dat)):
@@ -426,14 +425,14 @@ class enviar_orden(BaseModel):
 	pago: str = ""
 	user_Id: str = ""	
 @app.post('/api/enviar_orden_pub', tags=["Inserta el evento (554 - Orden de Publicación enviada) "])
-def insert_Action_(item: enviar_orden): 
+async def insert_Action_(item: enviar_orden): 
 	return(str(Insert_Action(item.exp,item.pago,item.user_Id,'Sprint V2 OP','554')))
 
 class publicacion_enviada(BaseModel):
 	fecha:str = ""
 	user_id: str = ""
 @app.post('/api/Orden_pub_enviada', tags=["Consulta el evento Orden de Publicación enviada por fecha y id de usuario"])
-def Orden_de_Publicacion_enviada(item: publicacion_enviada):
+async def Orden_de_Publicacion_enviada(item: publicacion_enviada):
 	catch_exp = []
 	obj_dat = orden_emitida(item.fecha,item.user_id)
 	for i in range(0,len(obj_dat)):
@@ -561,7 +560,7 @@ class Publicacion_enviada(BaseModel):
 	fileSeries: str = ""
 	fileType: str = ""
 @app.post('/api/orden_pub_enviada_exp', tags=["Consulta el evento Orden de Publicación enviada por expediente"])
-def Publicacion_enviada_(item: Publicacion_enviada):
+async def Publicacion_enviada_(item: Publicacion_enviada):
 	catch_exp = []
 	obj_dat = orden_emitida_exp(item.fileNbr,item.fileSeq,item.fileSeries,item.fileType)
 	for i in range(0,len(obj_dat)):
@@ -688,6 +687,28 @@ class redpi(BaseModel):
 	pago: str = ""
 	user_Id: str = ""
 @app.post('/api/publicado_redpi', tags=["Inserta el evento (573 - Publicado en REDPI)"])
-def PUB_REDPI(item: redpi):
+async def PUB_REDPI(item: redpi):
 	return(str(Insert_Action(item.exp,item.pago,item.user_Id,'Publicado en REDPI','573')))
+
+class processNbr(BaseModel):
+	Nbr:str = ""
+@app.post('/doc_firmado', tags=["Documentos firmados, consulta por (process_Nbr) - http://192.168.50.185:8888/nuxeo/restAPI/default/edmsAPI/getEDocPdfById?eDocId=***** "])
+async def documento_firmado(item: processNbr):
+	edoc= []
+	for i in range(len(fetch_all_officdoc_nuxeo(item.Nbr))):
+		edoc.append({
+		"EDOC_ID":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[0].sqlColumnValue,                
+        "EDOC_TYP":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[1].sqlColumnValue,               
+        "EDOC_DATE":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[2].sqlColumnValue,              
+        "EDOC_SEQ":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[3].sqlColumnValue,               
+        "EDOC_SER":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[4].sqlColumnValue,               
+        "EDOC_NBR":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[5].sqlColumnValue,               
+        "EDOC_IMAGE_LINKING_DATE":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[6].sqlColumnValue,
+        "EDOC_IMAGE_LINKING_USER":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[7].sqlColumnValue,
+        "ROW_VERSION":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[8].sqlColumnValue,            
+        "EFOLDER_ID":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[9].sqlColumnValue,             
+        "EDOC_IMAGE_CERTIF_DATE":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[10].sqlColumnValue, 
+        "EDOC_IMAGE_CERTIF_USER":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[11].sqlColumnValue
+		})
+	return(edoc)
 

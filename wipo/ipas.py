@@ -167,6 +167,51 @@ def fetch_all_officdoc(PROC_NBR):
 	except Exception as e:
 		return('false')
 
+#Offic_Nbr desde IP_OFFICDOC
+def fetch_all_officdoc_nuxeo(PROC_NBR:str):
+	try:
+		query = {
+				  "arg0": "SELECT OFFIDOC_NBR,ACTION_USER_ID,OFFIDOC_TYP FROM MARCAS_PY.ADMIN.IP_OFFIDOC WHERE CONTENT_TYPE is null and PROC_NBR ='"+PROC_NBR+"'", 
+				  "arg1": {
+							"sqlColumnList":[
+											{"sqlColumnType": "String", "sqlColumnValue":"OFFIDOC_NBR"},
+											{"sqlColumnType": "String", "sqlColumnValue":"ACTION_USER_ID"},
+											{"sqlColumnType": "String", "sqlColumnValue":"OFFIDOC_TYP"},
+											]
+				  }
+				}
+		return(clientMark.service.SqlFetchAll(**query))
+	except Exception as e:
+		return(e)	
+
+def fetch_all_do_edoc_nuxeo(EDOC_NBR:str):
+	try:
+		query = {
+				  "arg0": "SELECT * FROM MARCAS_PY.ADMIN.DO_EDOC WHERE EDOC_NBR = '"+EDOC_NBR+"' AND EDOC_IMAGE_CERTIF_USER = 4;", 
+				  "arg1": {
+							"sqlColumnList":[
+											{"sqlColumnType": "String", "sqlColumnValue":"EDOC_ID"},
+											{"sqlColumnType": "String", "sqlColumnValue":"EDOC_TYP"},
+											{"sqlColumnType": "String", "sqlColumnValue":"EDOC_DATE"},
+											
+											{"sqlColumnType": "String", "sqlColumnValue":"EDOC_SEQ"},
+											{"sqlColumnType": "String", "sqlColumnValue":"EDOC_SER"},
+											{"sqlColumnType": "String", "sqlColumnValue":"EDOC_NBR"},
+
+											{"sqlColumnType": "String", "sqlColumnValue":"EDOC_IMAGE_LINKING_DATE"},
+											{"sqlColumnType": "String", "sqlColumnValue":"EDOC_IMAGE_LINKING_USER"},
+											{"sqlColumnType": "String", "sqlColumnValue":"ROW_VERSION"},
+
+											{"sqlColumnType": "String", "sqlColumnValue":"EFOLDER_ID"},
+											{"sqlColumnType": "String", "sqlColumnValue":"EDOC_IMAGE_CERTIF_DATE"},
+											{"sqlColumnType": "String", "sqlColumnValue":"EDOC_IMAGE_CERTIF_USER"},
+											]
+				  }
+				}
+		return(clientMark.service.SqlFetchAll(**query))
+	except Exception as e:
+		return(e)
+
 #buscar documentos por process number
 def fetch_all_list_proc_nbr(PROC_NBR):
 	try:
@@ -5161,7 +5206,6 @@ def disenio_user_doc_getlist_docNbr(docNbrFrom, docNbrTo): # {'docNbrFrom': {'do
 def disenio_read(fileNbr,fileSeq,fileSeries,fileType):
 	read = {'arg0': {'fileNbr': {'doubleValue': fileNbr,},'fileSeq': fileSeq,'fileSeries': {'doubleValue': fileSeries, },'fileType': fileType, }, 'arg1':'?', 'arg2':'?',	}
 	return clientDisenio.service.PatentRead(**read)
-
 
 #GetList por expediente
 def disenio_getlist(fileNbrFrom, fileNbrTo): # {'doubleValue':'9044393',},'fileNbrTo': {'doubleValue':'9044393'}
