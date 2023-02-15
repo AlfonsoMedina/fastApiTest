@@ -2,7 +2,7 @@ from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
 from publicaciones.pub_2023 import convert_fecha_hora, orden_emitida, orden_emitida_exp
-from wipo.ipas import Insert_Action, fetch_all_do_edoc_nuxeo, fetch_all_officdoc_nuxeo, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
+from wipo.ipas import Insert_Action, fetch_all_do_edoc_nuxeo, fetch_all_officdoc_nuxeo, get_agente, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
 
 
 description = """
@@ -712,3 +712,21 @@ async def documento_firmado(item: processNbr):
 		})
 	return(edoc)
 
+
+
+
+
+##############################################################################################################################################################################
+##############################################################################################################################################################################
+##############################################################################################################################################################################
+##############################################################################################################################################################################
+##############################################################################################################################################################################
+
+
+
+
+class agent_code(BaseModel):
+	code:str = ""
+@app.post('/api/getAgente_ipas', summary="#", tags=["Consulta nombre de agente por codigo"])
+def getAgente_ipas(item: agent_code):
+	return(get_agente(item.code).agentName)
