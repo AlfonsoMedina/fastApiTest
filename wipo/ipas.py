@@ -171,10 +171,12 @@ def fetch_all_officdoc(PROC_NBR):
 def fetch_all_officdoc_nuxeo(PROC_NBR:str):
 	try:
 		query = {
-				  "arg0": "SELECT OFFIDOC_NBR,ACTION_USER_ID,OFFIDOC_TYP FROM MARCAS_PY.ADMIN.IP_OFFIDOC WHERE CONTENT_TYPE is null and PROC_NBR ='"+PROC_NBR+"'", 
+				  "arg0": "SELECT OFFIDOC_NBR, OFFIDOC_SER , OFFIDOC_ORI , ACTION_USER_ID,OFFIDOC_TYP FROM MARCAS_PY.ADMIN.IP_OFFIDOC WHERE CONTENT_TYPE is null and PROC_NBR = '"+PROC_NBR+"'", 
 				  "arg1": {
 							"sqlColumnList":[
 											{"sqlColumnType": "String", "sqlColumnValue":"OFFIDOC_NBR"},
+											{"sqlColumnType": "String", "sqlColumnValue":"OFFIDOC_SER"},
+											{"sqlColumnType": "String", "sqlColumnValue":"OFFIDOC_ORI"},
 											{"sqlColumnType": "String", "sqlColumnValue":"ACTION_USER_ID"},
 											{"sqlColumnType": "String", "sqlColumnValue":"OFFIDOC_TYP"},
 											]

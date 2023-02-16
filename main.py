@@ -691,42 +691,24 @@ async def PUB_REDPI(item: redpi):
 	return(str(Insert_Action(item.exp,item.pago,item.user_Id,'Publicado en REDPI','573')))
 
 class processNbr(BaseModel):
-	Nbr:str = ""
+	process_Nbr:str = ""
 @app.post('/doc_firmado', tags=["Documentos firmados, consulta por (process_Nbr) - http://192.168.50.185:8888/nuxeo/restAPI/default/edmsAPI/getEDocPdfById?eDocId=***** "])
 async def documento_firmado(item: processNbr):
 	edoc= []
-	for i in range(len(fetch_all_officdoc_nuxeo(item.Nbr))):
+	for i in range(0,len(fetch_all_officdoc_nuxeo(item.process_Nbr))):
 		edoc.append({
-		"EDOC_ID":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[0].sqlColumnValue,                
-        "EDOC_TYP":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[1].sqlColumnValue,               
-        "EDOC_DATE":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[2].sqlColumnValue,              
-        "EDOC_SEQ":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[3].sqlColumnValue,               
-        "EDOC_SER":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[4].sqlColumnValue,               
-        "EDOC_NBR":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[5].sqlColumnValue,               
-        "EDOC_IMAGE_LINKING_DATE":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[6].sqlColumnValue,
-        "EDOC_IMAGE_LINKING_USER":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[7].sqlColumnValue,
-        "ROW_VERSION":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[8].sqlColumnValue,            
-        "EFOLDER_ID":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[9].sqlColumnValue,             
-        "EDOC_IMAGE_CERTIF_DATE":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[10].sqlColumnValue, 
-        "EDOC_IMAGE_CERTIF_USER":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[11].sqlColumnValue
+			"EDOC_ID":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.process_Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[0].sqlColumnValue,                
+			"EDOC_TYP":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.process_Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[1].sqlColumnValue,               
+			"EDOC_DATE":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.process_Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[2].sqlColumnValue,              
+			"EDOC_SEQ":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.process_Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[3].sqlColumnValue,               
+			"EDOC_SER":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.process_Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[4].sqlColumnValue,               
+			"EDOC_NBR":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.process_Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[5].sqlColumnValue,               
+			"EDOC_IMAGE_LINKING_DATE":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.process_Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[6].sqlColumnValue,
+			"EDOC_IMAGE_LINKING_USER":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.process_Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[7].sqlColumnValue,
+			"ROW_VERSION":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.process_Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[8].sqlColumnValue,            
+			"EFOLDER_ID":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.process_Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[9].sqlColumnValue,             
+			"EDOC_IMAGE_CERTIF_DATE":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.process_Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[10].sqlColumnValue, 
+			"EDOC_IMAGE_CERTIF_USER":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.process_Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[11].sqlColumnValue
 		})
 	return(edoc)
 
-
-
-
-
-##############################################################################################################################################################################
-##############################################################################################################################################################################
-##############################################################################################################################################################################
-##############################################################################################################################################################################
-##############################################################################################################################################################################
-
-
-
-
-class agent_code(BaseModel):
-	code:str = ""
-@app.post('/api/getAgente_ipas', summary="#", tags=["Consulta nombre de agente por codigo"])
-def getAgente_ipas(item: agent_code):
-	return(get_agente(item.code).agentName)
