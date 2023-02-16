@@ -1,732 +1,403 @@
 from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
-from publicaciones.pub_2023 import convert_fecha_hora, orden_emitida, orden_emitida_exp
-from wipo.ipas import Insert_Action, fetch_all_do_edoc_nuxeo, fetch_all_officdoc_nuxeo, get_agente, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
-
+from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha #pip install "fastapi[all]"
+from wipo.function_for_reception_in import user_doc_read, user_doc_read_disenio, user_doc_read_patent
+import zeep
 
 description = """
 Version 2023 
 
-## Métodos para consultar e insertar eventos de Orden de Publicación 
+## Métodos para consultar e insertar eventos de Mesa de entrada 
 
 las rutas reciben un objeto **JSON** como parametro y retornar un objeto **JSON**.
 
 """
 
 app = FastAPI(
-	title="Api Publicaciones ",
+	title="Api Mesa de Entrada ",
 	description=description,
 	version="3.0.1",
 	openapi_url="/Sprint/v2/openapi.json"
 )
 
 
-@app.post('/api/markgetlist', tags=["MarkGetList por expediente"], summary="#", description="Consulta una marca por su numero de expediente, devuelve parametros utiles para otros metodos")
-async def mark_get_list(exp: str):
-	try:
-		for x in mark_getlist(exp):
-			respuesta = {
-						'fileIdAsString':x['fileIdAsString'],
-						'fileId':x['fileId']['fileNbr']['doubleValue'], 
-						'fileSeq':x['fileId']['fileSeq'], 
-						'fileSeries':x['fileId']['fileSeries']['doubleValue'], 
-						'fileType':x['fileId']['fileType'],
-						'fileSummaryOwner':x['fileSummaryOwner'],
-						'fileSummaryDescription':x['fileSummaryDescription']}	
-		return (respuesta)
-	except Exception as e:
-		return ({'res':''})
-
-class publicacion_Emision(BaseModel):
-	fecha:str = ""
-	user_id: str = ""
-@app.post('/api/orden_pub_emitida', description="Devuelve los expedientes con los eventos 549, 550, 560, en funcion de una fecha  **(2022-12-19)** y id de usuario **(89)** ", tags=["Consulta los eventos Emisión Orden Publicación, 2da. Emisión Orden Publicación e Informe de renovación por fecha y id de usuario"])
-async def Emisión_Orden_Publicacion(item: publicacion_Emision):#{"fecha":"2022-12-19","user_id":"89"}
-	catch_exp = []
-	obj_dat = orden_emitida(item.fecha,item.user_id)
-	for i in range(0,len(obj_dat)):
-		if obj_dat[i].lastActionName == 'Emisión Orden Publicación' or obj_dat[i].lastActionName == '2da. Emisión Orden Publicación' or obj_dat[i].lastActionName == 'Informe de renovación':
-			try:
-				documentId = {
-									'docLog': str(obj_dat[i].documentId.docLog),
-									'docNbr': {
-										'doubleValue': str(obj_dat[i].documentId.docNbr.doubleValue)
-									},
-									'docOrigin': str(obj_dat[i].documentId.docOrigin),
-									'docSeries': {
-										'doubleValue': str(obj_dat[i].documentId.docSeries.doubleValue)
-									},
-									'selected': str(obj_dat[i].documentId.selected)
-								}
-			except Exception as e:
-				documentId = {
-								'docLog': '',
-								'docNbr': '',
-								'docOrigin': '',
-								'docSeries': '',
-								'selected': ''
-							}
-			try:
-				officedocId = {
-									'offidocNbr': {
-										'doubleValue': str(obj_dat[i].officedocId.offidocNbr.doubleValue)
-									},
-									'offidocOrigin': str(obj_dat[i].officedocId.offidocOrigin),
-									'offidocSeries': {
-										'doubleValue': str(obj_dat[i].officedocId.offidocSeries.doubleValue)
-									},
-									'selected': str(obj_dat[i].officedocId.selected)
-								}
-			except Exception as e:
-				officedocId = {
-				'offidocNbr': '',
-				'offidocOrigin': '',
-				'offidocSeries': '',
-				'selected': ''
-			}
-			try:
-				upperProcessId = {
-									'processNbr': {
-										'doubleValue': str(obj_dat[i].upperProcessId.processNbr.doubleValue)
-									},
-									'processType': str(obj_dat[i].upperProcessId.processType)
-								}
-			except Exception as e:
-				upperProcessId = {
-				'processNbr': '',
-				'processType': ''
-			}	
-			catch_exp.append(
-								{
-								'creationDate': {
-									'dateValue': str(obj_dat[i].creationDate.dateValue)
-								},
-								'description': str(obj_dat[i].description),
-								'documentId': documentId,
-								'dueDate': str(obj_dat[i].dueDate),
-								'indTopFileMark': str(obj_dat[i].indTopFileMark),
-								'indTopMarkPatent': str(obj_dat[i].indTopMarkPatent),
-								'lastActionName': str(obj_dat[i].lastActionName),
-								'lastActionUsername': str(obj_dat[i].lastActionUsername),
-								'officedocId': officedocId,
-								'officedocTypeName': str(obj_dat[i].officedocTypeName),
-								'processId': {
-									'processNbr': {
-										'doubleValue': str(int(obj_dat[i].processId.processNbr.doubleValue))
-									},
-									'processType': str()
-								},
-								'processIdAsString': str(obj_dat[i].processIdAsString),
-								'relatedToWorkcode': {
-									'doubleValue': str(obj_dat[i].relatedToWorkcode.doubleValue)
-								},
-								'responsibleUserName': str(obj_dat[i].responsibleUserName),
-								'statusDate': {
-									'dateValue': convert_fecha_hora(str(obj_dat[i].statusDate.dateValue))
-								},
-								'statusName': str(obj_dat[i].statusName),
-								'topFileDescription': str(obj_dat[i].topFileDescription),
-								'topFileFilingDate': {
-									'dateValue': str(obj_dat[i].topFileFilingDate.dateValue)
-								},
-								'topFileId': {
-									'fileNbr': {
-										'doubleValue': str(int(obj_dat[i].topFileId.fileNbr.doubleValue))
-									},
-									'fileSeq': str(obj_dat[i].topFileId.fileSeq),
-									'fileSeries': {
-										'doubleValue': str(obj_dat[i].topFileId.fileSeries.doubleValue)
-									},
-									'fileType': str(obj_dat[i].topFileId.fileType)
-								},
-								'topFileOwner': str(obj_dat[i].topFileOwner),
-								'topFileRegistrationId': {
-									'registrationDup': str(obj_dat[i].topFileRegistrationId.registrationDup),
-									'registrationNbr': str(obj_dat[i].topFileRegistrationId.registrationNbr),
-									'registrationSeries': str(obj_dat[i].topFileRegistrationId.registrationSeries),
-									'registrationType': str(obj_dat[i].topFileRegistrationId.registrationType)
-								},
-								'topFileStatusName': str(obj_dat[i].topFileStatusName),
-								'topProcessId': {
-									'processNbr': {
-										'doubleValue': str(int(obj_dat[i].topProcessId.processNbr.doubleValue))
-									},
-									'processType': str(obj_dat[i].topProcessId.processType)
-								},
-								'upperProcessId': upperProcessId,
-								'userdocSeqName': str(obj_dat[i].userdocSeqName),
-								'userdocSeqNbr': str(obj_dat[i].userdocSeqNbr),
-								'userdocSeqSeries': str(obj_dat[i].userdocSeqSeries),
-								'userdocSeqType': str(obj_dat[i].userdocSeqType),
-								'userdocTypeName': str(obj_dat[i].userdocTypeName),
-								'workflowWarningText': str(obj_dat[i].workflowWarningText)
-							})
-	return(catch_exp)
-
-class primera_emicion(BaseModel):
-	fileNbr:str = ""
-	fileSeq: str = ""
-	fileSeries: str = ""
-	fileType: str = ""
-@app.post('/api/orden_pub_emitida_exp', tags=["Consulta el evento Emisión Orden Publicación por expediente"])
-async def Emisión_Orden_Publicacion(item: primera_emicion):
-	catch_exp = []
-	obj_dat = orden_emitida_exp(item.fileNbr,item.fileSeq,item.fileSeries,item.fileType)
-	for i in range(0,len(obj_dat)):
-		if obj_dat[i].lastActionName == 'Emisión Orden Publicación':
-			try:
-				documentId = {
-									'docLog': str(obj_dat[i].documentId.docLog),
-									'docNbr': {
-										'doubleValue': str(obj_dat[i].documentId.docNbr.doubleValue)
-									},
-									'docOrigin': str(obj_dat[i].documentId.docOrigin),
-									'docSeries': {
-										'doubleValue': str(obj_dat[i].documentId.docSeries.doubleValue)
-									},
-									'selected': str(obj_dat[i].documentId.selected)
-								}
-			except Exception as e:
-				documentId = {
-								'docLog': '',
-								'docNbr': '',
-								'docOrigin': '',
-								'docSeries': '',
-								'selected': ''
-							}
-			try:
-				officedocId = {
-									'offidocNbr': {
-										'doubleValue': str(obj_dat[i].officedocId.offidocNbr.doubleValue)
-									},
-									'offidocOrigin': str(obj_dat[i].officedocId.offidocOrigin),
-									'offidocSeries': {
-										'doubleValue': str(obj_dat[i].officedocId.offidocSeries.doubleValue)
-									},
-									'selected': str(obj_dat[i].officedocId.selected)
-								}
-			except Exception as e:
-				officedocId = {
-				'offidocNbr': '',
-				'offidocOrigin': '',
-				'offidocSeries': '',
-				'selected': ''
-			}
-			try:
-				upperProcessId = {
-									'processNbr': {
-										'doubleValue': str(obj_dat[i].upperProcessId.processNbr.doubleValue)
-									},
-									'processType': str(obj_dat[i].upperProcessId.processType)
-								}
-			except Exception as e:
-				upperProcessId = {
-				'processNbr': '',
-				'processType': ''
-			}	
-			catch_exp.append(
-								{
-								'creationDate': {
-									'dateValue': str(obj_dat[i].creationDate.dateValue)
-								},
-								'description': str(obj_dat[i].description),
-								'documentId': documentId,
-								'dueDate': str(obj_dat[i].dueDate),
-								'indTopFileMark': str(obj_dat[i].indTopFileMark),
-								'indTopMarkPatent': str(obj_dat[i].indTopMarkPatent),
-								'lastActionName': str(obj_dat[i].lastActionName),
-								'lastActionUsername': str(obj_dat[i].lastActionUsername),
-								'officedocId': officedocId,
-								'officedocTypeName': str(obj_dat[i].officedocTypeName),
-								'processId': {
-									'processNbr': {
-										'doubleValue': str(int(obj_dat[i].processId.processNbr.doubleValue))
-									},
-									'processType': str()
-								},
-								'processIdAsString': str(obj_dat[i].processIdAsString),
-								'relatedToWorkcode': {
-									'doubleValue': str(obj_dat[i].relatedToWorkcode.doubleValue)
-								},
-								'responsibleUserName': str(obj_dat[i].responsibleUserName),
-								'statusDate': {
-									'dateValue': convert_fecha_hora(str(obj_dat[i].statusDate.dateValue))
-								},
-								'statusName': str(obj_dat[i].statusName),
-								'topFileDescription': str(obj_dat[i].topFileDescription),
-								'topFileFilingDate': {
-									'dateValue': str(obj_dat[i].topFileFilingDate.dateValue)
-								},
-								'topFileId': {
-									'fileNbr': {
-										'doubleValue': str(int(obj_dat[i].topFileId.fileNbr.doubleValue))
-									},
-									'fileSeq': str(obj_dat[i].topFileId.fileSeq),
-									'fileSeries': {
-										'doubleValue': str(obj_dat[i].topFileId.fileSeries.doubleValue)
-									},
-									'fileType': str(obj_dat[i].topFileId.fileType)
-								},
-								'topFileOwner': str(obj_dat[i].topFileOwner),
-								'topFileRegistrationId': {
-									'registrationDup': str(obj_dat[i].topFileRegistrationId.registrationDup),
-									'registrationNbr': str(obj_dat[i].topFileRegistrationId.registrationNbr),
-									'registrationSeries': str(obj_dat[i].topFileRegistrationId.registrationSeries),
-									'registrationType': str(obj_dat[i].topFileRegistrationId.registrationType)
-								},
-								'topFileStatusName': str(obj_dat[i].topFileStatusName),
-								'topProcessId': {
-									'processNbr': {
-										'doubleValue': str(obj_dat[i].topProcessId.processNbr.doubleValue)
-									},
-									'processType': str(obj_dat[i].topProcessId.processType)
-								},
-								'upperProcessId': upperProcessId,
-								'userdocSeqName': str(obj_dat[i].userdocSeqName),
-								'userdocSeqNbr': str(obj_dat[i].userdocSeqNbr),
-								'userdocSeqSeries': str(obj_dat[i].userdocSeqSeries),
-								'userdocSeqType': str(obj_dat[i].userdocSeqType),
-								'userdocTypeName': str(obj_dat[i].userdocTypeName),
-								'workflowWarningText': str(obj_dat[i].workflowWarningText)
-							})
-	return(catch_exp)
-
-class segunda_emicion(BaseModel):
-	fileNbr:str = ""
-	fileSeq: str = ""
-	fileSeries: str = ""
-	fileType: str = ""
-@app.post('/api/orden_pub_2da_emitida_exp', tags=["Consulta el evento 2da. Emisión Orden Publicación por expediente"])
-async def Emision_2da__Orden_Publicacion(item: segunda_emicion):
-	catch_exp = []
-	obj_dat = orden_emitida_exp(item.fileNbr,item.fileSeq,item.fileSeries,item.fileType)
-	for i in range(0,len(obj_dat)):
-		if obj_dat[i].lastActionName == '2da. Emisión Orden Publicación':
-			try:
-				documentId = {
-								'docLog': str(obj_dat[i].documentId.docLog),
-								'docNbr': {
-									'doubleValue': str(obj_dat[i].documentId.docNbr.doubleValue)
-								},
-								'docOrigin': str(obj_dat[i].documentId.docOrigin),
-								'docSeries': {
-									'doubleValue': str(obj_dat[i].documentId.docSeries.doubleValue)
-								},
-								'selected': str(obj_dat[i].documentId.selected)
-							}
-			except Exception as e:
-				documentId = {
-							'docLog': '',
-							'docNbr': '',
-							'docOrigin': '',
-							'docSeries': '',
-							'selected': ''
-						}
-			try:
-				officedocId = {
-								'offidocNbr': {
-									'doubleValue': str(obj_dat[i].officedocId.offidocNbr.doubleValue)
-								},
-								'offidocOrigin': str(obj_dat[i].officedocId.offidocOrigin),
-								'offidocSeries': {
-									'doubleValue': str(obj_dat[i].officedocId.offidocSeries.doubleValue)
-								},
-								'selected': str(obj_dat[i].officedocId.selected)
-							}
-			except Exception as e:
-				officedocId = {
-			'offidocNbr': '',
-			'offidocOrigin': '',
-			'offidocSeries': '',
-			'selected': ''
-		}
-			try:
-				upperProcessId = {
-								'processNbr': {
-									'doubleValue': str(obj_dat[i].upperProcessId.processNbr.doubleValue)
-								},
-								'processType': str(obj_dat[i].upperProcessId.processType)
-							}
-			except Exception as e:
-				upperProcessId = {
-			'processNbr': '',
-			'processType': ''
-		}	
-			catch_exp.append(
-								{
-								'creationDate': {
-									'dateValue': str(obj_dat[i].creationDate.dateValue)
-								},
-								'description': str(obj_dat[i].description),
-								'documentId': documentId,
-								'dueDate': str(obj_dat[i].dueDate),
-								'indTopFileMark': str(obj_dat[i].indTopFileMark),
-								'indTopMarkPatent': str(obj_dat[i].indTopMarkPatent),
-								'lastActionName': str(obj_dat[i].lastActionName),
-								'lastActionUsername': str(obj_dat[i].lastActionUsername),
-								'officedocId': officedocId,
-								'officedocTypeName': str(obj_dat[i].officedocTypeName),
-								'processId': {
-									'processNbr': {
-										'doubleValue': str(obj_dat[i].processId.processNbr.doubleValue)
-									},
-									'processType': str()
-								},
-								'processIdAsString': str(obj_dat[i].processIdAsString),
-								'relatedToWorkcode': {
-									'doubleValue': str(obj_dat[i].relatedToWorkcode.doubleValue)
-								},
-								'responsibleUserName': str(obj_dat[i].responsibleUserName),
-								'statusDate': {
-									'dateValue': str(obj_dat[i].statusDate.dateValue)
-								},
-								'statusName': str(obj_dat[i].statusName),
-								'topFileDescription': str(obj_dat[i].topFileDescription),
-								'topFileFilingDate': {
-									'dateValue': str(obj_dat[i].topFileFilingDate.dateValue)
-								},
-								'topFileId': {
-									'fileNbr': {
-										'doubleValue': str(obj_dat[i].topFileId.fileNbr.doubleValue)
-									},
-									'fileSeq': str(obj_dat[i].topFileId.fileSeq),
-									'fileSeries': {
-										'doubleValue': str(obj_dat[i].topFileId.fileSeries.doubleValue)
-									},
-									'fileType': str(obj_dat[i].topFileId.fileType)
-								},
-								'topFileOwner': str(obj_dat[i].topFileOwner),
-								'topFileRegistrationId': {
-									'registrationDup': str(obj_dat[i].topFileRegistrationId.registrationDup),
-									'registrationNbr': str(obj_dat[i].topFileRegistrationId.registrationNbr),
-									'registrationSeries': str(obj_dat[i].topFileRegistrationId.registrationSeries),
-									'registrationType': str(obj_dat[i].topFileRegistrationId.registrationType)
-								},
-								'topFileStatusName': str(obj_dat[i].topFileStatusName),
-								'topProcessId': {
-									'processNbr': {
-										'doubleValue': str(obj_dat[i].topProcessId.processNbr.doubleValue)
-									},
-									'processType': str(obj_dat[i].topProcessId.processType)
-								},
-								'upperProcessId': upperProcessId,
-								'userdocSeqName': str(obj_dat[i].userdocSeqName),
-								'userdocSeqNbr': str(obj_dat[i].userdocSeqNbr),
-								'userdocSeqSeries': str(obj_dat[i].userdocSeqSeries),
-								'userdocSeqType': str(obj_dat[i].userdocSeqType),
-								'userdocTypeName': str(obj_dat[i].userdocTypeName),
-								'workflowWarningText': str(obj_dat[i].workflowWarningText)
-							})
-	return(catch_exp)
-
-class enviar_orden(BaseModel):
-	exp:str = ""
-	pago: str = ""
-	user_Id: str = ""	
-@app.post('/api/enviar_orden_pub', tags=["Inserta el evento (554 - Orden de Publicación enviada) "])
-async def insert_Action_(item: enviar_orden): 
-	return(str(Insert_Action(item.exp,item.pago,item.user_Id,'Sprint V2 OP','554')))
-
-class publicacion_enviada(BaseModel):
-	fecha:str = ""
-	user_id: str = ""
-@app.post('/api/Orden_pub_enviada', tags=["Consulta el evento Orden de Publicación enviada por fecha y id de usuario"])
-async def Orden_de_Publicacion_enviada(item: publicacion_enviada):
-	catch_exp = []
-	obj_dat = orden_emitida(item.fecha,item.user_id)
-	for i in range(0,len(obj_dat)):
-		if obj_dat[i].lastActionName == 'Orden de Publicación enviada':
-			try:
-				documentId = {
-									'docLog': str(obj_dat[i].documentId.docLog),
-									'docNbr': {
-										'doubleValue': str(obj_dat[i].documentId.docNbr.doubleValue)
-									},
-									'docOrigin': str(obj_dat[i].documentId.docOrigin),
-									'docSeries': {
-										'doubleValue': str(obj_dat[i].documentId.docSeries.doubleValue)
-									},
-									'selected': str(obj_dat[i].documentId.selected)
-								}
-			except Exception as e:
-				documentId = {
-								'docLog': '',
-								'docNbr': '',
-								'docOrigin': '',
-								'docSeries': '',
-								'selected': ''
-							}
-			try:
-				officedocId = {
-									'offidocNbr': {
-										'doubleValue': str(obj_dat[i].officedocId.offidocNbr.doubleValue)
-									},
-									'offidocOrigin': str(obj_dat[i].officedocId.offidocOrigin),
-									'offidocSeries': {
-										'doubleValue': str(obj_dat[i].officedocId.offidocSeries.doubleValue)
-									},
-									'selected': str(obj_dat[i].officedocId.selected)
-								}
-			except Exception as e:
-				officedocId = {
-				'offidocNbr': '',
-				'offidocOrigin': '',
-				'offidocSeries': '',
-				'selected': ''
-			}
-			try:
-				upperProcessId = {
-									'processNbr': {
-										'doubleValue': str(obj_dat[i].upperProcessId.processNbr.doubleValue)
-									},
-									'processType': str(obj_dat[i].upperProcessId.processType)
-								}
-			except Exception as e:
-				upperProcessId = {
-				'processNbr': '',
-				'processType': ''
-			}	
-			catch_exp.append(
-								{
-								'creationDate': {
-									'dateValue': str(obj_dat[i].creationDate.dateValue)
-								},
-								'description': str(obj_dat[i].description),
-								'documentId': documentId,
-								'dueDate': str(obj_dat[i].dueDate),
-								'indTopFileMark': str(obj_dat[i].indTopFileMark),
-								'indTopMarkPatent': str(obj_dat[i].indTopMarkPatent),
-								'lastActionName': str(obj_dat[i].lastActionName),
-								'lastActionUsername': str(obj_dat[i].lastActionUsername),
-								'officedocId': officedocId,
-								'officedocTypeName': str(obj_dat[i].officedocTypeName),
-								'processId': {
-									'processNbr': {
-										'doubleValue': str(int(obj_dat[i].processId.processNbr.doubleValue))
-									},
-									'processType': str()
-								},
-								'processIdAsString': str(obj_dat[i].processIdAsString),
-								'relatedToWorkcode': {
-									'doubleValue': str(obj_dat[i].relatedToWorkcode.doubleValue)
-								},
-								'responsibleUserName': str(obj_dat[i].responsibleUserName),
-								'statusDate': {
-									'dateValue': convert_fecha_hora(str(obj_dat[i].statusDate.dateValue))
-								},
-								'statusName': str(obj_dat[i].statusName),
-								'topFileDescription': str(obj_dat[i].topFileDescription),
-								'topFileFilingDate': {
-									'dateValue': str(obj_dat[i].topFileFilingDate.dateValue)
-								},
-								'topFileId': {
-									'fileNbr': {
-										'doubleValue': str(int(obj_dat[i].topFileId.fileNbr.doubleValue))
-									},
-									'fileSeq': str(obj_dat[i].topFileId.fileSeq),
-									'fileSeries': {
-										'doubleValue': str(obj_dat[i].topFileId.fileSeries.doubleValue)
-									},
-									'fileType': str(obj_dat[i].topFileId.fileType)
-								},
-								'topFileOwner': str(obj_dat[i].topFileOwner),
-								'topFileRegistrationId': {
-									'registrationDup': str(obj_dat[i].topFileRegistrationId.registrationDup),
-									'registrationNbr': str(obj_dat[i].topFileRegistrationId.registrationNbr),
-									'registrationSeries': str(obj_dat[i].topFileRegistrationId.registrationSeries),
-									'registrationType': str(obj_dat[i].topFileRegistrationId.registrationType)
-								},
-								'topFileStatusName': str(obj_dat[i].topFileStatusName),
-								'topProcessId': {
-									'processNbr': {
-										'doubleValue': str(int(obj_dat[i].topProcessId.processNbr.doubleValue))
-									},
-									'processType': str(obj_dat[i].topProcessId.processType)
-								},
-								'upperProcessId': upperProcessId,
-								'userdocSeqName': str(obj_dat[i].userdocSeqName),
-								'userdocSeqNbr': str(obj_dat[i].userdocSeqNbr),
-								'userdocSeqSeries': str(obj_dat[i].userdocSeqSeries),
-								'userdocSeqType': str(obj_dat[i].userdocSeqType),
-								'userdocTypeName': str(obj_dat[i].userdocTypeName),
-								'workflowWarningText': str(obj_dat[i].workflowWarningText)
-							})
-	return(catch_exp)
-
-class Publicacion_enviada(BaseModel):
-	fileNbr:str = ""
-	fileSeq: str = ""
-	fileSeries: str = ""
-	fileType: str = ""
-@app.post('/api/orden_pub_enviada_exp', tags=["Consulta el evento Orden de Publicación enviada por expediente"])
-async def Publicacion_enviada_(item: Publicacion_enviada):
-	catch_exp = []
-	obj_dat = orden_emitida_exp(item.fileNbr,item.fileSeq,item.fileSeries,item.fileType)
-	for i in range(0,len(obj_dat)):
-		if obj_dat[i].lastActionName == 'Orden de Publicación enviada':
-			try:
-				documentId = {
-									'docLog': str(obj_dat[i].documentId.docLog),
-									'docNbr': {
-										'doubleValue': str(obj_dat[i].documentId.docNbr.doubleValue)
-									},
-									'docOrigin': str(obj_dat[i].documentId.docOrigin),
-									'docSeries': {
-										'doubleValue': str(obj_dat[i].documentId.docSeries.doubleValue)
-									},
-									'selected': str(obj_dat[i].documentId.selected)
-								}
-			except Exception as e:
-				documentId = {
-								'docLog': '',
-								'docNbr': '',
-								'docOrigin': '',
-								'docSeries': '',
-								'selected': ''
-							}
-			try:
-				officedocId = {
-									'offidocNbr': {
-										'doubleValue': str(obj_dat[i].officedocId.offidocNbr.doubleValue)
-									},
-									'offidocOrigin': str(obj_dat[i].officedocId.offidocOrigin),
-									'offidocSeries': {
-										'doubleValue': str(obj_dat[i].officedocId.offidocSeries.doubleValue)
-									},
-									'selected': str(obj_dat[i].officedocId.selected)
-								}
-			except Exception as e:
-				officedocId = {
-				'offidocNbr': '',
-				'offidocOrigin': '',
-				'offidocSeries': '',
-				'selected': ''
-			}
-			try:
-				upperProcessId = {
-									'processNbr': {
-										'doubleValue': str(obj_dat[i].upperProcessId.processNbr.doubleValue)
-									},
-									'processType': str(obj_dat[i].upperProcessId.processType)
-								}
-			except Exception as e:
-				upperProcessId = {
-				'processNbr': '',
-				'processType': ''
-			}	
-			catch_exp.append(
-								{
-								'creationDate': {
-									'dateValue': str(obj_dat[i].creationDate.dateValue)
-								},
-								'description': str(obj_dat[i].description),
-								'documentId': documentId,
-								'dueDate': str(obj_dat[i].dueDate),
-								'indTopFileMark': str(obj_dat[i].indTopFileMark),
-								'indTopMarkPatent': str(obj_dat[i].indTopMarkPatent),
-								'lastActionName': str(obj_dat[i].lastActionName),
-								'lastActionUsername': str(obj_dat[i].lastActionUsername),
-								'officedocId': officedocId,
-								'officedocTypeName': str(obj_dat[i].officedocTypeName),
-								'processId': {
-									'processNbr': {
-										'doubleValue': str(int(obj_dat[i].processId.processNbr.doubleValue))
-									},
-									'processType': str()
-								},
-								'processIdAsString': str(obj_dat[i].processIdAsString),
-								'relatedToWorkcode': {
-									'doubleValue': str(obj_dat[i].relatedToWorkcode.doubleValue)
-								},
-								'responsibleUserName': str(obj_dat[i].responsibleUserName),
-								'statusDate': {
-									'dateValue': convert_fecha_hora(str(obj_dat[i].statusDate.dateValue))
-								},
-								'statusName': str(obj_dat[i].statusName),
-								'topFileDescription': str(obj_dat[i].topFileDescription),
-								'topFileFilingDate': {
-									'dateValue': str(obj_dat[i].topFileFilingDate.dateValue)
-								},
-								'topFileId': {
-									'fileNbr': {
-										'doubleValue': str(int(obj_dat[i].topFileId.fileNbr.doubleValue))
-									},
-									'fileSeq': str(obj_dat[i].topFileId.fileSeq),
-									'fileSeries': {
-										'doubleValue': str(obj_dat[i].topFileId.fileSeries.doubleValue)
-									},
-									'fileType': str(obj_dat[i].topFileId.fileType)
-								},
-								'topFileOwner': str(obj_dat[i].topFileOwner),
-								'topFileRegistrationId': {
-									'registrationDup': str(obj_dat[i].topFileRegistrationId.registrationDup),
-									'registrationNbr': str(obj_dat[i].topFileRegistrationId.registrationNbr),
-									'registrationSeries': str(obj_dat[i].topFileRegistrationId.registrationSeries),
-									'registrationType': str(obj_dat[i].topFileRegistrationId.registrationType)
-								},
-								'topFileStatusName': str(obj_dat[i].topFileStatusName),
-								'topProcessId': {
-									'processNbr': {
-										'doubleValue': str(obj_dat[i].topProcessId.processNbr.doubleValue)
-									},
-									'processType': str(obj_dat[i].topProcessId.processType)
-								},
-								'upperProcessId': upperProcessId,
-								'userdocSeqName': str(obj_dat[i].userdocSeqName),
-								'userdocSeqNbr': str(obj_dat[i].userdocSeqNbr),
-								'userdocSeqSeries': str(obj_dat[i].userdocSeqSeries),
-								'userdocSeqType': str(obj_dat[i].userdocSeqType),
-								'userdocTypeName': str(obj_dat[i].userdocTypeName),
-								'workflowWarningText': str(obj_dat[i].workflowWarningText)
-							})
-	return(catch_exp)
-
-class redpi(BaseModel):
-	exp:str = ""
-	pago: str = ""
-	user_Id: str = ""
-@app.post('/api/publicado_redpi', tags=["Inserta el evento (573 - Publicado en REDPI)"])
-async def PUB_REDPI(item: redpi):
-	return(str(Insert_Action(item.exp,item.pago,item.user_Id,'Publicado en REDPI','573')))
-
-class processNbr(BaseModel):
-	Nbr:str = ""
-@app.post('/doc_firmado', tags=["Documentos firmados, consulta por (process_Nbr) - http://192.168.50.185:8888/nuxeo/restAPI/default/edmsAPI/getEDocPdfById?eDocId=***** "])
-async def documento_firmado(item: processNbr):
-	edoc= []
-	for i in range(len(fetch_all_officdoc_nuxeo(item.Nbr))):
-		edoc.append({
-		"EDOC_ID":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[0].sqlColumnValue,                
-        "EDOC_TYP":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[1].sqlColumnValue,               
-        "EDOC_DATE":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[2].sqlColumnValue,              
-        "EDOC_SEQ":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[3].sqlColumnValue,               
-        "EDOC_SER":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[4].sqlColumnValue,               
-        "EDOC_NBR":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[5].sqlColumnValue,               
-        "EDOC_IMAGE_LINKING_DATE":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[6].sqlColumnValue,
-        "EDOC_IMAGE_LINKING_USER":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[7].sqlColumnValue,
-        "ROW_VERSION":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[8].sqlColumnValue,            
-        "EFOLDER_ID":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[9].sqlColumnValue,             
-        "EDOC_IMAGE_CERTIF_DATE":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[10].sqlColumnValue, 
-        "EDOC_IMAGE_CERTIF_USER":fetch_all_do_edoc_nuxeo(fetch_all_officdoc_nuxeo(item.Nbr)[i].sqlColumnList[0].sqlColumnValue)[0].sqlColumnList[11].sqlColumnValue
-		})
-	return(edoc)
-
-
-
-
-
-##############################################################################################################################################################################
-##############################################################################################################################################################################
-##############################################################################################################################################################################
-##############################################################################################################################################################################
-##############################################################################################################################################################################
-
-
-
 
 class agent_code(BaseModel):
 	code:str = ""
-@app.post('/api/getAgente_ipas', summary="#", tags=["Consulta nombre de agente por codigo"])
+
+@app.post('/api/getAgente_ipas', summary="Marcas", tags=["Consulta nombre de agente   por agent_code"])
 def getAgente_ipas(item: agent_code):
-	return(get_agente(item.code).agentName)
+	return({"nombre":get_agente(item.code).agentName})
+
+@app.post('/api/getAgente', summary="Marcas", tags=["Consulta datos de agente como persona  por agent_code"])
+def consulta_agente(item: agent_code):
+	data = []
+	try:
+		data.append({
+					"addressStreet":personAgente(item.code)[0].addressStreet,
+					"agentCode":personAgente(item.code)[0].agentCode.doubleValue,
+					"personName":personAgente(item.code)[0].personName,
+					"residenceCountryCode":personAgente(item.code)[0].residenceCountryCode,
+					"nationalityCountryCode":personAgente(item.code)[0].nationalityCountryCode,
+					"email":personAgente(item.code)[0].email,
+					"individualIdType":personAgente(item.code)[0].individualIdType,
+					"individualIdNbr":personAgente(item.code)[0].individualIdNbr,
+					"telephone":personAgente(item.code)[0].telephone,
+					"zipCode":personAgente(item.code)[0].zipCode})
+		return(data)
+	except Exception as e:
+		data = []
+		return(data)
+
+@app.post('/api/getAgentePatent', summary="Patentes", tags=["Consulta datos de agente como persona de patentes por agent_code"])
+def consulta_agente_Patent(item: agent_code):
+	data = []
+	data.append({
+					"addressStreet":personAgentePatent(item.code)[0].addressStreet,
+					"agentCode":personAgentePatent(item.code)[0].agentCode.doubleValue,
+					"personName":personAgentePatent(item.code)[0].personName,
+					"residenceCountryCode":personAgentePatent(item.code)[0].residenceCountryCode,
+					"nationalityCountryCode":personAgentePatent(item.code)[0].nationalityCountryCode,
+					"email":personAgentePatent(item.code)[0].email,
+					"individualIdType":personAgentePatent(item.code)[0].individualIdType,
+					"individualIdNbr":personAgentePatent(item.code)[0].individualIdNbr,
+					"telephone":personAgentePatent(item.code)[0].telephone,
+					"zipCode":personAgentePatent(item.code)[0].zipCode})
+	
+	return(data)
+
+@app.post('/api/getAgenteDisenio', summary="Diseño", tags=["Consulta datos de agente como persona de diseño por agent_code"])
+def consulta_agente_Disenio(item: agent_code):
+	data = []
+	#for i in range(0,len(personAgenteDisenio(item.code))):
+	data.append({
+					"addressStreet":personAgenteDisenio(item.code)[0].addressStreet,
+					"agentCode":personAgenteDisenio(item.code)[0].agentCode.doubleValue,
+					"personName":personAgenteDisenio(item.code)[0].personName,
+					"residenceCountryCode":personAgenteDisenio(item.code)[0].residenceCountryCode,
+					"nationalityCountryCode":personAgenteDisenio(item.code)[0].nationalityCountryCode,
+					"email":personAgenteDisenio(item.code)[0].email,
+					"individualIdType":personAgenteDisenio(item.code)[0].individualIdType,
+					"individualIdNbr":personAgenteDisenio(item.code)[0].individualIdNbr,
+					"telephone":personAgenteDisenio(item.code)[0].telephone,
+					"zipCode":personAgenteDisenio(item.code)[0].zipCode})
+	#print(data)
+	return(data)
+
+
+
+class gettitular(BaseModel):
+	nombre:str = ""
+@app.post('/api/getTitular', summary="Marcas", tags=["Consulta datos de titular como persona de marcas por nombre/denominacion"])
+def consulta_titular(item: gettitular):
+	personName = item.nombre					
+	return(personTitular(str(personName)))
+
+@app.post('/api/getTitularPatent', summary="Patentes", tags=["Consulta datos de titular como persona de patentes por nombre/denominacion"])
+def consulta_titularPatent(item: gettitular):
+	personName = item.nombre					
+	return(personTitularPatent(str(personName)))
+
+@app.post('/api/getTitularDisenio', summary="Diseño", tags=["Consulta datos de titular como persona de diseño por nombre/denominacion"])
+def consulta_titularDisenio(item: gettitular):
+	personName = item.nombre					
+	return(personTitularDisenio(str(personName)))
+
+
+
+class process_fecha(BaseModel):
+	fecha_from:str = ""
+	fecha_to:str = ""
+@app.post('/api/procesados_marcas', summary="Marcas", tags=["Consulta expedientes y escritos procesados de marcas por rango de fecha (yy-mm-dd)"])
+async def procesados_marcas(item: process_fecha):
+	resp=[]
+	try:
+		for x in mark_getlistFecha(item.fecha_from,item.fecha_to):
+			resp.append({
+								"fileNbr":str(int(x.fileId.fileNbr.doubleValue)),
+								"applicationType":x.filingData.applicationType,
+								"filingDate":str(x.filingData.filingDate.dateValue),
+								"fileSummaryOwner":x.fileSummaryOwner
+							})
+
+		for i in user_doc_getlist_fecha(item.fecha_from,item.fecha_to):
+			owner = user_doc_read(i.documentId.docLog, i.documentId.docNbr.doubleValue, i.documentId.docOrigin, i.documentId.docSeries.doubleValue)
+			try:
+				fileSummaryOwner = owner['affectedFileSummaryList']['fileSummaryOwner']
+			except Exception as e:
+				fileSummaryOwner = ""
+			try:
+				note = owner['notes']
+			except Exception as e:
+				note = ""				
+			
+			try:	
+				resp.append({
+						"fileNbr":int(i.documentId.docNbr.doubleValue),
+						"userdocSummaryTypes":i.userdocSummaryTypes,
+						"filingDate":str(i.filingDate.dateValue),
+						"ownwe":fileSummaryOwner,
+						"note": note
+						})
+			except Exception as e:
+				print(e)						
+	except Exception as e:
+		print(e)
+	return(resp)
+
+@app.post('/api/procesados_patentes', summary="Patentes", tags=["Consulta expedientes y escritos procesados de patentes por rango de fecha (yy-mm-dd)"])
+async def procesados_patentes(item: process_fecha):
+	try:	
+		resp=[]
+		for i in patent_getlist_fecha(item.fecha_from,item.fecha_to):
+			resp.append({
+							"fileNbr":str(int(i.fileId.fileNbr.doubleValue)),
+							"applicationType":i.filingData.applicationType,
+							"fileSummaryOwner":i.fileSummaryOwner,
+							"filingDate":str(i.filingData.filingDate.dateValue),
+							"applicationSubtype":i.filingData.applicationSubtype
+						})
+
+		for i in patent_user_doc_getlist_fecha(item.fecha_from,item.fecha_to):
+			owner=user_doc_read_patent(i.documentId.docLog, i.documentId.docNbr.doubleValue, i.documentId.docOrigin, i.documentId.docSeries.doubleValue)
+			try:	
+				personN = owner['applicant']['person']['personName']
+			except Exception as e:
+				personN = ""
+			try:	
+				noteN = owner['notes']
+			except Exception as e:
+				noteN = ""
+			resp.append({
+					"docSeqNbr":str(int(i.docSeqId.docSeqNbr.doubleValue)),
+					"filingDate":str(i.filingDate.dateValue),
+					"userdocSummaryTypes":i.userdocSummaryTypes,
+					"personName":personN,
+					"note":noteN
+					})
+
+	except Exception as e:
+		print(e)	
+	return(resp)
+
+@app.post('/api/procesados_disenios', summary="Diseño", tags=["Consulta expedientes y escritos procesados de diseño por rango de fecha (yy-mm-dd)"])
+def procesados_disenios(item: process_fecha):
+	try:	
+		resp=[]
+		for i in disenio_getlist_fecha(item.fecha_from,item.fecha_to):
+			resp.append({
+						"fileNbr":str(int(i.fileId.fileNbr.doubleValue)),
+						"applicationType":i.filingData.applicationType,
+						"fileSummaryOwner":i.fileSummaryOwner,
+						"filingDate":str(i.filingData.filingDate.dateValue),
+						"applicationSubtype":i.filingData.applicationSubtype
+						})
+
+
+		for i in disenio_user_doc_getlist_fecha(item.fecha_from,item.fecha_to):
+			owner=user_doc_read_disenio(i.documentId.docLog, i.documentId.docNbr.doubleValue, i.documentId.docOrigin, i.documentId.docSeries.doubleValue)
+			try:
+				fileSummaryOwner = owner['applicant']['person']['personName']
+			except Exception as e:
+				fileSummaryOwner = ""
+			try:
+				note = owner['notes']
+			except Exception as e:
+				note = ""	
+			
+			resp.append({
+				"docSeqNbr":str(int(i.docSeqId.docSeqNbr.doubleValue)),
+				"filingDate":str(i.filingDate.dateValue),
+				"userdocSummaryTypes":i.userdocSummaryTypes,
+				"personName":fileSummaryOwner,
+				"note":note
+				})
+	except Exception as e:
+		print(e)	
+	return(resp)
+
+
+
+@app.post('/api/user_doc_patentes', summary="Patentes", tags=["Consulta escritos procesados de patentes por rango de fecha (yy-mm-dd)"])
+def user_doc_patent(item: process_fecha):
+	try:
+		resp = []
+		for i in patent_user_doc_getlist_fecha(item.fecha_from,item.fecha_to):
+			owner=user_doc_read_patent(i.documentId.docLog, i.documentId.docNbr.doubleValue, i.documentId.docOrigin, i.documentId.docSeries.doubleValue)
+			try:	
+				personN = owner['applicant']['person']['personName']
+			except Exception as e:
+				personN = ""
+			try:	
+				noteN = owner['notes']
+			except Exception as e:
+				noteN = ""							
+			#print(i.filingDate.dateValue)
+			resp.append({
+				"docSeqNbr":str(int(i.docSeqId.docSeqNbr.doubleValue)),
+				"filingDate":i.filingDate.dateValue,
+				"personName":personN,
+				"note":noteN
+				})
+	except Exception as e:
+		print(e)	
+	return(resp)
+
+@app.post('/api/user_doc_disenios', summary="Diseño", tags=["Consulta escritos procesados de diseño por rango de fecha (yy-mm-dd)"])
+def user_doc_disenio(item: process_fecha):
+	try:
+		resp = []
+		for i in disenio_user_doc_getlist_fecha(item.fecha_from,item.fecha_to):
+			owner=user_doc_read_disenio(i.documentId.docLog, i.documentId.docNbr.doubleValue, i.documentId.docOrigin, i.documentId.docSeries.doubleValue)
+			try:	
+				personN = owner['applicant']['person']['personName'] 
+			except Exception as e:
+				personN = ""
+			try:	
+				noteN = owner['notes'] 
+			except Exception as e:
+				noteN = ""			
+			#print(i.filingDate.dateValue)
+			resp.append({
+				"docSeqNbr":str(int(i.docSeqId.docSeqNbr.doubleValue)),
+				"filingDate":i.filingDate.dateValue,
+				"personName":personN,
+				"note":noteN
+				})
+	except Exception as e:
+		print(e)	
+	return(resp)
+
+class for_exp(BaseModel):
+	expediente:str = ""
+@app.post('/api/disenio_por_exp', summary="Diseño", tags=["Consulta diseño por expediente"])
+def disenio_for_fileNBR(item: for_exp):
+	try:
+		data = disenio_getlist(item.expediente, item.expediente)[0]
+		return({
+						"fileNbr":str(int(data.fileId.fileNbr.doubleValue)),
+						"fileSeq":str(data.fileId.fileSeq),
+						"fileSeries":str(data.fileId.fileSeries.doubleValue),
+						"fileType":str(data.fileId.fileType),
+						"fileSummaryDescription":str(data.fileSummaryDescription).replace("'","\'")
+					})
+	except Exception as e:
+		return([])
+
+
+
+class userdoc_insert_uno(BaseModel):
+	affectedFileIdList_fileNbr:str = ""
+	affectedFileIdList_fileSeq:str = ""
+	affectedFileIdList_fileSeries:str = ""
+	affectedFileIdList_fileType:str = ""
+	affectedFileSummaryList_fileId_fileNbr:str = ""
+	affectedFileSummaryList_fileId_fileSeq:str = ""
+	affectedFileSummaryList_fileId_fileSeries:str = ""
+	affectedFileSummaryList_fileId_fileType:str = ""
+	affectedFileSummaryList_fileSummaryDescription:str = ""
+	affectedFileSummaryList_fileSummaryOwner:str = ""
+	applicant_applicantNotes:str = ""
+	applicant_person_addressStreet:str = ""
+	applicant_person_email:str = ""
+	applicant_person_nationalityCountryCode:str = ""
+	applicant_person_personName:str = ""
+	applicant_person_residenceCountryCode:str = ""
+	applicant_person_telephone:str = ""
+	documentId_docLog:str = ""
+	documentId_docNbr:str = ""
+	documentId_docOrigin:str = ""
+	documentId_docSeries:str = ""
+	documentId_selected:str = ""
+	documentSeqId_docSeqNbr:str = ""
+	documentSeqId_docSeqSeries:str = ""
+	documentSeqId_docSeqType:str = ""
+	filingData_captureDate:str = ""
+	filingData_captureUserId:str = ""
+	filingData_filingDate:str = ""
+	filingData_paymentList_receiptAmount:str = ""
+	filingData_paymentList_receiptDate:str = ""
+	filingData_paymentList_receiptNbr:str = ""
+	filingData_paymentList_receiptNotes:str = ""
+	filingData_paymentList_receiptType:str = ""
+	filingData_paymentList_receiptTypeName:str = ""
+	filingData_documentId_docLog:str = ""
+	filingData_documentId_docNbr:str = ""
+	filingData_documentId_docOrigin:str = ""
+	filingData_documentId_docSeries:str = ""
+	filingData_documentId_selected:str = ""
+	filingData_userdocTypeList_userdocType:str = ""
+	ownerList_personName:str = ""
+	ownerList_addressStreet:str = ""
+	ownerList_nationalityCountryCode:str = ""
+	ownerList_residenceCountryCode:str = ""
+	notes:str = ""
+	representationData_representativeList_addressStreet:str = ""
+	representationData_representativeList_agentCode:str = ""
+	representationData_representativeList_email:str = ""
+	representationData_representativeList_nationalityCountryCode:str = ""
+	representationData_representativeList_personName:str = ""
+	representationData_representativeList_residenceCountryCode:str = ""
+	representationData_representativeList_telephone:str = ""
+	representationData_representativeList_zipCode:str = ""
+@app.post('/api/insert_userdoc_opo', summary="Marcas", tags=["Escrito de Oposición de marca"])
+def insert_user_doc_mde(item: userdoc_insert_uno):
+	try:
+		return(str(Insert_user_doc(
+									item.affectedFileIdList_fileNbr,
+									item.affectedFileIdList_fileSeq,
+									item.affectedFileIdList_fileSeries,
+									item.affectedFileIdList_fileType,
+									item.affectedFileSummaryList_fileId_fileNbr,
+									item.affectedFileSummaryList_fileId_fileSeq,
+									item.affectedFileSummaryList_fileId_fileSeries,
+									item.affectedFileSummaryList_fileId_fileType,
+									item.affectedFileSummaryList_fileSummaryDescription,
+									item.affectedFileSummaryList_fileSummaryOwner,
+									item.applicant_applicantNotes,
+									item.applicant_person_addressStreet,
+									item.applicant_person_email,
+									item.applicant_person_nationalityCountryCode,
+									item.applicant_person_personName,
+									item.applicant_person_residenceCountryCode,
+									item.applicant_person_telephone,
+									item.documentId_docLog,
+									item.documentId_docNbr,
+									item.documentId_docOrigin,
+									item.documentId_docSeries,
+									item.documentId_selected,
+									item.documentSeqId_docSeqNbr,
+									item.documentSeqId_docSeqSeries,
+									item.documentSeqId_docSeqType,
+									item.filingData_captureDate,
+									item.filingData_captureUserId,
+									item.filingData_filingDate,
+									item.filingData_paymentList_receiptAmount,
+									item.filingData_paymentList_receiptDate,
+									item.filingData_paymentList_receiptNbr,
+									item.filingData_paymentList_receiptNotes,
+									item.filingData_paymentList_receiptType,
+									item.filingData_paymentList_receiptTypeName,
+									item.filingData_documentId_docLog,
+									item.filingData_documentId_docNbr,
+									item.filingData_documentId_docOrigin,
+									item.filingData_documentId_docSeries,
+									item.filingData_documentId_selected,
+									item.filingData_userdocTypeList_userdocType,
+									item.ownerList_personName,
+									item.ownerList_addressStreet,
+									item.ownerList_nationalityCountryCode,
+									item.ownerList_residenceCountryCode,
+									item.notes,
+									item.representationData_representativeList_addressStreet,
+									item.representationData_representativeList_agentCode,
+									item.representationData_representativeList_email,
+									item.representationData_representativeList_nationalityCountryCode,
+									item.representationData_representativeList_personName,
+									item.representationData_representativeList_residenceCountryCode,
+									item.representationData_representativeList_telephone,
+									item.representationData_representativeList_zipCode)))
+	except zeep.exceptions.Fault as e:
+			return(str(e.message))
+
