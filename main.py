@@ -5,6 +5,7 @@ from tools.base64Decode import image_url_to_b64
 from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update #pip install "fastapi[all]"
 from wipo.function_for_reception_in import user_doc_read, user_doc_read_disenio, user_doc_read_patent
 import zeep
+from fastapi.middleware.cors import CORSMiddleware
 
 description = """
 Version 2023 
@@ -14,7 +15,6 @@ Version 2023
 las rutas reciben un objeto **JSON** como parametro y retornar un objeto **JSON**.
 
 """
-
 app = FastAPI(
 	title="Api Mesa de Entrada ",
 	description=description,
@@ -22,6 +22,17 @@ app = FastAPI(
 	openapi_url="/Sprint/v2/openapi.json"
 )
 
+origins = ["*"]
+
+#http://192.168.71.189:3000 //bloqueo por aplicacion
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["POST"], #['*']
+    allow_headers=["*"],
+)
 
 
 class agent_code(BaseModel):
