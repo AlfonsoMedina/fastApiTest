@@ -2,25 +2,24 @@ from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
 from tools.base64Decode import image_url_to_b64
-from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update #pip install "fastapi[all]"
+from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, mark_insert_ren, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update #pip install "fastapi[all]"
 from wipo.function_for_reception_in import user_doc_read, user_doc_read_disenio, user_doc_read_patent
 import zeep
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
+
 
 description = """
 Version 2023 
 
 ## Métodos para consultar e insertar eventos de Mesa de entrada 
+Engineer in charge ***W. Alfonso Medina***
 
 las rutas reciben un objeto **JSON** como parametro y retornar un objeto **JSON**.
 
 """
-app = FastAPI(
-	title="Api Mesa de Entrada ",
-	description=description,
-	version="3.0.1",
-	openapi_url="/Sprint/v2/openapi.json"
-)
+
+app = FastAPI()
 
 origins = ["*"]
 
@@ -34,6 +33,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Api Mesa de Entrada",
+        version="3.0.0",
+        description=description,
+        routes=app.routes,
+    )
+    openapi_schema["info"]["x-logo"] = {
+        "url": "https://sfe.dinapi.gov.py/assets/logo_sprint-85d552f35942e4152f997bb4875b6283a05d34f7b9b7b6126e84414c924bb041.png"
+    }
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+#https://sfe.dinapi.gov.py/assets/home/dinapilogo4-5eef9860ea6bb48707a76c1d97e2438b195bd72171233946a40177bb27cc7f11.png	
+#https://sfe.dinapi.gov.py/assets/logo_sprint-85d552f35942e4152f997bb4875b6283a05d34f7b9b7b6126e84414c924bb041.png
 
 class agent_code(BaseModel):
 	code:str = ""
@@ -352,7 +368,7 @@ class userdoc_insert_OPO(BaseModel):
 	representationData_representativeList_residenceCountryCode:str = ""
 	representationData_representativeList_telephone:str = ""
 	representationData_representativeList_zipCode:str = ""
-@app.post('/sfe/insert_userdoc_opo', summary="Marcas", tags=["Escrito de Oposición de marca"])
+@app.post('/sfe/insert_userdoc_opo', summary="Marcas", tags=["Insert Escrito de Oposición de marca"])
 def insert_user_doc_mde(item: userdoc_insert_OPO):
 	try:
 		return(str(Insert_user_doc(
@@ -603,7 +619,7 @@ def insert_receive(item: receive):
 	"""
 		**Ej:**\n
 			"arg0": "1",
-			"arg1": "DAJ1",						**(tipo de documento)**
+			"arg1": "DAJ1",						(tipo de documento)
 			"arg3": "true",
 			"arg4_offidocNbr": "",
 			"arg4_offidocOrigin": "",
@@ -612,28 +628,28 @@ def insert_receive(item: receive):
 			"arg5_officeDepartmentCode": "",
 			"arg5_officeDivisionCode": "",
 			"arg5_officeSectionCode": "",
-			"arg6": "2023-02-17",					**(fecha del evento)**
+			"arg6": "2023-02-17",					(fecha del evento)
 			"arg7_currencyType": "",
 			"arg7_DReceiptAmount": "",
 			"arg7_receiptDate": "",
 			"arg7_receiptNbr": "",
 			"arg7_receiptType": "",
-			"arg8": "298",						**(UserID)**
+			"arg8": "298",						(UserID)
 			"arg9": "SFE test - Aplicante SPRINT",
-			"arg10_docLog": "E",					**(escrito relacionado)**
-			"arg10_docNbr": "2225891",				**(escrito relacionado)**
-			"arg10_docOrigin": "1",					**(escrito relacionado)**
-			"arg10_docSeries": "2022",				**(escrito relacionado)**
+			"arg10_docLog": "E",					(escrito relacionado)
+			"arg10_docNbr": "2225891",				(escrito relacionado)
+			"arg10_docOrigin": "1",					(escrito relacionado)
+			"arg10_docSeries": "2022",				(escrito relacionado)
 			"arg10_selected": "",
 			"arg11_docSeqName": "",
 			"arg11_docSeqNbr": "",
 			"arg11_docSeqSeries": "",
 			"arg11_docSeqType": "",
-			"arg12_docLog": "E",					**(escrito nuevo)**
-			"arg12_docNbr": "22102468",				**(escrito nuevo)**
-			"arg12_docOrigin": "1",					**(escrito nuevo)**
-			"arg12_docSeries": "2022",				**(escrito nuevo)**
-			"arg12_selected": "DAJ1"				**(tipo de documento)**
+			"arg12_docLog": "E",					(escrito nuevo)
+			"arg12_docNbr": "22102468",				(escrito nuevo)
+			"arg12_docOrigin": "1",					(escrito nuevo)
+			"arg12_docSeries": "2022",				(escrito nuevo)
+			"arg12_selected": "DAJ1"				(tipo de documento)
 
 	"""
 	try:
@@ -674,8 +690,10 @@ def insert_receive(item: receive):
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
 
+
+
 class insert_reg(BaseModel):
-	fileId_fileId_fileNbr:str = ""
+	file_fileId_fileNbr:str = ""
 	file_fileId_fileSeq:str = ""
 	file_fileId_fileSeries:str = ""
 	file_fileId_fileType:str = ""
@@ -691,7 +709,7 @@ class insert_reg(BaseModel):
 	file_filingData_paymentList_receiptNbr:str = ""
 	file_filingData_paymentList_receiptNotes:str = ""
 	file_filingData_paymentList_receiptType:str = ""
-	receptionUserId:str = ""
+	file_filingData_receptionUserId:str = ""
 	file_ownershipData_ownerList_person_addressStreet:str = ""
 	file_ownershipData_ownerList_person_nationalityCountryCode:str = ""
 	file_ownershipData_ownerList_person_personName:str = ""
@@ -712,12 +730,12 @@ class insert_reg(BaseModel):
 	signData_markName:str = ""
 	signData_signType:str = ""
 @app.post('/sfe/insert_reg', summary="Marcas", tags=["Insert para registro de marcas"])
-def insert_reg(item: insert_reg):
+def insertreg(item: insert_reg):
 	try:
 		if str(item.logoData).count('https:') >= 1:
 			imageurltob64 = image_url_to_b64(str(item.logoData))
 			return(mark_insert_reg(
-								item.fileId_fileId_fileNbr,
+								item.file_fileId_fileNbr,
 								item.file_fileId_fileSeq,
 								item.file_fileId_fileSeries,
 								item.file_fileId_fileType,
@@ -733,7 +751,7 @@ def insert_reg(item: insert_reg):
 								item.file_filingData_paymentList_receiptNbr,
 								item.file_filingData_paymentList_receiptNotes,
 								item.file_filingData_paymentList_receiptType,
-								item.receptionUserId,
+								item.file_filingData_receptionUserId,
 								item.file_ownershipData_ownerList_person_addressStreet,
 								item.file_ownershipData_ownerList_person_nationalityCountryCode,
 								item.file_ownershipData_ownerList_person_personName,
@@ -755,7 +773,7 @@ def insert_reg(item: insert_reg):
 								item.signData_signType))
 		else:
 			return(mark_insert_reg(
-								item.fileId_fileId_fileNbr,
+								item.file_fileId_fileNbr,
 								item.file_fileId_fileSeq,
 								item.file_fileId_fileSeries,
 								item.file_fileId_fileType,
@@ -771,7 +789,7 @@ def insert_reg(item: insert_reg):
 								item.file_filingData_paymentList_receiptNbr,
 								item.file_filingData_paymentList_receiptNotes,
 								item.file_filingData_paymentList_receiptType,
-								item.receptionUserId,
+								item.file_filingData_receptionUserId,
 								item.file_ownershipData_ownerList_person_addressStreet,
 								item.file_ownershipData_ownerList_person_nationalityCountryCode,
 								item.file_ownershipData_ownerList_person_personName,
@@ -793,3 +811,101 @@ def insert_reg(item: insert_reg):
 								item.signData_signType))			
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
+
+
+class insert_ren(BaseModel):
+	file_fileId_fileNbr:str = ""
+	file_fileId_fileSeq:str = ""
+	file_fileId_fileSeries:str = ""
+	file_fileId_fileType:str = ""
+	file_filingData_applicationSubtype:str = ""
+	file_filingData_applicationType:str = ""
+	file_filingData_captureUserId:str = ""
+	file_filingData_captureDate:str = ""
+	file_filingData_filingDate:str = ""
+	file_filingData_lawCode:str = ""
+	file_filingData_paymentList_currencyType:str = ""
+	file_filingData_paymentList_receiptAmount:str = ""
+	file_filingData_paymentList_receiptDate:str = ""
+	file_filingData_paymentList_receiptNbr:str = ""
+	file_filingData_paymentList_receiptNotes:str = ""
+	file_filingData_paymentList_receiptType:str = ""
+	file_filingData_receptionUserId:str = ""
+	file_ownershipData_ownerList_person_addressStreet:str = ""
+	file_ownershipData_ownerList_person_nationalityCountryCode:str = ""
+	file_ownershipData_ownerList_person_personName:str = ""
+	file_ownershipData_ownerList_person_residenceCountryCode:str = ""
+	file_representationData_representativeList_representativeType:str = ""
+	agentCode:str = ""
+	file_relationshipList_fileId_fileNbr:str = ""
+	file_relationshipList_fileId_fileSeq:str = ""
+	file_relationshipList_fileId_fileSeries:str = ""
+	file_relationshipList_fileId_fileType:str = ""
+	file_relationshipList_relationshipRole:str = ""
+	file_relationshipList_relationshipType:str = ""
+	file_rowVersion:str = ""
+	protectionData_dummy:str = ""
+	protectionData_niceClassList_niceClassDescription:str = ""
+	protectionData_niceClassList_niceClassDetailedStatus:str = ""
+	protectionData_niceClassList_niceClassEdition:str = ""
+	protectionData_niceClassList_niceClassGlobalStatus:str = ""
+	protectionData_niceClassList_niceClassNbr:str = ""
+	protectionData_niceClassList_niceClassVersion:str = ""
+	rowVersion:str = ""
+	logoData:str = ""
+	logoType:str = ""
+	signData_markName:str = ""
+	signData_signType:str = ""
+@app.post('/sfe/insert_ren', summary="Marcas", tags=["Insert para renovacion de marcas"])
+def insertren(item: insert_ren):
+	try:
+		return(mark_insert_ren(item.file_fileId_fileNbr,
+							item.file_fileId_fileSeq,
+							item.file_fileId_fileSeries,
+							item.file_fileId_fileType,
+							item.file_filingData_applicationSubtype,
+							item.file_filingData_applicationType,
+							item.file_filingData_captureUserId,
+							item.file_filingData_captureDate,
+							item.file_filingData_filingDate,
+							item.file_filingData_lawCode,
+							item.file_filingData_paymentList_currencyType,
+							item.file_filingData_paymentList_receiptAmount,
+							item.file_filingData_paymentList_receiptDate,
+							item.file_filingData_paymentList_receiptNbr,
+							item.file_filingData_paymentList_receiptNotes,
+							item.file_filingData_paymentList_receiptType,
+							item.file_filingData_receptionUserId,
+							item.file_ownershipData_ownerList_person_addressStreet,
+							item.file_ownershipData_ownerList_person_nationalityCountryCode,
+							item.file_ownershipData_ownerList_person_personName,
+							item.file_ownershipData_ownerList_person_residenceCountryCode,
+							item.file_representationData_representativeList_representativeType,
+							item.agentCode,
+							item.file_relationshipList_fileId_fileNbr,
+							item.file_relationshipList_fileId_fileSeq,
+							item.file_relationshipList_fileId_fileSeries,
+							item.file_relationshipList_fileId_fileType,
+							item.file_relationshipList_relationshipRole,
+							item.file_relationshipList_relationshipType,
+							item.file_rowVersion,
+							item.protectionData_dummy,
+							item.protectionData_niceClassList_niceClassDescription,
+							item.protectionData_niceClassList_niceClassDetailedStatus,
+							item.protectionData_niceClassList_niceClassEdition,
+							item.protectionData_niceClassList_niceClassGlobalStatus,
+							item.protectionData_niceClassList_niceClassNbr,
+							item.protectionData_niceClassList_niceClassVersion,
+							item.rowVersion,
+							item.logoData,
+							item.logoType,
+							item.signData_markName,
+							item.signData_signType))
+	except zeep.exceptions.Fault as e:
+		return(str(e.message))
+
+
+
+
+
+app.openapi = custom_openapi		

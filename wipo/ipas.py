@@ -575,7 +575,7 @@ def office_doc_read():
 						}
 	return(clientMark.service.OfficedocRead(**params))
 
-#Insert Registro ---- (AG)
+
 def mark_insert_reg(
 					fileId_fileId_fileNbr,
 					file_fileId_fileSeq,
@@ -593,7 +593,7 @@ def mark_insert_reg(
 					file_filingData_paymentList_receiptNbr,
 					file_filingData_paymentList_receiptNotes,
 					file_filingData_paymentList_receiptType,
-					receptionUserId,
+					file_filingData_receptionUserId,
 					file_ownershipData_ownerList_person_addressStreet,
 					file_ownershipData_ownerList_person_nationalityCountryCode,
 					file_ownershipData_ownerList_person_personName,
@@ -654,7 +654,7 @@ def mark_insert_reg(
 						'receiptType': file_filingData_paymentList_receiptType
 						},
 						'receptionUserId': {
-						'doubleValue': receptionUserId
+						'doubleValue': file_filingData_receptionUserId
 						}
 					},
 					'ownershipData': {
@@ -739,181 +739,171 @@ def mark_insert_reg(
 	except zeep.exceptions.Fault as e:
 		return(str(e))
 		
-#Insert Renovacion ----- (AG)
+
 def mark_insert_ren(
-					fileNbr,
-					fileSeq,
-					fileSeries,
-					fileType,
-					applicationSubtype,
-					applicationType,
-					captureUserId,
-					filingDate,
-					captureDate,
-					lawCode,
-					currencyType,
-					receiptAmount,
-					receiptDate,
-					receiptNbr,
-					receiptNotes,
-					receiptType,
-					receptionUserId,
-					owneraddressStreet,
-					ownernationalityCountryCode,
-					ownerpersonName,
-					ownerresidenceCountryCode,
-					ag_addressStreet,
+					file_fileId_fileNbr,
+					file_fileId_fileSeq,
+					file_fileId_fileSeries,
+					file_fileId_fileType,
+					file_filingData_applicationSubtype,
+					file_filingData_applicationType,
+					file_filingData_captureUserId,
+					file_filingData_captureDate,
+					file_filingData_filingDate,
+					file_filingData_lawCode,
+					file_filingData_paymentList_currencyType,
+					file_filingData_paymentList_receiptAmount,
+					file_filingData_paymentList_receiptDate,
+					file_filingData_paymentList_receiptNbr,
+					file_filingData_paymentList_receiptNotes,
+					file_filingData_paymentList_receiptType,
+					file_filingData_receptionUserId,
+					file_ownershipData_ownerList_person_owneraddressStreet,
+					file_ownershipData_ownerList_person_ownernationalityCountryCode,
+					file_ownershipData_ownerList_person_ownerpersonName,
+					file_ownershipData_ownerList_person_ownerresidenceCountryCode,
+					file_representationData_representativeList_representativeType,
 					agentCode,
-					ag_cityName,
-					ag_email,
-					ag_nationalityCountryCode,
-					ag_personName,
-					ag_residenceCountryCode,
-					ag_zipCode,
-					ag_telephone,
-					representativeType,
-					relationship_fileNbr,
-					relationship_fileSeq,
-					relationship_fileSeries,
-					relationship_fileType,
-					relationshipRole,
-					relationshipType,
+					file_relationshipList_fileId_fileNbr,
+					file_relationshipList_fileId_fileSeq,
+					file_relationshipList_fileId_fileSeries,
+					file_relationshipList_fileId_fileType,
+					file_relationshipList_relationshipRole,
+					file_relationshipList_relationshipType,
+					file_rowVersion,
+					protectionData_dummy,
+					protectionData_niceClassList_niceClassDescription,
+					protectionData_niceClassList_niceClassDetailedStatus,
+					protectionData_niceClassList_niceClassEdition,
+					protectionData_niceClassList_niceClassGlobalStatus,
+					protectionData_niceClassList_niceClassNbr,
+					protectionData_niceClassList_niceClassVersion,
 					rowVersion,
-					dummy,
-					niceClassDescription,
-					niceClassDetailedStatus,
-					niceClassEdition,
-					niceClassGlobalStatus,
-					niceClassNbr,
-					niceClassVersion,
 					logoData,
 					logoType,
-					markName,
-					signType):
+					signData_markName,
+					signData_signType):
 	try:
 		logo = logoData
-
 		markinsertren = { 
 			'arg0': {
 				'file': {
 					'fileId': {
 						'fileNbr': {
-						'doubleValue': fileNbr
+						'doubleValue': file_fileId_fileNbr
 						},
-						'fileSeq': fileSeq,
+						'fileSeq': file_fileId_fileSeq,
 						'fileSeries': {
-						'doubleValue': fileSeries,
+						'doubleValue': file_fileId_fileSeries,
 						},
-						'fileType': fileType
+						'fileType': file_fileId_fileType
 					},
 					'filingData': {
-						'applicationSubtype': applicationSubtype,
-						'applicationType': applicationType,
+						'applicationSubtype': file_filingData_applicationSubtype,
+						'applicationType': file_filingData_applicationType,
 						'captureUserId': {
-						'doubleValue': captureUserId
+						'doubleValue': file_filingData_captureUserId
 						},
-						  'captureDate': {
-							'dateValue': captureDate
+						'captureDate': {
+							'dateValue': file_filingData_captureDate
 						},
 						'filingDate': {
-						'dateValue': filingDate
+						'dateValue': file_filingData_filingDate
 						},
 						'lawCode': {
-						'doubleValue': lawCode
+						'doubleValue': file_filingData_lawCode
 						},
 						'paymentList': {
-						'currencyType': currencyType,
-						'receiptAmount': receiptAmount,
+						'currencyType': file_filingData_paymentList_currencyType,
+						'receiptAmount': file_filingData_paymentList_receiptAmount,
 						'receiptDate': {
-							'dateValue': receiptDate
+							'dateValue': file_filingData_paymentList_receiptDate
 						},
-						'receiptNbr': receiptNbr,
-						'receiptNotes': receiptNotes,
-						'receiptType': receiptType
+						'receiptNbr': file_filingData_paymentList_receiptNbr,
+						'receiptNotes': file_filingData_paymentList_receiptNotes,
+						'receiptType': file_filingData_paymentList_receiptType
 						},
 						'receptionUserId': {
-						'doubleValue': receptionUserId
+							'doubleValue': file_filingData_receptionUserId
 						}
 					},
 					'ownershipData': {
 						'ownerList': {
 							'person': {
-								'addressStreet': owneraddressStreet,
-								'nationalityCountryCode': ownernationalityCountryCode,
-								'personName': ownerpersonName,
-								'residenceCountryCode': ownerresidenceCountryCode
+								'addressStreet': file_ownershipData_ownerList_person_owneraddressStreet,
+								'nationalityCountryCode': file_ownershipData_ownerList_person_ownernationalityCountryCode,
+								'personName': file_ownershipData_ownerList_person_ownerpersonName,
+								'residenceCountryCode': file_ownershipData_ownerList_person_ownerresidenceCountryCode
 							}
 						}
 					},
 					'representationData': {
 						'representativeList': {
 						'indService': '',
-                  'person': {
-                        'addressStreet': str(personAgente(agentCode)[0].addressStreet).replace("None",""),
-                        'addressStreetInOtherLang': str(personAgente(agentCode)[0].addressStreetInOtherLang).replace("None",""),
-                        'addressZone': str(personAgente(agentCode)[0].addressZone).replace("None",""),
-                        'agentCode': {
-                        'doubleValue':str(personAgente(agentCode)[0].agentCode.doubleValue).replace("None","")
-                        },
-                        'cityCode': str(personAgente(agentCode)[0].cityCode).replace("None",""),
-                        'cityName': str(personAgente(agentCode)[0].cityName).replace("None",""),
-                        'companyRegisterRegistrationDate': str(personAgente(agentCode)[0].companyRegisterRegistrationDate).replace("None",""),
-                        'companyRegisterRegistrationNbr': str(personAgente(agentCode)[0].companyRegisterRegistrationNbr).replace("None",""),
-                        'email': str(personAgente(agentCode)[0].email).replace("None",""),
-                        'indCompany': str(personAgente(str(agentCode))[0].indCompany),
-                        'individualIdNbr': str(personAgente(agentCode)[0].individualIdNbr).replace("None",""),
-                        'individualIdType': str(personAgente(agentCode)[0].individualIdType).replace("None",""),
-                        'legalIdNbr': str(personAgente(agentCode)[0].legalIdNbr).replace("None",""),
-                        'legalIdType': str(personAgente(agentCode)[0].legalIdType).replace("None",""),
-                        'legalNature': str(personAgente(agentCode)[0].legalNature).replace("None",""),
-                        'legalNatureInOtherLang': str(personAgente(agentCode)[0].legalNatureInOtherLang).replace("None",""),
-                        'nationalityCountryCode': str(personAgente(agentCode)[0].nationalityCountryCode).replace("None",""),
-                        'personGroupCode': "",
-                        'personGroupName': str(personAgente(agentCode)[0].personGroupName).replace("None",""),
-                        'personName': str(personAgente(agentCode)[0].personName).replace("None",""),
-                        'personNameInOtherLang': str(personAgente(agentCode)[0].personNameInOtherLang).replace("None",""),
-                        'residenceCountryCode': str(personAgente(agentCode)[0].residenceCountryCode).replace("None",""),
-                        'stateCode': str(personAgente(agentCode)[0].stateCode).replace("None",""),
-                        'stateName': str(personAgente(agentCode)[0].stateName).replace("None",""),
-                        'telephone': str(personAgente(agentCode)[0].telephone).replace("None",""),
-                        'zipCode': str(personAgente(agentCode)[0].zipCode).replace("None","")
-                        },
-						'representativeType': representativeType
+						'person': {
+								'addressStreet': str(personAgente(agentCode)[0].addressStreet).replace("None",""),
+								'addressStreetInOtherLang': str(personAgente(agentCode)[0].addressStreetInOtherLang).replace("None",""),
+								'addressZone': str(personAgente(agentCode)[0].addressZone).replace("None",""),
+								'agentCode': {
+								'doubleValue':str(personAgente(agentCode)[0].agentCode.doubleValue).replace("None","")
+								},
+								'cityCode': str(personAgente(agentCode)[0].cityCode).replace("None",""),
+								'cityName': str(personAgente(agentCode)[0].cityName).replace("None",""),
+								'companyRegisterRegistrationDate': str(personAgente(agentCode)[0].companyRegisterRegistrationDate).replace("None",""),
+								'companyRegisterRegistrationNbr': str(personAgente(agentCode)[0].companyRegisterRegistrationNbr).replace("None",""),
+								'email': str(personAgente(agentCode)[0].email).replace("None",""),
+								'indCompany': str(personAgente(str(agentCode))[0].indCompany),
+								'individualIdNbr': str(personAgente(agentCode)[0].individualIdNbr).replace("None",""),
+								'individualIdType': str(personAgente(agentCode)[0].individualIdType).replace("None",""),
+								'legalIdNbr': str(personAgente(agentCode)[0].legalIdNbr).replace("None",""),
+								'legalIdType': str(personAgente(agentCode)[0].legalIdType).replace("None",""),
+								'legalNature': str(personAgente(agentCode)[0].legalNature).replace("None",""),
+								'legalNatureInOtherLang': str(personAgente(agentCode)[0].legalNatureInOtherLang).replace("None",""),
+								'nationalityCountryCode': str(personAgente(agentCode)[0].nationalityCountryCode).replace("None",""),
+								'personGroupCode': "",
+								'personGroupName': str(personAgente(agentCode)[0].personGroupName).replace("None",""),
+								'personName': str(personAgente(agentCode)[0].personName).replace("None",""),
+								'personNameInOtherLang': str(personAgente(agentCode)[0].personNameInOtherLang).replace("None",""),
+								'residenceCountryCode': str(personAgente(agentCode)[0].residenceCountryCode).replace("None",""),
+								'stateCode': str(personAgente(agentCode)[0].stateCode).replace("None",""),
+								'stateName': str(personAgente(agentCode)[0].stateName).replace("None",""),
+								'telephone': str(personAgente(agentCode)[0].telephone).replace("None",""),
+								'zipCode': str(personAgente(agentCode)[0].zipCode).replace("None","")
+								},
+						'representativeType': file_representationData_representativeList_representativeType
 						}
 					},
-
 					"relationshipList":{
 						'fileId': {
 							'fileNbr': {
-								'doubleValue': relationship_fileNbr
+								'doubleValue': file_relationshipList_fileId_fileNbr
 							},
-							'fileSeq': relationship_fileSeq,
+							'fileSeq': file_relationshipList_fileId_fileSeq,
 							'fileSeries': {
-								'doubleValue': relationship_fileSeries,
+								'doubleValue': file_relationshipList_fileId_fileSeries,
 							},
-							'fileType': relationship_fileType
+							'fileType': file_relationshipList_fileId_fileType
 						},
-						'relationshipRole': relationshipRole,
-						'relationshipType': relationshipType
+						'relationshipRole': file_relationshipList_relationshipRole,
+						'relationshipType': file_relationshipList_relationshipType
 					},
-
 					'rowVersion': {
-						'doubleValue': rowVersion
+						'doubleValue': file_rowVersion
 					}
 				},
 				'protectionData': {
-					'dummy': dummy,
+					'dummy': protectionData_dummy,
 					'niceClassList': {
-						'niceClassDescription': niceClassDescription,
-						'niceClassDetailedStatus': niceClassDetailedStatus,
+						'niceClassDescription': protectionData_niceClassList_niceClassDescription,
+						'niceClassDetailedStatus': protectionData_niceClassList_niceClassDetailedStatus,
 						'niceClassEdition': {
-						'doubleValue': niceClassEdition
+							'doubleValue': protectionData_niceClassList_niceClassEdition
 						},
-						'niceClassGlobalStatus': niceClassGlobalStatus,
+						'niceClassGlobalStatus': protectionData_niceClassList_niceClassGlobalStatus,
 						'niceClassNbr': {
-						'doubleValue': niceClassNbr
+							'doubleValue': protectionData_niceClassList_niceClassNbr
 						},
-						'niceClassVersion': niceClassVersion
+						'niceClassVersion': protectionData_niceClassList_niceClassVersion
 					}
 				},
 				'rowVersion': {
@@ -924,8 +914,8 @@ def mark_insert_ren(
 						'logoData':base64.b64decode(logo), #Convertir cadena en bytes
 						'logoType': logoType
 					},
-					'markName': markName,
-					'signType': signType
+					'markName': signData_markName,
+					'signType': signData_signType
 				}
 			} }
 		clientMark.service.MarkInsert(**markinsertren)

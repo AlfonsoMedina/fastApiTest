@@ -4,7 +4,7 @@
 
 Ejemplo registro de marcas:
 {
-  "fileId_fileId_fileNbr": "111111143",
+  "file_fileId_fileNbr": "111111143",
   "file_fileId_fileSeq": "PY",
   "file_fileId_fileSeries": "2023",
   "file_fileId_fileType": "M",
@@ -20,7 +20,7 @@ Ejemplo registro de marcas:
   "file_filingData_paymentList_receiptNbr": "10",
   "file_filingData_paymentList_receiptNotes": "Recibo Sprint SFE 2023",
   "file_filingData_paymentList_receiptType": "1",
-  "receptionUserId": "298",
+  "file_filingData_receptionUserId": "298",
   "file_ownershipData_ownerList_person_addressStreet": "CAMI SERIF MH. SEMIHA TOKATLI (5234) SK. NO: 10/ 6 AKDENIZ, MERSIN",
   "file_ownershipData_ownerList_person_nationalityCountryCode": "TR",
   "file_ownershipData_ownerList_person_personName": "nombre del propietario",
@@ -40,6 +40,54 @@ Ejemplo registro de marcas:
   "logoType": "",
   "signData_markName": "Marca de prueba",
   "signData_signType": "B"
+}
+
+
+
+Renovacion de marca:
+{
+  "file_fileId_fileNbr": "",
+  "file_fileId_fileSeq": "",
+  "file_fileId_fileSeries": "",
+  "file_fileId_fileType": "",
+  "file_filingData_applicationSubtype": "",
+  "file_filingData_applicationType": "",
+  "file_filingData_captureUserId": "",
+  "file_filingData_captureDate": "",
+  "file_filingData_filingDate": "",
+  "file_filingData_lawCode": "",
+  "file_filingData_paymentList_currencyType": "",
+  "file_filingData_paymentList_receiptAmount": "",
+  "file_filingData_paymentList_receiptDate": "",
+  "file_filingData_paymentList_receiptNbr": "",
+  "file_filingData_paymentList_receiptNotes": "",
+  "file_filingData_paymentList_receiptType": "",
+  "file_filingData_receptionUserId": "",
+  "file_ownershipData_ownerList_person_addressStreet": "",
+  "file_ownershipData_ownerList_person_nationalityCountryCode": "",
+  "file_ownershipData_ownerList_person_personName": "",
+  "file_ownershipData_ownerList_person_residenceCountryCode": "",
+  "file_representationData_representativeList_representativeType": "",
+  "agentCode": "",
+  "file_relationshipList_fileId_fileNbr": "",
+  "file_relationshipList_fileId_fileSeq": "",
+  "file_relationshipList_fileId_fileSeries": "",
+  "file_relationshipList_fileId_fileType": "",
+  "file_relationshipList_relationshipRole": "",
+  "file_relationshipList_relationshipType": "",
+  "file_rowVersion": "",
+  "protectionData_dummy": "",
+  "protectionData_niceClassList_niceClassDescription": "",
+  "protectionData_niceClassList_niceClassDetailedStatus": "",
+  "protectionData_niceClassList_niceClassEdition": "",
+  "protectionData_niceClassList_niceClassGlobalStatus": "",
+  "protectionData_niceClassList_niceClassNbr": "",
+  "protectionData_niceClassList_niceClassVersion": "",
+  "rowVersion": "",
+  "logoData": "",
+  "logoType": "",
+  "signData_markName": "",
+  "signData_signType": ""
 }
 
 
@@ -140,6 +188,20 @@ Ejemplo de receive:
   "arg12_docSeries": "2022",
   "arg12_selected": "DAJ1"
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
