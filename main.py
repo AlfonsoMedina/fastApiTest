@@ -2,7 +2,7 @@ from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
 from tools.base64Decode import image_url_to_b64
-from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, mark_insert_ren, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update #pip install "fastapi[all]"
+from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, mark_insert_ren, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update, user_doc_update_sin_recibo #pip install "fastapi[all]"
 from wipo.function_for_reception_in import user_doc_read, user_doc_read_disenio, user_doc_read_patent
 import zeep
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,7 +12,7 @@ from fastapi.openapi.utils import get_openapi
 description = """
 Version 2023 
 
-## Métodos para consultar e insertar eventos de Mesa de entrada 
+## Métodos para consultar e insertar eventos de Mesa de entrada Sprint  
 Engineer in charge ***W. Alfonso Medina***
 
 las rutas reciben un objeto **JSON** como parametro y retornar un objeto **JSON**.
@@ -502,7 +502,7 @@ class userdoc_upd(BaseModel):
 	representationData_representativeList_person_telephone:str = ""
 	representationData_representativeList_person_zipCode:str = ""
 	representationData_representativeList_representa:str = ""	
-@app.post('/sfe/UserdocUpdate', summary="Marcas", tags=["UpDate para Escrito de marcas"])
+@app.post('/sfe/UserdocUpdate', summary="Marcas", tags=["UpDate para Escrito"])
 def userdoc_update(item: userdoc_upd):
 	try:
 		return(user_doc_update(item.affectedDocumentId_docLog,
@@ -578,6 +578,134 @@ def userdoc_update(item: userdoc_upd):
 			item.representationData_representativeList_person_telephone,
 			item.representationData_representativeList_person_zipCode,
 			item.representationData_representativeList_representa))
+	except zeep.exceptions.Fault as e:
+		return(str(e.message))
+
+class userdoc_updsr(BaseModel):
+	affectedDocumentId_docLog:str = ""
+	affectedDocumentId_docNbr:str = ""
+	affectedDocumentId_docOrigin:str = ""
+	affectedDocumentId_docSeries:str = ""
+	applicant_applicantNotes:str = ""
+	affectedDocumentId_selected:str = ""
+	filingData_userdocTypeList_userdocType:str = ""
+	applicant_person_addressStreet:str = ""
+	applicant_person_cityName:str = ""
+	applicant_person_email:str = ""
+	applicant_person_nationalityCountryCode:str = ""
+	applicant_person_personName:str = ""
+	applicant_person_residenceCountryCode:str = ""
+	applicant_person_telephone:str = ""
+	applicant_person_zipCode:str = ""
+	documentId_docLog:str = ""
+	documentId_docNbr:str = ""
+	documentId_docOrigin:str = ""
+	documentId_docSeries:str = ""
+	documentSeqId_docSeqNbr:str = ""
+	documentSeqId_docSeqSeries:str = ""
+	documentSeqId_docSeqType:str = ""
+	filingData_captureDate:str = ""
+	filingData_captureUserId:str = ""
+	filingData_filingDate:str = ""
+	filingData_receptionDate:str = ""
+	filingData_receptionDocument_documentId_docLog:str = ""
+	filingData_receptionDocument_documentId_docNbr:str = ""
+	filingData_receptionDocument_documentId_docOrigin:str = ""
+	filingData_receptionDocument_documentId_docSeries:str = ""
+	filingData_receptionDocument_documentId_selected:str = ""
+	filingData_userdocTypeList_userdocName:str = ""
+	newOwnershipData_ownerList_orderNbr:str = ""
+	newOwnershipData_ownerList_ownershipNotes:str = ""
+	newOwnershipData_ownerList_addressStreet:str = ""
+	newOwnershipData_ownerList_cityName:str = ""
+	newOwnershipData_ownerList_email:str = ""
+	newOwnershipData_ownerList_nationalityCountryCode:str = ""
+	newOwnershipData_ownerList_personName:str = ""
+	newOwnershipData_ownerList_residenceCountryCode:str = ""
+	newOwnershipData_ownerList_telephone:str = ""
+	newOwnershipData_ownerList_zipCode:str = ""
+	notes:str = ""
+	representationData_representativeList_person_addressStreet:str = ""
+	representationData_representativeList_person_addressZone:str = ""
+	representationData_representativeList_person_agentCode:str = ""
+	representationData_representativeList_person_cityName:str = ""
+	representationData_representativeList_person_email:str = ""
+	representationData_representativeList_person_individualIdNbr:str = ""
+	representationData_representativeList_person_individualIdType:str = ""
+	representationData_representativeList_person_legalIdNbr:str = ""
+	representationData_representativeList_person_legalIdType:str = ""    
+	representationData_representativeList_person_legalNature:str = ""
+	representationData_representativeList_person_nationalityCountryCode:str = ""
+	representationData_representativeList_person_personName:str = ""
+	representationData_representativeList_person_personNameInOtherLang:str = ""
+	representationData_representativeList_person_residenceCountryCode:str = ""
+	representationData_representativeList_person_telephone:str = ""
+	representationData_representativeList_person_zipCode:str = ""
+	representationData_representativeList_representativeType:str = ""
+@app.post('/sfe/UserdocUpdateNotPayment', summary="Marcas", tags=["UpDate para Escrito sin recibo"])
+def userdoc_updatesin_recibo(item: userdoc_updsr):
+	try:
+		return(user_doc_update_sin_recibo(
+						item.affectedDocumentId_docLog,
+						item.affectedDocumentId_docNbr,
+						item.affectedDocumentId_docOrigin,
+						item.affectedDocumentId_docSeries,
+						item.applicant_applicantNotes,
+						item.affectedDocumentId_selected,
+						item.filingData_userdocTypeList_userdocType,
+						item.applicant_person_addressStreet,
+						item.applicant_person_cityName,
+						item.applicant_person_email,
+						item.applicant_person_nationalityCountryCode,
+						item.applicant_person_personName,
+						item.applicant_person_residenceCountryCode,
+						item.applicant_person_telephone,
+						item.applicant_person_zipCode,
+						item.documentId_docLog,
+						item.documentId_docNbr,
+						item.documentId_docOrigin,
+						item.documentId_docSeries,
+						item.documentSeqId_docSeqNbr,
+						item.documentSeqId_docSeqSeries,
+						item.documentSeqId_docSeqType,
+						item.filingData_captureDate,
+						item.filingData_captureUserId,
+						item.filingData_filingDate,
+						item.filingData_receptionDate,
+						item.filingData_receptionDocument_documentId_docLog,
+						item.filingData_receptionDocument_documentId_docNbr,
+						item.filingData_receptionDocument_documentId_docOrigin,
+						item.filingData_receptionDocument_documentId_docSeries,
+						item.filingData_receptionDocument_documentId_selected,
+						item.filingData_userdocTypeList_userdocName,
+						item.newOwnershipData_ownerList_orderNbr,
+						item.newOwnershipData_ownerList_ownershipNotes,
+						item.newOwnershipData_ownerList_addressStreet,
+						item.newOwnershipData_ownerList_cityName,
+						item.newOwnershipData_ownerList_email,
+						item.newOwnershipData_ownerList_nationalityCountryCode,
+						item.newOwnershipData_ownerList_personName,
+						item.newOwnershipData_ownerList_residenceCountryCode,
+						item.newOwnershipData_ownerList_telephone,
+						item.newOwnershipData_ownerList_zipCode,
+						item.notes,
+						item.representationData_representativeList_person_addressStreet,
+						item.representationData_representativeList_person_addressZone,
+						item.representationData_representativeList_person_agentCode,
+						item.representationData_representativeList_person_cityName,
+						item.representationData_representativeList_person_email,
+						item.representationData_representativeList_person_individualIdNbr,
+						item.representationData_representativeList_person_individualIdType,
+						item.representationData_representativeList_person_legalIdNbr,
+						item.representationData_representativeList_person_legalIdType,    
+						item.representationData_representativeList_person_legalNature,
+						item.representationData_representativeList_person_nationalityCountryCode,
+						item.representationData_representativeList_person_personName,
+						item.representationData_representativeList_person_personNameInOtherLang,
+						item.representationData_representativeList_person_residenceCountryCode,
+						item.representationData_representativeList_person_telephone,
+						item.representationData_representativeList_person_zipCode,
+						item.representationData_representativeList_representativeType))
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
 
@@ -903,8 +1031,6 @@ def insertren(item: insert_ren):
 							item.signData_signType))
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
-
-
 
 
 

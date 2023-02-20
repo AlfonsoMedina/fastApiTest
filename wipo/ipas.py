@@ -4854,19 +4854,22 @@ def user_doc_update(affectedDocumentId_docLog,
 	return clientMark.service.UserdocUpdate(**data)
 
 #User_Doc_UpDate sin recibo
-def user_doc_update_sin_recibo(affectedDocumentId_docLog,
+def user_doc_update_sin_recibo(
+					affectedDocumentId_docLog,
 					affectedDocumentId_docNbr,
 					affectedDocumentId_docOrigin,
 					affectedDocumentId_docSeries,
 					applicant_applicantNotes,
-					person_addressStreet,
-					person_cityName,
-					person_email,
-					person_nationalityCountryCode,
-					person_personName,
-					person_residenceCountryCode,
-					person_telephone,
-					person_zipCode,
+					affectedDocumentId_selected,
+					filingData_userdocTypeList_userdocType,
+					applicant_person_addressStreet,
+					applicant_person_cityName,
+					applicant_person_email,
+					applicant_person_nationalityCountryCode,
+					applicant_person_personName,
+					applicant_person_residenceCountryCode,
+					applicant_person_telephone,
+					applicant_person_zipCode,
 					documentId_docLog,
 					documentId_docNbr,
 					documentId_docOrigin,
@@ -4878,39 +4881,40 @@ def user_doc_update_sin_recibo(affectedDocumentId_docLog,
 					filingData_captureUserId,
 					filingData_filingDate,
 					filingData_receptionDate,
-					receptionDocument_docNbr,
-					receptionDocument_docOrigin,
-					receptionDocument_docSeries,
-					userdocTypeList_userdocName,
-					userdocTypeList_userdocType,
-					ownerList_orderNbr,
-					ownerList_ownershipNotes,
-					ownerList_addressStreet,
-					ownerList_cityName,
-					ownerList_email,
-					ownerList_nationalityCountryCode,
-					ownerList_personName,
-					ownerList_residenceCountryCode,
-					ownerList_telephone,
-					ownerList_zipCode,
+					filingData_receptionDocument_documentId_docLog,
+					filingData_receptionDocument_documentId_docNbr,
+					filingData_receptionDocument_documentId_docOrigin,
+					filingData_receptionDocument_documentId_docSeries,
+					filingData_receptionDocument_documentId_selected,
+					filingData_userdocTypeList_userdocName,
+					newOwnershipData_ownerList_orderNbr,
+					newOwnershipData_ownerList_ownershipNotes,
+					newOwnershipData_ownerList_addressStreet,
+					newOwnershipData_ownerList_cityName,
+					newOwnershipData_ownerList_email,
+					newOwnershipData_ownerList_nationalityCountryCode,
+					newOwnershipData_ownerList_personName,
+					newOwnershipData_ownerList_residenceCountryCode,
+					newOwnershipData_ownerList_telephone,
+					newOwnershipData_ownerList_zipCode,
 					notes,
-					representationData_addressStreet,
-					representationData_addressZone,
-					representationData_agentCode,
-					representationData_cityName,
-					representationData_individualIdNbr,
-					representationData_individualIdType,
-					representationData_legalIdNbr,
-					representationData_legalIdType,
-					representationData_legalNature,    
-					representationData_nationalityCountryCode,
-					representationData_personName,
-					representationData_personNameInOtherLang,
-					representationData_residenceCountryCode,
-					representationData_telephone,
-					representationData_zipCode,
-					representationData_representativeType,
-					representationData_email
+					representationData_representativeList_person_addressStreet,
+					representationData_representativeList_person_addressZone,
+					representationData_representativeList_person_agentCode,
+					representationData_representativeList_person_cityName,
+					representationData_representativeList_person_email,
+					representationData_representativeList_person_individualIdNbr,
+					representationData_representativeList_person_individualIdType,
+					representationData_representativeList_person_legalIdNbr,
+					representationData_representativeList_person_legalIdType,    
+					representationData_representativeList_person_legalNature,
+					representationData_representativeList_person_nationalityCountryCode,
+					representationData_representativeList_person_personName,
+					representationData_representativeList_person_personNameInOtherLang,
+					representationData_representativeList_person_residenceCountryCode,
+					representationData_representativeList_person_telephone,
+					representationData_representativeList_person_zipCode,
+					representationData_representativeList_representativeType
 					):
 	udud = {
 			"arg0": {
@@ -4923,48 +4927,48 @@ def user_doc_update_sin_recibo(affectedDocumentId_docLog,
 				"docSeries": {
 					"doubleValue": affectedDocumentId_docSeries
 				},
-				"selected": ""
+				"selected": affectedDocumentId_selected
 				},
 				"applicant": {
 				"applicantNotes": applicant_applicantNotes,
-				"person": {
-					"addressStreet": person_addressStreet,
-					"addressStreetInOtherLang": "",
-					"addressZone": "",
-					"agentCode": "",
-					"cityCode": "",
-					"cityName": person_cityName,
-					"companyRegisterRegistrationDate": "",
-					"companyRegisterRegistrationNbr": "",
-					"email": person_email,
-					"indCompany": "false",
-					"individualIdNbr": "",
-					"individualIdType": "",
-					"legalIdNbr": "",
-					"legalIdType": "",
-					"legalNature": "",
-					"legalNatureInOtherLang": "",
-					"nationalityCountryCode": person_nationalityCountryCode,
-					"personGroupCode": "",
-					"personGroupName": "",
-					"personName": person_personName,
-					"personNameInOtherLang": "",
-					"residenceCountryCode": person_residenceCountryCode,
-					"stateCode": "",
-					"stateName": "",
-					"telephone": person_telephone,
-					"zipCode": person_zipCode
-				}
+					"person": {
+						"addressStreet": applicant_person_addressStreet,
+						"addressStreetInOtherLang": "",
+						"addressZone": "",
+						"agentCode": "",
+						"cityCode": "",
+						"cityName": applicant_person_cityName,
+						"companyRegisterRegistrationDate": "",
+						"companyRegisterRegistrationNbr": "",
+						"email": applicant_person_email,
+						"indCompany": "false",
+						"individualIdNbr": "",
+						"individualIdType": "",
+						"legalIdNbr": "",
+						"legalIdType": "",
+						"legalNature": "",
+						"legalNatureInOtherLang": "",
+						"nationalityCountryCode": applicant_person_nationalityCountryCode,
+						"personGroupCode": "",
+						"personGroupName": "",
+						"personName": applicant_person_personName,
+						"personNameInOtherLang": "",
+						"residenceCountryCode": applicant_person_residenceCountryCode,
+						"stateCode": "",
+						"stateName": "",
+						"telephone": applicant_person_telephone,
+						"zipCode": applicant_person_zipCode
+					}
 				},
 				"documentId": {
-				"docLog": documentId_docLog,
-				"docNbr": {
-					"doubleValue": documentId_docNbr
-				},
-				"docOrigin": documentId_docOrigin,
-				"docSeries": {
-					"doubleValue": documentId_docSeries
-				}
+					"docLog": documentId_docLog,
+					"docNbr": {
+						"doubleValue": documentId_docNbr
+					},
+					"docOrigin": documentId_docOrigin,
+					"docSeries": {
+						"doubleValue": documentId_docSeries
+					}
 				},
 				"documentSeqId": {
 				"docSeqName": "Documentos",
@@ -4977,171 +4981,171 @@ def user_doc_update_sin_recibo(affectedDocumentId_docLog,
 				"docSeqType": documentSeqId_docSeqType
 				},
 				"filingData": {
-				"applicationSubtype": "",
-				"applicationType": "",
-				"captureDate": {
-					"dateValue": filingData_captureDate
-				},
-				"captureUserId": {
-					"doubleValue": filingData_captureUserId
-				},
-				"corrFileNbr": "",
-				"corrFileSeq": "",
-				"corrFileSeries": "",
-				"corrFileType": "",
-				"externalOfficeCode": "",
-				"externalOfficeFilingDate": "",
-				"externalSystemId": "",
-				"filingDate": {
-					"dateValue": filingData_filingDate
-				},
-				"indIncorrRecpDeleted": "",
-				"indManualInterpretationRequired": "false",
-				"lawCode": "",
-				"novelty1Date": "",
-				"novelty2Date": "",
-				"receptionDate": {
-					"dateValue": filingData_receptionDate
-				},
-				"receptionDocument": {
-					"documentEdmsData": {
-					"edocDate": "",
-					"edocId": "",
-					"edocImageCertifDate": "",
-					"edocImageCertifUser": "",
-					"edocImageLinkingDate": "",
-					"edocImageLinkingUser": "",
-					"edocNbr": "",
-					"edocSeq": "",
-					"edocSer": "",
-					"edocTyp": "",
-					"edocTypeName": "",
-					"efolderId": "",
-					"efolderNbr": "",
-					"efolderSeq": "",
-					"efolderSer": "",
-					"indInterfaceEdoc": "false",
-					"indSpecificEdoc": "false"
+					"applicationSubtype": "",
+					"applicationType": "",
+					"captureDate": {
+						"dateValue": filingData_captureDate
 					},
-					"documentId": {
-					"docLog": "E",
-					"docNbr": {
-						"doubleValue": receptionDocument_docNbr
+					"captureUserId": {
+						"doubleValue": filingData_captureUserId
 					},
-					"docOrigin": receptionDocument_docOrigin,
-					"docSeries": {
-						"doubleValue": receptionDocument_docSeries
-					},
-					"selected": ""
-					},
-					"documentSeqId": {
-					"docSeqName": "",
-					"docSeqNbr": "",
-					"docSeqSeries": "",
-					"docSeqType": ""
-					},
+					"corrFileNbr": "",
+					"corrFileSeq": "",
+					"corrFileSeries": "",
+					"corrFileType": "",
+					"externalOfficeCode": "",
+					"externalOfficeFilingDate": "",
 					"externalSystemId": "",
-					"inputDocumentData": "",
-					"internalDocumentData": {
-					"description": "",
-					"offidocId": {
-						"offidocNbr": "",
-						"offidocOrigin": "",
-						"offidocSeries": "",
-						"selected": ""
+					"filingDate": {
+						"dateValue": filingData_filingDate
 					},
-					"refNo": ""
+					"indIncorrRecpDeleted": "",
+					"indManualInterpretationRequired": "false",
+					"lawCode": "",
+					"novelty1Date": "",
+					"novelty2Date": "",
+					"receptionDate": {
+						"dateValue": filingData_receptionDate
 					},
-					"outputDocumentData": {
-					"officedocId": {
-						"offidocNbr": "",
-						"offidocOrigin": "",
-						"offidocSeries": "",
-						"selected": ""
-					}
+					"receptionDocument": {
+						"documentEdmsData": {
+						"edocDate": "",
+						"edocId": "",
+						"edocImageCertifDate": "",
+						"edocImageCertifUser": "",
+						"edocImageLinkingDate": "",
+						"edocImageLinkingUser": "",
+						"edocNbr": "",
+						"edocSeq": "",
+						"edocSer": "",
+						"edocTyp": "",
+						"edocTypeName": "",
+						"efolderId": "",
+						"efolderNbr": "",
+						"efolderSeq": "",
+						"efolderSer": "",
+						"indInterfaceEdoc": "false",
+						"indSpecificEdoc": "false"
+						},
+						"documentId": {
+							"docLog": filingData_receptionDocument_documentId_docLog,
+							"docNbr": {
+								"doubleValue": filingData_receptionDocument_documentId_docNbr
+							},
+							"docOrigin": filingData_receptionDocument_documentId_docOrigin,
+							"docSeries": {
+								"doubleValue": filingData_receptionDocument_documentId_docSeries
+							},
+							"selected": filingData_receptionDocument_documentId_selected
+						},
+						"documentSeqId": {
+						"docSeqName": "",
+						"docSeqNbr": "",
+						"docSeqSeries": "",
+						"docSeqType": ""
+						},
+						"externalSystemId": "",
+						"inputDocumentData": "",
+						"internalDocumentData": {
+						"description": "",
+						"offidocId": {
+							"offidocNbr": "",
+							"offidocOrigin": "",
+							"offidocSeries": "",
+							"selected": ""
+						},
+						"refNo": ""
+						},
+						"outputDocumentData": {
+						"officedocId": {
+							"offidocNbr": "",
+							"offidocOrigin": "",
+							"offidocSeries": "",
+							"selected": ""
+						}
+						},
+						"qtyPages": ""
 					},
-					"qtyPages": ""
-				},
-				"receptionUserId": "",
-				"userdocTypeList": {
-					"userdocName": userdocTypeList_userdocName,
-					"userdocType": userdocTypeList_userdocType
-				},
-				"validationDate": "",
-				"validationUserId": ""
+					"receptionUserId": "",
+					"userdocTypeList": {
+						"userdocName": filingData_userdocTypeList_userdocName,
+						"userdocType": filingData_userdocTypeList_userdocType
+					},
+					"validationDate": "",
+					"validationUserId": ""
 				},
 				"newOwnershipData": {
-				"ownerList": {
-					"orderNbr": {
-					"doubleValue": ownerList_orderNbr
-					},
-					"ownershipNotes": ownerList_ownershipNotes,
-					"person": {
-					"addressStreet": ownerList_addressStreet,
-					"addressStreetInOtherLang": "",
-					"addressZone": "",
-					"agentCode": "",
-					"cityCode": "",
-					"cityName": ownerList_cityName,
-					"companyRegisterRegistrationDate": "",
-					"companyRegisterRegistrationNbr": "",
-					"email": ownerList_email,
-					"indCompany": "false",
-					"individualIdNbr": "",
-					"individualIdType": "",
-					"legalIdNbr": "",
-					"legalIdType": "",
-					"legalNature": "",
-					"legalNatureInOtherLang": "",
-					"nationalityCountryCode": ownerList_nationalityCountryCode,
-					"personGroupCode": "",
-					"personGroupName": "",
-					"personName": ownerList_personName,
-					"personNameInOtherLang": "",
-					"residenceCountryCode": ownerList_residenceCountryCode,
-					"stateCode": "",
-					"stateName": "",
-					"telephone": ownerList_telephone,
-					"zipCode": ownerList_zipCode
+					"ownerList": {
+						"orderNbr": {
+						"doubleValue": newOwnershipData_ownerList_orderNbr
+						},
+						"ownershipNotes": newOwnershipData_ownerList_ownershipNotes,
+						"person": {
+						"addressStreet": newOwnershipData_ownerList_addressStreet,
+						"addressStreetInOtherLang": "",
+						"addressZone": "",
+						"agentCode": "",
+						"cityCode": "",
+						"cityName": newOwnershipData_ownerList_cityName,
+						"companyRegisterRegistrationDate": "",
+						"companyRegisterRegistrationNbr": "",
+						"email": newOwnershipData_ownerList_email,
+						"indCompany": "false",
+						"individualIdNbr": "",
+						"individualIdType": "",
+						"legalIdNbr": "",
+						"legalIdType": "",
+						"legalNature": "",
+						"legalNatureInOtherLang": "",
+						"nationalityCountryCode": newOwnershipData_ownerList_nationalityCountryCode,
+						"personGroupCode": "",
+						"personGroupName": "",
+						"personName": newOwnershipData_ownerList_personName,
+						"personNameInOtherLang": "",
+						"residenceCountryCode": newOwnershipData_ownerList_residenceCountryCode,
+						"stateCode": "",
+						"stateName": "",
+						"telephone": newOwnershipData_ownerList_telephone,
+						"zipCode": newOwnershipData_ownerList_zipCode
+						}
 					}
-				}
 				},
 				"notes": notes,
 				"representationData": {
-				"representativeList": {
-					"indService": "false",
-				"person": {
-					"addressStreet": representationData_addressStreet,
-					"addressStreetInOtherLang": "",
-					"addressZone": representationData_addressZone,
-					"agentCode": {
-						"doubleValue": representationData_agentCode
-					},
-					"cityCode": "",
-					"cityName": representationData_cityName,
-					"companyRegisterRegistrationDate": "",
-					"companyRegisterRegistrationNbr": "",
-					"email": representationData_email,
-					"indCompany": "true",
-					"individualIdNbr": representationData_individualIdNbr,
-					"individualIdType": representationData_individualIdType,
-					"legalIdNbr": representationData_legalIdNbr,
-					"legalIdType": representationData_legalIdType,
-					"legalNature": representationData_legalNature,
-					"legalNatureInOtherLang": "",
-					"nationalityCountryCode": representationData_nationalityCountryCode,
-					"personGroupCode": "",
-					"personGroupName": "",
-					"personName": representationData_personName,
-					"personNameInOtherLang": representationData_personNameInOtherLang,
-					"residenceCountryCode": representationData_residenceCountryCode,
-					"stateCode": "",
-					"stateName": "",
-					"telephone": representationData_telephone,
-					"zipCode": representationData_zipCode
-					},
-					"representativeType": representationData_representativeType
-				}
+					"representativeList": {
+						"indService": "false",
+						"person": {
+							"addressStreet": representationData_representativeList_person_addressStreet,
+							"addressStreetInOtherLang": "",
+							"addressZone": representationData_representativeList_person_addressZone,
+							"agentCode": {
+								"doubleValue": representationData_representativeList_person_agentCode
+							},
+							"cityCode": "",
+							"cityName": representationData_representativeList_person_cityName,
+							"companyRegisterRegistrationDate": "",
+							"companyRegisterRegistrationNbr": "",
+							"email": representationData_representativeList_person_email,
+							"indCompany": "true",
+							"individualIdNbr": representationData_representativeList_person_individualIdNbr,
+							"individualIdType": representationData_representativeList_person_individualIdType,
+							"legalIdNbr": representationData_representativeList_person_legalIdNbr,
+							"legalIdType": representationData_representativeList_person_legalIdType,
+							"legalNature": representationData_representativeList_person_legalNature,
+							"legalNatureInOtherLang": "",
+							"nationalityCountryCode": representationData_representativeList_person_nationalityCountryCode,
+							"personGroupCode": "",
+							"personGroupName": "",
+							"personName": representationData_representativeList_person_personName,
+							"personNameInOtherLang": representationData_representativeList_person_personNameInOtherLang,
+							"residenceCountryCode": representationData_representativeList_person_residenceCountryCode,
+							"stateCode": "",
+							"stateName": "",
+							"telephone": representationData_representativeList_person_telephone,
+							"zipCode": representationData_representativeList_person_zipCode
+							},
+						"representativeType": representationData_representativeList_representativeType
+					}
 				}
 			}
 			} 

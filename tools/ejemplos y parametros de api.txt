@@ -190,18 +190,3 @@ Ejemplo de receive:
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
