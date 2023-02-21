@@ -8,7 +8,6 @@ import zeep
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 
-
 description = """
 Version 2023 
 
@@ -26,27 +25,27 @@ origins = ["*"]
 #http://192.168.71.189:3000 //bloqueo por aplicacion
 
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["POST"], #['*']
-    allow_headers=["*"],
+	CORSMiddleware,
+	allow_origins=origins,
+	allow_credentials=True,
+	allow_methods=["POST"], #['*']
+	allow_headers=["*"],
 )
 
 def custom_openapi():
-    if app.openapi_schema:
-        return app.openapi_schema
-    openapi_schema = get_openapi(
-        title="Api Mesa de Entrada",
-        version="3.0.0",
-        description=description,
-        routes=app.routes,
-    )
-    openapi_schema["info"]["x-logo"] = {
-        "url": "https://sfe.dinapi.gov.py/assets/logo_sprint-85d552f35942e4152f997bb4875b6283a05d34f7b9b7b6126e84414c924bb041.png"
-    }
-    app.openapi_schema = openapi_schema
-    return app.openapi_schema
+	if app.openapi_schema:
+		return app.openapi_schema
+	openapi_schema = get_openapi(
+		title="Api Mesa de Entrada",
+		version="3.0.0",
+		description=description,
+		routes=app.routes,
+	)
+	openapi_schema["info"]["x-logo"] = {
+		"url": "https://sfe.dinapi.gov.py/assets/logo_sprint-85d552f35942e4152f997bb4875b6283a05d34f7b9b7b6126e84414c924bb041.png"
+	}
+	app.openapi_schema = openapi_schema
+	return app.openapi_schema
 
 #https://sfe.dinapi.gov.py/assets/home/dinapilogo4-5eef9860ea6bb48707a76c1d97e2438b195bd72171233946a40177bb27cc7f11.png	
 #https://sfe.dinapi.gov.py/assets/logo_sprint-85d552f35942e4152f997bb4875b6283a05d34f7b9b7b6126e84414c924bb041.png
@@ -939,7 +938,6 @@ def insertreg(item: insert_reg):
 								item.signData_signType))			
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
-
 
 class insert_ren(BaseModel):
 	file_fileId_fileNbr:str = ""
