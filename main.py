@@ -33,7 +33,7 @@ app.add_middleware(
 	allow_headers=["*"],
 )
 
-async def custom_openapi():
+def custom_openapi():
 	if app.openapi_schema:
 		return app.openapi_schema
 	openapi_schema = get_openapi(
