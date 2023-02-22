@@ -59,7 +59,7 @@ databaseCJ='db_caja_dinapi'
 
 #ipas Beta
 #                                192.168.80.42
-ipas_sprint = config_parametro('49')['valor1']
+ipas_sprint = config_parametro('50')['valor1']
 
 #                                     192.168.50.182
 ipas_produccion_A = config_parametro('50')['valor1']
