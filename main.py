@@ -1,3 +1,4 @@
+from time import sleep
 from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -32,7 +33,7 @@ app.add_middleware(
 	allow_headers=["*"],
 )
 
-def custom_openapi():
+async def custom_openapi():
 	if app.openapi_schema:
 		return app.openapi_schema
 	openapi_schema = get_openapi(
@@ -53,11 +54,11 @@ def custom_openapi():
 class agent_code(BaseModel):
 	code:str = ""
 @app.post('/api/getAgente_ipas', summary="Marcas", tags=["Consulta nombre de agente   por agent_code"])
-def getAgente_ipas(item: agent_code):
+async def getAgente_ipas(item: agent_code):
 	return({"nombre":get_agente(item.code).agentName})
 
 @app.post('/api/getAgente', summary="Marcas", tags=["Consulta datos de agente como persona  por agent_code"])
-def consulta_agente(item: agent_code):
+async def consulta_agente(item: agent_code):
 	data = []
 	try:
 		data.append({
@@ -77,7 +78,7 @@ def consulta_agente(item: agent_code):
 		return(data)
 
 @app.post('/api/getAgentePatent', summary="Patentes", tags=["Consulta datos de agente como persona de patentes por agent_code"])
-def consulta_agente_Patent(item: agent_code):
+async def consulta_agente_Patent(item: agent_code):
 	data = []
 	data.append({
 					"addressStreet":personAgentePatent(item.code)[0].addressStreet,
@@ -94,7 +95,7 @@ def consulta_agente_Patent(item: agent_code):
 	return(data)
 
 @app.post('/api/getAgenteDisenio', summary="Diseño", tags=["Consulta datos de agente como persona de diseño por agent_code"])
-def consulta_agente_Disenio(item: agent_code):
+async def consulta_agente_Disenio(item: agent_code):
 	data = []
 	#for i in range(0,len(personAgenteDisenio(item.code))):
 	data.append({
@@ -116,17 +117,17 @@ def consulta_agente_Disenio(item: agent_code):
 class gettitular(BaseModel):
 	nombre:str = ""
 @app.post('/api/getTitular', summary="Marcas", tags=["Consulta datos de titular como persona de marcas por nombre/denominacion"])
-def consulta_titular(item: gettitular):
+async def consulta_titular(item: gettitular):
 	personName = item.nombre					
 	return(personTitular(str(personName)))
 
 @app.post('/api/getTitularPatent', summary="Patentes", tags=["Consulta datos de titular como persona de patentes por nombre/denominacion"])
-def consulta_titularPatent(item: gettitular):
+async def consulta_titularPatent(item: gettitular):
 	personName = item.nombre					
 	return(personTitularPatent(str(personName)))
 
 @app.post('/api/getTitularDisenio', summary="Diseño", tags=["Consulta datos de titular como persona de diseño por nombre/denominacion"])
-def consulta_titularDisenio(item: gettitular):
+async def consulta_titularDisenio(item: gettitular):
 	personName = item.nombre					
 	return(personTitularDisenio(str(personName)))
 
@@ -208,7 +209,7 @@ async def procesados_patentes(item: process_fecha):
 	return(resp)
 
 @app.post('/api/procesados_disenios', summary="Diseño", tags=["Consulta expedientes y escritos procesados de diseño por rango de fecha (yy-mm-dd)"])
-def procesados_disenios(item: process_fecha):
+async def procesados_disenios(item: process_fecha):
 	try:	
 		resp=[]
 		for i in disenio_getlist_fecha(item.fecha_from,item.fecha_to):
@@ -246,7 +247,7 @@ def procesados_disenios(item: process_fecha):
 
 
 @app.post('/api/user_doc_patentes', summary="Patentes", tags=["Consulta escritos procesados de patentes por rango de fecha (yy-mm-dd)"])
-def user_doc_patent(item: process_fecha):
+async def user_doc_patent(item: process_fecha):
 	try:
 		resp = []
 		for i in patent_user_doc_getlist_fecha(item.fecha_from,item.fecha_to):
@@ -271,7 +272,7 @@ def user_doc_patent(item: process_fecha):
 	return(resp)
 
 @app.post('/api/user_doc_disenios', summary="Diseño", tags=["Consulta escritos procesados de diseño por rango de fecha (yy-mm-dd)"])
-def user_doc_disenio(item: process_fecha):
+async def user_doc_disenio(item: process_fecha):
 	try:
 		resp = []
 		for i in disenio_user_doc_getlist_fecha(item.fecha_from,item.fecha_to):
@@ -298,7 +299,7 @@ def user_doc_disenio(item: process_fecha):
 class for_exp(BaseModel):
 	expediente:str = ""
 @app.post('/api/disenio_por_exp', summary="Diseño", tags=["Consulta diseño por expediente"])
-def disenio_for_fileNBR(item: for_exp):
+async def disenio_for_fileNBR(item: for_exp):
 	try:
 		data = disenio_getlist(item.expediente, item.expediente)[0]
 		return({
@@ -368,7 +369,7 @@ class userdoc_insert_OPO(BaseModel):
 	representationData_representativeList_telephone:str = ""
 	representationData_representativeList_zipCode:str = ""
 @app.post('/sfe/insert_userdoc_opo', summary="Marcas", tags=["Insert Escrito de Oposición de marca"])
-def insert_user_doc_mde(item: userdoc_insert_OPO):
+async def insert_user_doc_mde(item: userdoc_insert_OPO):
 	try:
 		return(str(Insert_user_doc(
 									item.affectedFileIdList_fileNbr,
@@ -502,7 +503,7 @@ class userdoc_upd(BaseModel):
 	representationData_representativeList_person_zipCode:str = ""
 	representationData_representativeList_representa:str = ""	
 @app.post('/sfe/UserdocUpdate', summary="Marcas", tags=["UpDate para Escrito"])
-def userdoc_update(item: userdoc_upd):
+async def userdoc_update(item: userdoc_upd):
 	try:
 		return(user_doc_update(item.affectedDocumentId_docLog,
 			item.affectedDocumentId_docNbr,
@@ -642,7 +643,7 @@ class userdoc_updsr(BaseModel):
 	representationData_representativeList_person_zipCode:str = ""
 	representationData_representativeList_representativeType:str = ""
 @app.post('/sfe/UserdocUpdateNotPayment', summary="Marcas", tags=["UpDate para Escrito sin recibo"])
-def userdoc_updatesin_recibo(item: userdoc_updsr):
+async def userdoc_updatesin_recibo(item: userdoc_updsr):
 	try:
 		return(user_doc_update_sin_recibo(
 						item.affectedDocumentId_docLog,
@@ -742,7 +743,7 @@ class receive(BaseModel):
 	arg12_docSeries:str = ""
 	arg12_selected:str = ""	
 @app.post('/sfe/UserdocReceive', summary="Marcas", tags=["Insert para Escrito afecta Escrito"])
-def insert_receive(item: receive):
+async def insert_receive(item: receive):
 	"""
 		**Ej:**\n
 			"arg0": "1",
@@ -857,7 +858,7 @@ class insert_reg(BaseModel):
 	signData_markName:str = ""
 	signData_signType:str = ""
 @app.post('/sfe/insert_reg', summary="Marcas", tags=["Insert para registro de marcas"])
-def insertreg(item: insert_reg):
+async def insertreg(item: insert_reg):
 	try:
 		if str(item.logoData).count('https:') >= 1:
 			imageurltob64 = image_url_to_b64(str(item.logoData))
@@ -983,7 +984,7 @@ class insert_ren(BaseModel):
 	signData_markName:str = ""
 	signData_signType:str = ""
 @app.post('/sfe/insert_ren', summary="Marcas", tags=["Insert para renovacion de marcas"])
-def insertren(item: insert_ren):
+async def insertren(item: insert_ren):
 	try:
 		return(mark_insert_ren(item.file_fileId_fileNbr,
 							item.file_fileId_fileSeq,
