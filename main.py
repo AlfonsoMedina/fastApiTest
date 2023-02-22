@@ -3,23 +3,50 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from publicaciones.pub_2023 import convert_fecha_hora, orden_emitida, orden_emitida_exp
 from wipo.ipas import Insert_Action, fetch_all_do_edoc_nuxeo, fetch_all_officdoc_nuxeo, get_agente, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
-
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 
 description = """
 Version 2023 
 
-## Métodos para consultar e insertar eventos de Orden de Publicación 
+## Métodos para consultar e insertar eventos de Orden de Publicación
+ 
+Engineer in charge ***W. Alfonso Medina***
 
 las rutas reciben un objeto **JSON** como parametro y retornar un objeto **JSON**.
-
 """
 
-app = FastAPI(
-	title="Api Publicaciones ",
-	description=description,
-	version="3.0.1",
-	openapi_url="/Sprint/v2/openapi.json"
+app = FastAPI()
+
+origins = ["*"]
+
+#http://192.168.71.189:3000 //bloqueo por aplicacion
+
+app.add_middleware(
+	CORSMiddleware,
+	allow_origins=origins,
+	allow_credentials=True,
+	allow_methods=["POST"], #['*']
+	allow_headers=["*"],
 )
+
+def custom_openapi():
+	if app.openapi_schema:
+		return app.openapi_schema
+	openapi_schema = get_openapi(
+		title="Api Publicaciones",
+		version="3.0.0",
+		description=description,
+		routes=app.routes,
+	)
+	openapi_schema["info"]["x-logo"] = {
+		"url": "https://sfe.dinapi.gov.py/assets/logo_sprint-85d552f35942e4152f997bb4875b6283a05d34f7b9b7b6126e84414c924bb041.png"
+	}
+	app.openapi_schema = openapi_schema
+	return app.openapi_schema
+
+#https://sfe.dinapi.gov.py/assets/home/dinapilogo4-5eef9860ea6bb48707a76c1d97e2438b195bd72171233946a40177bb27cc7f11.png	
+#https://sfe.dinapi.gov.py/assets/logo_sprint-85d552f35942e4152f997bb4875b6283a05d34f7b9b7b6126e84414c924bb041.png
 
 
 @app.post('/api/markgetlist', tags=["MarkGetList por expediente"], summary="#", description="Consulta una marca por su numero de expediente, devuelve parametros utiles para otros metodos")
@@ -712,3 +739,6 @@ async def documento_firmado(item: processNbr):
 		})
 	return(edoc)
 
+
+
+app.openapi = custom_openapi
