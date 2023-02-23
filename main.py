@@ -428,6 +428,197 @@ async def insert_user_doc_mde(item: userdoc_insert_OPO):
 	except zeep.exceptions.Fault as e:
 			return(str(e.message))
 
+class userdoc_insert_sr_sr(BaseModel):
+	applicant_person_applicantNotes:str = ""
+	applicant_person_addressStreet:str = ""
+	applicant_person_nationalityCountryCode:str = ""
+	applicant_person_personName:str = ""
+	applicant_person_residenceCountryCode:str = ""
+	documentId_docLog:str = ""
+	documentId_docNbr:str = ""
+	documentId_docOrigin:str = ""
+	documentId_docSeries:str = ""
+	documentId_selected:str = ""
+	documentSeqId_docSeqNbr:str = ""
+	documentSeqId_docSeqSeries:str = ""
+	documentSeqId_docSeqType:str = ""
+	filingData_captureDate:str = ""
+	filingData_captureUserId:str = ""
+	filingData_filingDate:str = ""
+	filingData_receptionDocument_documentId_docLog:str = ""
+	filingData_receptionDocument_documentId_docNbr:str = ""
+	filingData_receptionDocument_documentId_docOrigin:str = ""
+	filingData_receptionDocument_documentId_docSeries:str = ""
+	filingData_receptionDocument_documentId_selected:str = ""
+	filingData_userdocTypeList_userdocName:str = ""
+	filingData_userdocTypeList_userdocType:str = ""
+	ownerList_person_addressStreet:str = ""
+	ownerList_person_nationalityCountryCode:str = ""
+	ownerList_person_personName:str = ""
+	ownerList_person_residenceCountryCode:str = ""
+	notes:str = ""
+	representativeList_person_addressStreetAgente:str = ""
+	representativeList_person_agentCode:str = ""
+	representativeList_person_email:str = ""
+	representativeList_person_nationalityCountryCode:str = ""
+	representativeList_person_AgentepersonName:str = ""
+	representativeList_person_residenceCountryCode:str = ""
+	representativeList_person_telephone:str = ""
+	representativeList_person_zipCode:str = ""
+	processNbr:str = ""
+	processType:str = ""
+@app.post('/sfe/insertuserdoc_sin_recibo_sin_relacion', summary="Marcas", tags=["Insert Escrito sin recibo sin relacion"])
+async def insert_sr_sr(item:userdoc_insert_sr_sr):
+	return(Insert_user_doc_sin_recibo_relacion(
+												item.applicant_person_applicantNotes,
+												item.applicant_person_addressStreet,
+												item.applicant_person_nationalityCountryCode,
+												item.applicant_person_personName,
+												item.applicant_person_residenceCountryCode,
+												item.documentId_docLog,
+												item.documentId_docNbr,
+												item.documentId_docOrigin,
+												item.documentId_docSeries,
+												item.documentId_selected,
+												item.documentSeqId_docSeqNbr,
+												item.documentSeqId_docSeqSeries,
+												item.documentSeqId_docSeqType,
+												item.filingData_captureDate,
+												item.filingData_captureUserId,
+												item.filingData_filingDate,
+												item.filingData_receptionDocument_documentId_docLog,
+												item.filingData_receptionDocument_documentId_docNbr,
+												item.filingData_receptionDocument_documentId_docOrigin,
+												item.filingData_receptionDocument_documentId_docSeries,
+												item.filingData_receptionDocument_documentId_selected,
+												item.filingData_userdocTypeList_userdocName,
+												item.filingData_userdocTypeList_userdocType,
+												item.ownerList_person_addressStreet,
+												item.ownerList_person_nationalityCountryCode,
+												item.ownerList_person_personName,
+												item.ownerList_person_residenceCountryCode,
+												item.notes,
+												item.representativeList_person_addressStreetAgente,
+												item.representativeList_person_agentCode,
+												item.representativeList_person_email,
+												item.representativeList_person_nationalityCountryCode,
+												item.representativeList_person_AgentepersonName,
+												item.representativeList_person_residenceCountryCode,
+												item.representativeList_person_telephone,
+												item.representativeList_person_zipCode,
+												item.processNbr,
+												item.processType))
+
+
+class receive(BaseModel):
+	arg0:str = ""
+	arg1:str = ""
+	arg3:str = ""
+	arg4_offidocNbr:str = ""
+	arg4_offidocOrigin:str = ""
+	arg4_offidocSeries:str = ""
+	arg4_selected:str = ""
+	arg5_officeDepartmentCode:str = ""
+	arg5_officeDivisionCode:str = ""
+	arg5_officeSectionCode:str = ""
+	arg6:str = ""
+	arg7_currencyType:str = ""
+	arg7_DReceiptAmount:str = ""
+	arg7_receiptDate:str = ""
+	arg7_receiptNbr:str = ""
+	arg7_receiptType:str = ""
+	arg8:str = ""
+	arg9:str = ""
+	arg10_docLog:str = ""
+	arg10_docNbr:str = ""
+	arg10_docOrigin:str = ""
+	arg10_docSeries:str = ""
+	arg10_selected:str = ""
+	arg11_docSeqName:str = ""
+	arg11_docSeqNbr:str = ""
+	arg11_docSeqSeries:str = ""
+	arg11_docSeqType:str = ""
+	arg12_docLog:str = ""
+	arg12_docNbr:str = ""
+	arg12_docOrigin:str = ""
+	arg12_docSeries:str = ""
+	arg12_selected:str = ""	
+@app.post('/sfe/UserdocReceive', summary="Marcas", tags=["Insert para Escrito afecta Escrito"])
+async def insert_receive(item: receive):
+	"""
+		**Ej:**\n
+			"arg0": "1",
+			"arg1": "DAJ1",						(tipo de documento)
+			"arg3": "true",
+			"arg4_offidocNbr": "",
+			"arg4_offidocOrigin": "",
+			"arg4_offidocSeries": "",
+			"arg4_selected": "",
+			"arg5_officeDepartmentCode": "",
+			"arg5_officeDivisionCode": "",
+			"arg5_officeSectionCode": "",
+			"arg6": "2023-02-17",					(fecha del evento)
+			"arg7_currencyType": "",
+			"arg7_DReceiptAmount": "",
+			"arg7_receiptDate": "",
+			"arg7_receiptNbr": "",
+			"arg7_receiptType": "",
+			"arg8": "298",						(UserID)
+			"arg9": "SFE test - Aplicante SPRINT",
+			"arg10_docLog": "E",					(escrito relacionado)
+			"arg10_docNbr": "2225891",				(escrito relacionado)
+			"arg10_docOrigin": "1",					(escrito relacionado)
+			"arg10_docSeries": "2022",				(escrito relacionado)
+			"arg10_selected": "",
+			"arg11_docSeqName": "",
+			"arg11_docSeqNbr": "",
+			"arg11_docSeqSeries": "",
+			"arg11_docSeqType": "",
+			"arg12_docLog": "E",					(escrito nuevo)
+			"arg12_docNbr": "22102468",				(escrito nuevo)
+			"arg12_docOrigin": "1",					(escrito nuevo)
+			"arg12_docSeries": "2022",				(escrito nuevo)
+			"arg12_selected": "DAJ1"				(tipo de documento)
+
+	"""
+	try:
+		return(user_doc_receive(
+								item.arg0,
+								item.arg1,
+								item.arg3,
+								item.arg4_offidocNbr,
+								item.arg4_offidocOrigin,
+								item.arg4_offidocSeries,
+								item.arg4_selected,
+								item.arg5_officeDepartmentCode,
+								item.arg5_officeDivisionCode,
+								item.arg5_officeSectionCode,
+								item.arg6,
+								item.arg7_currencyType,
+								item.arg7_DReceiptAmount,
+								item.arg7_receiptDate,
+								item.arg7_receiptNbr,
+								item.arg7_receiptType,
+								item.arg8,
+								item.arg9,
+								item.arg10_docLog,
+								item.arg10_docNbr,
+								item.arg10_docOrigin,
+								item.arg10_docSeries,
+								item.arg10_selected,
+								item.arg11_docSeqName,
+								item.arg11_docSeqNbr,
+								item.arg11_docSeqSeries,
+								item.arg11_docSeqType,
+								item.arg12_docLog,
+								item.arg12_docNbr,
+								item.arg12_docOrigin,
+								item.arg12_docSeries,
+								item.arg12_selected
+		))
+	except zeep.exceptions.Fault as e:
+		return(str(e.message))
+
 class userdoc_upd(BaseModel):
 	affectedDocumentId_docLog:str = ""
 	affectedDocumentId_docNbr:str = ""
@@ -709,115 +900,6 @@ async def userdoc_updatesin_recibo(item: userdoc_updsr):
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
 
-class receive(BaseModel):
-	arg0:str = ""
-	arg1:str = ""
-	arg3:str = ""
-	arg4_offidocNbr:str = ""
-	arg4_offidocOrigin:str = ""
-	arg4_offidocSeries:str = ""
-	arg4_selected:str = ""
-	arg5_officeDepartmentCode:str = ""
-	arg5_officeDivisionCode:str = ""
-	arg5_officeSectionCode:str = ""
-	arg6:str = ""
-	arg7_currencyType:str = ""
-	arg7_DReceiptAmount:str = ""
-	arg7_receiptDate:str = ""
-	arg7_receiptNbr:str = ""
-	arg7_receiptType:str = ""
-	arg8:str = ""
-	arg9:str = ""
-	arg10_docLog:str = ""
-	arg10_docNbr:str = ""
-	arg10_docOrigin:str = ""
-	arg10_docSeries:str = ""
-	arg10_selected:str = ""
-	arg11_docSeqName:str = ""
-	arg11_docSeqNbr:str = ""
-	arg11_docSeqSeries:str = ""
-	arg11_docSeqType:str = ""
-	arg12_docLog:str = ""
-	arg12_docNbr:str = ""
-	arg12_docOrigin:str = ""
-	arg12_docSeries:str = ""
-	arg12_selected:str = ""	
-@app.post('/sfe/UserdocReceive', summary="Marcas", tags=["Insert para Escrito afecta Escrito"])
-async def insert_receive(item: receive):
-	"""
-		**Ej:**\n
-			"arg0": "1",
-			"arg1": "DAJ1",						(tipo de documento)
-			"arg3": "true",
-			"arg4_offidocNbr": "",
-			"arg4_offidocOrigin": "",
-			"arg4_offidocSeries": "",
-			"arg4_selected": "",
-			"arg5_officeDepartmentCode": "",
-			"arg5_officeDivisionCode": "",
-			"arg5_officeSectionCode": "",
-			"arg6": "2023-02-17",					(fecha del evento)
-			"arg7_currencyType": "",
-			"arg7_DReceiptAmount": "",
-			"arg7_receiptDate": "",
-			"arg7_receiptNbr": "",
-			"arg7_receiptType": "",
-			"arg8": "298",						(UserID)
-			"arg9": "SFE test - Aplicante SPRINT",
-			"arg10_docLog": "E",					(escrito relacionado)
-			"arg10_docNbr": "2225891",				(escrito relacionado)
-			"arg10_docOrigin": "1",					(escrito relacionado)
-			"arg10_docSeries": "2022",				(escrito relacionado)
-			"arg10_selected": "",
-			"arg11_docSeqName": "",
-			"arg11_docSeqNbr": "",
-			"arg11_docSeqSeries": "",
-			"arg11_docSeqType": "",
-			"arg12_docLog": "E",					(escrito nuevo)
-			"arg12_docNbr": "22102468",				(escrito nuevo)
-			"arg12_docOrigin": "1",					(escrito nuevo)
-			"arg12_docSeries": "2022",				(escrito nuevo)
-			"arg12_selected": "DAJ1"				(tipo de documento)
-
-	"""
-	try:
-		return(user_doc_receive(
-								item.arg0,
-								item.arg1,
-								item.arg3,
-								item.arg4_offidocNbr,
-								item.arg4_offidocOrigin,
-								item.arg4_offidocSeries,
-								item.arg4_selected,
-								item.arg5_officeDepartmentCode,
-								item.arg5_officeDivisionCode,
-								item.arg5_officeSectionCode,
-								item.arg6,
-								item.arg7_currencyType,
-								item.arg7_DReceiptAmount,
-								item.arg7_receiptDate,
-								item.arg7_receiptNbr,
-								item.arg7_receiptType,
-								item.arg8,
-								item.arg9,
-								item.arg10_docLog,
-								item.arg10_docNbr,
-								item.arg10_docOrigin,
-								item.arg10_docSeries,
-								item.arg10_selected,
-								item.arg11_docSeqName,
-								item.arg11_docSeqNbr,
-								item.arg11_docSeqSeries,
-								item.arg11_docSeqType,
-								item.arg12_docLog,
-								item.arg12_docNbr,
-								item.arg12_docOrigin,
-								item.arg12_docSeries,
-								item.arg12_selected
-		))
-	except zeep.exceptions.Fault as e:
-		return(str(e.message))
-
 
 
 class insert_reg(BaseModel):
@@ -1030,6 +1112,18 @@ async def insertren(item: insert_ren):
 							item.signData_signType))
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
