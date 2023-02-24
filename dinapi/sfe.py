@@ -74,6 +74,54 @@ def new_document(arg):
 						print(i['valor'])
 				except Exception as e:
 					pass
+
+				try:
+					if(i['descripcion'] == "Nombres y Apellidos / Razón Social" and i['campo'] == 'marcaredpi_nombrerazonredpi'):
+						print(i['valor'])
+				except Exception as e:
+					pass
+
+				try:
+					if(i['descripcion'] == "Validación" and i['campo'] == 'marcaredpi_mensajesi'):
+						print(i['valor'])
+				except Exception as e:
+					pass
+
+				try:
+					if(i['descripcion'] == "NO PUEDE FIRMAR. Verifique si recibió el archivo PDF de la orden de publicación en su Buzón" and i['campo'] == 'marcaredpi_mensajeno'):
+						print(i['valor'])
+				except Exception as e:
+					pass
+
+				try:
+					if(i['descripcion'] == "-" and i['campo'] == 'marcaredpi_tipomarcaredpi'):
+						print(i['valor'])
+				except Exception as e:
+					pass
+
+				try:
+					if(i['descripcion'] == "Tipo de movimiento" and i['campo'] == 'marcaredpi_tipomovimientoredpi'):
+						print(i['valor'])
+				except Exception as e:
+					pass
+
+				try:
+					if(i['valor'] == "PRODUCTOS" and i['campo'] == 'marcaredpi_clasificacionredpip'):
+						print(i['condicion'])
+				except Exception as e:
+					pass
+
+				try:
+					if(i['valor'] == "SERVICIOS" and i['campo'] == 'marcaredpi_clasificacionredpis'):
+						print(i['condicion'])
+				except Exception as e:
+					pass
+
+				try:
+					if(i['descripcion'] == "Tipo de marca" and i['campo'] == 'marcaredpi_tiporedpidenominativa'):
+						print(i['valor'])
+				except Exception as e:
+					pass				
 			print('---------------------------')		
 	except Exception as e:
 		print(e)
