@@ -21,7 +21,7 @@ las rutas reciben un objeto **JSON** como parametro y retornar un objeto **JSON*
 
 app = FastAPI()
 
-origins = ["*"]
+origins = ["http://192.168.71.189:3000"]
 
 #http://192.168.71.189:3000 //bloqueo por aplicacion
 
@@ -467,9 +467,10 @@ class userdoc_insert_sr_sr(BaseModel):
 	representativeList_person_zipCode:str = ""
 	processNbr:str = ""
 	processType:str = ""
-@app.post('/sfe/insertuserdoc_sin_recibo_sin_relacion', summary="Marcas", tags=["Insert Escrito sin recibo sin relacion"])
+@app.post('/sfe/insertuserdoc_sr_sr', summary="Marcas", tags=["Insert Escrito sin recibo sin relacion"])
 async def insert_sr_sr(item:userdoc_insert_sr_sr):
-	return(Insert_user_doc_sin_recibo_relacion(
+	try:
+		return(Insert_user_doc_sin_recibo_relacion(
 												item.applicant_person_applicantNotes,
 												item.applicant_person_addressStreet,
 												item.applicant_person_nationalityCountryCode,
@@ -508,7 +509,175 @@ async def insert_sr_sr(item:userdoc_insert_sr_sr):
 												item.representativeList_person_zipCode,
 												item.processNbr,
 												item.processType))
+	except zeep.exceptions.Fault as e:
+		return(str(e.message))
 
+class userdoc_insert_rp(BaseModel):
+	applicant_applicantNotes:str = ""
+	applicant_person_addressStreet:str = ""
+	applicant_person_agentCode:str = ""
+	applicant_person_cityCode:str = ""
+	applicant_person_cityName:str = ""
+	applicant_person_email:str = ""
+	applicant_person_nationalityCountryCode:str = ""
+	applicant_person_personName:str = ""
+	applicant_person_residenceCountryCode:str = ""
+	applicant_person_telephone:str = ""
+	applicant_person_zipCode:str = ""
+	documentId_docLog:str = ""
+	documentId_docNbr:str = ""
+	documentId_docOrigin:str = ""
+	documentId_docSeries:str = ""
+	documentId_selected:str = ""
+	documentSeqId_docSeqNbr:str = ""
+	documentSeqId_docSeqSeries:str = ""
+	documentSeqId_docSeqType:str = ""
+	filingData_captureDate:str = ""
+	filingData_captureUserId:str = ""
+	filingData_filingDate:str = ""
+	filingData_paymentList_currencyName:str = ""
+	filingData_paymentList_currencyType:str = ""
+	filingData_paymentList_receiptAmount:str = ""
+	filingData_paymentList_receiptDate:str = ""
+	filingData_paymentList_receiptNbr:str = ""
+	filingData_paymentList_receiptNotes:str = ""
+	filingData_paymentList_receiptType:str = ""
+	filingData_paymentList_receiptTypeName:str = ""
+	filingData_userdocTypeList_userdocName:str = ""
+	filingData_userdocTypeList_userdocType:str = ""
+	filingData_receptionDocument_documentId_docLog:str = ""
+	filingData_receptionDocument_docNbr:str = ""
+	filingData_receptionDocument_docOrigin:str = ""
+	filingData_receptionDocument_docSeries:str = ""
+	receptionDocument_extraData_dataNbr1:str = ""
+	poaAgpoaData_poaGranteeList_person_agentCode:str = ""
+	poaData_poaDate:str = ""
+	ownerList_person_addressStreet:str = ""
+	ownerList_person_agentCode:str = ""
+	ownerList_person_nationalityCountryCode:str = ""
+	ownerList_person_personName:str = ""
+	ownerList_person_residenceCountryCode:str = ""
+	ownerList_person_telephone:str = ""
+	ownerList_person_zipCode:str = ""
+	poaData_poaGranteeList_person_addressStreet:str = ""
+	poaData_poaGranteeList_person_addressZone:str = ""
+	poaData_poaGranteeList_person_cityName:str = ""
+	poaData_poaGranteeList_person_email:str = ""
+	poaData_poaGranteeList_person_nationalityCountryCode:str = ""
+	poaData_poaGranteeList_person_personName:str = ""
+	poaData_poaGranteeList_person_residenceCountryCode:str = ""
+	poaData_poaGranteeList_person_telephone:str = ""
+	poaData_poaGranteeList_person_zipCode:str = ""
+	poaData_poaGranteeList_representativeType:str = ""
+	poaData_poaGrantor_person_addressStreet:str = ""
+	poaData_poaGrantor_person_agentCode:str = ""
+	poaData_poaGrantor_person_cityName:str = ""
+	poaData_poaGrantor_person_email:str = ""
+	poaData_poaGrantor_person_nationalityCountryCode:str = ""
+	poaData_poaGrantor_person_personName:str = ""
+	poaData_poaGrantor_person_residenceCountryCode:str = ""
+	poaData_poaGrantor_person_telephone:str = ""
+	poaData_poaGrantor_person_zipCode:str = ""
+	poaData_poaRegNumber:str = ""
+	poaData_scope:str = ""
+	representationData_representativeList_person_addressStreet:str = ""
+	representationData_representativeList_person_addressZone:str = ""
+	representationData_representativeList_person_agentCode:str = ""
+	representationData_representativeList_person_cityName:str = ""
+	representationData_representativeList_person_nationalityCountryCode:str = ""
+	representationData_representativeList_person_personName:str = ""
+	representationData_representativeList_person_residenceCountryCode:str = ""
+	representationData_representativeList_person_telephone:str = ""
+	representationData_representativeList_person_zipCode:str = ""
+	representativeList_representativeType:str = ""
+	notes:str = ""
+	userdocProcessId_processNbr:str = ""
+	userdocProcessId_processType:str = ""
+@app.post('/sfe/insertuserdoc_registro_de_poder', summary="Marcas", tags=["Insert Escrito registro de poder"])
+async def insert_user_doc_rp(item:userdoc_insert_rp):
+	try:
+		return(Insert_user_doc_con_recibo_poder(item.applicant_applicantNotes,
+											item.applicant_person_addressStreet,
+											item.applicant_person_agentCode,
+											item.applicant_person_cityCode,
+											item.applicant_person_cityName,
+											item.applicant_person_email,
+											item.applicant_person_nationalityCountryCode,
+											item.applicant_person_personName,
+											item.applicant_person_residenceCountryCode,
+											item.applicant_person_telephone,
+											item.applicant_person_zipCode,
+											item.documentId_docLog,
+											item.documentId_docNbr,
+											item.documentId_docOrigin,
+											item.documentId_docSeries,
+											item.documentId_selected,
+											item.documentSeqId_docSeqNbr,
+											item.documentSeqId_docSeqSeries,
+											item.documentSeqId_docSeqType,
+											item.filingData_captureDate,
+											item.filingData_captureUserId,
+											item.filingData_filingDate,
+											item.filingData_paymentList_currencyName,
+											item.filingData_paymentList_currencyType,
+											item.filingData_paymentList_receiptAmount,
+											item.filingData_paymentList_receiptDate,
+											item.filingData_paymentList_receiptNbr,
+											item.filingData_paymentList_receiptNotes,
+											item.filingData_paymentList_receiptType,
+											item.filingData_paymentList_receiptTypeName,
+											item.filingData_userdocTypeList_userdocName,
+											item.filingData_userdocTypeList_userdocType,
+											item.filingData_receptionDocument_documentId_docLog,
+											item.filingData_receptionDocument_docNbr,
+											item.filingData_receptionDocument_docOrigin,
+											item.filingData_receptionDocument_docSeries,
+											item.receptionDocument_extraData_dataNbr1,
+											item.poaAgpoaData_poaGranteeList_person_agentCode,
+											item.poaData_poaDate,
+											item.ownerList_person_addressStreet,
+											item.ownerList_person_agentCode,
+											item.ownerList_person_nationalityCountryCode,
+											item.ownerList_person_personName,
+											item.ownerList_person_residenceCountryCode,
+											item.ownerList_person_telephone,
+											item.ownerList_person_zipCode,
+											item.poaData_poaGranteeList_person_addressStreet,
+											item.poaData_poaGranteeList_person_addressZone,
+											item.poaData_poaGranteeList_person_cityName,
+											item.poaData_poaGranteeList_person_email,
+											item.poaData_poaGranteeList_person_nationalityCountryCode,
+											item.poaData_poaGranteeList_person_personName,
+											item.poaData_poaGranteeList_person_residenceCountryCode,
+											item.poaData_poaGranteeList_person_telephone,
+											item.poaData_poaGranteeList_person_zipCode,
+											item.poaData_poaGranteeList_representativeType,
+											item.poaData_poaGrantor_person_addressStreet,
+											item.poaData_poaGrantor_person_agentCode,
+											item.poaData_poaGrantor_person_cityName,
+											item.poaData_poaGrantor_person_email,
+											item.poaData_poaGrantor_person_nationalityCountryCode,
+											item.poaData_poaGrantor_person_personName,
+											item.poaData_poaGrantor_person_residenceCountryCode,
+											item.poaData_poaGrantor_person_telephone,
+											item.poaData_poaGrantor_person_zipCode,
+											item.poaData_poaRegNumber,
+											item.poaData_scope,
+											item.representationData_representativeList_person_addressStreet,
+											item.representationData_representativeList_person_addressZone,
+											item.representationData_representativeList_person_agentCode,
+											item.representationData_representativeList_person_cityName,
+											item.representationData_representativeList_person_nationalityCountryCode,
+											item.representationData_representativeList_person_personName,
+											item.representationData_representativeList_person_residenceCountryCode,
+											item.representationData_representativeList_person_telephone,
+											item.representationData_representativeList_person_zipCode,
+											item.representativeList_representativeType,
+											item.notes,
+											item.userdocProcessId_processNbr,
+											item.userdocProcessId_processType))
+	except zeep.exceptions.Fault as e:
+		return(str(e.message))
 
 class receive(BaseModel):
 	arg0:str = ""
@@ -1114,6 +1283,38 @@ async def insertren(item: insert_ren):
 		return(str(e.message))
 
 
+@app.post('/sfe/EN_PROCESO', summary="SFE", tags=["datos desde SFE"])
+def sfe_data_capture():
+	full_res = {
+			'id':'',
+			'fecha':'',
+			'formulario_id':'',
+			'estado':'',
+			'created_at':'',
+			'updated_at':'',
+			'respuestas':{
+
+			},
+			'costo':'',
+			'usuario_id':'',
+			'deleted_at ':'',
+			'codigo':'',
+			'firmado_at':'',
+			'pagado_at':'',
+			'expediente_id':'',
+			'pdf_url':'',
+			'enviado_at':'',
+			'recepcionado_at':'',
+			'nom_funcionario':'',
+			'pdf':'',
+			'expediente_afectado':'',
+			'notificacion_id':'',
+			'expedientes_autor':'',
+			'autorizado_por_id':'',
+			'locked_at':'',
+			'locked_by_id':''
+}
+	
 
 
 
