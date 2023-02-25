@@ -12,7 +12,7 @@ from fastapi.openapi.utils import get_openapi
 description = """
 Version 2023 
 
-## Métodos para consultar e insertar eventos de Mesa de entrada Sprint  
+## Métodos para consultar e insertar eventos de Mesa de Entrada Automatica  
 Engineer in charge ***W. Alfonso Medina***
 
 las rutas reciben un objeto **JSON** como parametro y retornar un objeto **JSON**.
@@ -1314,7 +1314,7 @@ def sfe_data_capture():
 			'locked_at':'',
 			'locked_by_id':''
 }
-	
+
 
 
 

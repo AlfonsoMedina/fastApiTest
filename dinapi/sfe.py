@@ -11,8 +11,6 @@ import psycopg2
 
 
 
-
-
 global_data = {}
 def new_document(arg):
 	try:
@@ -34,19 +32,57 @@ def new_document(arg):
 								where t.estado  = {};""".format(int(arg)))
 		row=cursor.fetchall()
 		for item in range(0,len(row)):
-			#print(row[item][8])
 			for i in row[item][8]:
+				try:
+					if(i['descripcion'] == "Tipo de marca" and i['campo'] == 'marcaredpi_tiporedpidenominativa' ):
+						print(i['valor'])
+				except Exception as e:
+					pass
+
+				try:
+					if(i['descripcion'] == "Tipo de marca" and i['campo'] == 'marcaredpi_tiporedpifigurativa' ):
+						print(i['valor'])
+				except Exception as e:
+					pass
+
+				try:
+					if(i['descripcion'] == "Tipo de marca" and i['campo'] == 'marcaredpi_tiporedpimixta' ):
+						print(i['valor'])
+				except Exception as e:
+					pass
+
+				try:
+					if(i['descripcion'] == "Tipo de marca" and i['campo'] == 'marcaredpi_tiporedpitridimensional' ):
+						print(i['valor'])
+				except Exception as e:
+					pass
+
+				try:
+					if(i['descripcion'] == "Tipo de marca" and i['campo'] == 'marcaredpi_tiporedpisonora' ):
+						print(i['valor'])
+				except Exception as e:
+					pass								
+
+
+
+
+
+
+
+
+
 				try:
 					if(i['descripcion'] == "Buscar Solicitud N°" and i['campo'] == 'marcaredpi_expediente' ):
 						print(i['valor'])
 				except Exception as e:
-					pass
+					pass		
 
 				try:
 					if(i['descripcion'] == "Solicitud N°" and i['campo'] == 'marcaredpi_expedienteredpi'):
 						print(i['valor'])
 				except Exception as e:
 					pass
+				
 				try:
 					if(i['descripcion'] == "Tipo de solicitud" and i['campo'] == 'marcaredpi_tiposolicitudrepi'):
 						print(i['valor'])
@@ -58,11 +94,13 @@ def new_document(arg):
 						print(i['valor'])
 				except Exception as e:
 					pass
+				
 				try:
 					if(i['descripcion'] == "Clase" and i['campo'] == 'marcaredpi_claseredpi'):
 						print(i['valor'])
 				except Exception as e:
 					pass
+				
 				try:
 					if(i['descripcion'] == "Denominación" and i['campo'] == 'marcaredpi_denominacionredpi'):
 						print(i['valor'])
@@ -100,12 +138,6 @@ def new_document(arg):
 					pass
 
 				try:
-					if(i['descripcion'] == "Tipo de movimiento" and i['campo'] == 'marcaredpi_tipomovimientoredpi'):
-						print(i['valor'])
-				except Exception as e:
-					pass
-
-				try:
 					if(i['valor'] == "PRODUCTOS" and i['campo'] == 'marcaredpi_clasificacionredpip'):
 						print(i['condicion'])
 				except Exception as e:
@@ -116,12 +148,7 @@ def new_document(arg):
 						print(i['condicion'])
 				except Exception as e:
 					pass
-
-				try:
-					if(i['descripcion'] == "Tipo de marca" and i['campo'] == 'marcaredpi_tiporedpidenominativa'):
-						print(i['valor'])
-				except Exception as e:
-					pass				
+				
 			print('---------------------------')		
 	except Exception as e:
 		print(e)
