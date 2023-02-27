@@ -32,123 +32,90 @@ def new_document(arg):
 								where t.estado  = {};""".format(int(arg)))
 		row=cursor.fetchall()
 		for item in range(0,len(row)):
-			for i in row[item][8]:
+			for i in row[item][8]:								
+				tipo_marca:str = ""
+				desc_marca:str = ""
 				try:
-					if(i['descripcion'] == "Tipo de marca" and i['campo'] == 'marcaredpi_tiporedpidenominativa' ):
-						print(i['valor'])
+					if(i['descripcion'] == "-" and i['campo'] == 'marcaredpi_tipomarcaredpi'):
+						if i['valor'] == 'N':
+							tipo_marca = 'DENOMINATIVA'
+						if i['valor'] == 'L':
+							tipo_marca = 'FIGURATIVA'
+						if i['valor'] == 'B':
+							tipo_marca = 'MIXTA'
+						if i['valor'] == 'T':
+							tipo_marca = 'TRIDIMENSIONAL'
+						if i['valor'] == 'S':
+							tipo_marca = 'SONORA'
+					print(tipo_marca)																												
 				except Exception as e:
-					pass
-
-				try:
-					if(i['descripcion'] == "Tipo de marca" and i['campo'] == 'marcaredpi_tiporedpifigurativa' ):
-						print(i['valor'])
-				except Exception as e:
-					pass
-
-				try:
-					if(i['descripcion'] == "Tipo de marca" and i['campo'] == 'marcaredpi_tiporedpimixta' ):
-						print(i['valor'])
-				except Exception as e:
-					pass
-
-				try:
-					if(i['descripcion'] == "Tipo de marca" and i['campo'] == 'marcaredpi_tiporedpitridimensional' ):
-						print(i['valor'])
-				except Exception as e:
-					pass
+					tipo_marca = 'No definido'
 
 				try:
-					if(i['descripcion'] == "Tipo de marca" and i['campo'] == 'marcaredpi_tiporedpisonora' ):
-						print(i['valor'])
+					if(i['descripcion'] == "Clase" and i['campo'] == 'marcaredpi_claseredpi'):
+						if i['valor'] <= 34:
+							desc_marca = "PRODUCTOS"
+						if i['valor'] >= 35:
+							desc_marca = "SERVICIOS"
+					print(desc_marca)							
 				except Exception as e:
-					pass								
-
-
-
-
-
-
-
-
+					desc_marca = 'No definido'
 
 				try:
 					if(i['descripcion'] == "Buscar Solicitud N°" and i['campo'] == 'marcaredpi_expediente' ):
 						print(i['valor'])
 				except Exception as e:
-					pass		
+					print('No definido')		
 
 				try:
 					if(i['descripcion'] == "Solicitud N°" and i['campo'] == 'marcaredpi_expedienteredpi'):
 						print(i['valor'])
 				except Exception as e:
-					pass
+					print('No definido')
 				
 				try:
 					if(i['descripcion'] == "Tipo de solicitud" and i['campo'] == 'marcaredpi_tiposolicitudrepi'):
 						print(i['valor'])
 				except Exception as e:
-					pass
+					print('No definido')
 
 				try:
 					if(i['descripcion'] == "Tipo de movimiento" and i['campo'] == 'marcaredpi_tipomovimientoredpi'):
 						print(i['valor'])
 				except Exception as e:
-					pass
-				
-				try:
-					if(i['descripcion'] == "Clase" and i['campo'] == 'marcaredpi_claseredpi'):
-						print(i['valor'])
-				except Exception as e:
-					pass
+					print('No definido')
 				
 				try:
 					if(i['descripcion'] == "Denominación" and i['campo'] == 'marcaredpi_denominacionredpi'):
 						print(i['valor'])
 				except Exception as e:
-					pass
+					print('No definido')
 
 				try:
 					if(i['descripcion'] == "Productos o Servicios que distingue" and i['campo'] == 'marcaredpi_proserdistingueredpi'):
 						print(i['valor'])
 				except Exception as e:
-					pass
+					print('No definido')
 
 				try:
 					if(i['descripcion'] == "Nombres y Apellidos / Razón Social" and i['campo'] == 'marcaredpi_nombrerazonredpi'):
 						print(i['valor'])
 				except Exception as e:
-					pass
+					print('No definido')
 
 				try:
 					if(i['descripcion'] == "Validación" and i['campo'] == 'marcaredpi_mensajesi'):
 						print(i['valor'])
 				except Exception as e:
-					pass
+					print('No definido')
 
 				try:
 					if(i['descripcion'] == "NO PUEDE FIRMAR. Verifique si recibió el archivo PDF de la orden de publicación en su Buzón" and i['campo'] == 'marcaredpi_mensajeno'):
 						print(i['valor'])
 				except Exception as e:
-					pass
+					print('No definido')
 
-				try:
-					if(i['descripcion'] == "-" and i['campo'] == 'marcaredpi_tipomarcaredpi'):
-						print(i['valor'])
-				except Exception as e:
-					pass
 
-				try:
-					if(i['valor'] == "PRODUCTOS" and i['campo'] == 'marcaredpi_clasificacionredpip'):
-						print(i['condicion'])
-				except Exception as e:
-					pass
-
-				try:
-					if(i['valor'] == "SERVICIOS" and i['campo'] == 'marcaredpi_clasificacionredpis'):
-						print(i['condicion'])
-				except Exception as e:
-					pass
-				
 			print('---------------------------')		
 	except Exception as e:
 		print(e)
