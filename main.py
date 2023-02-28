@@ -38,7 +38,7 @@ def custom_openapi():
 	if app.openapi_schema:
 		return app.openapi_schema
 	openapi_schema = get_openapi(
-		title="Api Mesa de Entrada",
+		title="Api Mesa de Entrada Automatica",
 		version="3.0.0",
 		description=description,
 		routes=app.routes,
@@ -1283,9 +1283,10 @@ async def insertren(item: insert_ren):
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
 
-
+class for_id(BaseModel):
+	ID:str = ""
 @app.post('/sfe/resep_registro', summary="SFE", tags=["Solicitud de registro SFE"])
-def sfe_reg_capture(item:for_exp):
+async def sfe_reg_capture(item:for_id):
 	full_res = {
 			'id':'',
 			'fecha':'',
@@ -1315,10 +1316,10 @@ def sfe_reg_capture(item:for_exp):
 			'locked_at':'',
 			'locked_by_id':''
 }
-	return(registro_sfe(item.expediente))
+	return(registro_sfe(item.ID))
 
 @app.post('/sfe/resep_renovacion', summary="SFE", tags=["Solicitud de renovacion SFE"])
-def sfe_ren_capture(item:for_exp):
+async def sfe_ren_capture(item:for_id):
 	full_res = {
 			'id':'',
 			'fecha':'',
@@ -1348,10 +1349,10 @@ def sfe_ren_capture(item:for_exp):
 			'locked_at':'',
 			'locked_by_id':''
 }
-	return(renovacion_sfe(item.expediente))
+	return(renovacion_sfe(item.ID))
 
 @app.post('/sfe/resep_oposicion', summary="SFE", tags=["Solicitud de oposicion SFE"])
-def sfe_opo_capture(item:for_exp):
+async def sfe_opo_capture(item:for_id):
 	full_res = {
 			'id':'',
 			'fecha':'',
@@ -1381,13 +1382,7 @@ def sfe_opo_capture(item:for_exp):
 			'locked_at':'',
 			'locked_by_id':''
 }
-	return(oposicion_sfe(item.expediente))
-
-
-
-
-
-
+	return(oposicion_sfe(item.ID))
 
 
 

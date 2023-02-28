@@ -146,18 +146,15 @@ def new_document(arg):
 		conn.close()
 	return(global_data)
 
-
 #print(new_document("7"))
-
-
 
 def registro_sfe(arg):
 	try:
 		conn = psycopg2.connect(
 			host = connex.host_SFE_conn,
-			user= 'user-sprint',
-			password = 'user-sprint--201901',
-			database = 'db_sfe_production'
+			user= connex.user_SFE_conn,
+			password = connex.password_SFE_conn,
+			database = connex.database_SFE_conn
 		)
 		cursor = conn.cursor()
 		cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
@@ -168,7 +165,7 @@ def registro_sfe(arg):
 						from tramites t join formularios f on t.formulario_id  = f.id  
 						join usuarios u on u.id = t.usuario_id  
 						join perfiles_agentes pa on pa.usuario_id = u.id         
-						where t.expediente_id = {};""".format(int(arg)))
+						where t.id = {};""".format(int(arg)))
 		row=cursor.fetchall()
 		global_data['fecha_envio'] = str(row[0][17])
 		global_data['expediente'] = str(row[0][15])
@@ -307,7 +304,7 @@ def registro_sfe(arg):
 					global_data['espe']=i['valor']
 			except Exception as e:
 				global_data['espe'] = "No definido"
-		print('Registro')
+
 		return(global_data)
 	except Exception as e:
 		print(e)
@@ -333,7 +330,7 @@ def renovacion_sfe(arg):
 								from tramites t join formularios f on t.formulario_id  = f.id  
 								join usuarios u on u.id = t.usuario_id  
 								join perfiles_agentes pa on pa.usuario_id = u.id         
-								where t.expediente_id = {};""".format(int(arg)))
+								where t.id = {};""".format(int(arg)))
 		row=cursor.fetchall()
 		global_data['fecha_envio'] = str(row[0][17])
 		global_data['expediente'] = str(row[0][15])
@@ -509,7 +506,6 @@ def renovacion_sfe(arg):
 							global_data['actc_num']=i['valor']
 					except Exception as e:
 						global_data['actc_num'] = ""
-		print('Renovacion')
 		return(global_data)
 	except Exception as e:
 		print(e)
@@ -535,7 +531,7 @@ def oposicion_sfe(arg):
 								from tramites t join formularios f on t.formulario_id  = f.id  
 								join usuarios u on u.id = t.usuario_id  
 								join perfiles_agentes pa on pa.usuario_id = u.id         
-								where t.expediente_id = {};""".format(int(arg)))
+								where t.id = {};""".format(int(arg)))
 				row=cursor.fetchall()
 				global_data['fecha_envio'] = str(row[0][17])
 				global_data['expediente'] = str(row[0][15])
@@ -674,8 +670,7 @@ def oposicion_sfe(arg):
 							global_data['observaciones']=i['valor']
 					except Exception as e:
 						global_data['observaciones']=""
-				
-				print('Oposicion')
+
 				return(global_data)
 			except Exception as e:
 				print(e)
