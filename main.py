@@ -2,6 +2,7 @@ from time import sleep
 from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
+from dinapi.sfe import oposicion_sfe, registro_sfe, renovacion_sfe
 from tools.base64Decode import image_url_to_b64
 from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, mark_insert_ren, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update, user_doc_update_sin_recibo #pip install "fastapi[all]"
 from wipo.function_for_reception_in import user_doc_read, user_doc_read_disenio, user_doc_read_patent
@@ -1283,8 +1284,8 @@ async def insertren(item: insert_ren):
 		return(str(e.message))
 
 
-@app.post('/sfe/EN_PROCESO', summary="SFE", tags=["datos desde SFE"])
-def sfe_data_capture():
+@app.post('/sfe/resep_registro', summary="SFE", tags=["Solicitud de registro SFE"])
+def sfe_reg_capture(item:for_exp):
 	full_res = {
 			'id':'',
 			'fecha':'',
@@ -1314,10 +1315,73 @@ def sfe_data_capture():
 			'locked_at':'',
 			'locked_by_id':''
 }
+	return(registro_sfe(item.expediente))
 
+@app.post('/sfe/resep_renovacion', summary="SFE", tags=["Solicitud de renovacion SFE"])
+def sfe_ren_capture(item:for_exp):
+	full_res = {
+			'id':'',
+			'fecha':'',
+			'formulario_id':'',
+			'estado':'',
+			'created_at':'',
+			'updated_at':'',
+			'respuestas':{
 
+			},
+			'costo':'',
+			'usuario_id':'',
+			'deleted_at ':'',
+			'codigo':'',
+			'firmado_at':'',
+			'pagado_at':'',
+			'expediente_id':'',
+			'pdf_url':'',
+			'enviado_at':'',
+			'recepcionado_at':'',
+			'nom_funcionario':'',
+			'pdf':'',
+			'expediente_afectado':'',
+			'notificacion_id':'',
+			'expedientes_autor':'',
+			'autorizado_por_id':'',
+			'locked_at':'',
+			'locked_by_id':''
+}
+	return(renovacion_sfe(item.expediente))
 
+@app.post('/sfe/resep_oposicion', summary="SFE", tags=["Solicitud de oposicion SFE"])
+def sfe_opo_capture(item:for_exp):
+	full_res = {
+			'id':'',
+			'fecha':'',
+			'formulario_id':'',
+			'estado':'',
+			'created_at':'',
+			'updated_at':'',
+			'respuestas':{
 
+			},
+			'costo':'',
+			'usuario_id':'',
+			'deleted_at ':'',
+			'codigo':'',
+			'firmado_at':'',
+			'pagado_at':'',
+			'expediente_id':'',
+			'pdf_url':'',
+			'enviado_at':'',
+			'recepcionado_at':'',
+			'nom_funcionario':'',
+			'pdf':'',
+			'expediente_afectado':'',
+			'notificacion_id':'',
+			'expedientes_autor':'',
+			'autorizado_por_id':'',
+			'locked_at':'',
+			'locked_by_id':''
+}
+	return(oposicion_sfe(item.expediente))
 
 
 
