@@ -1285,7 +1285,7 @@ async def insertren(item: insert_ren):
 
 class for_id(BaseModel):
 	ID:str = ""
-@app.post('/sfe/resep_registro', summary="SFE", tags=["Solicitud de registro SFE"])
+@app.post('/sfe/recep_registro', summary="SFE", tags=["Solicitud de registro SFE"])
 async def sfe_reg_capture(item:for_id):
 	full_res = {
 			'id':'',
@@ -1318,7 +1318,7 @@ async def sfe_reg_capture(item:for_id):
 }
 	return(registro_sfe(item.ID))
 
-@app.post('/sfe/resep_renovacion', summary="SFE", tags=["Solicitud de renovacion SFE"])
+@app.post('/sfe/recep_renovacion', summary="SFE", tags=["Solicitud de renovacion SFE"])
 async def sfe_ren_capture(item:for_id):
 	full_res = {
 			'id':'',
@@ -1351,7 +1351,7 @@ async def sfe_ren_capture(item:for_id):
 }
 	return(renovacion_sfe(item.ID))
 
-@app.post('/sfe/resep_oposicion', summary="SFE", tags=["Solicitud de oposicion SFE"])
+@app.post('/sfe/recep_oposicion', summary="SFE", tags=["Solicitud de oposicion SFE"])
 async def sfe_opo_capture(item:for_id):
 	full_res = {
 			'id':'',
@@ -1383,9 +1383,6 @@ async def sfe_opo_capture(item:for_id):
 			'locked_by_id':''
 }
 	return(oposicion_sfe(item.ID))
-
-
-
 
 
 
