@@ -22,15 +22,14 @@ las rutas reciben un objeto **JSON** como parametro y retornar un objeto **JSON*
 
 app = FastAPI()
 
-origins = ["http://192.168.71.189:3000"]
+origins = ["http://192.168.71.189:3000","http://192.168.71.189:4277"]
 
-#http://192.168.71.189:3000 //bloqueo por aplicacion
 
 app.add_middleware(
 	CORSMiddleware,
 	allow_origins=origins,
 	allow_credentials=True,
-	allow_methods=["POST"], #['*']
+	allow_methods=['*'], #["POST"]
 	allow_headers=["*"],
 )
 
@@ -1285,7 +1284,7 @@ async def insertren(item: insert_ren):
 
 class for_id(BaseModel):
 	ID:str = ""
-@app.post('/sfe/recep_registro', summary="SFE", tags=["Solicitud de registro SFE"])
+@app.post('/sfe/recep_registro', summary="SFE", tags=["Presentación de registro SFE"])
 async def sfe_reg_capture(item:for_id):
 	full_res = {
 			'id':'',
@@ -1318,7 +1317,7 @@ async def sfe_reg_capture(item:for_id):
 }
 	return(registro_sfe(item.ID))
 
-@app.post('/sfe/recep_renovacion', summary="SFE", tags=["Solicitud de renovacion SFE"])
+@app.post('/sfe/recep_renovacion', summary="SFE", tags=["Presentación de renovacion SFE"])
 async def sfe_ren_capture(item:for_id):
 	full_res = {
 			'id':'',
@@ -1351,7 +1350,7 @@ async def sfe_ren_capture(item:for_id):
 }
 	return(renovacion_sfe(item.ID))
 
-@app.post('/sfe/recep_oposicion', summary="SFE", tags=["Solicitud de oposicion SFE"])
+@app.post('/sfe/recep_oposicion', summary="SFE", tags=["Presentación de oposicion SFE"])
 async def sfe_opo_capture(item:for_id):
 	full_res = {
 			'id':'',

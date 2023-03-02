@@ -304,7 +304,6 @@ def registro_sfe(arg):
 					global_data['espe']=i['valor']
 			except Exception as e:
 				global_data['espe'] = "No definido"
-
 		return(global_data)
 	except Exception as e:
 		print(e)
