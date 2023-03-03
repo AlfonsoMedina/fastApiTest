@@ -309,7 +309,7 @@ def registro_sfe(arg):
 		print(e)
 	finally:
 		conn.close()
-#print(registro_sfe("22106763"))
+
 
 
 def renovacion_sfe(arg):
@@ -343,174 +343,173 @@ def renovacion_sfe(arg):
 		global_data['email_agente'] = str(row[0][27])
 		global_data['nombre_formulario'] = str(row[0][3])
 		for i in row[0][8]:
-
 			if(i['descripcion'] == "Clase" and i['campo'] == 'marcarenov_clase'):
 				clase_tipo = i['valor']
 				if(int(clase_tipo.replace(".0","")) <= 34):
 					global_data['clasificacion']= 'PRODUCTO'
 				if(int(clase_tipo.replace(".0","")) >= 35):
 					global_data['clasificacion']= 'SERVICIOS'						
-					try:					
-						if(i['campo'] == "marca_distintivo"):
-							global_data['distintivo'] = i['valor']['archivo']['url']
-					except Exception as e:
-						global_data['distintivo'] = ""							
-					try:	
+			try:					
+				if(i['campo'] == "marca_distintivo"):
+					global_data['distintivo'] = i['valor']['archivo']['url']
+			except Exception as e:
+					global_data['distintivo'] = "No definido"							
+			try:	
 						if(i['campo'] == "actualizacion_refdistitivo"):
 							global_data['distintivo2'] = i['valor']['archivo']['url']
-					except Exception as e:
-						global_data['distintivo2'] = ""							
-					try:	
+			except Exception as e:
+						global_data['distintivo2'] = "No definido"							
+			try:	
 						if(i['descripcion'] == "N° de Documento"):
 							global_data['documento'] = i['valor']
-					except Exception as e:
-						global_data['documento'] = ""							
-					try:	
+			except Exception as e:
+						global_data['documento'] = "No definido"							
+			try:	
 						if(i['descripcion'] == "RUC"):				
 							global_data['RUC']=i['valor']
-					except Exception as e:
-						global_data['RUC'] = ""							
-					try:	
+			except Exception as e:
+						global_data['RUC'] = "No definido"							
+			try:	
 						if(i['descripcion'] == "Productos o Servicios que distingue"):
 							global_data['distingue'] = i['valor']
-					except Exception as e:
-						global_data['distingue'] = ""							
-					try:								
+			except Exception as e:
+						global_data['distingue'] = "No definido"							
+			try:								
 						if(i['descripcion'] == "Reivindicaciones"):
 							global_data['reivindicaciones'] = i['valor']
-					except Exception as e:
-						global_data['reivindicaciones'] = ""							
-					try:	
+			except Exception as e:
+						global_data['reivindicaciones'] = "No definido"							
+			try:	
 						if(i['descripcion'] == "-" and i['campo'] == 'marcarenov_tipomarca'):
 							global_data["tipo_guion"] = i['valor']
-					except Exception as e:
-						global_data['tipo_guion'] = ""
-					try:	
+			except Exception as e:
+						global_data['tipo_guion'] = "No definido"
+			try:	
 						if(i['descripcion'] == "Denominación"):
 							global_data['denominacion_on'] = i['valor']
-					except Exception as e:
-						global_data['denominacion_on'] = ""							
-					try:	
+			except Exception as e:
+						global_data['denominacion_on'] = "No definido"							
+			try:	
 						if(i['descripcion'] == "Especificar"):
 							global_data['especificar'] = i['valor']
-					except Exception as e:
-						global_data['especificar'] = ""							
-					try:	
+			except Exception as e:
+						global_data['especificar'] = "No definido"							
+			try:	
 						if(i['descripcion'] == "Nombres y Apellidos / Razón Social" and i['campo'] == 'datospersonalesrenov_nombrerazon'):
 							global_data['nombre_soli'] = i['valor']
-					except Exception as e:
-						global_data['nombre_soli'] = ""							
-					try:						
+			except Exception as e:
+						global_data['nombre_soli'] = "No definido"							
+			try:						
 						if(i['descripcion'] == "Razón Social" and i['campo'] == 'datospersonales_razonsocial'):
 							global_data['razon_social']=i['valor']
-					except Exception as e:
-						global_data['razon_social'] = ""							
-					try:	
+			except Exception as e:
+						global_data['razon_social'] = "No definido"							
+			try:	
 						if(i['descripcion'] == "Dirección"):
 							global_data['direccion']=i['valor']
-					except Exception as e:
-						global_data['direccion'] = ""							
-					try:	
+			except Exception as e:
+						global_data['direccion'] = "No definido"							
+			try:	
 						if(i['descripcion'] == "Ciudad"):
 							global_data['ciudad']=i['valor']
-					except Exception as e:
-						global_data['ciudad'] = ""							
-					try:	
+			except Exception as e:
+						global_data['ciudad'] = "No definido"							
+			try:	
 						if(i['descripcion'] == "País "):
 							global_data['pais']=i['valor']
-					except Exception as e:
-						global_data['pais'] = ""							
-					try:						
+			except Exception as e:
+						global_data['pais'] = "No definido"							
+			try:						
 						if(i['descripcion'] == "Código Postal"):
 							global_data['codigo_postal']=i['valor']
-					except Exception as e:
-						global_data['codigo_postal'] = ""							
-					try:	
+			except Exception as e:
+						global_data['codigo_postal'] = "No definido"							
+			try:	
 						if(i['descripcion'] == "Teléfono"):
 							global_data['telefono']=i['valor']
-					except Exception as e:
-						global_data['telefono'] = ""							
-					try:	
+			except Exception as e:
+						global_data['telefono'] = "No definido"							
+			try:	
 						if(i['descripcion'] == "Correo Electrónico"):
 							global_data['email']=i['valor']
-					except Exception as e:
-						global_data['email'] = ""							
-					try:
+			except Exception as e:
+						global_data['email'] = "No definido"							
+			try:
 						if(i['descripcion'] == "Distrito"):
 							global_data['distrito']=i['valor']
-					except Exception as e:
-						global_data['distrito'] = ""						
-					try:	
+			except Exception as e:
+						global_data['distrito'] = "No definido"						
+			try:	
 						if(i['descripcion'] == "N° de Documento / RUC" and i['campo'] == 'actualizacion_nodocumentoruc'):
 							global_data['act_numero']=i['valor']
-					except Exception as e:
-						global_data['act_numero'] = ""
-					try:	
+			except Exception as e:
+						global_data['act_numero'] = "No definido"
+			try:	
 						if(i['descripcion'] == "País " and i['campo'] == 'actualizacion_pais'):
 							global_data['act_pais']=i['valor']
-					except Exception as e:
-						global_data['act_pais'] = ""
-					try:	
+			except Exception as e:
+						global_data['act_pais'] = "No definido"
+			try:	
 						if(i['descripcion'] == "Ciudad" and i['campo'] == 'actualizacion_ciudad'):
 							global_data['act_ciudad']=i['valor']
-					except Exception as e:
-						global_data['act_ciudad'] = ""
-					try:	
+			except Exception as e:
+						global_data['act_ciudad'] = "No definido"
+			try:	
 						if(i['descripcion'] == "Código Postal" and i['campo'] == 'actualizacion_codigopostal'):
 							global_data['act_post']=i['valor']
-					except Exception as e:
-						global_data['act_post'] = ""
-					try:	
+			except Exception as e:
+						global_data['act_post'] = "No definido"
+			try:	
 						if(i['descripcion'] == "Teléfono" and i['campo'] == 'actualizacion_telefono'):
 							global_data['act_tel']=i['valor']
-					except Exception as e:
-						global_data['act_tel'] = ""
-					try:	
+			except Exception as e:
+						global_data['act_tel'] = "No definido"
+			try:	
 						if(i['descripcion'] == "Correo Electrónico" and i['campo'] == 'actualizacion_correoelectronico'):
 							global_data['act_email']=i['valor']
-					except Exception as e:
-						global_data['act_email'] = ""
-					try:	
+			except Exception as e:
+						global_data['act_email'] = "No definido"
+			try:	
 						if(i['descripcion'] == "Clase" and i['campo'] == 'marcarenov_clase'):
 							global_data['clase_on']=i['valor']
-					except Exception as e:
-						global_data['clase_on'] = ""
-					try:	
+			except Exception as e:
+						global_data['clase_on'] = "No definido"
+			try:	
 						if(i['descripcion'] == "Buscar Registro N°" and i['campo'] == 'marcarenov_registrono'):
 							global_data['registro_nbr']=i['valor']
-					except Exception as e:
-						global_data['registro_nbr'] = ""
-					try:	
+			except Exception as e:
+						global_data['registro_nbr'] = "No definido"
+			try:	
 						if(i['descripcion'] == "País " and i['campo'] == 'datospersonalesrenov_pais'):
 							global_data['solic_pais']=i['valor']
-					except Exception as e:
-						global_data['solic_pais'] = ""
-					try:	
+			except Exception as e:
+						global_data['solic_pais'] = "No definido"
+			try:	
 						if(i['descripcion'] == "Dirección" and i['campo'] == 'datospersonalesrenov_calle'):
 							global_data['solic_dir'] = str(i['valor']).replace(" – "," | ")
-					except Exception as e:
-						global_data['solic_dir'] = ""
-					try:	
+			except Exception as e:
+						global_data['solic_dir'] = "No definido"
+			try:	
 						if(i['descripcion'] == "Teléfono" and i['campo'] == 'datospersonalesrenov_telefono'):
 							global_data['solic_tel']=i['valor']
-					except Exception as e:
-						global_data['solic_tel'] = ""
-					try:	
+			except Exception as e:
+						global_data['solic_tel'] = "No definido"
+			try:	
 						if(i['descripcion'] == "Correo Electrónico" and i['campo'] == 'datospersonalesrenov_correoelectronico'):
 							global_data['solic_email']=i['valor']
-					except Exception as e:
-						global_data['solic_email'] = ""
-					try:	
+			except Exception as e:
+						global_data['solic_email'] = "No definido"
+			try:	
 						if(i['descripcion'] == "Número" and i['campo'] == 'actualizacion_numero'):
 							global_data['actc_num']=i['valor']
-					except Exception as e:
-						global_data['actc_num'] = ""
+			except Exception as e:
+						global_data['actc_num'] = "No definido"
 		return(global_data)
 	except Exception as e:
 		print(e)
 	finally:
 		conn.close()
-#print(renovacion_sfe('22106266'))
+
 
 
 def oposicion_sfe(arg):
@@ -548,131 +547,130 @@ def oposicion_sfe(arg):
 						if(i['descripcion'] == "Buscar Solicitud N°" and i['campo'] == 'expedienteamarcas_buscarsolicitud'):
 							global_data['solicitud'] = i['valor']
 					except Exception as e:
-						global_data['solicitud'] = ""
+						global_data['solicitud'] = "No definido"
 
 					try:
 						if(i['descripcion'] == "En Fecha" and i['campo'] == 'expedienteamarcas_fecha'):				
 							global_data['fecha']=i['valor']
 					except Exception as e:
-						global_data['fecha'] = ""
+						global_data['fecha'] = "No definido"
 
 					try:
 						if(i['descripcion'] == "Nombres y Apellidos / Razón Social" and i['campo'] == 'datospersonalesv2_nombresrazon'):				
 							global_data['ras_social']=i['valor']
 					except Exception as e:
-						global_data['ras_social'] = ""
+						global_data['ras_social'] = "No definido"
 
 					try:
 						if(i['descripcion'] == "Clase" and i['campo'] == 'expedienteamarcas_clase'):
 							global_data['clase'] = i['valor']
 					except Exception as e:
-						global_data['clase'] = ""
+						global_data['clase'] = "No definido"
 
 					try:
 						if(i['descripcion'] == "Denominación" and i['campo'] == 'expedientebmarcas_denominacionb'):
 							global_data['denominacionB'] = i['valor']
 					except Exception as e:
-						global_data['denominacionB'] = ""
+						global_data['denominacionB'] = "No definido"
 						
 					try:
 						if(i['descripcion'] == "Clase" and i['campo'] == 'expedientebmarcas_claseb'):
 							global_data['claseB'] = i['valor']
 					except Exception as e:
-						global_data['claseB'] = ""
+						global_data['claseB'] = "No definido"
 
 					try: # Marca extranjera
 						if(i['descripcion'] == "Clase" and i['campo'] == 'datosopone1_claseint'):
 							global_data['clase_b'] = i['valor']
 					except Exception as e:
-						global_data['clase_b'] =""
+						global_data['clase_b'] ="No definido"
 
 					try: # Marca extranjera
 						if(i['descripcion'] == "Denominación" and i['campo'] == 'datosopone1_denominacionint'):
 							global_data['denominacion_b'] = i['valor']
 					except Exception as e:
-						global_data['denominacion_b'] =""
+						global_data['denominacion_b'] ="No definido"
 
 					try:				
 						if(i['descripcion'] == "Denominación" and i['campo'] == 'expedienteamarcas_denominacion'):
 							global_data['denominacion'] = i['valor']
 					except Exception as e:
-						global_data['denominacion'] = ""					
+						global_data['denominacion'] = "No definido"					
 					
 					try:
 						if(i['descripcion'] == "Solicitud N°" and i['campo'] == 'expedientebmarcas_solicitudb'):
 							global_data["solicitud2"] = i['valor']
 					except Exception as e:
-						global_data["solicitud2"] =	""				
+						global_data["solicitud2"] =	"No definido"				
 					
 					try:
 						if(i['descripcion'] == "En Fecha" and i['campo'] == 'expedientebmarcas_fechab'):
 							global_data["fecha2"] = i['valor']						
 					except Exception as e:
-						global_data["fecha2"] = ""					
+						global_data["fecha2"] = "No definido"					
 					
 					try:
 						if(i['descripcion'] == "Buscar Registro N°" and i['campo'] == 'expedientebmarcas_buscarregistrob'):
 							global_data['registro'] = i['valor']
 					except Exception as e:
-						global_data['registro'] = ""					
+						global_data['registro'] = "No definido"					
 					
 					try:						
 						if(i['descripcion'] == "Nombres y Apellidos / Razón Social" and i['campo'] == 'expedientebmarcas_nombrerazonb'):
 							global_data['razon_socialB']=i['valor']
 					except Exception as e:
-						global_data['razon_socialB']=""					
+						global_data['razon_socialB']="No definido"					
 					
 					try:
 						if(i['descripcion'] == "País " and i['campo'] ==  'datospersonalesv2_pais'):
 							global_data['pais']=i['valor']
 					except Exception as e:
-						global_data['pais']=""					
+						global_data['pais']="No definido"					
 					
 					try:
 						if(i['descripcion'] == "Ciudad" and i['campo'] ==  'datospersonalesv2_ciudad'):
 							global_data['ciudad']=i['valor']
 					except Exception as e:
-						global_data['ciudad']=""					
+						global_data['ciudad']="No definido"					
 					
 					try:
 						if(i['descripcion'] == "Código Postal" and i['campo'] == 'datospersonalesv2_codigopostal'):
 							global_data['code_post']=i['valor']
 					except Exception as e:
-						global_data['code_post']=""					
+						global_data['code_post']="No definido"					
 					
 					try:						
 						if(i['descripcion'] == "Dirección" and i['campo'] == 'datospersonalesv2_direccion'):
 							global_data['direccion']=i['valor']
 					except Exception as e:
-						global_data['direccion']=""					
+						global_data['direccion']="No definido"					
 					
 					try:
 						if(i['descripcion'] == "Teléfono" and i['campo'] == 'datospersonalesv2_telefono'):
 							global_data['telefono']=i['valor']
 					except Exception as e:
-						global_data['telefono']=""					
+						global_data['telefono']="No definido"					
 					
 					try:
 						if(i['descripcion'] == "Correo Electrónico" and i['campo'] == 'datospersonalesv2_correoelectronico'):
 							global_data['email']=i['valor']
 					except Exception as e:
-						global_data['email']=""					
+						global_data['email']="No definido"					
 					
 					try:
 						if(i['descripcion'] == "Número de Poder" and i['campo'] == 'datosrepresentacion2_podernro'):
 							global_data['poder']=i['valor']
 					except Exception as e:
-						global_data['poder']=""					
+						global_data['poder']="No definido"					
 					
 					try:
 						if(i['descripcion'] == "Descripción de la Observación" and i['campo'] == 'observacion_descobservacion'):
 							global_data['observaciones']=i['valor']
 					except Exception as e:
-						global_data['observaciones']=""
+						global_data['observaciones']="No definido"
 
 				return(global_data)
 			except Exception as e:
 				print(e)
 			finally:
 				conn.close()
-#print(oposicion_sfe('2310140'))
