@@ -49,7 +49,7 @@ def enviar(fileName,mail_ag,asunto,msg_body):
 #send all params 
 def enviar_back(mail, asunto, mensaje, fileName):
     email = "alfonso.medina@dinapi.gov.py"#noreply@dinapi.gov.py
-    password = "4lfon501977"#N0reply.com
+    password = ""#N0reply.com
     send_to_email = mail
     subject = asunto
     message = mensaje
