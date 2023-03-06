@@ -719,8 +719,12 @@ async def PUB_REDPI(item: redpi):
 
 class processNbr(BaseModel):
 	process_Nbr:str = ""
-@app.post('/doc_firmado', tags=["Documentos firmados, consulta por (process_Nbr) - http://192.168.50.185:8888/nuxeo/restAPI/default/edmsAPI/getEDocPdfById?eDocId=***** "])
+@app.post('/doc_firmado', tags=["Documentos firmados, consulta por (process_Nbr) "])
 async def documento_firmado(item: processNbr):
+	'''
+	Ej:
+	http://192.168.50.185:8888/nuxeo/restAPI/default/edmsAPI/getEDocPdfById?eDocId=***** 
+	'''
 	edoc= []
 	for i in range(0,len(fetch_all_officdoc_nuxeo(item.process_Nbr))):
 		edoc.append({
