@@ -723,7 +723,7 @@ class processNbr(BaseModel):
 async def documento_firmado(item: processNbr):
 	'''
 	Ej:
-	http://192.168.50.185:8888/nuxeo/restAPI/default/edmsAPI/getEDocPdfById?eDocId=***** 
+	http://192.168.50.185:8888/nuxeo/restAPI/default/edmsAPI/getEDocPdfById?eDocId=2366311 
 	'''
 	edoc= []
 	for i in range(0,len(fetch_all_officdoc_nuxeo(item.process_Nbr))):
