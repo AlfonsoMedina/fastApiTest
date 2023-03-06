@@ -60,71 +60,6 @@ def new_document(arg):
 					print(desc_marca)							
 				except Exception as e:
 					desc_marca = 'No definido'
-
-
-
-
-				'''
-				try:
-					if(i['descripcion'] == "Buscar Solicitud N°" and i['campo'] == 'marcaredpi_expediente' ):
-						print(i['valor'])
-				except Exception as e:
-					print('No definido')		
-
-				try:
-					if(i['descripcion'] == "Solicitud N°" and i['campo'] == 'marcaredpi_expedienteredpi'):
-						print(i['valor'])
-				except Exception as e:
-					print('No definido')
-				
-				try:
-					if(i['descripcion'] == "Tipo de solicitud" and i['campo'] == 'marcaredpi_tiposolicitudrepi'):
-						print(i['valor'])
-				except Exception as e:
-					print('No definido')
-
-				try:
-					if(i['descripcion'] == "Tipo de movimiento" and i['campo'] == 'marcaredpi_tipomovimientoredpi'):
-						print(i['valor'])
-				except Exception as e:
-					print('No definido')
-				
-				try:
-					if(i['descripcion'] == "Denominación" and i['campo'] == 'marcaredpi_denominacionredpi'):
-						print(i['valor'])
-				except Exception as e:
-					print('No definido')
-
-				try:
-					if(i['descripcion'] == "Productos o Servicios que distingue" and i['campo'] == 'marcaredpi_proserdistingueredpi'):
-						print(i['valor'])
-				except Exception as e:
-					print('No definido')
-
-				try:
-					if(i['descripcion'] == "Nombres y Apellidos / Razón Social" and i['campo'] == 'marcaredpi_nombrerazonredpi'):
-						print(i['valor'])
-				except Exception as e:
-					print('No definido')
-
-				try:
-					if(i['descripcion'] == "Validación" and i['campo'] == 'marcaredpi_mensajesi'):
-						print(i['valor'])
-				except Exception as e:
-					print('No definido')
-
-				try:
-					if(i['descripcion'] == "NO PUEDE FIRMAR. Verifique si recibió el archivo PDF de la orden de publicación en su Buzón" and i['campo'] == 'marcaredpi_mensajeno'):
-						print(i['valor'])
-				except Exception as e:
-					print('No definido')
-
-				try:
-					if(i['descripcion'] == "Buscar Solicitud N°" and i['campo'] == 'expedienteamarcas_buscarsolicitud'):
-						print(i['valor'])
-				except Exception as e:
-					print('No definido')
-				'''
 				"""____________________________________________________F 39___________________________________________________________"""
 				try:
 					if(i['descripcion'] == "Descripción" and i['campo'] == "tp2descripcion_descripcion"):
@@ -266,6 +201,8 @@ def new_document(arg):
 						print(i['valor'])
 				except Exception as e:
 					print('No definido')					
+				
+				'''
 				try:	
 					if(i['descripcion'] == "Tipo de marca" and i['campo'] == "expedientebmarcas_tipobdenominativa"):
 						print(i['valor'])
@@ -296,6 +233,10 @@ def new_document(arg):
 						print(i['valor'])
 				except Exception as e:
 					print('No definido')					
+				'''
+				
+				print(tipo_marca)
+
 				try:	
 					if(i['descripcion'] == "Buscar Solicitud N°" and i['campo'] == "expedientebmarcas_buscarsolicitudb"):
 						print(i['valor'])
