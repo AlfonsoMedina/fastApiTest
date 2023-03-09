@@ -1,12 +1,3 @@
-from dataclasses import replace
-from dbm import dumb
-import json
-import os
-from time import sleep
-from fpdf import FPDF, HTMLMixin  #pip install fpdf2
-from os import getcwd
-import barcode
-from barcode.writer import ImageWriter
 import psycopg2
 import tools.connect as connex
 
@@ -175,8 +166,6 @@ def registro_sfe(arg):
 		print(e)
 	finally:
 		conn.close()
-
-
 
 def renovacion_sfe(arg):
 	try:
@@ -376,8 +365,6 @@ def renovacion_sfe(arg):
 	finally:
 		conn.close()
 
-
-
 def oposicion_sfe(arg):
 			try:
 				conn = psycopg2.connect(
@@ -540,4 +527,51 @@ def oposicion_sfe(arg):
 				print(e)
 			finally:
 				conn.close()
+
+def pendientes_sfe():
+	try:
+		lista = []
+		connP = psycopg2.connect(
+			host = connex.host_SFE_conn,
+			user= connex.user_SFE_conn,
+			password = connex.password_SFE_conn,
+			database = connex.database_SFE_conn
+		)
+		cursor = connP.cursor()
+		cursor.execute("select * from tramites where formulario_id IN (39, 40, 66, 67,69,70,3,4,27,95) and estado  in (7)")
+		row=cursor.fetchall()
+		for i in row:
+			lista.append({
+						'Id':i[0],
+						'fecha':i[1],             
+						'formulario_id':i[2],     
+						'estado':i[3],            
+						'created_at':i[4],        
+						'updated_at':i[5],        
+						'respuestas':i[6],        
+						'costo':i[7],             
+						'usuario_id':i[8],        
+						'deleted_at':i[9],        
+						'codigo':i[10],            
+						'firmado_at':i[11],        
+						'pagado_at':i[12],         
+						'expediente_id':i[13],     
+						'pdf_url':i[14],           
+						'enviado_at':i[15],        
+						'recepcionado_at':i[16],   
+						'nom_funcionario':i[17],   
+						#'pdf':i[18],               
+						'expediente_afectad':i[19],
+						'notificacion_id':i[20],   
+						'expedientes_autor':i[21], 
+						'autorizado_por_id':i[22], 
+						'locked_at':i[23],         
+						'locked_by_id':i[24],      
+						'tipo_documento_id':i[25]
+						})
+		return(lista)	
+	except Exception as e:
+		print(e)
+	finally:
+		connP.close()	
 

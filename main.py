@@ -2,7 +2,8 @@ from time import sleep
 from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
-from dinapi.sfe import oposicion_sfe, registro_sfe, renovacion_sfe
+from dinapi.sfe import oposicion_sfe, pendientes_sfe, registro_sfe, renovacion_sfe
+from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
 from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, mark_insert_ren, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update, user_doc_update_sin_recibo #pip install "fastapi[all]"
 from wipo.function_for_reception_in import user_doc_read, user_doc_read_disenio, user_doc_read_patent
@@ -22,7 +23,7 @@ las rutas reciben un objeto **JSON** como parametro y retornar un objeto **JSON*
 
 app = FastAPI()
 
-origins = ["http://192.168.71.189:3000","http://192.168.71.189:4277"]
+origins = ["*"]
 
 
 app.add_middleware(
@@ -1282,8 +1283,9 @@ async def insertren(item: insert_ren):
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
 
+
 class for_id(BaseModel):
-	ID:str = ""
+	Id:str = ""
 @app.post('/sfe/recep_registro', summary="SFE", tags=["Presentación de registro SFE"])
 async def sfe_reg_capture(item:for_id):
 	full_res = {
@@ -1315,7 +1317,7 @@ async def sfe_reg_capture(item:for_id):
 			'locked_at':'',
 			'locked_by_id':''
 }
-	return(registro_sfe(item.ID))
+	return(registro_sfe(item.Id))
 
 @app.post('/sfe/recep_renovacion', summary="SFE", tags=["Presentación de renovacion SFE"])
 async def sfe_ren_capture(item:for_id):
@@ -1385,4 +1387,68 @@ async def sfe_opo_capture(item:for_id):
 
 
 
-app.openapi = custom_openapi		
+@app.post('/api/getparametros', summary="API", tags=["Lista de parametros"])
+def get_params():
+	return(get_parametros())
+
+@app.post('/api/getparametros_mea', summary="API", tags=["Lista de parametros MEA"])
+def get_params():
+	return(get_parametros_mea())
+
+@app.post('/api/getparametro', summary="API", tags=["Devuelve un registro segun su id"])
+def get_param(item: for_id):
+	return(get_parametro(item.Id))
+
+class update_id(BaseModel):
+	param_id:int
+	origen:str
+	descripcion:str
+	valor1:str
+	valor2:str
+	valor3:str
+	valor4:str
+	valor5:str
+	estado:int
+	sistema_id:int
+@app.post('/api/updateparametro', summary="API", tags=["editar parametro, respuesta registro editado"])
+def update_param(item:update_id):
+	return(upDate_parametro(item.param_id,item.origen,item.descripcion,item.valor1,item.valor2,item.valor3,item.valor4,item.valor5,item.estado,item.sistema_id))
+
+class pendientes(BaseModel):
+	Id:str                
+	fecha:str             
+	formulario_id:str     
+	estado:str            
+	created_at:str        
+	updated_at:str        
+	respuestas:str        
+	costo:str             
+	usuario_id:str        
+	deleted_at:str        
+	codigo:str            
+	firmado_at:str        
+	pagado_at:str         
+	expediente_id:str     
+	pdf_url:str           
+	enviado_at:str        
+	recepcionado_at:str   
+	nom_funcionario:str   
+	pdf:str               
+	expediente_afectad:str
+	notificacion_id:str   
+	expedientes_autor:str 
+	autorizado_por_id:str 
+	locked_at:str         
+	locked_by_id:str      
+	tipo_documento_id:str 
+@app.post('/api/pendientes_sfe', summary="API", tags=["Lista de pendientes"])
+def pendientes_sfe_m():
+	return(pendientes_sfe())
+
+
+
+
+
+app.openapi = custom_openapi
+
+

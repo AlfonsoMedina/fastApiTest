@@ -1,6 +1,5 @@
 from tools.service_system import config_parametro
 
-
 #Base de datos PUBLICACIONES posgresSql v14 
 #db_host = '192.168.50.216'
 #db_user='user_app_publicacion'
@@ -59,7 +58,7 @@ databaseCJ='db_caja_dinapi'
 
 #ipas Beta
 #                                192.168.80.42
-ipas_sprint = config_parametro('49')['valor1']
+ipas_sprint = config_parametro('59')['valor2']
 
 #                                     192.168.50.182
 ipas_produccion_A = config_parametro('50')['valor1']
@@ -74,14 +73,18 @@ ipas_produccion_patent = config_parametro('53')['valor1']
 ipas_produccion_disenio = config_parametro('54')['valor1']
 
 ###################################################################
-
+'''
 #pagos SFE
 host_SFE_conn = 'pgsql-sprint.dinapi.gov.py'
 user_SFE_conn = 'user-sprint'
 password_SFE_conn ='user-sprint--201901'
 database_SFE_conn = 'db_sfe_production'
-
+'''
 ###################################################################
+host_SFE_conn = '192.168.50.219'
+user_SFE_conn = 'user-developer'
+password_SFE_conn ='user-developer--201901'
+database_SFE_conn = 'db_sfe_production'
 
 #centura
 host_centura = '192.168.50.231'
