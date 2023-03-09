@@ -4,7 +4,6 @@ import tools.connect as connex
 
 global_data = {}
 
-
 def registro_sfe(arg):
 	try:
 		conn = psycopg2.connect(
@@ -560,7 +559,7 @@ def pendientes_sfe():
 						'enviado_at':i[15],        
 						'recepcionado_at':i[16],   
 						'nom_funcionario':i[17],   
-						#'pdf':i[18],               
+						'pdf':str(i[18]),               
 						'expediente_afectad':i[19],
 						'notificacion_id':i[20],   
 						'expedientes_autor':i[21], 
