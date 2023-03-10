@@ -314,7 +314,7 @@ async def disenio_for_fileNBR(item: for_exp):
 		return([])
 
 
-
+################################# Insert ################################################################## 
 class userdoc_insert_OPO(BaseModel):
 	affectedFileIdList_fileNbr:str = ""
 	affectedFileIdList_fileSeq:str = ""
@@ -863,7 +863,7 @@ class userdoc_upd(BaseModel):
 	representationData_representativeList_person_telephone:str = ""
 	representationData_representativeList_person_zipCode:str = ""
 	representationData_representativeList_representa:str = ""	
-@app.post('/sfe/UserdocUpdate', summary="Marcas", tags=["UpDate para Escrito"])
+@app.post('/sfe/UserdocUpdate', summary="Marcas", tags=["Escrito con Tipo Documento que afecta a Escritos con costo"])
 async def userdoc_update(item: userdoc_upd):
 	try:
 		return(user_doc_update(item.affectedDocumentId_docLog,
@@ -1003,7 +1003,7 @@ class userdoc_updsr(BaseModel):
 	representationData_representativeList_person_telephone:str = ""
 	representationData_representativeList_person_zipCode:str = ""
 	representationData_representativeList_representativeType:str = ""
-@app.post('/sfe/UserdocUpdateNotPayment', summary="Marcas", tags=["UpDate para Escrito sin recibo"])
+@app.post('/sfe/UserdocUpdateNotPayment', summary="Marcas", tags=["Escrito con Tipo Documento que afecta a Escritos sin costo"])
 async def userdoc_updatesin_recibo(item: userdoc_updsr):
 	try:
 		return(user_doc_update_sin_recibo(
@@ -1070,6 +1070,111 @@ async def userdoc_updatesin_recibo(item: userdoc_updsr):
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
 
+class userdoc_upd_sr_cr(BaseModel):
+	affectedFileIdList_fileNbr:str = ""
+	affectedFileIdList_fileSeq:str = ""
+	affectedFileIdList_fileSeries:str = ""
+	affectedFileIdList_fileType:str = ""                                           
+	affectedFileSummaryList_fileId_fileNbr:str = ""
+	affectedFileSummaryList_fileId_fileSeq:str = ""
+	affectedFileSummaryList_fileId_fileSeries:str = ""
+	affectedFileSummaryList_fileId_fileType:str = ""
+	affectedFileSummaryList_fileSummaryDescription:str = ""
+	affectedFileSummaryList_fileSummaryOwner:str = ""
+	applicant_applicantNotes:str = ""
+	applicant_addressStreet:str = ""
+	applicant_nationalityCountryCode:str = ""
+	applicant_personName:str = ""
+	applicant_residenceCountryCode:str = ""
+	documentId_docLog:str = ""
+	documentId_docNbr:str = ""
+	documentId_docOrigin:str = ""
+	documentId_docSeries:str = ""
+	documentId_selected:str = ""
+	documentSeqId_docSeqNbr:str = ""
+	documentSeqId_docSeqSeries:str = ""
+	documentSeqId_docSeqType:str = ""
+	filingData_captureDate:str = ""
+	filingData_captureUserId:str = ""
+	filingData_filingDate:str = ""
+	filingData_documentId_docLog:str = ""
+	filingData_documentId_docNbr:str = ""
+	filingData_documentId_docOrigin:str = ""
+	filingData_documentId_docSeries:str = ""
+	filingData_userdocTypeList_userdocName:str = ""
+	filingData_userdocTypeList_userdocType:str = ""
+	ownerList_person_addressStreet:str = ""
+	ownerList_person_email:str = ""
+	ownerList_person_nationalityCountryCode:str = ""
+	ownerList_person_personName:str = ""
+	ownerList_person_residenceCountryCode:str = ""
+	ownerList_person_telephone:str = ""
+	ownerList_person_zipCode:str = ""
+	notes:str = ""
+	representativeList_person_addressStreet:str = ""
+	representativeList_person_agentCode:str = ""
+	representativeList_person_email:str = ""
+	representativeList_person_nationalityCountryCode:str = ""
+	representativeList_person_personName:str = ""
+	representativeList_person_residenceCountryCode:str = ""
+	representativeList_person_telephone:str = ""
+	representativeList_person_zipCode:str = ""
+	representativeList_representativeType:str = ""
+@app.post('/sfe/insertuserdoc_sr_cr', summary="Marcas", tags=["Escrito con Tipo Documento que afecta a Expedientes sin costo"])
+def insert_user_doc_sin_recibo_con_exp(item:userdoc_upd_sr_cr):
+	try:
+		return(Insert_user_doc_sin_recibo_con_relacion(
+				item.affectedFileIdList_fileNbr,
+				item.affectedFileIdList_fileSeq,
+				item.affectedFileIdList_fileSeries,
+				item.affectedFileIdList_fileType,                                           
+				item.affectedFileSummaryList_fileId_fileNbr,
+				item.affectedFileSummaryList_fileId_fileSeq,
+				item.affectedFileSummaryList_fileId_fileSeries,
+				item.affectedFileSummaryList_fileId_fileType,
+				item.affectedFileSummaryList_fileSummaryDescription,
+				item.affectedFileSummaryList_fileSummaryOwner,
+				item.applicant_applicantNotes,
+				item.applicant_addressStreet,
+				item.applicant_nationalityCountryCode,
+				item.applicant_personName,
+				item.applicant_residenceCountryCode,
+				item.documentId_docLog,
+				item.documentId_docNbr,
+				item.documentId_docOrigin,
+				item.documentId_docSeries,
+				item.documentId_selected,
+				item.documentSeqId_docSeqNbr,
+				item.documentSeqId_docSeqSeries,
+				item.documentSeqId_docSeqType,
+				item.filingData_captureDate,
+				item.filingData_captureUserId,
+				item.filingData_filingDate,
+				item.filingData_documentId_docLog,
+				item.filingData_documentId_docNbr,
+				item.filingData_documentId_docOrigin,
+				item.filingData_documentId_docSeries,
+				item.filingData_userdocTypeList_userdocName,
+				item.filingData_userdocTypeList_userdocType,
+				item.ownerList_person_addressStreet,
+				item.ownerList_person_email,
+				item.ownerList_person_nationalityCountryCode,
+				item.ownerList_person_personName,
+				item.ownerList_person_residenceCountryCode,
+				item.ownerList_person_telephone,
+				item.ownerList_person_zipCode,
+				item.notes,
+				item.representativeList_person_addressStreet,
+				item.representativeList_person_agentCode,
+				item.representativeList_person_email,
+				item.representativeList_person_nationalityCountryCode,
+				item.representativeList_person_personName,
+				item.representativeList_person_residenceCountryCode,
+				item.representativeList_person_telephone,
+				item.representativeList_person_zipCode,
+				item.representativeList_representativeType))
+	except zeep.exceptions.Fault as e:
+		return(str(e.message))
 
 
 class insert_reg(BaseModel):
