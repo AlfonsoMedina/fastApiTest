@@ -1,5 +1,11 @@
 from tools.service_system import config_parametro
 
+########################MEA########################################
+MEA_TIEMPO_ACTUALIZACION = config_parametro('62')['valor2']
+
+
+###################################################################
+
 #Base de datos PUBLICACIONES posgresSql v14 
 #db_host = '192.168.50.216'
 #db_user='user_app_publicacion'

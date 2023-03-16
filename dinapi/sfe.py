@@ -2,7 +2,6 @@ import string
 import psycopg2
 import tools.connect as connex
 
-
 global_data = {}
 
 def registro_sfe(arg):
@@ -547,8 +546,8 @@ def pendientes_sfe(fecha:string):
 			lista.append({
 						'Id':i[0],
 						'fecha':i[1],             
-						'formulario_id':i[2],     
-						'estado':i[3],            
+						'formulario_id':i[2], #tipo_form(i[2]),     
+						'estado': i[3], #estado(i[3]),            
 						'created_at':i[4],        
 						'updated_at':i[5],        
 						'respuestas':i[6],        
@@ -557,7 +556,7 @@ def pendientes_sfe(fecha:string):
 						'deleted_at':i[9],        
 						'codigo':i[10],            
 						'firmado_at':i[11],        
-						'pagado_at':i[12],         
+						'pagado_at':str(pago_id(i[0])),         
 						'expediente_id':i[13],     
 						'pdf_url':i[14],           
 						'enviado_at':i[15],        
@@ -570,7 +569,7 @@ def pendientes_sfe(fecha:string):
 						'autorizado_por_id':i[22], 
 						'locked_at':i[23],         
 						'locked_by_id':i[24],      
-						'tipo_documento_id':i[25]
+						'tipo_documento_id':status_typ(str(i[25])) 
 						})
 		return(lista)	
 	except Exception as e:
@@ -578,7 +577,66 @@ def pendientes_sfe(fecha:string):
 	finally:
 		connP.close()	
 
+def tipo_form(form):
+	try:
+		lista = []
+		connP = psycopg2.connect(
+			host = connex.host_SFE_conn,
+			user= connex.user_SFE_conn,
+			password = connex.password_SFE_conn,
+			database = connex.database_SFE_conn
+		)
+		cursor = connP.cursor()
+		cursor.execute("""select nombre,id  from formularios where id = {}""".format(form))
+		row=cursor.fetchall()
+		for i in row:
+			return(i[0])	
+	except Exception as e:
+		print(e)
+	finally:
+		connP.close()
 
+def status_typ(tipo):
+	try:
+		connP = psycopg2.connect(
+			host = connex.host_SFE_conn,
+			user= connex.user_SFE_conn,
+			password = connex.password_SFE_conn,
+			database = connex.database_SFE_conn
+		)
+		cursor = connP.cursor()
+		cursor.execute("""select id,nombre,siglas  from tipos_documento where id = {} """.format(tipo))
+		row=cursor.fetchall()
+		for i in row:
+			return(i[2])	
+	except Exception as e:
+		print(e)
+	finally:
+		connP.close()
+
+def pago_id(pago):
+	try:
+		connP = psycopg2.connect(
+			host = connex.host_SFE_conn,
+			user= connex.user_SFE_conn,
+			password = connex.password_SFE_conn,
+			database = connex.database_SFE_conn
+		)
+		cursor = connP.cursor()
+		cursor.execute("""select authorization_number from bancard_transactions where status = 2 and  payable_id = {} """.format(str(pago)))
+		row=cursor.fetchall()
+		for i in row:
+			return(i[0])	
+	except Exception as e:
+		print(e)
+	finally:
+		connP.close()
+
+def estado(arg):
+	if arg == 7:
+		return('Enviado')
+	if arg == 8:
+		return('Recibido')
 
 
 '''
