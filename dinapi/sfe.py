@@ -1,3 +1,4 @@
+import string
 import psycopg2
 import tools.connect as connex
 
@@ -527,7 +528,7 @@ def oposicion_sfe(arg):
 			finally:
 				conn.close()
 
-def pendientes_sfe():
+def pendientes_sfe(fecha:string):
 	try:
 		lista = []
 		connP = psycopg2.connect(
@@ -537,7 +538,10 @@ def pendientes_sfe():
 			database = connex.database_SFE_conn
 		)
 		cursor = connP.cursor()
-		cursor.execute("select * from tramites where formulario_id IN (39, 40, 66, 67,69,70,3,4,27,95) and estado  in (7)")
+		cursor.execute("""
+		SELECT id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id
+		FROM public.tramites where estado in (7,8) and formulario_id in (68,69,70,36,39,42) and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59';
+		""".format(fecha,fecha))
 		row=cursor.fetchall()
 		for i in row:
 			lista.append({
@@ -574,3 +578,9 @@ def pendientes_sfe():
 	finally:
 		connP.close()	
 
+
+
+
+'''
+select * from tramites where formulario_id IN (39, 40, 66, 67,69,70,3,4,27,95) and estado  in (7)
+'''

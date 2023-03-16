@@ -1520,35 +1520,10 @@ def update_param(item:update_id):
 	return(upDate_parametro(item.param_id,item.origen,item.descripcion,item.valor1,item.valor2,item.valor3,item.valor4,item.valor5,item.estado,item.sistema_id))
 
 class pendientes(BaseModel):
-	Id:str                
-	fecha:str             
-	formulario_id:str     
-	estado:str            
-	created_at:str        
-	updated_at:str        
-	respuestas:str        
-	costo:str             
-	usuario_id:str        
-	deleted_at:str        
-	codigo:str            
-	firmado_at:str        
-	pagado_at:str         
-	expediente_id:str     
-	pdf_url:str           
-	enviado_at:str        
-	recepcionado_at:str   
-	nom_funcionario:str   
-	pdf:str               
-	expediente_afectad:str
-	notificacion_id:str   
-	expedientes_autor:str 
-	autorizado_por_id:str 
-	locked_at:str         
-	locked_by_id:str      
-	tipo_documento_id:str 
+	fecha:str                 
 @app.post('/api/pendientes_sfe', summary="API", tags=["Lista de pendientes"])
-def pendientes_sfe_m():
-	return(pendientes_sfe())
+def pendientes_sfe_m(item:pendientes):
+	return(pendientes_sfe(item.fecha))
 
 
 
