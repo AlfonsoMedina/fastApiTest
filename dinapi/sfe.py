@@ -545,8 +545,9 @@ def pendientes_sfe(fecha:string):
 		for i in row:
 			lista.append({
 						'Id':i[0],
-						'fecha':i[1],             
-						'formulario_id':i[2], #tipo_form(i[2]),     
+						'fecha':i[1],
+						'tip_doc':i[2],             
+						'formulario_id':tipo_form(i[2]),     
 						'estado': i[3], #estado(i[3]),            
 						'created_at':i[4],        
 						'updated_at':i[5],        
@@ -637,6 +638,33 @@ def estado(arg):
 		return('Enviado')
 	if arg == 8:
 		return('Recibido')
+
+def cambio_estado(Id):
+	try:
+		connA = psycopg2.connect(
+			host = connex.host_SFE_conn,
+			user= connex.user_SFE_conn,
+			password = connex.password_SFE_conn,
+			database = connex.database_SFE_conn
+		)
+		cursorA = connA.cursor()
+		cursorA.execute("""select * from tramites where id = {}""".format(Id))
+		row=cursorA.fetchall()
+		for i in row:
+			conn = psycopg2.connect(
+					host = connex.host_SFE_conn,
+					user= connex.user_SFE_conn,
+					password = connex.password_SFE_conn,
+					database = connex.database_SFE_conn)
+			cursor = conn.cursor()
+			cursor.execute("""UPDATE public.tramites set estado = 8  WHERE id={};""".format(Id))
+			cursor.rowcount
+			conn.commit()
+			conn.close()
+	except Exception as e:
+		print(e)
+	finally:
+		connA.close()	
 
 
 '''
