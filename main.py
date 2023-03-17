@@ -1520,10 +1520,11 @@ def update_param(item:update_id):
 	return(upDate_parametro(item.param_id,item.origen,item.descripcion,item.valor1,item.valor2,item.valor3,item.valor4,item.valor5,item.estado,item.sistema_id))
 
 class pendientes(BaseModel):
-	fecha:str                 
+	fecha:str
+	pag:str                 
 @app.post('/api/pendientes_sfe', summary="API", tags=["Lista de pendientes"])
 def pendientes_sfe_m(item:pendientes):
-	return(pendientes_sfe(item.fecha))
+	return(pendientes_sfe(item.fecha,item.pag))
 
 
 

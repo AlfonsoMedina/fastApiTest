@@ -527,7 +527,7 @@ def oposicion_sfe(arg):
 			finally:
 				conn.close()
 
-def pendientes_sfe(fecha:string):
+def pendientes_sfe(fecha:string,pag):
 	try:
 		lista = []
 		connP = psycopg2.connect(
@@ -538,9 +538,8 @@ def pendientes_sfe(fecha:string):
 		)
 		cursor = connP.cursor()
 		cursor.execute("""
-		SELECT id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id
-		FROM public.tramites where estado in (7,8) and formulario_id in (68,69,70,36,39,42) and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59';
-		""".format(fecha,fecha))
+		select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id from tramites where formulario_id in (68,69,70,36,39,42) and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by id asc LIMIT 10 offset {}
+		""".format(fecha,fecha,pag))
 		row=cursor.fetchall()
 		for i in row:
 			lista.append({
@@ -657,7 +656,7 @@ def cambio_estado(Id):
 					password = connex.password_SFE_conn,
 					database = connex.database_SFE_conn)
 			cursor = conn.cursor()
-			cursor.execute("""UPDATE public.tramites set estado = 8  WHERE id={};""".format(Id))
+			cursor.execute("""UPDATE public.tramites set estado = 8 WHERE id={};""".format(Id))
 			cursor.rowcount
 			conn.commit()
 			conn.close()

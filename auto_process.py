@@ -9,7 +9,7 @@ import tools.connect as connex
 
 list_id = []
 def timer(step):
-	print('M.E.A On')
+	print('M.E.A Online............')
 	i = 0
 	while i < step:
 		for i in range(step):
@@ -18,19 +18,22 @@ def timer(step):
 				i=0
 			sleep(int(connex.MEA_TIEMPO_ACTUALIZACION))		
 
+
+
 def check_date(): # Captura lista pendiente
 	today = time.strftime("%Y-%m-%d")
-	for i in pendientes_sfe(today):
+	for i in pendientes_sfe(today,0):
 		try:
 			if i['estado'] == 7:
 				list_id.append(str(i['Id'])+"-"+str(i['tip_doc']))
 		except Exception as e:
 			pass
-	#print(list_id)	
 	if list_id != []:
 		for n in list_id:
 			params = str(n).split('-')
 			insert_list(params[0],params[1])
+
+
 
 def insert_list(arg0:string,arg1:string): # Insercion segun tipo de formulario
 	if arg1 == "68":
