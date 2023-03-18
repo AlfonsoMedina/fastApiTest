@@ -3,6 +3,7 @@ import psycopg2
 import tools.connect as connex
 
 global_data = {}
+conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,	password = connex.password_SFE_conn,database = connex.database_SFE_conn	)
 
 def registro_sfe(arg):
 	try:
@@ -547,7 +548,7 @@ def pendientes_sfe(fecha:string,pag):
 						'fecha':i[1],
 						'tip_doc':i[2],             
 						'formulario_id':tipo_form(i[2]),     
-						'estado': i[3], #estado(i[3]),            
+						'estado': i[3],            
 						'created_at':i[4],        
 						'updated_at':i[5],        
 						'respuestas':i[6],        
@@ -569,7 +570,8 @@ def pendientes_sfe(fecha:string,pag):
 						'autorizado_por_id':i[22], 
 						'locked_at':i[23],         
 						'locked_by_id':i[24],      
-						'tipo_documento_id':status_typ(str(i[25])) 
+						'tipo_documento_id':status_typ(str(i[25]))[2],
+						'tool_tip':status_typ(str(i[25]))[1]
 						})
 		return(lista)	
 	except Exception as e:
@@ -608,7 +610,7 @@ def status_typ(tipo):
 		cursor.execute("""select id,nombre,siglas  from tipos_documento where id = {} """.format(tipo))
 		row=cursor.fetchall()
 		for i in row:
-			return(i[2])	
+			return(i)	
 	except Exception as e:
 		print(e)
 	finally:
@@ -664,6 +666,29 @@ def cambio_estado(Id):
 		print(e)
 	finally:
 		connA.close()	
+
+def count_pendiente(fecha:string):
+	try:
+		lista = []
+		conn = psycopg2.connect(
+			host = connex.host_SFE_conn,
+			user= connex.user_SFE_conn,
+			password = connex.password_SFE_conn,
+			database = connex.database_SFE_conn
+		)
+		cursor = conn.cursor()
+		cursor.execute("""select count(*) from tramites where estado in (7,8) and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59'""".format(fecha,fecha))
+		row=cursor.fetchall()
+		for i in row:
+			return(i[0])	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+
+
+
 
 
 '''

@@ -2,7 +2,7 @@ from time import sleep
 from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
-from dinapi.sfe import oposicion_sfe, pendientes_sfe, registro_sfe, renovacion_sfe
+from dinapi.sfe import count_pendiente, oposicion_sfe, pendientes_sfe, registro_sfe, renovacion_sfe
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
 from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, mark_insert_ren, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update, user_doc_update_sin_recibo #pip install "fastapi[all]"
@@ -1525,6 +1525,17 @@ class pendientes(BaseModel):
 @app.post('/api/pendientes_sfe', summary="API", tags=["Lista de pendientes"])
 def pendientes_sfe_m(item:pendientes):
 	return(pendientes_sfe(item.fecha,item.pag))
+
+class pendientes_count(BaseModel):
+	fecha:str = ""                
+@app.post('/api/pendientes_count', summary="API", tags=["contador pendientes"])
+def pendientes_sfe_count(item:pendientes_count):
+	return(count_pendiente(item.fecha))
+
+
+
+
+
 
 
 

@@ -4,7 +4,7 @@ Administrador de recepcion MEA
 import string
 import time
 from time import sleep
-from dinapi.sfe import cambio_estado, pendientes_sfe
+from dinapi.sfe import cambio_estado, count_pendiente, pendientes_sfe
 import tools.connect as connex
 
 list_id = []
@@ -14,15 +14,16 @@ def timer(step):
 	while i < step:
 		for i in range(step):
 			check_date()
+			#print('.')
 			if(i == 10):
 				i=0
-			sleep(int(connex.MEA_TIEMPO_ACTUALIZACION))		
+		sleep(int(connex.MEA_TIEMPO_ACTUALIZACION))		
 
 
 
 def check_date(): # Captura lista pendiente
 	today = time.strftime("%Y-%m-%d")
-	for i in pendientes_sfe(today,0):
+	for i in pendientes_sfe(today,count_pendiente(today)):
 		try:
 			if i['estado'] == 7:
 				list_id.append(str(i['Id'])+"-"+str(i['tip_doc']))
@@ -90,7 +91,7 @@ def insert_list(arg0:string,arg1:string): # Insercion segun tipo de formulario
 
 
 
-timer(60) 
+timer(1) 
 
 
 	

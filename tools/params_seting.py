@@ -104,7 +104,7 @@ def upDate_parametro(param_id:int,origen:str,descripcion:str,valor1:str,valor2:s
 					database="db_sfe_presencial"
 				)
 		cursor = conn.cursor()
-		cursor.execute("UPDATE public.parametros SET origen='"+origen+"',descripcion='"+descripcion+"',valor1='"+valor1+"',valor2='"+valor2+"',valor3='"+valor3+"',valor4='"+valor4+"',valor5='"+valor5+"',estado="+str(estado)+",sistema_id="+str(sistema_id)+" WHERE id="+str(param_id))
+		cursor.execute("UPDATE public.parametros SET origen='"+origen+"',descripcion='"+descripcion+"',valor1='"+valor1+"',valor2='"+valor2+"',valor3='"+valor3+"',valor4='"+valor4+"',valor5='"+valor5+"',estado=0,sistema_id=0 WHERE id="+str(param_id))
 		cursor.rowcount
 		conn.commit()
 		conn.close()
