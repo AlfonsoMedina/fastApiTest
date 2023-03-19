@@ -23,7 +23,7 @@ def timer(step):
 
 def check_date(): # Captura lista pendiente
 	today = time.strftime("%Y-%m-%d")
-	for i in pendientes_sfe(today,count_pendiente(today)):
+	for i in pendientes_sfe(today,0):
 		try:
 			if i['estado'] == 7:
 				list_id.append(str(i['Id'])+"-"+str(i['tip_doc']))

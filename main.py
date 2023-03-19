@@ -1526,6 +1526,8 @@ class pendientes(BaseModel):
 def pendientes_sfe_m(item:pendientes):
 	return(pendientes_sfe(item.fecha,item.pag))
 
+
+
 class pendientes_count(BaseModel):
 	fecha:str = ""                
 @app.post('/api/pendientes_count', summary="API", tags=["contador pendientes"])
