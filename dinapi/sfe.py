@@ -539,9 +539,12 @@ def pendientes_sfe(fecha:string,pag):
 		)
 		cursor = connP.cursor()
 		cursor.execute("""
-select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id from tramites where estado in (7,8) and formulario_id in (27,95,68,69,70,36,39,42) 
+select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,
+codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
+to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,
+notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id from tramites where estado in (7,8) and formulario_id in ({}) 
 and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by id asc LIMIT 10 offset {}
-		""".format(fecha,fecha,pag))
+		""".format(connex.MEA_SFE_FORMULARIOS_ID,fecha,fecha,pag))
 		row=cursor.fetchall()
 		for i in row:
 			lista.append({
