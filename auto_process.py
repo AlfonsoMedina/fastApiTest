@@ -7,7 +7,8 @@ from time import sleep
 from dinapi.sfe import cambio_estado, count_pendiente, pendientes_sfe
 import tools.connect as connex
 
-list_id = []
+
+"""
 def timer(step):
 	print('M.E.A Online............')
 	i = 0
@@ -18,8 +19,6 @@ def timer(step):
 			if(i == 10):
 				i=0
 		sleep(int(connex.MEA_TIEMPO_ACTUALIZACION))		
-
-
 
 def check_date(): # Captura lista pendiente
 	today = time.strftime("%Y-%m-%d")
@@ -33,6 +32,42 @@ def check_date(): # Captura lista pendiente
 		for n in list_id:
 			params = str(n).split('-')
 			insert_list(params[0],params[1])
+
+
+"""
+
+list_id = []
+def listar():
+	print('crear lista')
+	check_date() # Captura lista pendiente
+	time.sleep(5)
+	insertar()
+
+def insertar():
+	time.sleep(5)
+	print('ordenar lista')
+	time.sleep(1)
+	list_id.sort()
+	print(list_id)
+	if list_id != []:
+		for i in list_id:
+			params = str(i).split('-')
+			print('insertar docs '+str(params[0]))
+			insert_list(str(params[0]),str(params[1]))
+		time.sleep(2)
+	listar()
+
+def check_date(): # Captura lista pendiente
+	today = time.strftime("%Y-%m-%d")
+	for i in pendientes_sfe(today,0):
+		try:
+			if i['estado'] == 7:
+				list_id.append(str(i['Id'])+"-"+str(i['tip_doc']))
+		except Exception as e:
+			pass
+
+
+listar()
 
 
 
@@ -91,7 +126,7 @@ def insert_list(arg0:string,arg1:string): # Insercion segun tipo de formulario
 
 
 
-timer(1) 
+#timer(1) 
 
 
 	
