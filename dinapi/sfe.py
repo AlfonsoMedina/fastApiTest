@@ -686,7 +686,6 @@ def count_pendiente(fecha:string):
 			cant = []
 			for i in range(round(pag)):
 				cant.append(i)
-
 		return({"registros":reg,"paginas":cant})	
 	except Exception as e:
 		print(e)
