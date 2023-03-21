@@ -6,7 +6,7 @@ from dinapi.sfe import count_pendiente, oposicion_sfe, pendientes_sfe, registro_
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
 from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, mark_insert_ren, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update, user_doc_update_sin_recibo #pip install "fastapi[all]"
-from wipo.function_for_reception_in import user_doc_read, user_doc_read_disenio, user_doc_read_patent
+from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_read, user_doc_read_disenio, user_doc_read_patent
 import zeep
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
@@ -1388,6 +1388,383 @@ async def insertren(item: insert_ren):
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
 
+class insert_user_doc(BaseModel):
+	affectedFileIdList_fileNbr:str = ""
+	affectedFileIdList_fileSeq:str = ""
+	affectedFileIdList_fileSeries:str = ""
+	affectedFileIdList_fileType:str = ""
+	affectedFileSummaryList_disclaimerInOtherLang:str = ""
+	affectedFileSummaryList_fileNbr:str = ""
+	affectedFileSummaryList_fileSeq:str = ""
+	affectedFileSummaryList_fileSeries:str = ""
+	affectedFileSummaryList_fileType:str = ""
+	affectedFileSummaryList_fileIdAsString:str = ""
+	affectedFileSummaryList_fileSummaryClasses:str = ""
+	affectedFileSummaryList_fileSummaryCountry:str = ""
+	affectedFileSummaryList_fileSummaryDescription:str = ""
+	affectedFileSummaryList_fileSummaryDescriptionInOtherLang:str = ""
+	affectedFileSummaryList_fileSummaryOwner:str = ""
+	affectedFileSummaryList_fileSummaryOwnerInOtherLang:str = ""
+	affectedFileSummaryList_fileSummaryRepresentative:str = ""
+	affectedFileSummaryList_fileSummaryRepresentativeInOtherLang:str = ""
+	affectedFileSummaryList_fileSummaryResponsibleName:str = ""
+	affectedFileSummaryList_fileSummaryStatus:str = ""
+	applicant_applicantNotes:str = ""
+	applicant_person_addressStreet:str = ""
+	applicant_person_addressStreetInOtherLang:str = ""
+	applicant_person_addressZone:str = ""
+	applicant_person_agentCode:str = ""
+	applicant_person_cityCode:str = ""
+	applicant_person_cityName:str = ""
+	applicant_person_companyRegisterRegistrationDate:str = ""
+	applicant_person_companyRegisterRegistrationNbr:str = ""
+	applicant_person_email:str = ""
+	applicant_person_individualIdNbr:str = ""
+	applicant_person_individualIdType:str = ""
+	applicant_person_legalIdNbr:str = ""
+	applicant_person_legalIdType:str = ""
+	applicant_person_legalNature:str = ""
+	applicant_person_legalNatureInOtherLang:str = ""
+	applicant_person_nationalityCountryCode:str = ""
+	applicant_person_personGroupCode:str = ""
+	applicant_person_personGroupName:str = ""
+	applicant_person_personName:str = ""
+	applicant_person_personNameInOtherLang:str = ""
+	applicant_person_residenceCountryCode:str = ""
+	applicant_person_stateCode:str = ""
+	applicant_person_stateName:str = ""
+	applicant_person_telephone:str = ""
+	applicant_person_zipCode:str = ""
+	documentId_docLog:str = ""
+	documentId_docNbr:str = ""
+	documentId_docOrigin:str = ""
+	documentId_docSeries:str = ""
+	documentId_selected:str = ""
+	documentSeqId_docSeqName:str = ""
+	documentSeqId_docSeqNbr:str = ""
+	documentSeqId_docSeqSeries:str = ""
+	documentSeqId_docSeqType:str = ""
+	filingData_applicationSubtype:str = ""
+	filingData_applicationType:str = ""
+	filingData_captureDate:str = ""
+	filingData_captureUserId:str = ""
+	filingData_filingDate:str = ""
+	filingData_lawCode:str = ""
+	filingData_novelty1Date:str = ""
+	filingData_novelty2Date:str = ""
+	filingData_paymentList_currencyName:str = ""
+	filingData_paymentList_currencyType:str = ""
+	filingData_paymentList_receiptAmount:str = ""
+	filingData_paymentList_receiptDate:str = ""
+	filingData_paymentList_receiptNbr:str = ""
+	filingData_paymentList_receiptNotes:str = ""
+	filingData_paymentList_receiptType:str = ""
+	filingData_paymentList_receiptTypeName:str = ""
+	filingData_receptionDate:str = ""
+	filingData_documentId_receptionDocument_docLog:str = ""
+	filingData_documentId_receptionDocument_docNbr:str = ""
+	filingData_documentId_receptionDocument_docOrigin:str = ""
+	filingData_documentId_receptionDocument_docSeries:str = ""
+	filingData_documentId_receptionDocument_selected:str = ""
+	filingData_userdocTypeList_userdocName:str = ""
+	filingData_userdocTypeList_userdocType:str = ""
+	newOwnershipData_ownerList_orderNbr:str = ""
+	newOwnershipData_ownerList_ownershipNotes:str = ""
+	newOwnershipData_ownerList_person_addressStreet:str = ""
+	newOwnershipData_ownerList_person_addressStreetInOtherLang:str = ""
+	newOwnershipData_ownerList_person_addressZone:str = ""
+	newOwnershipData_ownerList_person_agentCode:str = ""
+	newOwnershipData_ownerList_person_cityCode:str = ""
+	newOwnershipData_ownerList_person_cityName:str = ""
+	newOwnershipData_ownerList_person_companyRegisterRegistrationDate:str = ""
+	newOwnershipData_ownerList_person_companyRegisterRegistrationNbr:str = ""
+	newOwnershipData_ownerList_person_email:str = ""
+	newOwnershipData_ownerList_person_individualIdNbr:str = ""
+	newOwnershipData_ownerList_person_individualIdType:str = ""
+	newOwnershipData_ownerList_person_legalIdNbr:str = ""
+	newOwnershipData_ownerList_person_legalIdType:str = ""
+	newOwnershipData_ownerList_person_legalNature:str = ""
+	newOwnershipData_ownerList_person_legalNatureInOtherLang:str = ""
+	newOwnershipData_ownerList_person_nationalityCountryCode:str = ""
+	newOwnershipData_ownerList_person_personGroupCode:str = ""
+	newOwnershipData_ownerList_person_personGroupName:str = ""
+	newOwnershipData_ownerList_person_personName:str = ""
+	newOwnershipData_ownerList_person_personNameInOtherLang:str = ""
+	newOwnershipData_ownerList_person_residenceCountryCode:str = ""
+	newOwnershipData_ownerList_person_stateCode:str = ""
+	newOwnershipData_ownerList_person_stateName:str = ""
+	newOwnershipData_ownerList_person_telephone:str = ""
+	newOwnershipData_ownerList_person_zipCode:str = ""
+	notes:str = ""
+	poaData_poaGranteeList_person_addressStreet:str = ""
+	poaData_poaGranteeList_person_addressStreetInOtherLang:str = ""
+	poaData_poaGranteeList_person_addressZone:str = ""
+	poaData_poaGranteeList_person_agentCode:str = ""
+	poaData_poaGranteeList_person_cityCode:str = ""
+	poaData_poaGranteeList_person_cityName:str = ""
+	poaData_poaGranteeList_person_companyRegisterRegistrationDate:str = ""
+	poaData_poaGranteeList_person_companyRegisterRegistrationNbr:str = ""
+	poaData_poaGranteeList_person_email:str = ""
+	poaData_poaGranteeList_person_individualIdNbr:str = ""
+	poaData_poaGranteeList_person_individualIdType:str = ""
+	poaData_poaGranteeList_person_legalIdNbr:str = ""
+	poaData_poaGranteeList_person_individualIdType:str = ""
+	poaData_poaGranteeList_person_legalIdNbr:str = ""
+	poaData_poaGranteeList_person_legalIdType:str = ""
+	poaData_poaGranteeList_person_legalNature:str = ""
+	poaData_poaGranteeList_person_legalNatureInOtherLang:str = ""
+	poaData_poaGranteeList_person_nationalityCountryCode:str = ""
+	poaData_poaGranteeList_person_personGroupCode:str = ""
+	poaData_poaGranteeList_person_personGroupName:str = ""
+	poaData_poaGranteeList_person_personName:str = ""
+	poaData_poaGranteeList_person_personNameInOtherLang:str = ""
+	poaData_poaGranteeList_person_residenceCountryCode:str = ""
+	poaData_poaGranteeList_person_stateCode:str = ""
+	poaData_poaGranteeList_person_stateName:str = ""
+	poaData_poaGranteeList_person_telephone:str = ""
+	poaData_poaGranteeList_person_zipCode:str = ""
+	poaData_poaGrantor_person_addressStreet:str = ""
+	poaData_poaGrantor_person_addressStreetInOtherLang:str = ""
+	poaData_poaGrantor_person_addressZone:str = ""
+	poaData_poaGrantor_person_agentCode:str = ""
+	poaData_poaGrantor_person_cityCode:str = ""
+	poaData_poaGrantor_person_cityName:str = ""
+	poaData_poaGrantor_person_companyRegisterRegistrationDate:str = ""
+	poaData_poaGrantor_person_companyRegisterRegistrationNbr:str = ""
+	poaData_poaGrantor_person_email:str = ""
+	poaData_poaGrantor_person_individualIdNbr:str = ""
+	poaData_poaGrantor_person_individualIdType:str = ""
+	poaData_poaGrantor_person_legalIdNbr:str = ""
+	poaData_poaGrantor_person_legalIdType:str = ""
+	poaData_poaGrantor_person_legalNature:str = ""
+	poaData_poaGrantor_person_legalNatureInOtherLang:str = ""
+	poaData_poaGrantor_person_nationalityCountryCode:str = ""
+	poaData_poaGrantor_person_personGroupCode:str = ""
+	poaData_poaGrantor_person_personGroupName:str = ""
+	poaData_poaGrantor_person_personName:str = ""
+	poaData_poaGrantor_person_personNameInOtherLang:str = ""
+	poaData_poaGrantor_person_residenceCountryCode:str = ""
+	poaData_poaGrantor_person_stateCode:str = ""
+	poaData_poaGrantor_person_stateName:str = ""
+	poaData_poaGrantor_person_telephone:str = ""
+	poaData_poaGrantor_person_zipCode:str = ""
+	poaData_poaRegNumber:str = ""
+	poaData_scope:str = ""
+	representationData_representativeList_person_addressStreet:str = ""
+	representationData_representativeList_person_addressStreetInOtherLang:str = ""
+	representationData_representativeList_person_addressZone:str = ""
+	representationData_representativeList_person_agentCode:str = ""
+	representationData_representativeList_person_cityCode:str = ""
+	representationData_representativeList_person_cityName:str = ""
+	representationData_representativeList_person_companyRegisterRegistrationDate:str = ""
+	representationData_representativeList_person_companyRegisterRegistrationNbr:str = ""
+	representationData_representativeList_person_email:str = ""
+	representationData_representativeList_person_individualIdNbr:str = ""
+	representationData_representativeList_person_individualIdType:str = ""
+	representationData_representativeList_person_legalIdNbr:str = ""
+	representationData_representativeList_person_legalIdType:str = ""
+	representationData_representativeList_person_legalNature:str = ""
+	representationData_representativeList_person_legalNatureInOtherLang:str = ""
+	representationData_representativeList_person_nationalityCountryCode:str = ""
+	representationData_representativeList_person_personGroupCode:str = ""
+	representationData_representativeList_person_personGroupName:str = ""
+	representationData_representativeList_person_personName:str = ""
+	representationData_representativeList_person_personNameInOtherLang:str = ""
+	representationData_representativeList_person_residenceCountryCode:str = ""
+	representationData_representativeList_person_stateCode:str = ""
+	representationData_representativeList_person_stateName:str = ""
+	representationData_representativeList_person_telephone:str = ""
+	representationData_representativeList_person_zipCode:str = ""
+	representationData_representativeList_representativeType:str = ""
+@app.post('/sfe/insertEscrito', summary="SFE", tags=["InsertUserDocMarcas prueba para insertar todos los escritos"])
+async def insert_escritos(item:insert_user_doc):
+	return(insert_user_doc_escritos(item.affectedFileIdList_fileNbr,
+item.affectedFileIdList_fileSeq,
+item.affectedFileIdList_fileSeries,
+item.affectedFileIdList_fileType,
+item.affectedFileSummaryList_disclaimerInOtherLang,
+item.affectedFileSummaryList_fileNbr,
+item.affectedFileSummaryList_fileSeq,
+item.affectedFileSummaryList_fileSeries,
+item.affectedFileSummaryList_fileType,
+item.affectedFileSummaryList_fileIdAsString,
+item.affectedFileSummaryList_fileSummaryClasses,
+item.affectedFileSummaryList_fileSummaryCountry,
+item.affectedFileSummaryList_fileSummaryDescription,
+item.affectedFileSummaryList_fileSummaryDescriptionInOtherLang,
+item.affectedFileSummaryList_fileSummaryOwner,
+item.affectedFileSummaryList_fileSummaryOwnerInOtherLang,
+item.affectedFileSummaryList_fileSummaryRepresentative,
+item.affectedFileSummaryList_fileSummaryRepresentativeInOtherLang,
+item.affectedFileSummaryList_fileSummaryResponsibleName,
+item.affectedFileSummaryList_fileSummaryStatus,
+item.applicant_applicantNotes,
+item.applicant_person_addressStreet,
+item.applicant_person_addressStreetInOtherLang,
+item.applicant_person_addressZone,
+item.applicant_person_agentCode,
+item.applicant_person_cityCode,
+item.applicant_person_cityName,
+item.applicant_person_companyRegisterRegistrationDate,
+item.applicant_person_companyRegisterRegistrationNbr,
+item.applicant_person_email,
+item.applicant_person_individualIdNbr,
+item.applicant_person_individualIdType,
+item.applicant_person_legalIdNbr,
+item.applicant_person_legalIdType,
+item.applicant_person_legalNature,
+item.applicant_person_legalNatureInOtherLang,
+item.applicant_person_nationalityCountryCode,
+item.applicant_person_personGroupCode,
+item.applicant_person_personGroupName,
+item.applicant_person_personName,
+item.applicant_person_personNameInOtherLang,
+item.applicant_person_residenceCountryCode,
+item.applicant_person_stateCode,
+item.applicant_person_stateName,
+item.applicant_person_telephone,
+item.applicant_person_zipCode,
+item.documentId_docLog,
+item.documentId_docNbr,
+item.documentId_docOrigin,
+item.documentId_docSeries,
+item.documentId_selected,
+item.documentSeqId_docSeqName,
+item.documentSeqId_docSeqNbr,
+item.documentSeqId_docSeqSeries,
+item.documentSeqId_docSeqType,
+item.filingData_applicationSubtype,
+item.filingData_applicationType,
+item.filingData_captureDate,
+item.filingData_captureUserId,
+item.filingData_filingDate,
+item.filingData_lawCode,
+item.filingData_novelty1Date,
+item.filingData_novelty2Date,
+item.filingData_paymentList_currencyName,
+item.filingData_paymentList_currencyType,
+item.filingData_paymentList_receiptAmount,
+item.filingData_paymentList_receiptDate,
+item.filingData_paymentList_receiptNbr,
+item.filingData_paymentList_receiptNotes,
+item.filingData_paymentList_receiptType,
+item.filingData_paymentList_receiptTypeName,
+item.filingData_receptionDate,
+item.filingData_documentId_receptionDocument_docLog,
+item.filingData_documentId_receptionDocument_docNbr,
+item.filingData_documentId_receptionDocument_docOrigin,
+item.filingData_documentId_receptionDocument_docSeries,
+item.filingData_documentId_receptionDocument_selected,
+item.filingData_userdocTypeList_userdocName,
+item.filingData_userdocTypeList_userdocType,
+item.newOwnershipData_ownerList_orderNbr,
+item.newOwnershipData_ownerList_ownershipNotes,
+item.newOwnershipData_ownerList_person_addressStreet,
+item.newOwnershipData_ownerList_person_addressStreetInOtherLang,
+item.newOwnershipData_ownerList_person_addressZone,
+item.newOwnershipData_ownerList_person_agentCode,
+item.newOwnershipData_ownerList_person_cityCode,
+item.newOwnershipData_ownerList_person_cityName,
+item.newOwnershipData_ownerList_person_companyRegisterRegistrationDate,
+item.newOwnershipData_ownerList_person_companyRegisterRegistrationNbr,
+item.newOwnershipData_ownerList_person_email,
+item.newOwnershipData_ownerList_person_individualIdNbr,
+item.newOwnershipData_ownerList_person_individualIdType,
+item.newOwnershipData_ownerList_person_legalIdNbr,
+item.newOwnershipData_ownerList_person_legalIdType,
+item.newOwnershipData_ownerList_person_legalNature,
+item.newOwnershipData_ownerList_person_legalNatureInOtherLang,
+item.newOwnershipData_ownerList_person_nationalityCountryCode,
+item.newOwnershipData_ownerList_person_personGroupCode,
+item.newOwnershipData_ownerList_person_personGroupName,
+item.newOwnershipData_ownerList_person_personName,
+item.newOwnershipData_ownerList_person_personNameInOtherLang,
+item.newOwnershipData_ownerList_person_residenceCountryCode,
+item.newOwnershipData_ownerList_person_stateCode,
+item.newOwnershipData_ownerList_person_stateName,
+item.newOwnershipData_ownerList_person_telephone,
+item.newOwnershipData_ownerList_person_zipCode,
+item.notes,
+item.poaData_poaGranteeList_person_addressStreet,
+item.poaData_poaGranteeList_person_addressStreetInOtherLang,
+item.poaData_poaGranteeList_person_addressZone,
+item.poaData_poaGranteeList_person_agentCode,
+item.poaData_poaGranteeList_person_cityCode,
+item.poaData_poaGranteeList_person_cityName,
+item.poaData_poaGranteeList_person_companyRegisterRegistrationDate,
+item.poaData_poaGranteeList_person_companyRegisterRegistrationNbr,
+item.poaData_poaGranteeList_person_email,
+item.poaData_poaGranteeList_person_individualIdNbr,
+item.poaData_poaGranteeList_person_individualIdType,
+item.poaData_poaGranteeList_person_legalIdNbr,
+item.poaData_poaGranteeList_person_individualIdType,
+item.poaData_poaGranteeList_person_legalIdNbr,
+item.poaData_poaGranteeList_person_legalIdType,
+item.poaData_poaGranteeList_person_legalNature,
+item.poaData_poaGranteeList_person_legalNatureInOtherLang,
+item.poaData_poaGranteeList_person_nationalityCountryCode,
+item.poaData_poaGranteeList_person_personGroupCode,
+item.poaData_poaGranteeList_person_personGroupName,
+item.poaData_poaGranteeList_person_personName,
+item.poaData_poaGranteeList_person_personNameInOtherLang,
+item.poaData_poaGranteeList_person_residenceCountryCode,
+item.poaData_poaGranteeList_person_stateCode,
+item.poaData_poaGranteeList_person_stateName,
+item.poaData_poaGranteeList_person_telephone,
+item.poaData_poaGranteeList_person_zipCode,
+item.poaData_poaGrantor_person_addressStreet,
+item.poaData_poaGrantor_person_addressStreetInOtherLang,
+item.poaData_poaGrantor_person_addressZone,
+item.poaData_poaGrantor_person_agentCode,
+item.poaData_poaGrantor_person_cityCode,
+item.poaData_poaGrantor_person_cityName,
+item.poaData_poaGrantor_person_companyRegisterRegistrationDate,
+item.poaData_poaGrantor_person_companyRegisterRegistrationNbr,
+item.poaData_poaGrantor_person_email,
+item.poaData_poaGrantor_person_individualIdNbr,
+item.poaData_poaGrantor_person_individualIdType,
+item.poaData_poaGrantor_person_legalIdNbr,
+item.poaData_poaGrantor_person_legalIdType,
+item.poaData_poaGrantor_person_legalNature,
+item.poaData_poaGrantor_person_legalNatureInOtherLang,
+item.poaData_poaGrantor_person_nationalityCountryCode,
+item.poaData_poaGrantor_person_personGroupCode,
+item.poaData_poaGrantor_person_personGroupName,
+item.poaData_poaGrantor_person_personName,
+item.poaData_poaGrantor_person_personNameInOtherLang,
+item.poaData_poaGrantor_person_residenceCountryCode,
+item.poaData_poaGrantor_person_stateCode,
+item.poaData_poaGrantor_person_stateName,
+item.poaData_poaGrantor_person_telephone,
+item.poaData_poaGrantor_person_zipCode,
+item.poaData_poaRegNumber,
+item.poaData_scope,
+item.representationData_representativeList_person_addressStreet,
+item.representationData_representativeList_person_addressStreetInOtherLang,
+item.representationData_representativeList_person_addressZone,
+item.representationData_representativeList_person_agentCode,
+item.representationData_representativeList_person_cityCode,
+item.representationData_representativeList_person_cityName,
+item.representationData_representativeList_person_companyRegisterRegistrationDate,
+item.representationData_representativeList_person_companyRegisterRegistrationNbr,
+item.representationData_representativeList_person_email,
+item.representationData_representativeList_person_individualIdNbr,
+item.representationData_representativeList_person_individualIdType,
+item.representationData_representativeList_person_legalIdNbr,
+item.representationData_representativeList_person_legalIdType,
+item.representationData_representativeList_person_legalNature,
+item.representationData_representativeList_person_legalNatureInOtherLang,
+item.representationData_representativeList_person_nationalityCountryCode,
+item.representationData_representativeList_person_personGroupCode,
+item.representationData_representativeList_person_personGroupName,
+item.representationData_representativeList_person_personName,
+item.representationData_representativeList_person_personNameInOtherLang,
+item.representationData_representativeList_person_residenceCountryCode,
+item.representationData_representativeList_person_stateCode,
+item.representationData_representativeList_person_stateName,
+item.representationData_representativeList_person_telephone,
+item.representationData_representativeList_person_zipCode,
+item.representationData_representativeList_representativeType))
 
 class for_id(BaseModel):
 	Id:str = ""
