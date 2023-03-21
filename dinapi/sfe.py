@@ -1,3 +1,4 @@
+from math import ceil
 import string
 import psycopg2
 import tools.connect as connex
@@ -681,13 +682,13 @@ def count_pendiente(fecha:string):
 			database = connex.database_SFE_conn
 		)
 		cursor = conn.cursor()
-		cursor.execute("""select count(*) from tramites where estado in (7,8) and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59'""".format(fecha,fecha))
+		cursor.execute("""select count(*) from tramites where estado in (7,8) and formulario_id in ({}) and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59'""".format(connex.MEA_SFE_FORMULARIOS_ID,fecha,fecha))
 		row=cursor.fetchall()
 		for i in row:
 			reg=i[0]
 			pag=reg/10
 			cant = []
-			for i in range(round(pag)):
+			for i in range(ceil(pag)):
 				cant.append(i)
 		return({"registros":reg,"paginas":cant})	
 	except Exception as e:

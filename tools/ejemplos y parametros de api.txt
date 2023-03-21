@@ -1,7 +1,6 @@
 
 
 
-
 Ejemplo registro de marcas:
 {
   "file_fileId_fileNbr": "111111143",

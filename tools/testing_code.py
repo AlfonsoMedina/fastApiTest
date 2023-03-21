@@ -11,8 +11,6 @@ from ipas.ipas_methods import fetch_all_offic_doc_OFFIDOC_PROC_NBR, fetch_all_of
 
 
 
-
-
 #var = {}
 #print(type(var))
 

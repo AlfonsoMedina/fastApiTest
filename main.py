@@ -1536,12 +1536,17 @@ def pendientes_sfe_count(item:pendientes_count):
 
 
 
-
-
-
-
-
-
+@app.post('/sis/reload', summary="sis", tags=["reload"])
+def re_load():
+	ObjFichero = open("reload.py",'w')
+	msg = "#ReInicio de sistema"
+	ObjFichero.write(msg)
+	ObjFichero.close()
+	ObjFichero2 = open("reload.py")
+	TextoFichero = ObjFichero2.read()
+	print (TextoFichero)
+	ObjFichero2.close()
+	return(True)
 
 app.openapi = custom_openapi
 

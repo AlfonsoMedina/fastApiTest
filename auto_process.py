@@ -40,15 +40,15 @@ list_id = []
 def listar():
 	print('crear lista')
 	check_date() # Captura lista pendiente
-	time.sleep(5)
+	time.sleep(int(connex.MEA_TIEMPO_ACTUALIZACION))
 	insertar()
 
 def insertar():
-	time.sleep(5)
+	time.sleep(int(connex.MEA_TIEMPO_ACTUALIZACION)/2)
 	print('ordenar lista')
 	time.sleep(1)
 	list_id.sort()
-	print(list_id)
+	#print(list_id)
 	if list_id != []:
 		for i in list_id:
 			params = str(i).split('-')
@@ -65,11 +65,6 @@ def check_date(): # Captura lista pendiente
 				list_id.append(str(i['Id'])+"-"+str(i['tip_doc']))
 		except Exception as e:
 			pass
-
-
-listar()
-
-
 
 def insert_list(arg0:string,arg1:string): # Insercion segun tipo de formulario
 	if arg1 == "68":
@@ -102,13 +97,27 @@ def insert_list(arg0:string,arg1:string): # Insercion segun tipo de formulario
 		list_id.remove(arg0+"-"+arg1)
 		cambio_estado(arg0)
 
+	if arg1 == "95":
+		print(arg0 + " Procesado...")
+		list_id.remove(arg0+"-"+arg1)
+		cambio_estado(arg0)
 
+	if arg1 == "3":
+		print(arg0 + " Procesado...")
+		list_id.remove(arg0+"-"+arg1)
+		cambio_estado(arg0)
 
+	if arg1 == "4":
+		print(arg0 + " Procesado...")
+		list_id.remove(arg0+"-"+arg1)
+		cambio_estado(arg0)
 
+	if arg1 == "27":
+		print(arg0 + " Procesado...")
+		list_id.remove(arg0+"-"+arg1)
+		cambio_estado(arg0)
 
-
-
-
+listar()
 
 
 
