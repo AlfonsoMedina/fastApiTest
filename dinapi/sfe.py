@@ -617,7 +617,7 @@ def status_typ(tipo):
 		for i in row:
 			return(i)	
 	except Exception as e:
-		print(e)
+		return(12, '', '[SIN DATO]')
 	finally:
 		connP.close()
 
@@ -697,6 +697,25 @@ def count_pendiente(fecha:string):
 	finally:
 		conn.close()
 
+def reglas():
+	try:
+		reglas = []
+		conn = psycopg2.connect(
+			host = connex.hostME,
+			user= connex.userME,
+			password = connex.passwordME,
+			database = connex.databaseME
+		)
+		cursor = conn.cursor()
+		cursor.execute("""select * from reglas_me rm where id in ({})""".format(connex.MEA_SFE_FORMULARIOS_ID_tipo))
+		row=cursor.fetchall()
+		for i in row:
+			reglas.append(i)
+		return(reglas)	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
 
 
 

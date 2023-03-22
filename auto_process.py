@@ -70,7 +70,7 @@ def insert_list(arg0:string,arg1:string): # Insercion segun tipo de formulario
 	if arg1 == "68":
 		print(arg0 + " Procesado...")
 		list_id.remove(arg0+"-"+arg1)
-
+		#insert_user_doc_escritos()
 		cambio_estado(arg0)
 
 	if arg1 == "70":
@@ -88,7 +88,7 @@ def insert_list(arg0:string,arg1:string): # Insercion segun tipo de formulario
 	if arg1 == "36":
 		print(arg0 + " Procesado...")
 		list_id.remove(arg0+"-"+arg1)
-		
+
 		cambio_estado(arg0)
 
 	if arg1 == "39":
