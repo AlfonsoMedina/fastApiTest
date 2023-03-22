@@ -4,7 +4,7 @@ Administrador de recepcion MEA
 import string
 import time
 from time import sleep
-from dinapi.sfe import cambio_estado, count_pendiente, pendientes_sfe
+from dinapi.sfe import cambio_estado, count_pendiente, pendiente_sfe, pendientes_sfe
 import tools.connect as connex
 
 
@@ -121,26 +121,29 @@ def insert_list(arg0:string,arg1:string): # Insercion segun tipo de formulario
 		list_id.remove(arg0+"-"+arg1)
 		cambio_estado(arg0)
 
-listar()
+#listar()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#timer(1) 
-
-
-	
-
+#
+print(pendiente_sfe('1468')[0]['expediente_afectad'])
+for i in range(0,len(pendiente_sfe('1468')[0]['respuestas'])):
+	if pendiente_sfe('1468')[0]['respuestas'][i]['campo'] == 'datospersonales_nombresrazon':
+			print(pendiente_sfe('1468')[0]['respuestas'][i]['valor'])
+	if pendiente_sfe('1468')[0]['respuestas'][i]['campo'] == 'datospersonales_documento':
+			print(pendiente_sfe('1468')[0]['respuestas'][i]['valor'])
+	if pendiente_sfe('1468')[0]['respuestas'][i]['campo'] == 'datospersonales_tipo':
+			print(pendiente_sfe('1468')[0]['respuestas'][i]['valor'])
+	if pendiente_sfe('1468')[0]['respuestas'][i]['campo'] == 'datospersonales_sexo':
+			print(pendiente_sfe('1468')[0]['respuestas'][i]['valor'])
+	if pendiente_sfe('1468')[0]['respuestas'][i]['campo'] == 'datospersonales_pais':
+			print(pendiente_sfe('1468')[0]['respuestas'][i]['valor'])
+	if pendiente_sfe('1468')[0]['respuestas'][i]['campo'] == 'datospersonales_ciudad':
+			print(pendiente_sfe('1468')[0]['respuestas'][i]['valor'])
+	if pendiente_sfe('1468')[0]['respuestas'][i]['campo'] == 'datospersonales_codigopostal':
+			print(pendiente_sfe('1468')[0]['respuestas'][i]['valor'])
+	if pendiente_sfe('1468')[0]['respuestas'][i]['campo'] == 'datospersonales_direccion':
+			print(pendiente_sfe('1468')[0]['respuestas'][i]['valor'])						
+	if pendiente_sfe('1468')[0]['respuestas'][i]['campo'] == 'datospersonales_telefono':
+			print(pendiente_sfe('1468')[0]['respuestas'][i]['valor'])	
+	if pendiente_sfe('1468')[0]['respuestas'][i]['campo'] == 'datospersonales_correoelectronico':
+			print(pendiente_sfe('1468')[0]['respuestas'][i]['valor'])

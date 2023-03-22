@@ -584,6 +584,57 @@ and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by id asc 
 	finally:
 		connP.close()	
 
+def pendiente_sfe(arg):
+	try:
+		lista = []
+		connP = psycopg2.connect(
+			host = connex.host_SFE_conn,
+			user= connex.user_SFE_conn,
+			password = connex.password_SFE_conn,
+			database = connex.database_SFE_conn
+		)
+		cursor = connP.cursor()
+		cursor.execute("""select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
+			from tramites where id = {}
+		""".format(arg))
+		row=cursor.fetchall()
+		for i in row:
+			lista.append({
+						'Id':i[0],
+						'fecha':i[1],
+						'tip_doc':i[2],             
+						'formulario_id':tipo_form(i[2]),     
+						'estado': i[3],            
+						'created_at':i[4],        
+						'updated_at':i[5],        
+						'respuestas':i[6],        
+						'costo':i[7],             
+						'usuario_id':i[8],        
+						'deleted_at':i[9],        
+						'codigo':i[10],            
+						'firmado_at':i[11],        
+						'pagado_at':str(pago_id(i[0])),         
+						'expediente_id':i[13],     
+						'pdf_url':i[14],           
+						'enviado_at':i[15],        
+						'recepcionado_at':i[16],   
+						'nom_funcionario':i[17],   
+						'pdf':str(i[18]),               
+						'expediente_afectad':i[19],
+						'notificacion_id':i[20],   
+						'expedientes_autor':i[21], 
+						'autorizado_por_id':i[22], 
+						'locked_at':i[23],         
+						'locked_by_id':i[24],      
+						'tipo_documento_id':status_typ(str(i[25]))[2],
+						'tool_tip':status_typ(str(i[25]))[1]
+						})
+		return(lista)	
+	except Exception as e:
+		pass
+	finally:
+		connP.close()
+
 def tipo_form(form):
 	try:
 		lista = []
