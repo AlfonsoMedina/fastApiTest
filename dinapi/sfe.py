@@ -2,18 +2,16 @@ from math import ceil
 import string
 import psycopg2
 import tools.connect as connex
+from wipo.ipas import mark_getlist, personAgente
 
 global_data = {}
+create_userdoc = {}
+
 conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,	password = connex.password_SFE_conn,database = connex.database_SFE_conn	)
 
 def registro_sfe(arg):
 	try:
-		conn = psycopg2.connect(
-			host = connex.host_SFE_conn,
-			user= connex.user_SFE_conn,
-			password = connex.password_SFE_conn,
-			database = connex.database_SFE_conn
-		)
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
 		cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
 						to_char(t.created_at,'yyyy-mm-dd hh24:mi:ss')created_at,to_char(t.updated_at,'yyyy-mm-dd hh24:mi:ss')updated_at,t.respuestas,t.costo,t.usuario_id, t.deleted_at,
@@ -529,23 +527,18 @@ def oposicion_sfe(arg):
 			finally:
 				conn.close()
 
-def pendientes_sfe(fecha:string,pag):
+def pendientes_sfe(fecha:string,ver,pag):
 	try:
 		lista = []
-		connP = psycopg2.connect(
-			host = connex.host_SFE_conn,
-			user= connex.user_SFE_conn,
-			password = connex.password_SFE_conn,
-			database = connex.database_SFE_conn
-		)
-		cursor = connP.cursor()
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
 		cursor.execute("""
 select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,
 codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
 to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,
 notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id from tramites where estado in ({}) and formulario_id in ({}) 
-and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by id asc LIMIT 10 offset {}
-		""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha,pag))
+and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by enviado_at asc LIMIT {} offset {}
+		""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha,ver,pag))
 		row=cursor.fetchall()
 		for i in row:
 			lista.append({
@@ -582,18 +575,13 @@ and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by id asc 
 	except Exception as e:
 		pass
 	finally:
-		connP.close()	
+		conn.close()	
 
 def pendiente_sfe(arg):
 	try:
 		lista = []
-		connP = psycopg2.connect(
-			host = connex.host_SFE_conn,
-			user= connex.user_SFE_conn,
-			password = connex.password_SFE_conn,
-			database = connex.database_SFE_conn
-		)
-		cursor = connP.cursor()
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
 		cursor.execute("""select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
 			from tramites where id = {}
 		""".format(arg))
@@ -633,18 +621,13 @@ def pendiente_sfe(arg):
 	except Exception as e:
 		pass
 	finally:
-		connP.close()
+		conn.close()
 
 def tipo_form(form):
 	try:
 		lista = []
-		connP = psycopg2.connect(
-			host = connex.host_SFE_conn,
-			user= connex.user_SFE_conn,
-			password = connex.password_SFE_conn,
-			database = connex.database_SFE_conn
-		)
-		cursor = connP.cursor()
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
 		cursor.execute("""select nombre,id  from formularios where id = {}""".format(form))
 		row=cursor.fetchall()
 		for i in row:
@@ -652,17 +635,12 @@ def tipo_form(form):
 	except Exception as e:
 		print(e)
 	finally:
-		connP.close()
+		conn.close()
 
 def status_typ(tipo):
 	try:
-		connP = psycopg2.connect(
-			host = connex.host_SFE_conn,
-			user= connex.user_SFE_conn,
-			password = connex.password_SFE_conn,
-			database = connex.database_SFE_conn
-		)
-		cursor = connP.cursor()
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
 		cursor.execute("""select id,nombre,siglas  from tipos_documento where id = {} """.format(tipo))
 		row=cursor.fetchall()
 		for i in row:
@@ -670,17 +648,12 @@ def status_typ(tipo):
 	except Exception as e:
 		return(12, '', '[SIN DATO]')
 	finally:
-		connP.close()
+		conn.close()
 
 def pago_id(pago):
 	try:
-		connP = psycopg2.connect(
-			host = connex.host_SFE_conn,
-			user= connex.user_SFE_conn,
-			password = connex.password_SFE_conn,
-			database = connex.database_SFE_conn
-		)
-		cursor = connP.cursor()
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
 		cursor.execute("""select authorization_number from bancard_transactions where status = 2 and  payable_id = {} """.format(str(pago)))
 		row=cursor.fetchall()
 		for i in row:
@@ -688,7 +661,20 @@ def pago_id(pago):
 	except Exception as e:
 		print(e)
 	finally:
-		connP.close()
+		conn.close()
+
+def code_ag(arg): 
+	try:
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select numero_agente from perfiles_agentes where usuario_id = {}  """.format(arg))
+		row=cursor.fetchall()
+		for i in row:
+			return(i[0])	
+	except Exception as e:
+		return(e)
+	finally:
+		conn.close()
 
 def estado(arg):
 	if arg == 7:
@@ -698,21 +684,12 @@ def estado(arg):
 
 def cambio_estado(Id):
 	try:
-		connA = psycopg2.connect(
-			host = connex.host_SFE_conn,
-			user= connex.user_SFE_conn,
-			password = connex.password_SFE_conn,
-			database = connex.database_SFE_conn
-		)
+		connA = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursorA = connA.cursor()
 		cursorA.execute("""select * from tramites where id = {}""".format(Id))
 		row=cursorA.fetchall()
 		for i in row:
-			conn = psycopg2.connect(
-					host = connex.host_SFE_conn,
-					user= connex.user_SFE_conn,
-					password = connex.password_SFE_conn,
-					database = connex.database_SFE_conn)
+			conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 			cursor = conn.cursor()
 			cursor.execute("""UPDATE public.tramites set estado = 8 WHERE id={};""".format(Id))
 			cursor.rowcount
@@ -726,12 +703,7 @@ def cambio_estado(Id):
 def count_pendiente(fecha:string):
 	try:
 		lista = []
-		conn = psycopg2.connect(
-			host = connex.host_SFE_conn,
-			user= connex.user_SFE_conn,
-			password = connex.password_SFE_conn,
-			database = connex.database_SFE_conn
-		)
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
 		cursor.execute("""select count(*) from tramites where estado in ({}) and formulario_id in ({}) and enviado_at >= '{} 00:59:59' 
 		and enviado_at <= '{} 23:59:59'""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha))
@@ -748,17 +720,28 @@ def count_pendiente(fecha:string):
 	finally:
 		conn.close()
 
-def reglas():
+def tip_doc():
 	try:
 		reglas = []
-		conn = psycopg2.connect(
-			host = connex.hostME,
-			user= connex.userME,
-			password = connex.passwordME,
-			database = connex.databaseME
-		)
+		tipo_form = []
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""select * from reglas_me rm where id in ({})""".format(connex.MEA_SFE_FORMULARIOS_ID_tipo))
+		cursor.execute("""select nombre from tipos_documento  where formulario_id  in  ({})""".format(connex.MEA_SFE_FORMULARIOS_ID_tipo))
+		row=cursor.fetchall()
+		for i in row:
+			tipo_form.append(i)
+		return(tipo_form)	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+def reglas_me():
+	try:
+		reglas = []
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select tipo_doc,ma,pa,di,ig,rq_cb,rq_pago,ttasa,exp_ri,esc_ri,rq_sol,rq_ag,estado from reglas_me where tipo_doc in ({})""".format(str(tip_doc()).replace("[","").replace("]","").replace("(","").replace(",)","")))
 		row=cursor.fetchall()
 		for i in row:
 			reglas.append(i)
@@ -768,10 +751,323 @@ def reglas():
 	finally:
 		conn.close()
 
+def format_userdoc(doc_Id):
+	data = pendiente_sfe(doc_Id)
+	create_userdoc['affectedFileIdList_fileNbr'] = str(data[0]['expediente_afectad'])
+	create_userdoc['affectedFileIdList_fileSeq'] = "PY"
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_fecha':
+				data_split = str(data['respuestas'][i]['valor']).split('-')
+				create_userdoc['affectedFileIdList_fileSeries']=str(data_split[0]).replace('"','')
+	except Exception as e:
+		create_userdoc['affectedFileIdList_fileSeries']=""
+	create_userdoc['affectedFileIdList_fileType'] = "M"
+	create_userdoc['affectedFileSummaryList_disclaimer'] = ""
+	create_userdoc['affectedFileSummaryList_disclaimerInOtherLang'] = ""
+	create_userdoc['affectedFileSummaryList_fileNbr'] = "----"
+	create_userdoc['affectedFileSummaryList_fileSeq'] = "---"
+	create_userdoc['affectedFileSummaryList_fileSeries'] = "----"
+	create_userdoc['affectedFileSummaryList_fileType'] = "----"
+	create_userdoc['affectedFileSummaryList_fileIdAsString'] = ""
+	create_userdoc['affectedFileSummaryList_fileSummaryClasses'] = ""
+	create_userdoc['affectedFileSummaryList_fileSummaryCountry'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_denominacion':
+				create_userdoc['affectedFileSummaryList_fileSummaryDescription'] = str(data[0]['respuestas'][i]['valor']) 
+	except Exception as e:
+		create_userdoc['affectedFileSummaryList_fileSummaryDescription'] = ""
+	create_userdoc['affectedFileSummaryList_fileSummaryDescriptionInOtherLang'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_nombrerazon':
+				create_userdoc['affectedFileSummaryList_fileSummaryOwner'] = str(data[0]['respuestas'][i]['valor']) 
+	except Exception as e:
+		create_userdoc['affectedFileSummaryList_fileSummaryOwner'] = ""
+	create_userdoc['affectedFileSummaryList_fileSummaryOwnerInOtherLang'] = ""
+	create_userdoc['affectedFileSummaryList_fileSummaryRepresentative'] = ""
+	create_userdoc['affectedFileSummaryList_fileSummaryRepresentativeInOtherLang'] = ""
+	create_userdoc['affectedFileSummaryList_fileSummaryResponsibleName'] = ""
+	create_userdoc['affectedFileSummaryList_fileSummaryStatus'] = ""
 
 
+
+
+
+
+	
+	create_userdoc['applicant_applicantNotes'] = "Aplicante SPRINT M.E.A."
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_direccion':	
+				create_userdoc['applicant_person_addressStreet'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['applicant_person_addressStreet'] = ""
+	create_userdoc['applicant_person_addressStreetInOtherLang'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == '':
+				create_userdoc['applicant_person_addressZone'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['applicant_person_addressZone'] = ""
+	create_userdoc['applicant_person_agentCode'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == '':	
+				create_userdoc['applicant_person_cityCode'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['applicant_person_cityCode'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_ciudad':
+				create_userdoc['applicant_person_cityName'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['applicant_person_cityName'] = ""
+	create_userdoc['applicant_person_companyRegisterRegistrationDate'] = ""
+	create_userdoc['applicant_person_companyRegisterRegistrationNbr'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_correoelectronico':			
+				create_userdoc['applicant_person_email'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['applicant_person_email'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_documento':
+				create_userdoc['applicant_person_individualIdNbr'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['applicant_person_individualIdNbr'] = ""
+	create_userdoc['applicant_person_individualIdType'] = ""
+	create_userdoc['applicant_person_legalIdNbr'] = ""
+	create_userdoc['applicant_person_legalIdType'] = ""
+	create_userdoc['applicant_person_legalNature'] = ""
+	create_userdoc['applicant_person_legalNatureInOtherLang'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_pais':
+				create_userdoc['applicant_person_nationalityCountryCode'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['applicant_person_nationalityCountryCode'] = ""
+	create_userdoc['applicant_person_personGroupCode'] = ""
+	create_userdoc['applicant_person_personGroupName'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_nombresrazon':
+				create_userdoc['applicant_person_personName'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['applicant_person_personName'] = ""
+	create_userdoc['applicant_person_personNameInOtherLang'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_pais':
+				create_userdoc['applicant_person_residenceCountryCode'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['applicant_person_residenceCountryCode'] = "" 
+	create_userdoc['applicant_person_stateCode'] = ""
+	create_userdoc['applicant_person_stateName'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_telefono':
+				create_userdoc['applicant_person_telephone'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['applicant_person_telephone'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_codigopostal':
+				create_userdoc['applicant_person_zipCode'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['applicant_person_zipCode'] = ""
+	
+	
+	
+	
+	
+	
+	
+	create_userdoc['documentId_docLog'] = "----------"
+	create_userdoc['documentId_docNbr'] = "--------"
+	create_userdoc['documentId_docOrigin'] = "-------"
+	create_userdoc['documentId_docSeries'] = "------"
+	create_userdoc['documentId_selected'] = ""
+	create_userdoc['documentSeqId_docSeqName'] = "----------"
+	create_userdoc['documentSeqId_docSeqNbr'] = "----------"
+	create_userdoc['documentSeqId_docSeqSeries'] = "---------"
+	create_userdoc['documentSeqId_docSeqType'] = "---------"
+	
+	
+	
+	
+	
+	
+	
+	create_userdoc['filingData_applicationSubtype'] = ""
+	create_userdoc['filingData_applicationType'] = ""
+	create_userdoc['filingData_captureDate'] = "--------"
+	create_userdoc['filingData_captureUserId'] = "----------"
+	create_userdoc['filingData_filingDate'] = "--------"
+	create_userdoc['filingData_lawCode'] = ""
+	create_userdoc['filingData_novelty1Date'] = ""
+	create_userdoc['filingData_novelty2Date'] = ""
+	create_userdoc['filingData_paymentList_currencyName'] = ""
+	create_userdoc['filingData_paymentList_currencyType'] = ""
+	create_userdoc['filingData_paymentList_receiptAmount'] = ""
+	create_userdoc['filingData_paymentList_receiptDate'] = ""
+	create_userdoc['filingData_paymentList_receiptNbr'] = ""
+	create_userdoc['filingData_paymentList_receiptNotes'] = ""
+	create_userdoc['filingData_paymentList_receiptType'] = ""
+	create_userdoc['filingData_paymentList_receiptTypeName'] = ""
+	create_userdoc['filingData_receptionDate'] = ""
+	create_userdoc['filingData_documentId_receptionDocument_docLog'] = ""
+	create_userdoc['filingData_documentId_receptionDocument_docNbr'] = ""
+	create_userdoc['filingData_documentId_receptionDocument_docOrigin'] = ""
+	create_userdoc['filingData_documentId_receptionDocument_docSeries'] = ""
+	create_userdoc['filingData_documentId_receptionDocument_selected'] = ""
+	create_userdoc['filingData_userdocTypeList_userdocName'] = ""
+	create_userdoc['filingData_userdocTypeList_userdocType'] = ""
+	
+	
+	
+	
+	
+	
+	
+	create_userdoc['newOwnershipData_ownerList_orderNbr'] = ""
+	create_userdoc['newOwnershipData_ownerList_ownershipNotes'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_addressStreet'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_addressStreetInOtherLang'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_addressZone'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_agentCode'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_cityCode'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_cityName'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_companyRegisterRegistrationDate'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_companyRegisterRegistrationNbr'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_email'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_individualIdNbr'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_individualIdType'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_legalIdNbr'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_legalIdType'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_legalNature'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_legalNatureInOtherLang'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_nationalityCountryCode'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_personGroupCode'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_personGroupName'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_personName'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_personNameInOtherLang'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_residenceCountryCode'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_stateCode'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_stateName'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_telephone'] = ""
+	create_userdoc['newOwnershipData_ownerList_person_zipCode'] = ""
+	
+	
+	
+	
+	
+	
+	
+	
+	create_userdoc['notes'] = ""
+	create_userdoc['poaData_poaGranteeList_person_addressStreet'] = ""
+	create_userdoc['poaData_poaGranteeList_person_addressStreetInOtherLang'] = ""
+	create_userdoc['poaData_poaGranteeList_person_addressZone'] = ""
+	create_userdoc['poaData_poaGranteeList_person_agentCode'] = ""
+	create_userdoc['poaData_poaGranteeList_person_cityCode'] = ""
+	create_userdoc['poaData_poaGranteeList_person_cityName'] = ""
+	create_userdoc['poaData_poaGranteeList_person_companyRegisterRegistrationDate'] = ""
+	create_userdoc['poaData_poaGranteeList_person_companyRegisterRegistrationNbr'] = ""
+	create_userdoc['poaData_poaGranteeList_person_email'] = ""
+	create_userdoc['poaData_poaGranteeList_person_individualIdNbr'] = ""
+	create_userdoc['poaData_poaGranteeList_person_individualIdType'] = ""
+	create_userdoc['poaData_poaGranteeList_person_legalIdNbr'] = ""
+	create_userdoc['poaData_poaGranteeList_person_legalIdType'] = ""
+	create_userdoc['poaData_poaGranteeList_person_legalNature'] = ""
+	create_userdoc['poaData_poaGranteeList_person_legalNatureInOtherLang'] = ""
+	create_userdoc['poaData_poaGranteeList_person_nationalityCountryCode'] = ""
+	create_userdoc['poaData_poaGranteeList_person_personGroupCode'] = ""
+	create_userdoc['poaData_poaGranteeList_person_personGroupName'] = ""
+	create_userdoc['poaData_poaGranteeList_person_personName'] = ""
+	create_userdoc['poaData_poaGranteeList_person_personNameInOtherLang'] = ""
+	create_userdoc['poaData_poaGranteeList_person_residenceCountryCode'] = ""
+	create_userdoc['poaData_poaGranteeList_person_stateCode'] = ""
+	create_userdoc['poaData_poaGranteeList_person_stateName'] = ""
+	create_userdoc['poaData_poaGranteeList_person_telephone'] = ""
+	create_userdoc['poaData_poaGranteeList_person_zipCode'] = ""
+	create_userdoc['poaData_poaGrantor_person_addressStreet'] = ""
+	create_userdoc['poaData_poaGrantor_person_addressStreetInOtherLang'] = ""
+	create_userdoc['poaData_poaGrantor_person_addressZone'] = ""
+	create_userdoc['poaData_poaGrantor_person_agentCode'] = ""
+	create_userdoc['poaData_poaGrantor_person_cityCode'] = ""
+	create_userdoc['poaData_poaGrantor_person_cityName'] = ""
+	create_userdoc['poaData_poaGrantor_person_companyRegisterRegistrationDate'] = ""
+	create_userdoc['poaData_poaGrantor_person_companyRegisterRegistrationNbr'] = ""
+	create_userdoc['poaData_poaGrantor_person_email'] = ""
+	create_userdoc['poaData_poaGrantor_person_individualIdNbr'] = ""
+	create_userdoc['poaData_poaGrantor_person_individualIdType'] = ""
+	create_userdoc['poaData_poaGrantor_person_legalIdNbr'] = ""
+	create_userdoc['poaData_poaGrantor_person_legalIdType'] = ""
+	create_userdoc['poaData_poaGrantor_person_legalNature'] = ""
+	create_userdoc['poaData_poaGrantor_person_legalNatureInOtherLang'] = ""
+	create_userdoc['poaData_poaGrantor_person_nationalityCountryCode'] = ""
+	create_userdoc['poaData_poaGrantor_person_personGroupCode'] = ""
+	create_userdoc['poaData_poaGrantor_person_personGroupName'] = ""
+	create_userdoc['poaData_poaGrantor_person_personName'] = ""
+	create_userdoc['poaData_poaGrantor_person_personNameInOtherLang'] = ""
+	create_userdoc['poaData_poaGrantor_person_residenceCountryCode'] = ""
+	create_userdoc['poaData_poaGrantor_person_stateCode'] = ""
+	create_userdoc['poaData_poaGrantor_person_stateName'] = ""
+	create_userdoc['poaData_poaGrantor_person_telephone'] = ""
+	create_userdoc['poaData_poaGrantor_person_zipCode'] = ""
+	create_userdoc['poaData_poaRegNumber'] = ""
+	create_userdoc['poaData_scope'] = ""
+	
+	
+	
+	
+	
+	
+	
+	create_userdoc['representationData_representativeList_person_addressStreet'] = personAgente(code_ag(data[0]['usuario_id']))[0]['addressStreet']
+	create_userdoc['representationData_representativeList_person_addressStreetInOtherLang'] = ""
+	create_userdoc['representationData_representativeList_person_addressZone'] = ""
+	create_userdoc['representationData_representativeList_person_agentCode'] = personAgente(code_ag(data[0]['usuario_id']))[0]['agentCode']['doubleValue']
+	create_userdoc['representationData_representativeList_person_cityCode'] = ""
+	create_userdoc['representationData_representativeList_person_cityName'] = ""
+	create_userdoc['representationData_representativeList_person_companyRegisterRegistrationDate'] = ""
+	create_userdoc['representationData_representativeList_person_companyRegisterRegistrationNbr'] = ""
+	create_userdoc['representationData_representativeList_person_email'] = personAgente(code_ag(data[0]['usuario_id']))[0]['email']
+	create_userdoc['representationData_representativeList_person_individualIdNbr'] = ""
+	create_userdoc['representationData_representativeList_person_individualIdType'] = ""
+	create_userdoc['representationData_representativeList_person_legalIdNbr'] = ""
+	create_userdoc['representationData_representativeList_person_legalIdType'] = ""
+	create_userdoc['representationData_representativeList_person_legalNature'] = ""
+	create_userdoc['representationData_representativeList_person_legalNatureInOtherLang'] = ""
+	create_userdoc['representationData_representativeList_person_nationalityCountryCode'] = personAgente(code_ag(data[0]['usuario_id']))[0]['nationalityCountryCode']
+	create_userdoc['representationData_representativeList_person_personGroupCode'] = ""
+	create_userdoc['representationData_representativeList_person_personGroupName'] = ""
+	create_userdoc['representationData_representativeList_person_personName'] = personAgente(code_ag(data[0]['usuario_id']))[0]['personName']
+	create_userdoc['representationData_representativeList_person_personNameInOtherLang'] = ""
+	create_userdoc['representationData_representativeList_person_residenceCountryCode'] = personAgente(code_ag(data[0]['usuario_id']))[0]['residenceCountryCode']
+	create_userdoc['representationData_representativeList_person_stateCode'] = ""
+	create_userdoc['representationData_representativeList_person_stateName'] = ""
+	create_userdoc['representationData_representativeList_person_telephone'] = personAgente(code_ag(data[0]['usuario_id']))[0]['telephone']
+	create_userdoc['representationData_representativeList_person_zipCode'] = ""
+	create_userdoc['representationData_representativeList_representativeType'] = ""
+	
+	return(create_userdoc)
+ 
+	
+	
+
+#print(mark_getlist('1958312')[0]['fileId'])
+
+
+#print(format_userdoc('1495')['affectedFileIdList_fileNbr'])
 
 
 '''
+
+personAgente(code_ag(pendiente_sfe(doc_Id)[0]['usuario_id']))[0] #Consulta agente
+
 select * from tramites where formulario_id IN (39, 40, 66, 67,69,70,3,4,27,95) and estado  in (7)
 '''

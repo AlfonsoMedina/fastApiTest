@@ -2,7 +2,7 @@ from time import sleep
 from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
-from dinapi.sfe import count_pendiente, oposicion_sfe, pendientes_sfe, registro_sfe, reglas, renovacion_sfe
+from dinapi.sfe import count_pendiente, format_userdoc, oposicion_sfe, pendientes_sfe, registro_sfe, reglas_me, renovacion_sfe, tip_doc
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
 from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, mark_insert_ren, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update, user_doc_update_sin_recibo #pip install "fastapi[all]"
@@ -1865,7 +1865,9 @@ async def sfe_opo_capture(item:for_id):
 }
 	return(oposicion_sfe(item.ID))
 
-
+@app.post('/sis/test', summary="MEA", tags=["test insert"])
+def TEST_MEA():
+	return(format_userdoc('1495'))
 
 @app.post('/api/getparametros', summary="API", tags=["Lista de parametros"])
 def get_params():
@@ -1877,7 +1879,7 @@ def get_params():
 
 @app.post('/api/reglas', summary="API", tags=["Lista de reglas segun formulario_id"])
 def reglas_mea():
-	return(reglas())
+	return(reglas_me())
 
 @app.post('/api/getparametro', summary="API", tags=["Devuelve un registro segun su id"])
 def get_param(item: for_id):
@@ -1900,10 +1902,11 @@ def update_param(item:update_id):
 
 class pendientes(BaseModel):
 	fecha:str
+	ver:str
 	pag:str                 
 @app.post('/api/pendientes_sfe', summary="API", tags=["Lista de pendientes"])
 def pendientes_sfe_m(item:pendientes):
-	return(pendientes_sfe(item.fecha,item.pag))
+	return(pendientes_sfe(item.fecha,item.ver,item.pag))
 
 
 class pendientes_count(BaseModel):
