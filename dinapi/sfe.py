@@ -6,7 +6,7 @@ from wipo.ipas import mark_getlist, personAgente
 
 global_data = {}
 create_userdoc = {}
-
+default_val = lambda arg: arg if arg == "null" else "" 
 conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,	password = connex.password_SFE_conn,database = connex.database_SFE_conn	)
 
 def registro_sfe(arg):
@@ -751,8 +751,11 @@ def reglas_me():
 	finally:
 		conn.close()
 
+
+
 def format_userdoc(doc_Id):
 	data = pendiente_sfe(doc_Id)
+	ag_data = personAgente(code_ag(data[0]['usuario_id']))[0]
 	create_userdoc['affectedFileIdList_fileNbr'] = str(data[0]['expediente_afectad'])
 	create_userdoc['affectedFileIdList_fileSeq'] = "PY"
 	try:
@@ -1026,33 +1029,110 @@ def format_userdoc(doc_Id):
 	
 	
 	
-	
-	create_userdoc['representationData_representativeList_person_addressStreet'] = personAgente(code_ag(data[0]['usuario_id']))[0]['addressStreet']
-	create_userdoc['representationData_representativeList_person_addressStreetInOtherLang'] = ""
-	create_userdoc['representationData_representativeList_person_addressZone'] = ""
-	create_userdoc['representationData_representativeList_person_agentCode'] = personAgente(code_ag(data[0]['usuario_id']))[0]['agentCode']['doubleValue']
-	create_userdoc['representationData_representativeList_person_cityCode'] = ""
-	create_userdoc['representationData_representativeList_person_cityName'] = ""
-	create_userdoc['representationData_representativeList_person_companyRegisterRegistrationDate'] = ""
-	create_userdoc['representationData_representativeList_person_companyRegisterRegistrationNbr'] = ""
-	create_userdoc['representationData_representativeList_person_email'] = personAgente(code_ag(data[0]['usuario_id']))[0]['email']
-	create_userdoc['representationData_representativeList_person_individualIdNbr'] = ""
-	create_userdoc['representationData_representativeList_person_individualIdType'] = ""
-	create_userdoc['representationData_representativeList_person_legalIdNbr'] = ""
-	create_userdoc['representationData_representativeList_person_legalIdType'] = ""
-	create_userdoc['representationData_representativeList_person_legalNature'] = ""
-	create_userdoc['representationData_representativeList_person_legalNatureInOtherLang'] = ""
-	create_userdoc['representationData_representativeList_person_nationalityCountryCode'] = personAgente(code_ag(data[0]['usuario_id']))[0]['nationalityCountryCode']
-	create_userdoc['representationData_representativeList_person_personGroupCode'] = ""
-	create_userdoc['representationData_representativeList_person_personGroupName'] = ""
-	create_userdoc['representationData_representativeList_person_personName'] = personAgente(code_ag(data[0]['usuario_id']))[0]['personName']
-	create_userdoc['representationData_representativeList_person_personNameInOtherLang'] = ""
-	create_userdoc['representationData_representativeList_person_residenceCountryCode'] = personAgente(code_ag(data[0]['usuario_id']))[0]['residenceCountryCode']
-	create_userdoc['representationData_representativeList_person_stateCode'] = ""
-	create_userdoc['representationData_representativeList_person_stateName'] = ""
-	create_userdoc['representationData_representativeList_person_telephone'] = personAgente(code_ag(data[0]['usuario_id']))[0]['telephone']
-	create_userdoc['representationData_representativeList_person_zipCode'] = ""
-	create_userdoc['representationData_representativeList_representativeType'] = ""
+	try:
+		create_userdoc['representationData_representativeList_person_addressStreet'] = ag_data['addressStreet']
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_addressStreet'] = ""
+	try:	
+		create_userdoc['representationData_representativeList_person_addressStreetInOtherLang'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_addressStreetInOtherLang'] = ""	
+	try:
+		create_userdoc['representationData_representativeList_person_addressZone'] = default_val(ag_data['addressZone'])
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_addressZone'] = ""	
+	try:
+		create_userdoc['representationData_representativeList_person_agentCode'] = str(int(ag_data['agentCode']['doubleValue']))
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_agentCode'] = ""	
+	try:
+		create_userdoc['representationData_representativeList_person_cityCode'] =  ag_data['cityCode']
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_cityCode'] = ""	
+	try:	
+		create_userdoc['representationData_representativeList_person_cityName'] = ag_data['cityName']
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_cityName'] = ""	
+	try:	
+		create_userdoc['representationData_representativeList_person_companyRegisterRegistrationDate'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_companyRegisterRegistrationDate'] = ""	
+	try:	
+		create_userdoc['representationData_representativeList_person_companyRegisterRegistrationNbr'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_companyRegisterRegistrationNbr'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_email'] = ag_data['email']
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_email'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_individualIdNbr'] = ""	
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_individualIdNbr'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_individualIdType'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_individualIdType'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_legalIdNbr'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_legalIdNbr'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_legalIdType'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_legalIdType'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_legalNature'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_legalNature'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_legalNatureInOtherLang'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_legalNatureInOtherLang'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_nationalityCountryCode'] = ag_data['nationalityCountryCode']
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_nationalityCountryCode'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_personGroupCode'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_personGroupCode'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_personGroupName'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_personGroupName'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_personName'] = ag_data['personName']
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_personName'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_personNameInOtherLang'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_personNameInOtherLang'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_residenceCountryCode'] = ag_data['residenceCountryCode']
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_residenceCountryCode'] = ""
+	try:		
+		create_userdoc['representationData_representativeList_person_stateCode'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_stateCode'] = ""
+	try:		
+		create_userdoc['representationData_representativeList_person_stateName'] = ""
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_stateName'] = ""
+	try:		
+		create_userdoc['representationData_representativeList_person_telephone'] = ag_data['telephone']
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_telephone'] = ""		
+	try:		
+		create_userdoc['representationData_representativeList_person_zipCode'] = ag_data['zipCode']
+	except Exception as e:
+		create_userdoc['representationData_representativeList_person_zipCode'] = ""	
+	try:
+		create_userdoc['representationData_representativeList_representativeType'] = ag_data['representativeType']
+	except Exception as e:
+		create_userdoc['representationData_representativeList_representativeType'] = ""
 	
 	return(create_userdoc)
  
