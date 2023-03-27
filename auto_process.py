@@ -4,7 +4,7 @@ Administrador de recepcion MEA
 import string
 import time
 from time import sleep
-from dinapi.sfe import cambio_estado, count_pendiente, format_userdoc, paymentYeasOrNot, pendiente_sfe, pendientes_sfe
+from dinapi.sfe import cambio_estado, count_pendiente, format_userdoc, pago_data, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos
 
@@ -63,76 +63,28 @@ def check_date(): # Captura lista pendiente
 	for i in pendientes_sfe(today,100,0):
 		try:
 			if i['estado'] == 7:
-				list_id.append(str(i['Id'])+"-"+str(i['tool_tip']))
-			print(list_id)
+				list_id.append(str(i['Id'])+"-"+paymentYeasOrNot(str(i['tool_tip'])))
+			#print(list_id)
 		except Exception as e:
 			pass
 
 def insert_list(arg0:string,arg1:string): # Insercion segun tipo de formulario
-	if arg1 == "68":
-		print(arg0 + " Procesado...")
-		list_id.remove(arg0+"-"+arg1)
+	
+	print(paymentYeasOrNot(arg1))
+	
+	print(pago_id(arg0)) 
+
+	#Quitar de la lista despues de procesar
+	#list_id.remove(arg0+"-"+arg1)
+
 		
-		cambio_estado(arg0)
-
-	if arg1 == "70":
-		print(arg0 + " Procesado...")
-		list_id.remove(arg0+"-"+arg1)
-
-		cambio_estado(arg0)
-
-	if arg1 == "69":
-		print(arg0 + " Procesado...") 
-		list_id.remove(arg0+"-"+arg1)
-
-		cambio_estado(arg0)
-
-	if arg1 == "36":
-		print(arg0 + " Procesado...")
-		list_id.remove(arg0+"-"+arg1)
-
-		cambio_estado(arg0)
-
-	if arg1 == "39":
-		print(arg0 + " Procesado...")
-		list_id.remove(arg0+"-"+arg1)
-		cambio_estado(arg0)
-
-	if arg1 == "42":
-		print(arg0 + " Procesado...")
-		list_id.remove(arg0+"-"+arg1)
-		cambio_estado(arg0)
-
-	if arg1 == "95":
-		print(arg0 + " Procesado...")
-		list_id.remove(arg0+"-"+arg1)
-		cambio_estado(arg0)
-
-	if arg1 == "3":
-		print(arg0 + " Procesado...")
-		list_id.remove(arg0+"-"+arg1)
-		cambio_estado(arg0)
-
-	if arg1 == "4":
-		print(arg0 + " Procesado...")
-		list_id.remove(arg0+"-"+arg1)
-		cambio_estado(arg0)
-
-	if arg1 == "27":
-		print(arg0 + " Procesado...")
-		list_id.remove(arg0+"-"+arg1)
-		cambio_estado(arg0)
-
-#listar()
-
-
-print(paymentYeasOrNot('DTM - Duplicado de Títulos Marcas'))
-
-
-
+	#Cambiar estado despues de procesar
+	#cambio_estado(arg0)
+		
 def compileAndInsert(form_Id,typ):
 	item = format_userdoc(form_Id,typ)
-	return insert_user_doc_escritos(item['affectedFileIdList_fileNbr'],
+	return insert_user_doc_escritos(
+							item['affectedFileIdList_fileNbr'],
 							item['affectedFileIdList_fileSeq'],
 							item['affectedFileIdList_fileSeries'],
 							item['affectedFileIdList_fileType'],
@@ -318,6 +270,16 @@ def compileAndInsert(form_Id,typ):
 							item['representationData_representativeList_person_telephone'],
 							item['representationData_representativeList_person_zipCode'],
 							item['representationData_representativeList_representativeType'])
+
+
+print(paymentYeasOrNot('ACL - Aclaratoria'))
+
+print(pago_id('1452'))
+
+print(pago_data('1452'))
+
+#listar()
+
 
 
 #print(compileAndInsert('1496','70'))
