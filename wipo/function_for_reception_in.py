@@ -6,6 +6,7 @@ from dis import code_info
 import json
 import pickle
 from time import sleep
+import time
 from click import File
 from zeep import Client
 from io import BytesIO, FileIO
@@ -4114,3 +4115,46 @@ def insert_user_doc_escritos(affectedFileIdList_fileNbr,
 		return(clientMark.service.UserdocInsert(**data))
 	except zeep.exceptions.Fault as e:
 		return(e)
+
+
+'''
+##############################################################################################################
+Hora por 24H
+    time.strftime("%H:%M:%S") #Formato de 24 horas
+
+Hora por 12H
+    time.strftime("%I:%M:%S") #Formato de 12 horas
+
+Fecha formato: dd/mm/yyyy
+print (time.strftime("%d/%m/%y"))
+    
+
+Las siguientes directivas se pueden utilizar en el formato de cadena:
+
+%a - Nombre del día de la semana
+%A - Nombre del día completo
+%b - Nombre abreviado del mes
+%B - Nombre completo del mes
+%c - Fecha y hora actual
+%d - Día del mes
+%H - Hora (formato 24 horas)
+%I - Hora (formato 12 horas)
+%j - Día del año
+%m - Mes en número
+%M- Minutos
+%p - Equivalente de AM o PM
+%S - Segundos
+%U - Semana del año (domingo como primer día de la semana)
+%w - Día de la semana
+%W - Semana del año (lunes como primer día de la semana)
+%x - Fecha actual
+%X - Hora actual
+%y - Número de año (14)
+%Y - Numero de año entero (2014)
+%Z - Zona horaria
+
+
+
+
+
+'''

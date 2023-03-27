@@ -1,6 +1,8 @@
 from math import ceil
 import string
+import time
 import psycopg2
+import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.ipas import mark_getlist, personAgente
 
@@ -751,43 +753,34 @@ def reglas_me():
 	finally:
 		conn.close()
 
-
-
-def format_userdoc(doc_Id):
+def format_userdoc(doc_Id,typ):
+	#process_day_commit_Nbr()
 	data = pendiente_sfe(doc_Id)
-	ag_data = personAgente(code_ag(data[0]['usuario_id']))[0]
+	try:
+		ag_data = personAgente(code_ag(data[0]['usuario_id']))[0]
+	except Exception as e:
+		print("No existe el Agente")	
 	create_userdoc['affectedFileIdList_fileNbr'] = str(data[0]['expediente_afectad'])
 	create_userdoc['affectedFileIdList_fileSeq'] = "PY"
 	try:
-		for i in range(0,len(data[0]['respuestas'])):
-			if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_fecha':
-				data_split = str(data['respuestas'][i]['valor']).split('-')
-				create_userdoc['affectedFileIdList_fileSeries']=str(data_split[0]).replace('"','')
+		create_userdoc['affectedFileIdList_fileSeries']=str(int(mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeries']['doubleValue']))
 	except Exception as e:
 		create_userdoc['affectedFileIdList_fileSeries']=""
 	create_userdoc['affectedFileIdList_fileType'] = "M"
+
+
 	create_userdoc['affectedFileSummaryList_disclaimer'] = ""
 	create_userdoc['affectedFileSummaryList_disclaimerInOtherLang'] = ""
-	create_userdoc['affectedFileSummaryList_fileNbr'] = "----"
-	create_userdoc['affectedFileSummaryList_fileSeq'] = "---"
-	create_userdoc['affectedFileSummaryList_fileSeries'] = "----"
-	create_userdoc['affectedFileSummaryList_fileType'] = "----"
+	create_userdoc['affectedFileSummaryList_fileNbr'] = ""
+	create_userdoc['affectedFileSummaryList_fileSeq'] = ""
+	create_userdoc['affectedFileSummaryList_fileSeries'] = ""
+	create_userdoc['affectedFileSummaryList_fileType'] = ""
 	create_userdoc['affectedFileSummaryList_fileIdAsString'] = ""
 	create_userdoc['affectedFileSummaryList_fileSummaryClasses'] = ""
 	create_userdoc['affectedFileSummaryList_fileSummaryCountry'] = ""
-	try:
-		for i in range(0,len(data[0]['respuestas'])):
-			if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_denominacion':
-				create_userdoc['affectedFileSummaryList_fileSummaryDescription'] = str(data[0]['respuestas'][i]['valor']) 
-	except Exception as e:
-		create_userdoc['affectedFileSummaryList_fileSummaryDescription'] = ""
+	create_userdoc['affectedFileSummaryList_fileSummaryDescription'] = ""
 	create_userdoc['affectedFileSummaryList_fileSummaryDescriptionInOtherLang'] = ""
-	try:
-		for i in range(0,len(data[0]['respuestas'])):
-			if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_nombrerazon':
-				create_userdoc['affectedFileSummaryList_fileSummaryOwner'] = str(data[0]['respuestas'][i]['valor']) 
-	except Exception as e:
-		create_userdoc['affectedFileSummaryList_fileSummaryOwner'] = ""
+	create_userdoc['affectedFileSummaryList_fileSummaryOwner'] = ""
 	create_userdoc['affectedFileSummaryList_fileSummaryOwnerInOtherLang'] = ""
 	create_userdoc['affectedFileSummaryList_fileSummaryRepresentative'] = ""
 	create_userdoc['affectedFileSummaryList_fileSummaryRepresentativeInOtherLang'] = ""
@@ -795,38 +788,23 @@ def format_userdoc(doc_Id):
 	create_userdoc['affectedFileSummaryList_fileSummaryStatus'] = ""
 
 
-
-
-
-
-	
 	create_userdoc['applicant_applicantNotes'] = "Aplicante SPRINT M.E.A."
+
 	try:
 		for i in range(0,len(data[0]['respuestas'])):
 			if data[0]['respuestas'][i]['campo'] == 'datospersonales_direccion':	
 				create_userdoc['applicant_person_addressStreet'] = str(data[0]['respuestas'][i]['valor'])
 	except Exception as e:
 		create_userdoc['applicant_person_addressStreet'] = ""
+
 	create_userdoc['applicant_person_addressStreetInOtherLang'] = ""
-	try:
-		for i in range(0,len(data[0]['respuestas'])):
-			if data[0]['respuestas'][i]['campo'] == '':
-				create_userdoc['applicant_person_addressZone'] = str(data[0]['respuestas'][i]['valor'])
-	except Exception as e:
-		create_userdoc['applicant_person_addressZone'] = ""
+	create_userdoc['applicant_person_addressZone'] = ""
 	create_userdoc['applicant_person_agentCode'] = ""
-	try:
-		for i in range(0,len(data[0]['respuestas'])):
-			if data[0]['respuestas'][i]['campo'] == '':	
-				create_userdoc['applicant_person_cityCode'] = str(data[0]['respuestas'][i]['valor'])
-	except Exception as e:
-		create_userdoc['applicant_person_cityCode'] = ""
-	try:
-		for i in range(0,len(data[0]['respuestas'])):
-			if data[0]['respuestas'][i]['campo'] == 'datospersonales_ciudad':
-				create_userdoc['applicant_person_cityName'] = str(data[0]['respuestas'][i]['valor'])
-	except Exception as e:
-		create_userdoc['applicant_person_cityName'] = ""
+
+	create_userdoc['applicant_person_cityCode'] = ""
+
+	create_userdoc['applicant_person_cityName'] = ""
+
 	create_userdoc['applicant_person_companyRegisterRegistrationDate'] = ""
 	create_userdoc['applicant_person_companyRegisterRegistrationNbr'] = ""
 	try:
@@ -835,15 +813,15 @@ def format_userdoc(doc_Id):
 				create_userdoc['applicant_person_email'] = str(data[0]['respuestas'][i]['valor'])
 	except Exception as e:
 		create_userdoc['applicant_person_email'] = ""
-	try:
-		for i in range(0,len(data[0]['respuestas'])):
-			if data[0]['respuestas'][i]['campo'] == 'datospersonales_documento':
-				create_userdoc['applicant_person_individualIdNbr'] = str(data[0]['respuestas'][i]['valor'])
-	except Exception as e:
-		create_userdoc['applicant_person_individualIdNbr'] = ""
+
+	create_userdoc['applicant_person_individualIdNbr'] = ""
+	
 	create_userdoc['applicant_person_individualIdType'] = ""
+	
 	create_userdoc['applicant_person_legalIdNbr'] = ""
-	create_userdoc['applicant_person_legalIdType'] = ""
+
+	create_userdoc['applicant_person_legalIdType'] = ""		
+	
 	create_userdoc['applicant_person_legalNature'] = ""
 	create_userdoc['applicant_person_legalNatureInOtherLang'] = ""
 	try:
@@ -884,57 +862,86 @@ def format_userdoc(doc_Id):
 	
 	
 	
+	try:
+		create_userdoc['documentId_docLog'] = "E"
+	except Exception as e:
+		create_userdoc['documentId_docLog'] = ""
+	try:
+		create_userdoc['documentId_docNbr'] = str(process_day_Nbr())
+	except Exception as e:
+		create_userdoc['documentId_docNbr'] = ""	
+	try:
+		create_userdoc['documentId_docOrigin'] = "1"
+	except Exception as e:
+		create_userdoc['documentId_docOrigin'] = ""	
+	try:
+		create_userdoc['documentId_docSeries'] = captureDate.capture_year()
+	except Exception as e:
+		create_userdoc['documentId_docSeries'] = ""	
+	try:
+		create_userdoc['documentId_selected'] = ""
+	except Exception as e:
+		create_userdoc['documentId_selected'] = ""	
+	try:	
+		create_userdoc['documentSeqId_docSeqName'] = "Documentos"
+	except Exception as e:
+		create_userdoc['documentSeqId_docSeqName'] = ""	
+	try:	
+		create_userdoc['documentSeqId_docSeqNbr'] = str(process_day_Nbr())
+	except Exception as e:
+		create_userdoc['documentSeqId_docSeqNbr'] = ""	
+	try:	
+		create_userdoc['documentSeqId_docSeqSeries'] = captureDate.capture_year()
+	except Exception as e:
+		create_userdoc['documentSeqId_docSeqSeries'] = ""	
+	try:
+		create_userdoc['documentSeqId_docSeqType'] = "PY"
+	except Exception as e:
+		create_userdoc['documentSeqId_docSeqType'] = ""	
 	
 	
-	
-	
-	create_userdoc['documentId_docLog'] = "----------"
-	create_userdoc['documentId_docNbr'] = "--------"
-	create_userdoc['documentId_docOrigin'] = "-------"
-	create_userdoc['documentId_docSeries'] = "------"
-	create_userdoc['documentId_selected'] = ""
-	create_userdoc['documentSeqId_docSeqName'] = "----------"
-	create_userdoc['documentSeqId_docSeqNbr'] = "----------"
-	create_userdoc['documentSeqId_docSeqSeries'] = "---------"
-	create_userdoc['documentSeqId_docSeqType'] = "---------"
-	
-	
-	
-	
-	
-	
-	
+
 	create_userdoc['filingData_applicationSubtype'] = ""
 	create_userdoc['filingData_applicationType'] = ""
-	create_userdoc['filingData_captureDate'] = "--------"
-	create_userdoc['filingData_captureUserId'] = "----------"
-	create_userdoc['filingData_filingDate'] = "--------"
+	create_userdoc['filingData_captureDate'] = captureDate.capture_full()
+	create_userdoc['filingData_captureUserId'] = "4"
+	create_userdoc['filingData_filingDate'] = captureDate.capture_full()
 	create_userdoc['filingData_lawCode'] = ""
 	create_userdoc['filingData_novelty1Date'] = ""
 	create_userdoc['filingData_novelty2Date'] = ""
-	create_userdoc['filingData_paymentList_currencyName'] = ""
-	create_userdoc['filingData_paymentList_currencyType'] = ""
-	create_userdoc['filingData_paymentList_receiptAmount'] = ""
-	create_userdoc['filingData_paymentList_receiptDate'] = ""
-	create_userdoc['filingData_paymentList_receiptNbr'] = ""
-	create_userdoc['filingData_paymentList_receiptNotes'] = ""
+
+
+	create_userdoc['filingData_paymentList_currencyName'] = "Guaraníes"
+	create_userdoc['filingData_paymentList_currencyType'] = "GS"
+	try:
+		create_userdoc['filingData_paymentList_receiptAmount'] = str(pago_data(doc_Id)[1])
+	except Exception as e:
+		create_userdoc['filingData_paymentList_receiptAmount'] = ""
+	try:	
+		create_userdoc['filingData_paymentList_receiptDate'] = str(pago_data(doc_Id)[2])[0:10]
+	except Exception as e:
+		create_userdoc['filingData_paymentList_receiptDate'] = ""		
+	try:
+		create_userdoc['filingData_paymentList_receiptNbr'] = str(pago_data(doc_Id)[0])
+	except Exception as e:
+		create_userdoc['filingData_paymentList_receiptNbr'] = ""		
+
+	create_userdoc['filingData_paymentList_receiptNotes'] = " Caja MEA"
 	create_userdoc['filingData_paymentList_receiptType'] = ""
 	create_userdoc['filingData_paymentList_receiptTypeName'] = ""
-	create_userdoc['filingData_receptionDate'] = ""
-	create_userdoc['filingData_documentId_receptionDocument_docLog'] = ""
-	create_userdoc['filingData_documentId_receptionDocument_docNbr'] = ""
-	create_userdoc['filingData_documentId_receptionDocument_docOrigin'] = ""
-	create_userdoc['filingData_documentId_receptionDocument_docSeries'] = ""
+
+
+	create_userdoc['filingData_receptionDate'] = captureDate.capture_full()
+	create_userdoc['filingData_documentId_receptionDocument_docLog'] = "E"
+	create_userdoc['filingData_documentId_receptionDocument_docNbr'] = str(process_day_Nbr())
+	create_userdoc['filingData_documentId_receptionDocument_docOrigin'] = "1"
+	create_userdoc['filingData_documentId_receptionDocument_docSeries'] = captureDate.capture_year()
 	create_userdoc['filingData_documentId_receptionDocument_selected'] = ""
-	create_userdoc['filingData_userdocTypeList_userdocName'] = ""
-	create_userdoc['filingData_userdocTypeList_userdocType'] = ""
+	create_userdoc['filingData_userdocTypeList_userdocName'] = str(data[0]['tool_tip'])
+	create_userdoc['filingData_userdocTypeList_userdocType'] = str(data[0]['tipo_documento_id'])
 	
 	
-	
-	
-	
-	
-	
+
 	create_userdoc['newOwnershipData_ownerList_orderNbr'] = ""
 	create_userdoc['newOwnershipData_ownerList_ownershipNotes'] = ""
 	create_userdoc['newOwnershipData_ownerList_person_addressStreet'] = ""
@@ -952,25 +959,38 @@ def format_userdoc(doc_Id):
 	create_userdoc['newOwnershipData_ownerList_person_legalIdType'] = ""
 	create_userdoc['newOwnershipData_ownerList_person_legalNature'] = ""
 	create_userdoc['newOwnershipData_ownerList_person_legalNatureInOtherLang'] = ""
-	create_userdoc['newOwnershipData_ownerList_person_nationalityCountryCode'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_pais':
+				create_userdoc['newOwnershipData_ownerList_person_nationalityCountryCode'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['newOwnershipData_ownerList_person_nationalityCountryCode'] = "" 
 	create_userdoc['newOwnershipData_ownerList_person_personGroupCode'] = ""
 	create_userdoc['newOwnershipData_ownerList_person_personGroupName'] = ""
-	create_userdoc['newOwnershipData_ownerList_person_personName'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_nombresrazon':
+				create_userdoc['newOwnershipData_ownerList_person_personName'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['newOwnershipData_ownerList_person_personName'] = ""
+
 	create_userdoc['newOwnershipData_ownerList_person_personNameInOtherLang'] = ""
-	create_userdoc['newOwnershipData_ownerList_person_residenceCountryCode'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_pais':
+				create_userdoc['newOwnershipData_ownerList_person_residenceCountryCode'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['newOwnershipData_ownerList_person_residenceCountryCode'] = ""
 	create_userdoc['newOwnershipData_ownerList_person_stateCode'] = ""
 	create_userdoc['newOwnershipData_ownerList_person_stateName'] = ""
 	create_userdoc['newOwnershipData_ownerList_person_telephone'] = ""
 	create_userdoc['newOwnershipData_ownerList_person_zipCode'] = ""
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
 	create_userdoc['notes'] = ""
+
+
 	create_userdoc['poaData_poaGranteeList_person_addressStreet'] = ""
 	create_userdoc['poaData_poaGranteeList_person_addressStreetInOtherLang'] = ""
 	create_userdoc['poaData_poaGranteeList_person_addressZone'] = ""
@@ -1025,10 +1045,7 @@ def format_userdoc(doc_Id):
 	create_userdoc['poaData_scope'] = ""
 	
 	
-	
-	
-	
-	
+
 	try:
 		create_userdoc['representationData_representativeList_person_addressStreet'] = ag_data['addressStreet']
 	except Exception as e:
@@ -1042,15 +1059,15 @@ def format_userdoc(doc_Id):
 	except Exception as e:
 		create_userdoc['representationData_representativeList_person_addressZone'] = ""	
 	try:
-		create_userdoc['representationData_representativeList_person_agentCode'] = str(int(ag_data['agentCode']['doubleValue']))
+		create_userdoc['representationData_representativeList_person_agentCode'] = default_val(str(int(ag_data['agentCode']['doubleValue'])))
 	except Exception as e:
 		create_userdoc['representationData_representativeList_person_agentCode'] = ""	
 	try:
-		create_userdoc['representationData_representativeList_person_cityCode'] =  ag_data['cityCode']
+		create_userdoc['representationData_representativeList_person_cityCode'] =  default_val(ag_data['cityCode'])
 	except Exception as e:
 		create_userdoc['representationData_representativeList_person_cityCode'] = ""	
 	try:	
-		create_userdoc['representationData_representativeList_person_cityName'] = ag_data['cityName']
+		create_userdoc['representationData_representativeList_person_cityName'] = default_val(ag_data['cityName'])
 	except Exception as e:
 		create_userdoc['representationData_representativeList_person_cityName'] = ""	
 	try:	
@@ -1132,17 +1149,68 @@ def format_userdoc(doc_Id):
 	try:
 		create_userdoc['representationData_representativeList_representativeType'] = ag_data['representativeType']
 	except Exception as e:
-		create_userdoc['representationData_representativeList_representativeType'] = ""
+		create_userdoc['representationData_representativeList_representativeType'] = "AG"
 	
 	return(create_userdoc)
  
-	
-	
+def process_day_commit_Nbr():
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select num_acta_ultima from dia_proceso where fec_proceso = '{}' and ind_atencion_comp = 'N' and ind_recepcion_comp = 'N' order by num_acta_ultima desc""".format(str(captureDate.capture_day())))
+		row=cursor.fetchall()
+		for i in row:
+			conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+			cursor = conn.cursor()
+			cursor.execute("""UPDATE public.dia_proceso SET  num_acta_ultima={}, fec_recepcion_comp=null WHERE fec_proceso='{}';""".format((int(i[0])+1),str(captureDate.capture_day())))
+			cursor.rowcount
+			conn.commit()
+			#conn.close()
+			return(i[0])				
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
 
-#print(mark_getlist('1958312')[0]['fileId'])
+def process_day_Nbr():
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select num_acta_ultima from dia_proceso where fec_proceso = '{}' and ind_atencion_comp = 'N' and ind_recepcion_comp = 'N' order by num_acta_ultima desc""".format(str(captureDate.capture_day())))
+		row=cursor.fetchall()
+		for i in row:
+			return(i[0])				
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()			
 
+def pago_data(pago):
+	try:
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select authorization_number,amount,created_at from bancard_transactions where status = 2 and  payable_id = {} """.format(str(pago)))
+		row=cursor.fetchall()
+		for i in row:
+			return(i)	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
 
-#print(format_userdoc('1495')['affectedFileIdList_fileNbr'])
+def paymentYeasOrNot(typ):
+	try:
+		reglas = []
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select  rq_pago from reglas_me where tipo_doc = '{}'""".format(typ))
+		row=cursor.fetchall()
+		for i in row:
+			return(i[0])	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()		
 
 
 '''
