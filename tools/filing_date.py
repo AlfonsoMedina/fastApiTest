@@ -10,5 +10,8 @@ def capture_houer():
 def capture_full():
     return time.strftime("%Y-%m-%d")+"T"+time.strftime("%H:%M:%S")
 
+def capture_full_upd():
+    return time.strftime("%Y-%m-%d")+" "+time.strftime("%I:%M:%S")
+
 def capture_year():
     return time.strftime("%Y")

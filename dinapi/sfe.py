@@ -617,7 +617,8 @@ def pendiente_sfe(arg):
 						'locked_at':i[23],         
 						'locked_by_id':i[24],      
 						'tipo_documento_id':status_typ(str(i[25]))[2],
-						'tool_tip':status_typ(str(i[25]))[1]
+						'tool_tip':status_typ(str(i[25]))[1],
+						'tasa_id':str(i[25])
 						})
 		return(lista)	
 	except Exception as e:
@@ -684,7 +685,7 @@ def estado(arg):
 	if arg == 8:
 		return('Recibido')
 
-def cambio_estado(Id):
+def cambio_estado(Id,exp):
 	try:
 		connA = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursorA = connA.cursor()
@@ -693,7 +694,7 @@ def cambio_estado(Id):
 		for i in row:
 			conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 			cursor = conn.cursor()
-			cursor.execute("""UPDATE public.tramites set estado = 8 WHERE id={};""".format(Id))
+			cursor.execute("""UPDATE public.tramites set estado = 8, expediente_id = {},recepcionado_at = '{}' WHERE id={};""".format( exp , captureDate.capture_full_upd(), Id))
 			cursor.rowcount
 			conn.commit()
 			conn.close()
@@ -728,7 +729,7 @@ def tip_doc():
 		tipo_form = []
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""select nombre from tipos_documento  where formulario_id  in  ({})""".format(connex.MEA_SFE_FORMULARIOS_ID_tipo))
+		cursor.execute("""select nombre  from tipos_documento  where formulario_id  in  ({})""".format(connex.MEA_SFE_FORMULARIOS_ID_tipo))
 		row=cursor.fetchall()
 		for i in row:
 			tipo_form.append(i)
@@ -753,13 +754,41 @@ def reglas_me():
 	finally:
 		conn.close()
 
-def format_userdoc(doc_Id,typ):
+def format_userdoc(doc_Id):
 	#process_day_commit_Nbr()
+	documento_Typ:str = ''
+	ruc_Typ:str = ''
+	ci_Typ:str = ''	
+	ruc_Nbr:str = ''
+	ci_Nbr:str = ''
 	data = pendiente_sfe(doc_Id)
 	try:
 		ag_data = personAgente(code_ag(data[0]['usuario_id']))[0]
 	except Exception as e:
-		print("No existe el Agente")	
+		print("No existe el Agente")
+
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_tipo':	
+				if str(data[0]['respuestas'][i]['valor']) == 'Persona Jurídica':
+					ruc_Typ = 'RUC'
+				else:
+					ci_Typ = 'C.I.'	 
+	except Exception as e:
+		pass
+
+	try:
+		if ruc_Typ == 'RUC': 
+			for i in range(0,len(data[0]['respuestas'])):
+				if data[0]['respuestas'][i]['campo'] == 'datospersonales_documento':	
+					ruc_Nbr = str(data[0]['respuestas'][i]['valor'])
+		if ci_Typ == 'C.I.': 
+			for i in range(0,len(data[0]['respuestas'])):
+				if data[0]['respuestas'][i]['campo'] == 'datospersonales_documento':	
+					ci_Nbr = str(data[0]['respuestas'][i]['valor'])							
+	except Exception as e:
+		pass
+
 	create_userdoc['affectedFileIdList_fileNbr'] = str(data[0]['expediente_afectad'])
 	create_userdoc['affectedFileIdList_fileSeq'] = "PY"
 	try:
@@ -803,7 +832,12 @@ def format_userdoc(doc_Id,typ):
 
 	create_userdoc['applicant_person_cityCode'] = ""
 
-	create_userdoc['applicant_person_cityName'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_ciudad':			
+				create_userdoc['applicant_person_cityName'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['applicant_person_cityName'] =""
 
 	create_userdoc['applicant_person_companyRegisterRegistrationDate'] = ""
 	create_userdoc['applicant_person_companyRegisterRegistrationNbr'] = ""
@@ -814,13 +848,13 @@ def format_userdoc(doc_Id,typ):
 	except Exception as e:
 		create_userdoc['applicant_person_email'] = ""
 
-	create_userdoc['applicant_person_individualIdNbr'] = ""
+	create_userdoc['applicant_person_individualIdNbr'] = ci_Nbr
 	
-	create_userdoc['applicant_person_individualIdType'] = ""
+	create_userdoc['applicant_person_individualIdType'] = ci_Typ
 	
-	create_userdoc['applicant_person_legalIdNbr'] = ""
+	create_userdoc['applicant_person_legalIdNbr'] = ruc_Nbr
 
-	create_userdoc['applicant_person_legalIdType'] = ""		
+	create_userdoc['applicant_person_legalIdType'] = ruc_Typ		
 	
 	create_userdoc['applicant_person_legalNature'] = ""
 	create_userdoc['applicant_person_legalNatureInOtherLang'] = ""
@@ -927,7 +961,7 @@ def format_userdoc(doc_Id,typ):
 		create_userdoc['filingData_paymentList_receiptNbr'] = ""		
 
 	create_userdoc['filingData_paymentList_receiptNotes'] = " Caja MEA"
-	create_userdoc['filingData_paymentList_receiptType'] = ""
+	create_userdoc['filingData_paymentList_receiptType'] = str(tasa_id(str(data[0]['tasa_id'])))
 	create_userdoc['filingData_paymentList_receiptTypeName'] = ""
 
 
@@ -983,7 +1017,12 @@ def format_userdoc(doc_Id,typ):
 		create_userdoc['newOwnershipData_ownerList_person_residenceCountryCode'] = ""
 	create_userdoc['newOwnershipData_ownerList_person_stateCode'] = ""
 	create_userdoc['newOwnershipData_ownerList_person_stateName'] = ""
-	create_userdoc['newOwnershipData_ownerList_person_telephone'] = ""
+	try:
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'datospersonales_telefono':
+				create_userdoc['newOwnershipData_ownerList_person_telephone'] = str(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		create_userdoc['newOwnershipData_ownerList_person_telephone'] = ""	
 	create_userdoc['newOwnershipData_ownerList_person_zipCode'] = ""
 
 
@@ -1203,7 +1242,7 @@ def paymentYeasOrNot(typ):
 		reglas = []
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""select  rq_pago from reglas_me where tipo_doc = '{}'""".format(typ))
+		cursor.execute("""select rq_pago from reglas_me where tipo_doc = '{}'""".format(typ))
 		row=cursor.fetchall()
 		for i in row:
 			return(i[0])	
@@ -1212,6 +1251,19 @@ def paymentYeasOrNot(typ):
 	finally:
 		conn.close()		
 
+def tasa_id(arg):
+	try:
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select tasa_id  from tipos_documento  where id  = {}""".format(arg))
+		row=cursor.fetchall()
+		for i in row:
+			return i[0]
+		return(tipo_form)	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
 
 '''
 
