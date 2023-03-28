@@ -2,12 +2,15 @@
 Administrador de recepcion MEA
 """
 from dataclasses import replace
+import numbers
 import string
 import time
 from time import sleep
+from unicodedata import numeric
 from dinapi.sfe import cambio_estado, count_pendiente, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, process_day_Nbr
 import tools.connect as connex
-from wipo.function_for_reception_in import insert_user_doc_escritos
+from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito
+from wipo.ipas import mark_getlist
 
 
 """
@@ -62,6 +65,7 @@ def captura_pendientes(): # Captura lista pendiente
 			time.sleep(2)
 	listar()
 		
+
 def insert_list(arg0:string,arg1:string): # Insercion segun tipo de formulario
 	if arg1 == "UG - Usos Generales":
 		pago = str(paymentYeasOrNot(arg1)).replace("None","N")
@@ -70,18 +74,23 @@ def insert_list(arg0:string,arg1:string): # Insercion segun tipo de formulario
 			print(str(pago_id(arg0)).replace("None","sin dato en bancar"))
 		if pago == 'N':
 			print('sin pago')
-		if compileAndInsert(arg0) == 'True':
-			cambio_estado(arg0,process_day_Nbr())
+		print(compileAndInsert(arg0))
+		cambio_estado(arg0,process_day_Nbr())
 
 	if arg1 == "FS - Fusión de sociedad":
+		ipas:str
 		pago = str(paymentYeasOrNot(arg1)).replace("None","N")
 		if pago == 'S':
 			print(pago)
 			print(str(pago_id(arg0)).replace("None","sin dato en bancar"))
 		if pago == 'N':
 			print('sin pago')
-		if compileAndInsert(arg0) == 'True':
+		print(compileAndInsert(arg0))	
+		esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
+		if int(esc) == process_day_Nbr():
 			cambio_estado(arg0,process_day_Nbr())
+
+
 
 def compileAndInsert(form_Id):
    item = format_userdoc(form_Id)
@@ -274,6 +283,10 @@ def compileAndInsert(form_Id):
                      item['representationData_representativeList_representativeType'])
 
 listar()
+
+
+
+
 #Quitar de la lista despues
 #list_id.remove(arg0+"/"+arg1)
 #print(compileAndInsert('1496','70'))
