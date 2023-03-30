@@ -2,7 +2,7 @@ from time import sleep
 from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
-from dinapi.sfe import count_pendiente, format_userdoc, oposicion_sfe, pendientes_sfe, registro_sfe, reglas_me, renovacion_sfe, tip_doc
+from dinapi.sfe import count_pendiente, format_userdoc, oposicion_sfe, pendientes_sfe, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, tip_doc
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
 from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, mark_insert_ren, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update, user_doc_update_sin_recibo #pip install "fastapi[all]"
@@ -1867,7 +1867,7 @@ async def sfe_opo_capture(item:for_id):
 
 @app.post('/sis/test', summary="MEA", tags=["test insert"])
 def TEST_MEA():
-	return(format_userdoc('1508'))
+	return(format_userdoc('1521'))
 
 @app.post('/api/getparametros', summary="API", tags=["Lista de parametros"])
 def get_params():
@@ -1907,6 +1907,12 @@ class pendientes(BaseModel):
 @app.post('/api/pendientes_sfe', summary="API", tags=["Lista de pendientes"])
 def pendientes_sfe_m(item:pendientes):
 	return(pendientes_sfe(item.fecha,item.ver,item.pag))
+
+class pendientes_fecha(BaseModel):
+	fecha:str              
+@app.post('/api/pendientes_sfe_sop', summary="API", tags=["Lista de pendientes para soporte"])
+def pendientes_sfe_sop(item:pendientes_fecha):
+	return(pendientes_sfe_soporte(item.fecha))
 
 
 class pendientes_count(BaseModel):

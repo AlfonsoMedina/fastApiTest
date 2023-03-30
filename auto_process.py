@@ -7,7 +7,7 @@ import string
 import time
 from time import sleep
 from unicodedata import numeric
-from dinapi.sfe import cambio_estado, count_pendiente, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, process_day_Nbr
+from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, process_day_Nbr
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito
 from wipo.ipas import mark_getlist
@@ -28,163 +28,92 @@ def captura_pendientes():
 				list_id.append(str(i['Id'])+"/"+str(i['tool_tip']))
 		except Exception as e:
 			pass
-	#print(list_id)
+	print(list_id)
 	if list_id != []:
 		for i in list_id:
 			params = str(i).split('/')
-			print(' doc pendiente '+str(params[0]))
+			#print('doc pendiente '+str(params[0]))
 			insert_list(str(params[0]),str(params[1]))
 			time.sleep(2)
 	listar()
 		
-def insert_list(arg0:string,arg1:string): 
-	if arg1 == "UG - Usos Generales":
+def insert_list(arg0:string,arg1:string):
+	try:
+		pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
+		pago_auth:str = str(pago_id(arg0)).replace("None","sin dato en bancar")
+		valid_rules:str = []
+		print(' ')	
+		print(str(arg1)) #TIPO DE DOCUMENTO
+		time.sleep(1)
+		#CONSULTA SI HAY RELACION DE EXPEDIENTE__________________________________________________________________________________________ 
+		if exp_relation(arg1)[0] == 'S': 
+			print('CON EXPEDIENTE RELACIONADO')# CONFIRMA RELACION
+			if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
+				print('relacion expediente Ok!') # insert
+				valid_rules.append('Ok')
+			else:
+				print('falta expediente relacionado') # estado 99
+				valid_rules.append('Not')
+				cambio_estado_soporte(arg0)
+		else:
+			print('SIN EXPEDIENTE RELACIONADO')# CONFIRMA SIN RELACION
+			valid_rules.append('Ok')
+		#FIN_____________________________________________________________________________________________________________________________ 
+
+		time.sleep(1)
+		#CONSULTA SI HAY RELACION DE ESCRITO______________________________________________________________________________________________	
+		if esc_relation(arg1)[0] == 'S':
+			print('CON ESCRITO RELACIONADO')
+			if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
+				print('relacion de escrito Ok!') # insert
+				valid_rules.append('Ok')
+			else:
+				print('falta escrito relacionado') # estado 99
+				valid_rules.append('Not')
+				cambio_estado_soporte(arg0)			
+		else:
+			print('SIN ESCRITO RELACIONADO')
+			valid_rules.append('Ok')
+		#FIN_____________________________________________________________________________________________________________________________
+
+
+		time.sleep(1)
+		#CONSULTA SI EL TIPO ES CON PAGO_____________________________________________________________________________________________________
 		if pago == 'S':
-			print(pago)
-			print(str(pago_id(arg0)).replace("None","sin dato en bancar"))
-		if pago == 'N':
-			print('sin pago')
-		print(compileAndInsert(arg0))	
-		esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
-		if int(esc) == process_day_Nbr():
-			cambio_estado(arg0,process_day_Nbr())
+			print('CON PAGO')
+			if pago_auth != 'sin dato en bancar': # CONFIRMA EL PAGO EN BANCAR
+				print('Con pago Ok!') # INSERT
+				valid_rules.append('Ok')
+			else:
+				print(pago_auth) # ESTADO 99
+				valid_rules.append('Not')
+				cambio_estado_soporte(arg0)
+		else:
+			print('SIN PAGO') # INSERT
+			valid_rules.append('Ok')
+		#FIN_____________________________________________________________________________________________________________________________	
+
+
+
+
+		if valid_rules == ['Ok', 'Ok', 'Ok']:
+			print('INSERTAR Y ACTUALIZAR')
+			print(compileAndInsert(arg0))
+			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
+			if int(esc) == process_day_Nbr():
+				cambio_estado_soporte(arg0)
+			else:
+				pass
+		else:
+			print('NO INSERTAR NI ACTUALISAR')
+			
+
+
+		#print(valid_rules)
+
+	except Exception as e:
+		pass			
 	
-	if arg1 == "IGM - Informe General de Marcas":
-		pass 
-	if arg1 == "IO - Informe Oficial":
-		pass 
-	if arg1 == "CD - Cambio de Domicilio":
-		pass   
-	if arg1 == "LC - Licencia de Uso Marcas":
-		pass   
-	if arg1 == "TR - Transferencia Total Marcas":
-		pago = str(paymentYeasOrNot(arg1)).replace("None","N")
-		pago_auth = str(pago_id(arg0)).replace("None","sin dato en bancar")
-		if pago == 'S':
-			print('Con pago......')
-			if pago_auth != 'sin dato en bancar':
-				print(pago_auth)
-				print(compileAndInsert(arg0)) 
-				esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
-				if int(esc) == process_day_Nbr():
-					cambio_estado(arg0,process_day_Nbr())
-		if pago == 'N':
-			print('Sin pago......')    
-	
-	if arg1 == "CV - Contestación de Vista":
-		pass 
-	if arg1 == "ABM - Abandono de Marcas":
-		pass   
-	if arg1 == "CAD - Caducidad de Instancia OPO":
-		pass 
-	if arg1 == "AMA - Adecuación de Marcas":
-		pass 
-	if arg1 == "CO - Contestación de oposición":
-		pass   
-	if arg1 == "CPP - Cierre periodo probatorio":
-		pass  
-	if arg1 == "ED - Entrega Copias Diario Marcas":
-		pass   
-	if arg1 == "IG - Informe General":
-		pass 
-	if arg1 == "CDM - Condición de Dominio Marcas":
-		pass 
-	if arg1 == "EXM - Expresar Agravios Marcas":
-		pass 
-	if arg1 == "DTM - Duplicado de Títulos Marcas":
-		pass 
-	if arg1 == "SUS - Suspensión":
-		pass 
-	if arg1 == "CER - Certificación de Firmas":
-		pass
-	if arg1 == "CT - Certificado de Tramitación":
-		pass 
-	if arg1 == "AP - Apelación de Providencia":
-		pass
-	if arg1 == "LA - Limitación de artículos":
-		pass 
-	if arg1 == "APN - Apelación y Nulidad":
-		pass  
-	if arg1 == "CP - Convalidar personeria":
-		pass 
-	if arg1 == "FA - Formular alegatos":
-		pass 
-	if arg1 == "CEX - Contesta Expresión de Agravios":
-		pass  
-	if arg1 == "CEM - Cambio Etiqueta Marcas":
-		pass  
-	if arg1 == "DS - Desistir de Solicitud Marcas":
-		pass   
-	
-	if arg1 == "FS - Fusión de sociedad":
-		pago = str(paymentYeasOrNot(arg1)).replace("None","N")
-		pago_auth = str(pago_id(arg0)).replace("None","sin dato en bancar")
-		if pago == 'S':
-			print('Con pago......')
-			if pago_auth != 'sin dato en bancar':
-				print(pago_auth)
-				print(compileAndInsert(arg0)) 
-				esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
-				if int(esc) == process_day_Nbr():
-					cambio_estado(arg0,process_day_Nbr())
-		if pago == 'N':
-			print('Sin pago......')
-			 
-	if arg1 == "IAJ - Informe Actos Jurídicos":
-		pass
-	if arg1 == "IRR - Interponer recurso reposicion":
-		pass 
-	if arg1 == "MAN - Formular Manifestación":
-		pass 
-	if arg1 == "ORD - Subsiguientes Ordenes Publica.":
-		pass  
-	if arg1 == "RRE - Recurso de Reconsideración":
-		pass 
-	if arg1 == "TRS - Transferencia Solicitud Marca":
-		pass
-	if arg1 == "RO - Reconstrucción de Oposición":
-		pass 
-	if arg1 == "PDM - Presentar Documentos Marcas":
-		pass 
-	if arg1 == "IFM - Informes sobre Marcas":
-		pass 
-	if arg1 == "CN - Cambio de Nombre":
-		pass
-	if arg1 == "ANU - Número de expediente anulado":
-		pass
-	if arg1 == "ACL - Aclaratoria":
-		pass
-	if arg1 == "CPS - Adecuación Productos":
-		pass
-	
-	if arg1 == "AU - Autorización":
-		pago = str(paymentYeasOrNot(arg1)).replace("None","N")
-		pago_auth = str(pago_id(arg0)).replace("None","sin dato en bancar")
-		if pago == 'S':
-			print('Con pago......')
-			if pago_auth != 'sin dato en bancar':
-				print(pago_auth)
-				print(compileAndInsert(arg0)) 
-				esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
-				if int(esc) == process_day_Nbr():
-					cambio_estado(arg0,process_day_Nbr())
-		if pago == 'N':
-			print('Sin pago......')  
-	
-	if arg1 == "DAJ1 - Presentar Documentos Actos Jurídicos":
-		pass  
-	if arg1 == "DO - Desistir de Oposición":
-		pass
-
-
-
-
-
-
-
-
-
-
 def compileAndInsert(form_Id):
    item = format_userdoc(form_Id)
    return insert_user_doc_escritos(
@@ -374,6 +303,8 @@ def compileAndInsert(form_Id):
 					 item['representationData_representativeList_person_telephone'],
 					 item['representationData_representativeList_person_zipCode'],
 					 item['representationData_representativeList_representativeType'])
+
+
 
 
 
