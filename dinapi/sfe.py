@@ -537,7 +537,7 @@ def pendientes_sfe(fecha:string,ver,pag):
 select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,
 codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
 to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,
-notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id from tramites where estado in ({}) and formulario_id in ({}) 
+notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id, enviado_at as bruto from tramites where estado in ({}) and formulario_id in ({}) 
 and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by enviado_at asc LIMIT {} offset {}
 		""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha,ver,pag))
 		row=cursor.fetchall()
@@ -559,7 +559,7 @@ and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by enviado
 						'pagado_at':str(pago_id(i[0])),         
 						'expediente_id':i[13],     
 						'pdf_url':i[14],           
-						'enviado_at':i[15],        
+						'enviado_at':str(i[15])[0:10]+" "+str(captureDate.time_difference(str(i[26]),3))[10:19],        
 						'recepcionado_at':i[16],   
 						'nom_funcionario':i[17],   
 						'pdf':str(i[18]),               
@@ -570,8 +570,10 @@ and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by enviado
 						'locked_at':i[23],         
 						'locked_by_id':i[24],      
 						'tipo_documento_id':status_typ(str(i[25]))[2],
-						'tool_tip':status_typ(str(i[25]))[1]
+						'tool_tip':status_typ(str(i[25]))[1],
+						'row':str(captureDate.time_difference(str(i[26]),3))
 						})
+			
 		return(lista)	
 	except Exception as e:
 		pass

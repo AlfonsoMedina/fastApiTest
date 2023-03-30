@@ -93,9 +93,6 @@ def insert_list(arg0:string,arg1:string):
 			valid_rules.append('Ok')
 		#FIN_____________________________________________________________________________________________________________________________	
 
-
-
-
 		if valid_rules == ['Ok', 'Ok', 'Ok']:
 			print('INSERTAR Y ACTUALIZAR')
 			print(compileAndInsert(arg0))
@@ -105,10 +102,8 @@ def insert_list(arg0:string,arg1:string):
 			else:
 				pass
 		else:
-			print('NO INSERTAR NI ACTUALISAR')
+			print('NO INSERTAR NI ACTUALIZAR')
 			
-
-
 		#print(valid_rules)
 
 	except Exception as e:
@@ -303,10 +298,6 @@ def compileAndInsert(form_Id):
 					 item['representationData_representativeList_person_telephone'],
 					 item['representationData_representativeList_person_zipCode'],
 					 item['representationData_representativeList_representativeType'])
-
-
-
-
 
 listar()
 
