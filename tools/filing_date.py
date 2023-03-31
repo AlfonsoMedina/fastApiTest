@@ -20,7 +20,6 @@ def time_difference(date,diff):
     res = str(final_time).split(".")
     return(str(res[0]))
 
-
 def capture_day():
     return time.strftime("%Y-%m-%d")
 

@@ -7,44 +7,46 @@ import string
 import time
 from time import sleep
 from unicodedata import numeric
-from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, process_day_Nbr
+from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito
-from wipo.ipas import mark_getlist
+
 
 
 list_id = []
 def listar():
-	#print('crear lista')
+	print('............')
 	captura_pendientes() # Captura lista pendiente
-	time.sleep(int(connex.MEA_TIEMPO_ACTUALIZACION))
+	time.sleep(int(connex.MEA_TIEMPO_ACTUALIZACION))#int(connex.MEA_TIEMPO_ACTUALIZACION)
+	listar()
 
 def captura_pendientes():
 	list_id = []
 	today = time.strftime("%Y-%m-%d")
-	for i in pendientes_sfe(today,100,0):
+	for i in pendientes_sfe_not_pag(today):
 		try:
 			if i['estado'] == 7:
 				list_id.append(str(i['Id'])+"/"+str(i['tool_tip']))
+				#print(str(i['tool_tip']))
 		except Exception as e:
 			pass
-	print(list_id)
+	#print(list_id)
 	if list_id != []:
 		for i in list_id:
 			params = str(i).split('/')
 			#print('doc pendiente '+str(params[0]))
 			insert_list(str(params[0]),str(params[1]))
-			time.sleep(2)
-	listar()
+			time.sleep(3)
 		
 def insert_list(arg0:string,arg1:string):
 	try:
 		pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
 		pago_auth:str = str(pago_id(arg0)).replace("None","sin dato en bancar")
 		valid_rules:str = []
-		print(' ')	
+		print(' ')
+		print(arg0)	
 		print(str(arg1)) #TIPO DE DOCUMENTO
-		time.sleep(1)
+		
 		#CONSULTA SI HAY RELACION DE EXPEDIENTE__________________________________________________________________________________________ 
 		if exp_relation(arg1)[0] == 'S': 
 			print('CON EXPEDIENTE RELACIONADO')# CONFIRMA RELACION
@@ -60,7 +62,6 @@ def insert_list(arg0:string,arg1:string):
 			valid_rules.append('Ok')
 		#FIN_____________________________________________________________________________________________________________________________ 
 
-		time.sleep(1)
 		#CONSULTA SI HAY RELACION DE ESCRITO______________________________________________________________________________________________	
 		if esc_relation(arg1)[0] == 'S':
 			print('CON ESCRITO RELACIONADO')
@@ -75,9 +76,7 @@ def insert_list(arg0:string,arg1:string):
 			print('SIN ESCRITO RELACIONADO')
 			valid_rules.append('Ok')
 		#FIN_____________________________________________________________________________________________________________________________
-
-
-		time.sleep(1)
+		
 		#CONSULTA SI EL TIPO ES CON PAGO_____________________________________________________________________________________________________
 		if pago == 'S':
 			print('CON PAGO')
@@ -98,7 +97,7 @@ def insert_list(arg0:string,arg1:string):
 			print(compileAndInsert(arg0))
 			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
 			if int(esc) == process_day_Nbr():
-				cambio_estado_soporte(arg0)
+				cambio_estado(arg0,process_day_Nbr())
 			else:
 				pass
 		else:
@@ -109,7 +108,7 @@ def insert_list(arg0:string,arg1:string):
 	except Exception as e:
 		pass			
 	
-def compileAndInsert(form_Id):
+def compileAndInsert(form_Id):	
    item = format_userdoc(form_Id)
    return insert_user_doc_escritos(
 					 item['affectedFileIdList_fileNbr'],
@@ -301,9 +300,3 @@ def compileAndInsert(form_Id):
 
 listar()
 
-
-
-
-#Quitar de la lista despues
-#list_id.remove(arg0+"/"+arg1)
-#print(compileAndInsert('1496','70'))

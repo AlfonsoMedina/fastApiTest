@@ -580,6 +580,58 @@ and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by enviado
 	finally:
 		conn.close()	
 
+def pendientes_sfe_not_pag(fecha:string):
+	try:
+		lista = []
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""
+select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,
+codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
+to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,
+notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id, enviado_at as bruto from tramites where estado in ({}) and formulario_id in ({}) 
+and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by enviado_at asc 
+		""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha))
+		row=cursor.fetchall()
+		for i in row:
+			lista.append({
+						'Id':i[0],
+						'fecha':i[1],
+						'tip_doc':i[2],             
+						'formulario_id':tipo_form(i[2]),     
+						'estado': i[3],            
+						'created_at':i[4],        
+						'updated_at':i[5],        
+						'respuestas':i[6],        
+						'costo':i[7],             
+						'usuario_id':i[8],        
+						'deleted_at':i[9],        
+						'codigo':i[10],            
+						'firmado_at':i[11],        
+						'pagado_at':str(pago_id(i[0])),         
+						'expediente_id':i[13],     
+						'pdf_url':i[14],           
+						'enviado_at':str(i[15])[0:10]+" "+str(captureDate.time_difference(str(i[26]),3))[10:19],        
+						'recepcionado_at':i[16],   
+						'nom_funcionario':i[17],   
+						'pdf':str(i[18]),               
+						'expediente_afectad':i[19],
+						'notificacion_id':i[20],   
+						'expedientes_autor':i[21], 
+						'autorizado_por_id':i[22], 
+						'locked_at':i[23],         
+						'locked_by_id':i[24],      
+						'tipo_documento_id':status_typ(str(i[25]))[2],
+						'tool_tip':status_typ(str(i[25]))[1],
+						'row':str(captureDate.time_difference(str(i[26]),3))
+						})
+			
+		return(lista)	
+	except Exception as e:
+		conn.close()
+	finally:
+		conn.close()
+
 def pendientes_sfe_soporte(fecha:string):
 	try:
 		lista = []
@@ -794,7 +846,6 @@ def count_pendiente(fecha:string):
 
 def tip_doc():
 	try:
-		reglas = []
 		tipo_form = []
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
@@ -874,6 +925,7 @@ def format_userdoc(doc_Id):
 		create_userdoc['affectedFileIdList_fileSeries']=str(int(mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeries']['doubleValue']))
 	except Exception as e:
 		create_userdoc['affectedFileIdList_fileSeries']=""
+	
 	create_userdoc['affectedFileIdList_fileType'] = fileTyp
 
 
