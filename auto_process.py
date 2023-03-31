@@ -1,6 +1,7 @@
 """
 Administrador de recepcion MEA
 """
+from ast import Break
 from dataclasses import replace
 import numbers
 import string
@@ -10,6 +11,7 @@ from unicodedata import numeric
 from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito
+from wipo.ipas import user_doc_receive, user_doc_update
 
 
 
@@ -25,8 +27,9 @@ def captura_pendientes():
 	today = time.strftime("%Y-%m-%d")
 	for i in pendientes_sfe_not_pag(today):
 		try:
+			sigla_doc = str(i['tool_tip']).split("-")
 			if i['estado'] == 7:
-				list_id.append(str(i['Id'])+"/"+str(i['tool_tip']))
+				list_id.append(str(i['Id'])+"/"+str(sigla_doc[0]))
 				#print(str(i['tool_tip']))
 		except Exception as e:
 			pass
@@ -55,11 +58,11 @@ def insert_list(arg0:string,arg1:string):
 				valid_rules.append('Ok')
 			else:
 				print('falta expediente relacionado') # estado 99
-				valid_rules.append('Not')
+				valid_rules.append('Error')
 				cambio_estado_soporte(arg0)
 		else:
 			print('SIN EXPEDIENTE RELACIONADO')# CONFIRMA SIN RELACION
-			valid_rules.append('Ok')
+			valid_rules.append('Not')
 		#FIN_____________________________________________________________________________________________________________________________ 
 
 		#CONSULTA SI HAY RELACION DE ESCRITO______________________________________________________________________________________________	
@@ -70,11 +73,11 @@ def insert_list(arg0:string,arg1:string):
 				valid_rules.append('Ok')
 			else:
 				print('falta escrito relacionado') # estado 99
-				valid_rules.append('Not')
-				cambio_estado_soporte(arg0)			
+				valid_rules.append('Error')
+				cambio_estado_soporte(arg0)
 		else:
 			print('SIN ESCRITO RELACIONADO')
-			valid_rules.append('Ok')
+			valid_rules.append('Not')
 		#FIN_____________________________________________________________________________________________________________________________
 		
 		#CONSULTA SI EL TIPO ES CON PAGO_____________________________________________________________________________________________________
@@ -85,29 +88,50 @@ def insert_list(arg0:string,arg1:string):
 				valid_rules.append('Ok')
 			else:
 				print(pago_auth) # ESTADO 99
-				valid_rules.append('Not')
+				valid_rules.append('Error')
 				cambio_estado_soporte(arg0)
 		else:
 			print('SIN PAGO') # INSERT
 			valid_rules.append('Ok')
 		#FIN_____________________________________________________________________________________________________________________________	
 
-		if valid_rules == ['Ok', 'Ok', 'Ok']:
-			print('INSERTAR Y ACTUALIZAR')
+		if valid_rules == ['Ok', 'Not', 'Ok']:
+			print('ESCRITO CON RELACION')
+			"""			
 			print(compileAndInsert(arg0))
 			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
 			if int(esc) == process_day_Nbr():
 				cambio_estado(arg0,process_day_Nbr())
 			else:
-				pass
+				pass"""
+		elif valid_rules == ['Not', 'Ok', 'Ok']:
+			print('ESCRTO A ESCRITO')
+			#compileAndInsertUserDocUserDoc(arg0,arg1)
+			#esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
+			#if int(esc) == process_day_Nbr():
+			#	cambio_estado(arg0,process_day_Nbr())
+			#else:
+			#	pass
+
+		elif valid_rules == ['Not', 'Not', 'Ok']:
+			print('ESCRITO SIN RELACION')
+			"""			
+			print(compileAndInsert(arg0))
+			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
+			if int(esc) == process_day_Nbr():
+				cambio_estado(arg0,process_day_Nbr())
+			else:
+				pass"""			
 		else:
 			print('NO INSERTAR NI ACTUALIZAR')
+			cambio_estado_soporte(arg0)
 			
 		#print(valid_rules)
 
 	except Exception as e:
 		pass			
-	
+
+#Insert Escritos	
 def compileAndInsert(form_Id):	
    item = format_userdoc(form_Id)
    return insert_user_doc_escritos(
@@ -297,6 +321,86 @@ def compileAndInsert(form_Id):
 					 item['representationData_representativeList_person_telephone'],
 					 item['representationData_representativeList_person_zipCode'],
 					 item['representationData_representativeList_representativeType'])
+
+#Insert Escrito a Escrito
+def compileAndInsertUserDocUserDoc(form_Id,typ):	
+	item = format_userdoc(form_Id)
+	user_doc_receive("1",str(typ),"true","","","","","","","","2023-02-17","","","","","","298","SFE test - Aplicante M.E.A","E","2225891","1","2022","","","","","","E","22102468","1","2022","DAJ1")
+	time.sleep(1)
+	user_doc_update(item.affectedDocumentId_docLog,
+					item.affectedDocumentId_docNbr,
+					item.affectedDocumentId_docOrigin,
+					item.affectedDocumentId_docSeries,
+					item.applicant_applicantNotes,
+					item.applicant_person_addressStreet,
+					item.applicant_person_agentCode,
+					item.applicant_person_cityCode,
+					item.applicant_person_cityName,
+					item.applicant_person_email,
+					item.applicant_person_nationalityCountryCode,
+					item.applicant_person_personGroupCode,
+					item.applicant_person_personGroupName,
+					item.applicant_person_personName,
+					item.applicant_person_residenceCountryCode,
+					item.applicant_person_stateCode,
+					item.applicant_person_stateName,
+					item.applicant_person_telephone,
+					item.applicant_person_zipCode,
+					item.documentId_docLog,
+					item.documentId_docNbr,
+					item.documentId_docOrigin,
+					item.documentId_docSeries,
+					item.documentSeqId_docSeqNbr,
+					item.documentSeqId_docSeqSeries,
+					item.documentSeqId_docSeqType,
+					item.filingData_captureDate,
+					item.filingData_captureUserId,
+					item.filingData_filingDate,
+					item.filingData_receptionDate,
+					item.filingData_paymentList_currencyName,
+					item.filingData_paymentList_currencyType,
+					item.filingData_paymentList_receiptAmount,
+					item.filingData_paymentList_receiptDate,
+					item.filingData_paymentList_receiptNbr,
+					item.filingData_paymentList_receiptNotes,
+					item.filingData_paymentList_receiptType,
+					item.filingData_paymentList_receiptTypeName,
+					item.filingData_userdocTypeList_userdocName,
+					item.filingData_userdocTypeList_userdocType,
+					item.filingData_documentId_docLog,
+					item.filingData_documentId_receptionDocument_docNbr,
+					item.filingData_documentId_receptionDocument_docOrigin,
+					item.filingData_documentId_receptionDocument_docSeries,
+					item.filingData_documentId_receptionDocument_selected,
+					item.newOwnershipData_ownerList_orderNbr,
+					item.newOwnershipData_ownerList_ownershipNotes,
+					item.newOwnershipData_ownerList_addressStreet,
+					item.newOwnershipData_ownerList_cityName,
+					item.newOwnershipData_ownerList_email,
+					item.newOwnershipData_ownerList_nationalityCountryCode,
+					item.newOwnershipData_ownerList_personName,
+					item.newOwnershipData_ownerList_residenceCountryCode,
+					item.newOwnershipData_ownerList_telephone,
+					item.newOwnershipData_ownerList_zipCode,
+					item.notes,
+					item.representationData_representativeList_person_addressStreet,
+					item.representationData_representativeList_person_addressZone,
+					item.representationData_representativeList_person_agentCode,
+					item.representationData_representativeList_person_cityName,
+					item.representationData_representativeList_person_email,
+					item.representationData_representativeList_person_individualIdNbr,
+					item.representationData_representativeList_person_individualIdType,
+					item.representationData_representativeList_person_legalIdNbr,
+					item.representationData_representativeList_person_legalIdType,
+					item.representationData_representativeList_person_legalNature,
+					item.representationData_representativeList_person_nationalityCountryCode,
+					item.representationData_representativeList_person_personName,
+					item.representationData_representativeList_person_personNameInOtherLang,
+					item.representationData_representativeList_person_residenceCountryCode,
+					item.representationData_representativeList_person_telephone,
+					item.representationData_representativeList_person_zipCode,
+					item.representationData_representativeList_representa)
+	return('true')
 
 listar()
 

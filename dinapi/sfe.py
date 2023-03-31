@@ -1386,7 +1386,7 @@ def paymentYeasOrNot(typ):
 	try:
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""select rq_pago from reglas_me where tipo_doc = '{}'""".format(typ))
+		cursor.execute("""select  rq_pago from reglas_me where tipo_doc like '{}%'""".format(typ))
 		row=cursor.fetchall()
 		for i in row:
 			return(i)	
@@ -1399,7 +1399,7 @@ def exp_relation(typ):
 	try:
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""select exp_ri from reglas_me where tipo_doc = '{}'""".format(typ))
+		cursor.execute("""select exp_ri from reglas_me where tipo_doc like '{}%'""".format(typ))
 		row=cursor.fetchall()
 		for i in row:
 			return(i)	
@@ -1412,7 +1412,7 @@ def esc_relation(typ):
 	try:
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""select esc_ri from reglas_me where tipo_doc = '{}'""".format(typ))
+		cursor.execute("""select esc_ri from reglas_me where tipo_doc like '{}%'""".format(typ))
 		row=cursor.fetchall()
 		for i in row:
 			return(i)	
