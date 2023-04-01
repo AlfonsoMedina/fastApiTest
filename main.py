@@ -863,7 +863,7 @@ class userdoc_upd(BaseModel):
 	representationData_representativeList_person_telephone:str = ""
 	representationData_representativeList_person_zipCode:str = ""
 	representationData_representativeList_representa:str = ""	
-@app.post('/sfe/UserdocUpdate', summary="Marcas", tags=["Escrito con Tipo Documento que afecta a Escritos con costo"])
+@app.post('/sfe/UserdocUpdate', summary="Marcas", tags=["UserDocUpDate con y sin pago"])
 async def userdoc_update(item: userdoc_upd):
 	try:
 		return(user_doc_update(item.affectedDocumentId_docLog,

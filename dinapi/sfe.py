@@ -1036,7 +1036,7 @@ def format_userdoc(doc_Id):
 	except Exception as e:
 		create_userdoc['documentId_docNbr'] = ""	
 	try:
-		create_userdoc['documentId_docOrigin'] = "1"
+		create_userdoc['documentId_docOrigin'] = str(connex.MEA_SFE_FORMULARIOS_ID_Origin)
 	except Exception as e:
 		create_userdoc['documentId_docOrigin'] = ""	
 	try:
@@ -1099,7 +1099,7 @@ def format_userdoc(doc_Id):
 	create_userdoc['filingData_receptionDate'] = captureDate.capture_full()
 	create_userdoc['filingData_documentId_receptionDocument_docLog'] = "E"
 	create_userdoc['filingData_documentId_receptionDocument_docNbr'] = str(process_day_Nbr())
-	create_userdoc['filingData_documentId_receptionDocument_docOrigin'] = "1"
+	create_userdoc['filingData_documentId_receptionDocument_docOrigin'] = str(connex.MEA_SFE_FORMULARIOS_ID_Origin)
 	create_userdoc['filingData_documentId_receptionDocument_docSeries'] = captureDate.capture_year()
 	create_userdoc['filingData_documentId_receptionDocument_selected'] = ""
 	create_userdoc['filingData_userdocTypeList_userdocName'] = str(data[0]['tool_tip'])

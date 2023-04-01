@@ -4646,9 +4646,9 @@ def user_doc_update(affectedDocumentId_docLog,
 					representationData_representativeList_person_residenceCountryCode,
 					representationData_representativeList_person_telephone,
 					representationData_representativeList_person_zipCode,
-					representationData_representativeList_representativeType
-					):
-	data = {
+					representationData_representativeList_representativeType):
+	if filingData_paymentList_receiptNbr != "":	
+		data = {
 			"arg0": {
 				"affectedDocumentId": {
 				"docLog": affectedDocumentId_docLog,
@@ -4748,6 +4748,240 @@ def user_doc_update(affectedDocumentId_docLog,
 						"receiptType": filingData_paymentList_receiptType,
 						"receiptTypeName": filingData_paymentList_receiptTypeName
 					},
+					"receptionDate": {
+						"dateValue": filingData_receptionDate
+					},
+					"receptionDocument": {
+						"documentEdmsData": {
+						"edocDate": "",
+						"edocId": "",
+						"edocImageCertifDate": "",
+						"edocImageCertifUser": "",
+						"edocImageLinkingDate": "",
+						"edocImageLinkingUser": "",
+						"edocNbr": "",
+						"edocSeq": "",
+						"edocSer": "",
+						"edocTyp": "",
+						"edocTypeName": "",
+						"efolderId": "",
+						"efolderNbr": "",
+						"efolderSeq": "",
+						"efolderSer": "",
+						"indInterfaceEdoc": "false",
+						"indSpecificEdoc": "false"
+						},
+						"documentId": {
+						"docLog": filingData_documentId_docLog,
+						"docNbr": {
+							"doubleValue": filingData_documentId_receptionDocument_docNbr
+						},
+						"docOrigin": filingData_documentId_receptionDocument_docOrigin,
+						"docSeries": {
+							"doubleValue": filingData_documentId_receptionDocument_docSeries
+						},
+						"selected": filingData_documentId_receptionDocument_selected
+						},
+						"documentSeqId": {
+						"docSeqName": "",
+						"docSeqNbr": "",
+						"docSeqSeries": "",
+						"docSeqType": ""
+						},
+						"externalSystemId": "",
+						"inputDocumentData": "",
+						"internalDocumentData": {
+						"description": "",
+						"offidocId": {
+							"offidocNbr": "",
+							"offidocOrigin": "",
+							"offidocSeries": "",
+							"selected": ""
+						},
+						"refNo": ""
+						},
+						"outputDocumentData": {
+						"officedocId": {
+							"offidocNbr": "",
+							"offidocOrigin": "",
+							"offidocSeries": "",
+							"selected": ""
+						}
+						},
+						"qtyPages": ""
+					},
+					"receptionUserId": "",
+					"userdocTypeList": {
+						"userdocName": filingData_userdocTypeList_userdocName,
+						"userdocType": filingData_userdocTypeList_userdocType
+					},
+					"validationDate": "",
+					"validationUserId": ""
+				},
+				"newOwnershipData": {
+					"ownerList": {
+						"orderNbr": {
+						"doubleValue": newOwnershipData_ownerList_orderNbr
+						},
+						"ownershipNotes": newOwnershipData_ownerList_ownershipNotes,
+						"person": {
+						"addressStreet": newOwnershipData_ownerList_addressStreet,
+						"addressStreetInOtherLang": "",
+						"addressZone": "",
+						"agentCode": "",
+						"cityCode": "",
+						"cityName": newOwnershipData_ownerList_cityName,
+						"companyRegisterRegistrationDate": "",
+						"companyRegisterRegistrationNbr": "",
+						"email": newOwnershipData_ownerList_email,
+						"indCompany": "false",
+						"individualIdNbr": "",
+						"individualIdType": "",
+						"legalIdNbr": "",
+						"legalIdType": "",
+						"legalNature": "",
+						"legalNatureInOtherLang": "",
+						"nationalityCountryCode": newOwnershipData_ownerList_nationalityCountryCode,
+						"personGroupCode": "",
+						"personGroupName": "",
+						"personName": newOwnershipData_ownerList_personName,
+						"personNameInOtherLang": "",
+						"residenceCountryCode": newOwnershipData_ownerList_residenceCountryCode,
+						"stateCode": "",
+						"stateName": "",
+						"telephone": newOwnershipData_ownerList_telephone,
+						"zipCode": newOwnershipData_ownerList_zipCode
+						}
+					}
+				},
+				"notes": notes,
+				"representationData": {
+					"representativeList": {
+							"indService": "false",
+							"person": {
+							"addressStreet": representationData_representativeList_person_addressStreet,
+							"addressStreetInOtherLang": "",
+							"addressZone": representationData_representativeList_person_addressZone,
+							"agentCode": {
+								"doubleValue": representationData_representativeList_person_agentCode
+							},
+							"cityCode": "",
+							"cityName": representationData_representativeList_person_cityName,
+							"companyRegisterRegistrationDate": "",
+							"companyRegisterRegistrationNbr": "",
+							"email": representationData_representativeList_person_email,
+							"indCompany": "true",
+							"individualIdNbr": representationData_representativeList_person_individualIdNbr,
+							"individualIdType": representationData_representativeList_person_individualIdType,
+							"legalIdNbr": representationData_representativeList_person_legalIdNbr,
+							"legalIdType": representationData_representativeList_person_legalIdType,
+							"legalNature": representationData_representativeList_person_legalNature,
+							"legalNatureInOtherLang": "",
+							"nationalityCountryCode": representationData_representativeList_person_nationalityCountryCode,
+							"personGroupCode": "",
+							"personGroupName": "",
+							"personName": representationData_representativeList_person_personName,
+							"personNameInOtherLang": representationData_representativeList_person_personNameInOtherLang,
+							"residenceCountryCode": representationData_representativeList_person_residenceCountryCode,
+							"stateCode": "",
+							"stateName": "",
+							"telephone": representationData_representativeList_person_telephone,
+							"zipCode": representationData_representativeList_person_zipCode
+							},
+							"representativeType": representationData_representativeList_representativeType
+					}
+				}
+				}
+			}
+	else:
+		data = {
+			"arg0": {
+				"affectedDocumentId": {
+				"docLog": affectedDocumentId_docLog,
+				"docNbr": {
+					"doubleValue": affectedDocumentId_docNbr
+				},
+				"docOrigin": affectedDocumentId_docOrigin,
+				"docSeries": {
+					"doubleValue": affectedDocumentId_docSeries
+				},
+				"selected": ""
+				},
+				"applicant": {
+				"applicantNotes": applicant_applicantNotes,
+				"person": {
+					"addressStreet": applicant_person_addressStreet,
+					"addressStreetInOtherLang": "",
+					"addressZone": "",
+					"agentCode": applicant_person_agentCode,
+					"cityCode": applicant_person_cityCode,
+					"cityName": applicant_person_cityName,
+					"companyRegisterRegistrationDate": "",
+					"companyRegisterRegistrationNbr": "",
+					"email": applicant_person_email,
+					"indCompany": "false",
+					"individualIdNbr": "",
+					"individualIdType": "",
+					"legalIdNbr": "",
+					"legalIdType": "",
+					"legalNature": "",
+					"legalNatureInOtherLang": "",
+					"nationalityCountryCode": applicant_person_nationalityCountryCode,
+					"personGroupCode": applicant_person_personGroupCode,
+					"personGroupName": applicant_person_personGroupName,
+					"personName": applicant_person_personName,
+					"personNameInOtherLang": "",
+					"residenceCountryCode": applicant_person_residenceCountryCode,
+					"stateCode": applicant_person_stateCode,
+					"stateName": applicant_person_stateName,
+					"telephone": applicant_person_telephone,
+					"zipCode": applicant_person_zipCode
+				}
+				},
+				"documentId": {
+				"docLog": documentId_docLog,
+				"docNbr": {
+					"doubleValue": documentId_docNbr
+				},
+				"docOrigin": documentId_docOrigin,
+				"docSeries": {
+					"doubleValue": documentId_docSeries
+				}
+				},
+				"documentSeqId": {
+				"docSeqName": "Documentos",
+				"docSeqNbr": {
+					"doubleValue": documentSeqId_docSeqNbr
+				},
+				"docSeqSeries": {
+					"doubleValue": documentSeqId_docSeqSeries
+				},
+				"docSeqType": documentSeqId_docSeqType
+				},
+				"filingData": {
+					"applicationSubtype": "",
+					"applicationType": "",
+					"captureDate": {
+						"dateValue": filingData_captureDate
+					},
+					"captureUserId": {
+						"doubleValue": filingData_captureUserId
+					},
+					"corrFileNbr": "",
+					"corrFileSeq": "",
+					"corrFileSeries": "",
+					"corrFileType": "",
+					"externalOfficeCode": "",
+					"externalOfficeFilingDate": "",
+					"externalSystemId": "",
+					"filingDate": {
+						"dateValue": filingData_filingDate
+					},
+					"indIncorrRecpDeleted": "",
+					"indManualInterpretationRequired": "false",
+					"lawCode": "",
+					"novelty1Date": "",
+					"novelty2Date": "",
 					"receptionDate": {
 						"dateValue": filingData_receptionDate
 					},
