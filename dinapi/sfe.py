@@ -1242,7 +1242,7 @@ def format_userdoc(doc_Id):
 	except Exception as e:
 		create_userdoc['representationData_representativeList_person_addressZone'] = ""	
 	try:
-		create_userdoc['representationData_representativeList_person_agentCode'] = default_val(str(int(ag_data['agentCode']['doubleValue'])))
+		create_userdoc['representationData_representativeList_person_agentCode'] = str(int(ag_data['agentCode']['doubleValue']))
 	except Exception as e:
 		create_userdoc['representationData_representativeList_person_agentCode'] = ""	
 	try:
@@ -1437,12 +1437,11 @@ def tasa_id(arg):
 
 
 
-
 """def afected_relation_auth(arg):"""
 
-'''
 
-personAgente(code_ag(pendiente_sfe(doc_Id)[0]['usuario_id']))[0] #Consulta agente
+'''
+print(personAgente(code_ag('43'))[0].agentCode.doubleValue) #Consulta agente
 
 select * from tramites where formulario_id IN (39, 40, 66, 67,69,70,3,4,27,95) and estado  in (7)
 '''
