@@ -67,7 +67,7 @@ databaseCJ='db_caja_dinapi'
 
 #ipas Beta
 #                                192.168.80.42
-ipas_sprint = config_parametro('49')['valor2']
+ipas_sprint = config_parametro('49')['valor1']
 
 #                                     192.168.50.182
 ipas_produccion_A = config_parametro('50')['valor1']
@@ -111,7 +111,16 @@ prod_database='MARCAS_PY'
 '''
 ###################################################################
 
+'''
 prod_server='192.168.80.41' 
+prod_user='ADMIN' 
+prod_password='ipas4PY$' 
+prod_database='MARCAS_PY
+'''
+
+###################################################################
+
+prod_server='192.168.50.195' 
 prod_user='ADMIN' 
 prod_password='ipas4PY$' 
 prod_database='MARCAS_PY'

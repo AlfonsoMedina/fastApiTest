@@ -5986,9 +5986,9 @@ def user_doc_afectado(
 		fileNbr,
 		fileSeq,
 		fileSeries,
-		fileType
-):
-	addexpafect = {
+		fileType):
+	try:
+		addexpafect = {
 						"arg0": {
 						"docLog": docLog,
 						"docNbr": {
@@ -6010,9 +6010,10 @@ def user_doc_afectado(
 						},
 						"fileType": fileType
 						}
-					}
-				
-	return clientMark.service.UserdocAddAffectedFile(**addexpafect)
+					}		
+		return clientMark.service.UserdocAddAffectedFile(**addexpafect)
+	except zeep.exceptions.Fault as e:
+		return(e)
 
 #--------------------------------------------------------------- Patentes ----------------------------------------------------------------------------------------------
 #userDoc por expediente

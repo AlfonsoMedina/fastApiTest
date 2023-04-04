@@ -93,39 +93,57 @@ def insert_list(arg0:string,arg1:string):
 				cambio_estado_soporte(arg0)
 		else:
 			print('SIN PAGO') # INSERT
-			valid_rules.append('Ok')
+			valid_rules.append('Not')
 		#FIN_____________________________________________________________________________________________________________________________	
-
-		if valid_rules == ['Ok', 'Not', 'Ok']:
+		
+		if valid_rules == ['Ok', 'Not', 'Not']: #con exp - sin esc - sin pago
 			print('ESCRITO CON RELACION')		
 			print(compileAndInsert(arg0))
 			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
 			if int(esc) == process_day_Nbr():
 				cambio_estado(arg0,process_day_Nbr())
-			else:
-				pass
-		elif valid_rules == ['Not', 'Ok', 'Ok']:
+
+		if valid_rules == ['Ok', 'Not', 'Ok']: #con exp - sin esc - con pago
+			print('ESCRITO CON RELACION')		
+			print(compileAndInsert(arg0))
+			time.sleep(1)
+			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
+			if int(esc) == process_day_Nbr():
+				cambio_estado(arg0,process_day_Nbr())
+
+		if valid_rules == ['Not', 'Ok', 'Not']:#sin exp - con esc - sin pago
 			print('ESCRTO A ESCRITO')
 			print(compileAndInsertUserDocUserDoc(arg0,arg1))
+			time.sleep(1)
+			exists = process_day_Nbr() in user_doc_getList_escrito(process_day_Nbr())['documentId'].values()
+			if exists == True:				
+				cambio_estado(arg0,process_day_Nbr())
+
+		if valid_rules == ['Not', 'Ok', 'Ok']:#sin exp - con esc - sin pago
+			print('ESCRTO A ESCRITO')
+			print(compileAndInsertUserDocUserDoc(arg0,arg1))
+			time.sleep(1)
 			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
 			if int(esc) == process_day_Nbr():
-				pass
 				cambio_estado(arg0,process_day_Nbr())
-			else:
-				pass
-		elif valid_rules == ['Not', 'Not', 'Ok']:
+
+		if valid_rules == ['Not', 'Not', 'Ok']:
 			print('ESCRITO SIN RELACION')		
 			print(compileAndInsert(arg0))
+			time.sleep(1)
 			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
 			if int(esc) == process_day_Nbr():
 				cambio_estado(arg0,process_day_Nbr())
-			else:
-				pass		
-		else:
-			print('NO INSERTAR NI ACTUALIZAR')
-			cambio_estado_soporte(arg0)
-			
-		print(valid_rules)
+
+		if valid_rules == ['Not', 'Not', 'Not']:
+			print('ESCRITO SIN RELACION')		
+			print(compileAndInsert(arg0))
+			time.sleep(1)
+			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
+			if int(esc) == process_day_Nbr():
+				cambio_estado(arg0,process_day_Nbr())
+				
+		#print(valid_rules)
 
 	except Exception as e:
 		pass			
@@ -425,8 +443,11 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 					item['representationData_representativeList_representativeType'],
 					item['representationData_representativeList_person_email']))
 	afferc = user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])
-	time.sleep(1)	
-	print(user_doc_afectado(item['documentId_docLog'],
+	print(afferc)
+	time.sleep(1)
+	exists = afferc['affectedFileIdList'][0]['fileSeq'] in iter(afferc['affectedFileIdList'][0].values())
+	if exists == True:
+		print(user_doc_afectado(item['documentId_docLog'],
 							item['documentId_docNbr'],
 							item['documentId_docOrigin'],
 							item['documentId_docSeries'],
@@ -434,7 +455,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 							afferc['affectedFileIdList'][0]['fileSeq'],
 							afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
 							afferc['affectedFileIdList'][0]['fileType']))
-	return('TRUE')
+
 
 
 #compileAndInsertUserDocUserDoc('1494','EDJ1')
