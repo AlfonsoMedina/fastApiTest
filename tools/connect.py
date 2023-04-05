@@ -67,7 +67,7 @@ databaseCJ='db_caja_dinapi'
 
 #ipas Beta
 #                                192.168.80.42
-ipas_sprint = config_parametro('49')['valor1']
+ipas_sprint = config_parametro('49')['valor2']
 
 #                                     192.168.50.182
 ipas_produccion_A = config_parametro('50')['valor1']
@@ -100,6 +100,98 @@ host_centura = '192.168.50.231'
 user_centura = 'user-developer'
 password_centura = 'user-developer--201901'
 database_centura = 'centura'
+
+###################################################################
+#Pendiente por ID
+PENDING = """
+select 
+id,
+fecha,
+formulario_id,
+estado,
+created_at,
+updated_at,
+respuestas,
+costo,
+usuario_id,
+deleted_at,
+codigo,
+firmado_at,
+pagado_at,
+expediente_id,
+pdf_url,
+to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
+to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,
+nom_funcionario,
+pdf,
+expediente_afectado,
+notificacion_id,
+expedientes_autor,
+autorizado_por_id,
+locked_at,
+locked_by_id,
+tipo_documento_id 
+from tramites where id = {}
+"""
+###################################################################
+
+EARRINGS = """
+select id,
+fecha,
+formulario_id,
+estado,
+created_at,
+updated_at,
+respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
+			from tramites where id = {}
+		"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ###################################################################

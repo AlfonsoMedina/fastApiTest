@@ -5,6 +5,8 @@ import psycopg2
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.ipas import mark_getlist, personAgente
+from urllib import request
+
 
 global_data = {}
 create_userdoc = {}
@@ -844,6 +846,7 @@ def count_pendiente(fecha:string):
 	finally:
 		conn.close()
 
+#MODIFICAR ORIGEN DE REGLAS
 def tip_doc():
 	try:
 		tipo_form = []
@@ -1421,7 +1424,7 @@ def esc_relation(typ):
 	finally:
 		conn.close()
 
-def tasa_id(arg):
+def tasa_id(arg):#BUSCA
 	try:
 		conn = psycopg2.connect(host = connex.hostCJ,user= connex.userCJ,password = connex.passwordCJ,database = connex.databaseCJ)
 		cursor = conn.cursor()
@@ -1435,7 +1438,7 @@ def tasa_id(arg):
 	finally:
 		conn.close()
 
-
+print(tasa_id('18'))
 
 """def afected_relation_auth(arg):"""
 

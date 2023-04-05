@@ -4564,7 +4564,6 @@ def user_doc_receive(
 					"selected": arg12_selected
 				}
 				} 
-		#print(udr)
 		clientMark.service.UserdocReceive(**udr)
 		daily_log_close(arg6)   
 		return('true') 
@@ -10639,25 +10638,62 @@ def check_serv_disenio():
 	except Exception as e:
 		return('error')
 
+
 def daily_log_open(fecha):
 	try:
-		conn = pymssql.connect(server=conn_serv.prod_server, user=conn_serv.prod_user, password=conn_serv.prod_password, database=conn_serv.prod_database)
-		cursor = conn.cursor() 
-		cursor.execute("UPDATE MARCAS_PY.ADMIN.IP_DAILY_LOG SET IND_OPEN = 'S', IND_CLOSED = 'N' WHERE DAILY_LOG_DATE BETWEEN convert(datetime,'"+str(fecha)+"') AND convert(datetime,'"+str(fecha)+"') AND DOC_LOG='E';")
-		conn.commit()
-		conn.close()
-	except Exception as e:
-		return('fail connect')
+		mDailyLog = {
+				"arg0": {
+					"affectedFilesReadyDate": "",
+					"certificationReadyDate": "",
+					"dailyLogId": {
+					"dailyLogDate": {
+						"dateValue": str(fecha)+"T00:00:00-04:00"
+					},
+					"docLog": "E",
+					"docOrigin": "1"
+					},
+					"digitalizationReadyDate": "",
+					"fileCaptureReadyDate": "",
+					"firstDocNbr": "",
+					"indClosed": "false",
+					"indOpen": "true",
+					"lastDocNbr": "",
+					"logoCaptureReadyDate": "",
+					"searchCodesReadyDate": "",
+					"userdocCaptureReadyDate": ""
+				}
+				}
+		return(str(clientMark.service.DailyLogUpdate(**mDailyLog)))
+	except zeep.exceptions.Fault as e:
+		return(str(e))
 
 def daily_log_close(fecha):
-	try:	
-		conn = pymssql.connect(server=conn_serv.prod_server, user=conn_serv.prod_user, password=conn_serv.prod_password, database=conn_serv.prod_database)
-		cursor = conn.cursor() 
-		cursor.execute("UPDATE MARCAS_PY.ADMIN.IP_DAILY_LOG SET IND_OPEN = 'N', IND_CLOSED = 'N' WHERE DAILY_LOG_DATE BETWEEN convert(datetime,'"+str(fecha)+"') AND convert(datetime,'"+str(fecha)+"') AND DOC_LOG='E';")
-		conn.commit()
-		conn.close()
-	except Exception as e:
-		return('fail connect')
+	try:
+		mDailyLog = {
+				"arg0": {
+					"affectedFilesReadyDate": "",
+					"certificationReadyDate": "",
+					"dailyLogId": {
+					"dailyLogDate": {
+						"dateValue": str(fecha)+"T00:00:00-04:00"
+					},
+					"docLog": "E",
+					"docOrigin": "1"
+					},
+					"digitalizationReadyDate": "",
+					"fileCaptureReadyDate": "",
+					"firstDocNbr": "",
+					"indClosed": "false",
+					"indOpen": "false",
+					"lastDocNbr": "",
+					"logoCaptureReadyDate": "",
+					"searchCodesReadyDate": "",
+					"userdocCaptureReadyDate": ""
+				}
+				}
+		return(str(clientMark.service.DailyLogUpdate(**mDailyLog)))
+	except zeep.exceptions.Fault as e:
+		return(str(e))
 
 def get_agente(arg):
 	code = {

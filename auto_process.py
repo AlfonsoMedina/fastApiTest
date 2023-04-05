@@ -48,69 +48,95 @@ def insert_list(arg0:string,arg1:string):
 		pago_auth:str = str(pago_id(arg0)).replace("None","sin dato en bancar")
 		valid_rules:str = []
 		print(' ')
-		print(arg0)	
+		print(arg0) #tramite ID	
 		print(str(arg1)) #TIPO DE DOCUMENTO
 		
+
+
+
+
+
 		#CONSULTA SI HAY RELACION DE EXPEDIENTE__________________________________________________________________________________________ 
 		if exp_relation(arg1)[0] == 'S': 
-			print('CON EXPEDIENTE RELACIONADO')# CONFIRMA RELACION
+			#print('CON EXPEDIENTE RELACIONADO')# CONFIRMA RELACION
 			if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
-				print('relacion expediente Ok!') # insert
+				#print('relacion expediente Ok!') # insert
 				valid_rules.append('Ok')
 			else:
-				print('falta expediente relacionado') # estado 99
+				#print('falta expediente relacionado') # estado 99
 				valid_rules.append('Error')
 				cambio_estado_soporte(arg0)
 		else:
-			print('SIN EXPEDIENTE RELACIONADO')# CONFIRMA SIN RELACION
+			#print('SIN EXPEDIENTE RELACIONADO')# CONFIRMA SIN RELACION
 			valid_rules.append('Not')
 		#FIN_____________________________________________________________________________________________________________________________ 
 
+
+
+
+
+
+
 		#CONSULTA SI HAY RELACION DE ESCRITO______________________________________________________________________________________________	
 		if esc_relation(arg1)[0] == 'S':
-			print('CON ESCRITO RELACIONADO')
+			#print('CON ESCRITO RELACIONADO')
 			if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
-				print('relacion de escrito Ok!') # insert
+				#print('relacion de escrito Ok!') # insert
 				valid_rules.append('Ok')
 			else:
-				print('falta escrito relacionado') # estado 99
+				#print('falta escrito relacionado') # estado 99
 				valid_rules.append('Error')
 				cambio_estado_soporte(arg0)
 		else:
 			print('SIN ESCRITO RELACIONADO')
 			valid_rules.append('Not')
 		#FIN_____________________________________________________________________________________________________________________________
-		
+
+
+
+
+
+
+
 		#CONSULTA SI EL TIPO ES CON PAGO_____________________________________________________________________________________________________
 		if pago == 'S':
-			print('CON PAGO')
+			#print('CON PAGO')
 			if pago_auth != 'sin dato en bancar': # CONFIRMA EL PAGO EN BANCAR
-				print('Con pago Ok!') # INSERT
+				#print('Con pago Ok!') # INSERT
 				valid_rules.append('Ok')
 			else:
-				print(pago_auth) # ESTADO 99
+				#print(pago_auth) # ESTADO 99
 				valid_rules.append('Error')
 				cambio_estado_soporte(arg0)
 		else:
-			print('SIN PAGO') # INSERT
+			#print('SIN PAGO') # INSERT
 			valid_rules.append('Not')
 		#FIN_____________________________________________________________________________________________________________________________	
-		
+
+
+
+
+
+
+
+
+
 		if valid_rules == ['Ok', 'Not', 'Not']: #con exp - sin esc - sin pago
-			print('ESCRITO CON RELACION')		
+			#print('ESCRITO CON RELACION')		
 			print(compileAndInsert(arg0))
-			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
-			if int(esc) == process_day_Nbr():
-				cambio_estado(arg0,process_day_Nbr())
+			time.sleep(0.5)
+
+
+
 
 		if valid_rules == ['Ok', 'Not', 'Ok']: #con exp - sin esc - con pago
-			print('ESCRITO CON RELACION')		
+			#print('ESCRITO CON RELACION')		
 			print(compileAndInsert(arg0))
-			time.sleep(1)
-			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
-			if int(esc) == process_day_Nbr():
-				cambio_estado(arg0,process_day_Nbr())
+			time.sleep(0.5)
 
+
+
+		
 		if valid_rules == ['Not', 'Ok', 'Not']:#sin exp - con esc - sin pago
 			print('ESCRTO A ESCRITO')
 			print(compileAndInsertUserDocUserDoc(arg0,arg1))
@@ -119,30 +145,44 @@ def insert_list(arg0:string,arg1:string):
 			if exists == True:				
 				cambio_estado(arg0,process_day_Nbr())
 
+
+
+
+
+
+
 		if valid_rules == ['Not', 'Ok', 'Ok']:#sin exp - con esc - sin pago
 			print('ESCRTO A ESCRITO')
 			print(compileAndInsertUserDocUserDoc(arg0,arg1))
-			time.sleep(1)
-			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
-			if int(esc) == process_day_Nbr():
+			time.sleep(0.5)
+			exists = process_day_Nbr() in user_doc_getList_escrito(process_day_Nbr())['documentId'].values()
+			if exists == True:
 				cambio_estado(arg0,process_day_Nbr())
+
+
+
+
+
 
 		if valid_rules == ['Not', 'Not', 'Ok']:
-			print('ESCRITO SIN RELACION')		
+			#print('ESCRITO SIN RELACION')		
 			print(compileAndInsert(arg0))
-			time.sleep(1)
-			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
-			if int(esc) == process_day_Nbr():
-				cambio_estado(arg0,process_day_Nbr())
+			time.sleep(0.5)
+
+
+
+
+
 
 		if valid_rules == ['Not', 'Not', 'Not']:
-			print('ESCRITO SIN RELACION')		
+			#print('ESCRITO SIN RELACION')		
 			print(compileAndInsert(arg0))
-			time.sleep(1)
-			esc = str(user_doc_getList_escrito(process_day_Nbr())['documentId']['docNbr']['doubleValue']).replace(".0","")
-			if int(esc) == process_day_Nbr():
-				cambio_estado(arg0,process_day_Nbr())
-				
+			time.sleep(0.5)
+
+
+
+
+
 		#print(valid_rules)
 
 	except Exception as e:
@@ -150,8 +190,8 @@ def insert_list(arg0:string,arg1:string):
 
 #Insert Escritos	
 def compileAndInsert(form_Id):	
-   item = format_userdoc(form_Id)
-   return insert_user_doc_escritos(
+	item = format_userdoc(form_Id)
+	insert_user_doc_escritos(
 					 item['affectedFileIdList_fileNbr'],
 					 item['affectedFileIdList_fileSeq'],
 					 item['affectedFileIdList_fileSeries'],
@@ -338,11 +378,16 @@ def compileAndInsert(form_Id):
 					 item['representationData_representativeList_person_telephone'],
 					 item['representationData_representativeList_person_zipCode'],
 					 item['representationData_representativeList_representativeType'])
+	exists = str(user_doc_getList_escrito(item['documentId_docNbr'])['documentId']['docNbr']['doubleValue']).replace(".0","") 
+	if exists == item['documentId_docNbr']:
+		cambio_estado(form_Id,item['documentId_docNbr'])
 
 #Insert Escrito a Escrito
 def compileAndInsertUserDocUserDoc(form_Id,typ):	
 	item = format_userdoc(form_Id)
+
 	series = str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docSeries']['doubleValue']).replace(".0","")
+	
 	print(user_doc_receive("1",
 					str(typ),
 					"true",
@@ -376,6 +421,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 					item['documentId_docSeries'],
 					str(typ)))
 	time.sleep(1)
+	
 	print(user_doc_update(
 					item['documentId_docLog'],
 					item['affectedFileIdList_fileNbr'],
@@ -443,22 +489,26 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 					item['representationData_representativeList_representativeType'],
 					item['representationData_representativeList_person_email']))
 	afferc = user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])
-	print(afferc)
-	time.sleep(1)
-	exists = afferc['affectedFileIdList'][0]['fileSeq'] in iter(afferc['affectedFileIdList'][0].values())
-	if exists == True:
-		print(user_doc_afectado(item['documentId_docLog'],
+	time.sleep(0.5)
+	
+	if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
+		user_doc_afectado(item['documentId_docLog'],
 							item['documentId_docNbr'],
 							item['documentId_docOrigin'],
 							item['documentId_docSeries'],
 							afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
 							afferc['affectedFileIdList'][0]['fileSeq'],
 							afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
-							afferc['affectedFileIdList'][0]['fileType']))
+							afferc['affectedFileIdList'][0]['fileType'])
+
+	exists = str(user_doc_getList_escrito(item['documentId_docNbr'])['documentId']['docNbr']['doubleValue']).replace(".0","") 
+	if exists == item['documentId_docNbr']:
+		cambio_estado(form_Id,item['documentId_docNbr'])
+
+
+
+listar()
 
 
 
 #compileAndInsertUserDocUserDoc('1494','EDJ1')
-
-listar()
-
