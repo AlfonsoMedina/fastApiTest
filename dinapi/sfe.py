@@ -694,6 +694,7 @@ def pendiente_sfe(arg):
 		""".format(arg))
 		row=cursor.fetchall()
 		for i in row:
+			sigla = str(status_typ(str(i[25]))[1]).split("-")
 			lista.append({
 						'Id':i[0],
 						'fecha':i[1],
@@ -723,7 +724,9 @@ def pendiente_sfe(arg):
 						'locked_by_id':i[24],      
 						'tipo_documento_id':status_typ(str(i[25]))[2],
 						'tool_tip':status_typ(str(i[25]))[1],
-						'tasa_id':str(i[25])
+						'tasa_id':str(i[25]),
+						'tasa_desc':str(i[25]),
+						'sigl':sigla[0]
 						})
 		return(lista)	
 	except Exception as e:
@@ -872,6 +875,19 @@ def reglas_me():
 		for i in row:
 			reglas.append(i)
 		return(reglas)	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+def reglas_me_ttasa(sig):
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select ttasa from reglas_me where tipo_doc like '{} %'""".format(sig))
+		row=cursor.fetchall()
+		for i in row:
+			return(i)	
 	except Exception as e:
 		print(e)
 	finally:
@@ -1424,7 +1440,7 @@ def esc_relation(typ):
 	finally:
 		conn.close()
 
-def tasa_id(arg):#BUSCA
+def tasa_id(arg):
 	try:
 		conn = psycopg2.connect(host = connex.hostCJ,user= connex.userCJ,password = connex.passwordCJ,database = connex.databaseCJ)
 		cursor = conn.cursor()
@@ -1438,9 +1454,11 @@ def tasa_id(arg):#BUSCA
 	finally:
 		conn.close()
 
-print(tasa_id('18'))
+#print(pendiente_sfe('1522'))
+
 
 """def afected_relation_auth(arg):"""
+
 
 
 '''

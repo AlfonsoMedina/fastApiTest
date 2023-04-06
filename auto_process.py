@@ -8,7 +8,7 @@ import string
 import time
 from time import sleep
 from unicodedata import numeric
-from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr
+from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, reglas_me_ttasa, tasa_id
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito
@@ -88,7 +88,7 @@ def insert_list(arg0:string,arg1:string):
 				valid_rules.append('Error')
 				cambio_estado_soporte(arg0)
 		else:
-			print('SIN ESCRITO RELACIONADO')
+			#print('SIN ESCRITO RELACIONADO')
 			valid_rules.append('Not')
 		#FIN_____________________________________________________________________________________________________________________________
 
@@ -123,7 +123,7 @@ def insert_list(arg0:string,arg1:string):
 
 		if valid_rules == ['Ok', 'Not', 'Not']: #con exp - sin esc - sin pago
 			#print('ESCRITO CON RELACION')		
-			print(compileAndInsert(arg0))
+			print(compileAndInsert(arg0,arg1))
 			time.sleep(0.5)
 
 
@@ -131,7 +131,7 @@ def insert_list(arg0:string,arg1:string):
 
 		if valid_rules == ['Ok', 'Not', 'Ok']: #con exp - sin esc - con pago
 			#print('ESCRITO CON RELACION')		
-			print(compileAndInsert(arg0))
+			print(compileAndInsert(arg0,arg1))
 			time.sleep(0.5)
 
 
@@ -141,9 +141,6 @@ def insert_list(arg0:string,arg1:string):
 			print('ESCRTO A ESCRITO')
 			print(compileAndInsertUserDocUserDoc(arg0,arg1))
 			time.sleep(1)
-			exists = process_day_Nbr() in user_doc_getList_escrito(process_day_Nbr())['documentId'].values()
-			if exists == True:				
-				cambio_estado(arg0,process_day_Nbr())
 
 
 
@@ -155,9 +152,7 @@ def insert_list(arg0:string,arg1:string):
 			print('ESCRTO A ESCRITO')
 			print(compileAndInsertUserDocUserDoc(arg0,arg1))
 			time.sleep(0.5)
-			exists = process_day_Nbr() in user_doc_getList_escrito(process_day_Nbr())['documentId'].values()
-			if exists == True:
-				cambio_estado(arg0,process_day_Nbr())
+
 
 
 
@@ -166,7 +161,7 @@ def insert_list(arg0:string,arg1:string):
 
 		if valid_rules == ['Not', 'Not', 'Ok']:
 			#print('ESCRITO SIN RELACION')		
-			print(compileAndInsert(arg0))
+			print(compileAndInsert(arg0,arg1))
 			time.sleep(0.5)
 
 
@@ -176,7 +171,7 @@ def insert_list(arg0:string,arg1:string):
 
 		if valid_rules == ['Not', 'Not', 'Not']:
 			#print('ESCRITO SIN RELACION')		
-			print(compileAndInsert(arg0))
+			print(compileAndInsert(arg0,arg1))
 			time.sleep(0.5)
 
 
@@ -189,8 +184,15 @@ def insert_list(arg0:string,arg1:string):
 		pass			
 
 #Insert Escritos	
-def compileAndInsert(form_Id):	
+def compileAndInsert(form_Id,typ):	
 	item = format_userdoc(form_Id)
+	try:
+		ttasa_Nbr = tasa_id(str(reglas_me_ttasa(str(typ))[0]))[0]			 
+		ttasa_Name = tasa_id(str(reglas_me_ttasa(str(typ))[0]))[1]
+	except Exception as e:
+		ttasa_Nbr = ""
+		ttasa_Name = ""
+
 	insert_user_doc_escritos(
 					 item['affectedFileIdList_fileNbr'],
 					 item['affectedFileIdList_fileSeq'],
@@ -262,8 +264,8 @@ def compileAndInsert(form_Id):
 					 item['filingData_paymentList_receiptDate'],
 					 item['filingData_paymentList_receiptNbr'],
 					 item['filingData_paymentList_receiptNotes'],
-					 item['filingData_paymentList_receiptType'],
-					 item['filingData_paymentList_receiptTypeName'],
+					 ttasa_Nbr,
+					 ttasa_Name,
 					 item['filingData_receptionDate'],
 					 item['filingData_documentId_receptionDocument_docLog'],
 					 item['filingData_documentId_receptionDocument_docNbr'],
@@ -421,7 +423,14 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 					item['documentId_docSeries'],
 					str(typ)))
 	time.sleep(1)
-	
+
+	try:
+		ttasa_Nbr = tasa_id(str(reglas_me_ttasa(str(typ))[0]))[0]			 
+		ttasa_Name = tasa_id(str(reglas_me_ttasa(str(typ))[0]))[1]
+	except Exception as e:
+		ttasa_Nbr = ""
+		ttasa_Name = ""
+
 	print(user_doc_update(
 					item['documentId_docLog'],
 					item['affectedFileIdList_fileNbr'],
@@ -453,8 +462,8 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 					item['filingData_paymentList_receiptDate'],
 					item['filingData_paymentList_receiptNbr'],
 					item['filingData_paymentList_receiptNotes'],
-					item['filingData_paymentList_receiptType'],
-					item['filingData_paymentList_receiptTypeName'],			
+					ttasa_Nbr,
+					ttasa_Name,			
 					item['filingData_documentId_receptionDocument_docNbr'],
 					item['filingData_documentId_receptionDocument_docOrigin'],
 					item['filingData_documentId_receptionDocument_docSeries'],
@@ -504,6 +513,8 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 	exists = str(user_doc_getList_escrito(item['documentId_docNbr'])['documentId']['docNbr']['doubleValue']).replace(".0","") 
 	if exists == item['documentId_docNbr']:
 		cambio_estado(form_Id,item['documentId_docNbr'])
+
+
 
 
 
