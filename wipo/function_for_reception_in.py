@@ -4117,6 +4117,7 @@ def insert_user_doc_escritos(affectedFileIdList_fileNbr,
 		return(e)
 
 
+
 '''
 ##############################################################################################################
 Hora por 24H

@@ -695,6 +695,13 @@ def pendiente_sfe(arg):
 		row=cursor.fetchall()
 		for i in row:
 			sigla = str(status_typ(str(i[25]))[1]).split("-")
+			t_id = str(reglas_me_ttasa(status_typ(str(i[25]))[2])[0])
+			if t_id == '0':
+				id_tasa = ''
+				desc_tasa = ''
+			else:
+				id_tasa = str(reglas_me_ttasa(status_typ(str(i[25]))[2])[0])
+				desc_tasa = str(tasa_id(str(reglas_me_ttasa(status_typ(str(i[25]))[2])[0]))[1])					
 			lista.append({
 						'Id':i[0],
 						'fecha':i[1],
@@ -710,7 +717,7 @@ def pendiente_sfe(arg):
 						'codigo':i[10],            
 						'firmado_at':i[11],        
 						'pagado_at':str(pago_id(i[0])),         
-						'expediente_id':i[13],     
+						'expediente_id':str(i[13]),     
 						'pdf_url':i[14],           
 						'enviado_at':i[15],        
 						'recepcionado_at':i[16],   
@@ -724,8 +731,8 @@ def pendiente_sfe(arg):
 						'locked_by_id':i[24],      
 						'tipo_documento_id':status_typ(str(i[25]))[2],
 						'tool_tip':status_typ(str(i[25]))[1],
-						'tasa_id':str(i[25]),
-						'tasa_desc':str(i[25]),
+						'tasa_id':id_tasa,
+						'tasa_desc':desc_tasa,
 						'sigl':sigla[0]
 						})
 		return(lista)	
@@ -1111,8 +1118,8 @@ def format_userdoc(doc_Id):
 		create_userdoc['filingData_paymentList_receiptNbr'] = ""		
 
 	create_userdoc['filingData_paymentList_receiptNotes'] = " Caja MEA"
-	create_userdoc['filingData_paymentList_receiptType'] = str(tasa_id(str(data[0]['tasa_id']))[0])
-	create_userdoc['filingData_paymentList_receiptTypeName'] = str(tasa_id(str(data[0]['tasa_id']))[1])
+	create_userdoc['filingData_paymentList_receiptType'] = str(data[0]['tasa_id'])
+	create_userdoc['filingData_paymentList_receiptTypeName'] = str(data[0]['tasa_desc'])
 
 
 	create_userdoc['filingData_receptionDate'] = captureDate.capture_full()
@@ -1454,7 +1461,7 @@ def tasa_id(arg):
 	finally:
 		conn.close()
 
-#print(pendiente_sfe('1522'))
+#print(pendiente_sfe('1474'))
 
 
 """def afected_relation_auth(arg):"""
