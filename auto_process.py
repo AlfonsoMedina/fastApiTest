@@ -9,6 +9,7 @@ import time
 from time import sleep
 from unicodedata import numeric
 from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, reglas_me_ttasa, tasa_id
+from getFileDoc import getFile
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito
@@ -19,7 +20,7 @@ import asyncio
 
 list_id = []
 def listar():
-	print('............')
+	#print('............')
 	captura_pendientes() # Captura lista pendiente
 	time.sleep(int(connex.MEA_TIEMPO_ACTUALIZACION))#int(connex.MEA_TIEMPO_ACTUALIZACION)
 	listar()
@@ -527,6 +528,12 @@ async def compileAndInsertUserDocUserDoc(form_Id,typ):
 		afferc = str(user_doc_getList_escrito(item['documentId_docNbr'])['documentId']['docNbr']['doubleValue']).replace(".0","") 
 		if afferc == item['documentId_docNbr']:
 			cambio_estado(form_Id,item['documentId_docNbr'])
+
+
+		try:
+			getFile(form_Id,item['documentId_docNbr'])
+		except Exception as e:
+			pass
 		
 
 
