@@ -55,8 +55,6 @@ def insert_list(arg0:string,arg1:string):
 
 
 
-
-
 	#CONSULTA SI HAY RELACION DE EXPEDIENTE__________________________________________________________________________________________ 
 	if exp_relation(arg1)[0] == 'S': 
 		#print('CON EXPEDIENTE RELACIONADO')# CONFIRMA RELACION
@@ -76,8 +74,6 @@ def insert_list(arg0:string,arg1:string):
 
 
 
-
-
 	#CONSULTA SI HAY RELACION DE ESCRITO______________________________________________________________________________________________	
 	if esc_relation(arg1)[0] == 'S':
 		#print('CON ESCRITO RELACIONADO')
@@ -92,8 +88,6 @@ def insert_list(arg0:string,arg1:string):
 		#print('SIN ESCRITO RELACIONADO')
 		valid_rules.append('Not')
 	#FIN_____________________________________________________________________________________________________________________________
-
-
 
 
 
@@ -120,8 +114,6 @@ def insert_list(arg0:string,arg1:string):
 
 
 		
-
-
 	if valid_rules == ['Ok', 'Not', 'Not']: #con exp - sin esc - sin pago
 		#print('ESCRITO CON RELACION')		
 		print(compileAndInsert(arg0,arg1))
@@ -146,18 +138,11 @@ def insert_list(arg0:string,arg1:string):
 
 
 
-		
-
-
-
 	if valid_rules == ['Not', 'Ok', 'Ok']:#sin exp - con esc - sin pago
-		print('ESCRTO A ESCRITO')
+		#print('ESCRTO A ESCRITO')
 		compileAndInsertUserDocUserDoc(arg0,arg1)
 		time.sleep(0.5)
 		print(valid_rules)
-
-
-
 
 
 
@@ -166,8 +151,6 @@ def insert_list(arg0:string,arg1:string):
 		#print('ESCRITO SIN RELACION')		
 		print(compileAndInsert(arg0,arg1))
 		time.sleep(0.5)
-
-
 
 
 
@@ -397,7 +380,15 @@ def compileAndInsert(form_Id,typ):
 
 #Insert Escrito a Escrito
 async def compileAndInsertUserDocUserDoc(form_Id,typ):	
-		item = format_userdoc(form_Id)		
+		item = format_userdoc(form_Id)
+		try:
+			doc_Log = "E"
+			doc_docNbr = str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docNbr']['doubleValue'])
+			doc_docOrigin = str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docOrigin'])
+			doc_docSeries = str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docSeries']['doubleValue'])
+		except Exception as e:
+			print('no existe el escrito')
+		
 		try:
 			user_doc_receive("1",
 						str(typ),
@@ -417,10 +408,10 @@ async def compileAndInsertUserDocUserDoc(form_Id,typ):
 						"",
 						item['filingData_captureUserId'],
 						"SFE test - Aplicante M.E.A",
-						"E",
-						str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docNbr']['doubleValue']),
-						str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docOrigin']), 
-						str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docSeries']['doubleValue']),
+						doc_Log,
+						doc_docNbr,
+						doc_docOrigin, 
+						doc_docSeries,
 						"",
 						"",
 						"",
@@ -447,10 +438,10 @@ async def compileAndInsertUserDocUserDoc(form_Id,typ):
 				
 		try:
 			user_doc_update(
-						"E",
-						str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docNbr']['doubleValue']),
-						str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docOrigin']), 
-						str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docSeries']['doubleValue']),
+						doc_Log,
+						doc_docNbr,
+						doc_docOrigin, 
+						doc_docSeries,
 						item['applicant_applicantNotes'],
 						item['applicant_person_addressStreet'],
 						item['applicant_person_cityName'],

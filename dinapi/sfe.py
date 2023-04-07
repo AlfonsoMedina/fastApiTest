@@ -856,7 +856,6 @@ def count_pendiente(fecha:string):
 	finally:
 		conn.close()
 
-#MODIFICAR ORIGEN DE REGLAS
 def tip_doc():
 	try:
 		tipo_form = []
