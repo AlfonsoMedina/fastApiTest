@@ -4498,7 +4498,7 @@ def user_doc_receive(
 		daily_log_open(arg6)   
 		udr={
 				"arg0": arg0,
-				"arg1": arg1,
+				"arg1": str(arg1),
 				"arg3": arg3,
 				"arg4": {
 					"offidocNbr": {

@@ -946,8 +946,11 @@ def format_userdoc(doc_Id):
 
 	create_userdoc['affectedFileIdList_fileNbr'] = str(data[0]['expediente_afectad']).replace("None","")
 	create_userdoc['affectedFileIdList_fileSeq'] = fileSeq
-	try:
-		create_userdoc['affectedFileIdList_fileSeries']=str(int(mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeries']['doubleValue']))
+	try:#
+		for i in range(0,len(data[0]['respuestas'])):
+			if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_fecha':	
+				create_userdoc['affectedFileIdList_fileSeries'] = str(data[0]['respuestas'][i]['valor'][0:4])
+		#create_userdoc['affectedFileIdList_fileSeries']=str(int(mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeries']['doubleValue']))
 	except Exception as e:
 		create_userdoc['affectedFileIdList_fileSeries']=""
 	

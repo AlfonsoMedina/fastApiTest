@@ -1,6 +1,3 @@
-"""
-Administrador de recepcion MEA
-"""
 from ast import Break
 from dataclasses import replace
 import numbers
@@ -8,7 +5,8 @@ import string
 import time
 from time import sleep
 from unicodedata import numeric
-from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, reglas_me_ttasa, tasa_id
+from models.InsertUserDocModel import userDocModel
+from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, tasa_id
 from getFileDoc import getFile
 import tools.filing_date as captureDate
 import tools.connect as connex
@@ -19,6 +17,7 @@ import asyncio
 
 
 list_id = []
+sigla:string = ''
 def listar():
 	#print('............')
 	captura_pendientes() # Captura lista pendiente
@@ -141,9 +140,8 @@ def insert_list(arg0:string,arg1:string):
 
 	if valid_rules == ['Not', 'Ok', 'Ok']:#sin exp - con esc - sin pago
 		#print('ESCRTO A ESCRITO')
-		compileAndInsertUserDocUserDoc(arg0,arg1)
+		compileAndInsertUserDocUserDocPago(arg0,arg1)
 		time.sleep(0.5)
-		print(valid_rules)
 
 
 
@@ -163,12 +161,9 @@ def insert_list(arg0:string,arg1:string):
 
 		
 
-
-
 	#print(valid_rules)
 
-			
-
+		
 #Insert Escritos	
 def compileAndInsert(form_Id,typ):
 		
@@ -381,18 +376,14 @@ def compileAndInsert(form_Id,typ):
 
 #Insert Escrito a Escrito
 async def compileAndInsertUserDocUserDoc(form_Id,typ):	
-		item = format_userdoc(form_Id)
-		try:
-			doc_Log = "E"
-			doc_docNbr = str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docNbr']['doubleValue'])
-			doc_docOrigin = str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docOrigin'])
-			doc_docSeries = str(user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])['documentId']['docSeries']['doubleValue'])
-		except Exception as e:
-			print('no existe el escrito')
 		
+		escrito_relacionado = userDocModel()
+		escrito_relacionado.setData(form_Id)
+
 		try:
-			user_doc_receive("1",
-						str(typ),
+			user_doc_receive(
+						"1",
+						escrito_relacionado.filingData_userdocTypeList_userdocType,
 						"true",
 						"",
 						"",
@@ -407,115 +398,259 @@ async def compileAndInsertUserDocUserDoc(form_Id,typ):
 						"",
 						"",
 						"",
-						item['filingData_captureUserId'],
+						escrito_relacionado.filingData_captureUserId,#item['filingData_captureUserId']
 						"SFE test - Aplicante M.E.A",
-						doc_Log,
-						doc_docNbr,
-						doc_docOrigin, 
-						doc_docSeries,
+						escrito_relacionado.affected_doc_Log,
+						escrito_relacionado.affected_doc_docNbr,
+						escrito_relacionado.affected_doc_docOrigin, 
+						escrito_relacionado.affected_doc_docSeries,
 						"",
 						"",
 						"",
 						"",
 						"",
-						item['documentId_docLog'],
-						item['documentId_docNbr'],
-						item['documentId_docOrigin'],
-						item['documentId_docSeries'],
-						str(typ))
+						escrito_relacionado.documentId_docLog,
+						escrito_relacionado.documentId_docNbr,
+						escrito_relacionado.documentId_docOrigin,
+						escrito_relacionado.documentId_docSeries,
+						escrito_relacionado.filingData_userdocTypeList_userdocType)
 		except zeep.exceptions.Fault as e:
 			print(str(e))
 			cambio_estado_soporte(form_Id)
 
-		await asyncio.sleep(1)
+		await asyncio.sleep(0.5)
+	
+		sigla_desc = str(escrito_relacionado.filingData_userdocTypeList_userdocName).split("- ")
+		
 		
 		try:
-			ttasa_Nbr = tasa_id(str(reglas_me_ttasa(str(typ))[0]))[0]			 
-			ttasa_Name = tasa_id(str(reglas_me_ttasa(str(typ))[0]))[1]
+			user_doc_update(
+						escrito_relacionado.affected_doc_Log,
+						escrito_relacionado.affected_doc_docNbr,
+						escrito_relacionado.affected_doc_docOrigin, 
+						escrito_relacionado.affected_doc_docSeries,
+						escrito_relacionado.applicant_applicantNotes,
+						escrito_relacionado.applicant_person_addressStreet,
+						escrito_relacionado.applicant_person_cityName,
+						escrito_relacionado.applicant_person_email,
+						escrito_relacionado.applicant_person_nationalityCountryCode,
+						escrito_relacionado.applicant_person_personName,
+						escrito_relacionado.applicant_person_residenceCountryCode,
+						escrito_relacionado.applicant_person_telephone,
+						escrito_relacionado.applicant_person_zipCode,
+						escrito_relacionado.documentId_docLog,
+						escrito_relacionado.documentId_docNbr,
+						escrito_relacionado.documentId_docOrigin,
+						escrito_relacionado.documentId_docSeries,
+						escrito_relacionado.documentSeqId_docSeqNbr,
+						escrito_relacionado.documentSeqId_docSeqSeries,
+						escrito_relacionado.documentSeqId_docSeqType,
+						escrito_relacionado.filingData_captureDate,
+						escrito_relacionado.filingData_captureUserId,
+						escrito_relacionado.filingData_filingDate,
+						escrito_relacionado.filingData_receptionDate,
+						escrito_relacionado.filingData_paymentList_currencyName,
+						escrito_relacionado.filingData_paymentList_currencyType,
+						escrito_relacionado.filingData_paymentList_receiptAmount,
+						escrito_relacionado.filingData_paymentList_receiptDate,
+						escrito_relacionado.filingData_paymentList_receiptNbr,
+						escrito_relacionado.filingData_paymentList_receiptNotes,
+						escrito_relacionado.filingData_paymentList_receiptType,
+						escrito_relacionado.filingData_paymentList_receiptTypeName,		
+						escrito_relacionado.filingData_documentId_receptionDocument_docNbr,
+						escrito_relacionado.filingData_documentId_receptionDocument_docOrigin,
+						escrito_relacionado.filingData_documentId_receptionDocument_docSeries,
+						sigla_desc[1],
+						escrito_relacionado.filingData_userdocTypeList_userdocType,					
+						"1",
+						escrito_relacionado.newOwnershipData_ownerList_ownershipNotes,
+						escrito_relacionado.newOwnershipData_ownerList_person_addressStreet,
+						escrito_relacionado.newOwnershipData_ownerList_person_cityName,
+						escrito_relacionado.newOwnershipData_ownerList_person_email,
+						escrito_relacionado.newOwnershipData_ownerList_person_nationalityCountryCode,
+						escrito_relacionado.newOwnershipData_ownerList_person_personName,
+						escrito_relacionado.newOwnershipData_ownerList_person_residenceCountryCode,
+						escrito_relacionado.newOwnershipData_ownerList_person_telephone,
+						escrito_relacionado.newOwnershipData_ownerList_person_zipCode,
+						escrito_relacionado.notes,
+						escrito_relacionado.representationData_representativeList_person_addressStreet,
+						escrito_relacionado.representationData_representativeList_person_addressZone,
+						escrito_relacionado.representationData_representativeList_person_agentCode,
+						escrito_relacionado.representationData_representativeList_person_cityName,
+						escrito_relacionado.representationData_representativeList_person_individualIdNbr,
+						escrito_relacionado.representationData_representativeList_person_individualIdType,
+						escrito_relacionado.representationData_representativeList_person_legalIdNbr,
+						escrito_relacionado.representationData_representativeList_person_legalIdType,
+						escrito_relacionado.representationData_representativeList_person_legalNature,					
+						escrito_relacionado.representationData_representativeList_person_nationalityCountryCode,
+						escrito_relacionado.representationData_representativeList_person_personName,
+						escrito_relacionado.representationData_representativeList_person_personNameInOtherLang,
+						escrito_relacionado.representationData_representativeList_person_residenceCountryCode,
+						escrito_relacionado.representationData_representativeList_person_telephone,
+						escrito_relacionado.representationData_representativeList_person_zipCode,
+						escrito_relacionado.representationData_representativeList_representativeType,
+						escrito_relacionado.representationData_representativeList_person_email)
+			process_day_commit_Nbr()
+		except zeep.exceptions.Fault as e:
+			print(str(e))
+			cambio_estado_soporte(form_Id)
+
+		await asyncio.sleep(0.5)
+		
+		afferc = user_doc_getList_escrito(escrito_relacionado.affectedFileIdList_fileNbr)
+		if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
+			user_doc_afectado(
+								escrito_relacionado.documentId_docLog,
+								escrito_relacionado.documentId_docNbr,
+								escrito_relacionado.documentId_docOrigin,
+								escrito_relacionado.documentId_docSeries,
+								afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
+								afferc['affectedFileIdList'][0]['fileSeq'],
+								afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
+								afferc['affectedFileIdList'][0]['fileType'])
+		else:
+			pass
+
+		await asyncio.sleep(0.5)
+		
+		afferc = str(user_doc_getList_escrito(escrito_relacionado.documentId_docNbr)['documentId']['docNbr']['doubleValue']).replace(".0","") 
+		if afferc == escrito_relacionado.documentId_docNbr:
+			cambio_estado(form_Id,escrito_relacionado.documentId_docNbr)
+
+
+		try:
+			getFile(form_Id,escrito_relacionado.documentId_docNbr)
 		except Exception as e:
-			ttasa_Nbr = ""
-			ttasa_Name = ""
+			pass
+
+def compileAndInsertUserDocUserDocPago(form_Id,typ):	
+		
+		escrito_escrito_pago = userDocModel()
+		escrito_escrito_pago.setData(form_Id)
+	
+		try:
+			user_doc_receive(
+						"1",
+						escrito_escrito_pago.filingData_userdocTypeList_userdocType,
+						"true",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						str(captureDate.capture_day()),
+						"",
+						"",
+						"",
+						"",
+						"",
+						escrito_escrito_pago.filingData_captureUserId,
+						"SFE test - Aplicante M.E.A",
+						escrito_escrito_pago.affected_doc_Log,
+						escrito_escrito_pago.affected_doc_docNbr,
+						escrito_escrito_pago.affected_doc_docOrigin, 
+						escrito_escrito_pago.affected_doc_docSeries,
+						"",
+						"",
+						"",
+						"",
+						"",
+						escrito_escrito_pago.documentId_docLog,
+						escrito_escrito_pago.documentId_docNbr,
+						escrito_escrito_pago.documentId_docOrigin,
+						escrito_escrito_pago.documentId_docSeries,
+						escrito_escrito_pago.filingData_userdocTypeList_userdocType)
+		except zeep.exceptions.Fault as e:
+			print(str(e))
+			cambio_estado_soporte(form_Id)
+
+		time.sleep(1)
+		
+		sigla_desc = str(escrito_escrito_pago.filingData_userdocTypeList_userdocName).split("- ")
 		
 				
 		try:
 			user_doc_update(
-						doc_Log,
-						doc_docNbr,
-						doc_docOrigin, 
-						doc_docSeries,
-						item['applicant_applicantNotes'],
-						item['applicant_person_addressStreet'],
-						item['applicant_person_cityName'],
-						item['applicant_person_email'],
-						item['applicant_person_nationalityCountryCode'],
-						item['applicant_person_personName'],
-						item['applicant_person_residenceCountryCode'],
-						item['applicant_person_telephone'],
-						item['applicant_person_zipCode'],
-						item['documentId_docLog'],
-						item['documentId_docNbr'],
-						item['documentId_docOrigin'],
-						item['documentId_docSeries'],
-						item['documentSeqId_docSeqNbr'],
-						item['documentSeqId_docSeqSeries'],
-						item['documentSeqId_docSeqType'],
-						item['filingData_captureDate'],
-						item['filingData_captureUserId'],
-						item['filingData_filingDate'],
-						item['filingData_receptionDate'],
-						item['filingData_paymentList_currencyName'],
-						item['filingData_paymentList_currencyType'],
-						item['filingData_paymentList_receiptAmount'],
-						item['filingData_paymentList_receiptDate'],
-						item['filingData_paymentList_receiptNbr'],
-						item['filingData_paymentList_receiptNotes'],
-						item['filingData_paymentList_receiptType'],
-						item['filingData_paymentList_receiptTypeName'],		
-						item['filingData_documentId_receptionDocument_docNbr'],
-						item['filingData_documentId_receptionDocument_docOrigin'],
-						item['filingData_documentId_receptionDocument_docSeries'],
-						item['filingData_userdocTypeList_userdocName'],
-						str(typ),					
-						"",
-						item['newOwnershipData_ownerList_ownershipNotes'],
-						item['newOwnershipData_ownerList_person_addressStreet'],
-						item['newOwnershipData_ownerList_person_cityName'],
-						item['newOwnershipData_ownerList_person_email'],
-						item['newOwnershipData_ownerList_person_nationalityCountryCode'],
-						item['newOwnershipData_ownerList_person_personName'],
-						item['newOwnershipData_ownerList_person_residenceCountryCode'],
-						item['newOwnershipData_ownerList_person_telephone'],
-						item['newOwnershipData_ownerList_person_zipCode'],
-						item['notes'],
-						item['representationData_representativeList_person_addressStreet'],
-						item['representationData_representativeList_person_addressZone'],
-						item['representationData_representativeList_person_agentCode'],
-						item['representationData_representativeList_person_cityName'],
-						item['representationData_representativeList_person_individualIdNbr'],
-						item['representationData_representativeList_person_individualIdType'],
-						item['representationData_representativeList_person_legalIdNbr'],
-						item['representationData_representativeList_person_legalIdType'],
-						item['representationData_representativeList_person_legalNature'],					
-						item['representationData_representativeList_person_nationalityCountryCode'],
-						item['representationData_representativeList_person_personName'],
-						item['representationData_representativeList_person_personNameInOtherLang'],
-						item['representationData_representativeList_person_residenceCountryCode'],
-						item['representationData_representativeList_person_telephone'],
-						item['representationData_representativeList_person_zipCode'],
-						item['representationData_representativeList_representativeType'],
-						item['representationData_representativeList_person_email'])
+						escrito_escrito_pago.affected_doc_Log,
+						escrito_escrito_pago.affected_doc_docNbr,
+						escrito_escrito_pago.affected_doc_docOrigin, 
+						escrito_escrito_pago.affected_doc_docSeries,
+						escrito_escrito_pago.applicant_applicantNotes,
+						escrito_escrito_pago.applicant_person_addressStreet,
+						escrito_escrito_pago.applicant_person_cityName,
+						escrito_escrito_pago.applicant_person_email,
+						escrito_escrito_pago.applicant_person_nationalityCountryCode,
+						escrito_escrito_pago.applicant_person_personName,
+						escrito_escrito_pago.applicant_person_residenceCountryCode,
+						escrito_escrito_pago.applicant_person_telephone,
+						escrito_escrito_pago.applicant_person_zipCode,
+						escrito_escrito_pago.documentId_docLog,
+						escrito_escrito_pago.documentId_docNbr,
+						escrito_escrito_pago.documentId_docOrigin,
+						escrito_escrito_pago.documentId_docSeries,
+						escrito_escrito_pago.documentSeqId_docSeqNbr,
+						escrito_escrito_pago.documentSeqId_docSeqSeries,
+						escrito_escrito_pago.documentSeqId_docSeqType,
+						escrito_escrito_pago.filingData_captureDate,
+						escrito_escrito_pago.filingData_captureUserId,
+						escrito_escrito_pago.filingData_filingDate,
+						escrito_escrito_pago.filingData_receptionDate,
+						escrito_escrito_pago.filingData_paymentList_currencyName,
+						escrito_escrito_pago.filingData_paymentList_currencyType,
+						escrito_escrito_pago.filingData_paymentList_receiptAmount,
+						escrito_escrito_pago.filingData_paymentList_receiptDate,
+						escrito_escrito_pago.filingData_paymentList_receiptNbr,
+						escrito_escrito_pago.filingData_paymentList_receiptNotes,
+						escrito_escrito_pago.filingData_paymentList_receiptType,
+						escrito_escrito_pago.filingData_paymentList_receiptTypeName,		
+						escrito_escrito_pago.filingData_documentId_receptionDocument_docNbr,
+						escrito_escrito_pago.filingData_documentId_receptionDocument_docOrigin,
+						escrito_escrito_pago.filingData_documentId_receptionDocument_docSeries,
+						sigla_desc[1],
+						escrito_escrito_pago.filingData_userdocTypeList_userdocType,					
+						"1",
+						escrito_escrito_pago.newOwnershipData_ownerList_ownershipNotes,
+						escrito_escrito_pago.newOwnershipData_ownerList_person_addressStreet,
+						escrito_escrito_pago.newOwnershipData_ownerList_person_cityName,
+						escrito_escrito_pago.newOwnershipData_ownerList_person_email,
+						escrito_escrito_pago.newOwnershipData_ownerList_person_nationalityCountryCode,
+						escrito_escrito_pago.newOwnershipData_ownerList_person_personName,
+						escrito_escrito_pago.newOwnershipData_ownerList_person_residenceCountryCode,
+						escrito_escrito_pago.newOwnershipData_ownerList_person_telephone,
+						escrito_escrito_pago.newOwnershipData_ownerList_person_zipCode,
+						escrito_escrito_pago.notes,
+						escrito_escrito_pago.representationData_representativeList_person_addressStreet,
+						escrito_escrito_pago.representationData_representativeList_person_addressZone,
+						escrito_escrito_pago.representationData_representativeList_person_agentCode,
+						escrito_escrito_pago.representationData_representativeList_person_cityName,
+						escrito_escrito_pago.representationData_representativeList_person_individualIdNbr,
+						escrito_escrito_pago.representationData_representativeList_person_individualIdType,
+						escrito_escrito_pago.representationData_representativeList_person_legalIdNbr,
+						escrito_escrito_pago.representationData_representativeList_person_legalIdType,
+						escrito_escrito_pago.representationData_representativeList_person_legalNature,					
+						escrito_escrito_pago.representationData_representativeList_person_nationalityCountryCode,
+						escrito_escrito_pago.representationData_representativeList_person_personName,
+						escrito_escrito_pago.representationData_representativeList_person_personNameInOtherLang,
+						escrito_escrito_pago.representationData_representativeList_person_residenceCountryCode,
+						escrito_escrito_pago.representationData_representativeList_person_telephone,
+						escrito_escrito_pago.representationData_representativeList_person_zipCode,
+						escrito_escrito_pago.representationData_representativeList_representativeType,
+						escrito_escrito_pago.representationData_representativeList_person_email)
+			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
 			print(str(e))
 			cambio_estado_soporte(form_Id)		
 		
-		await asyncio.sleep(1)
+		time.sleep(1)
 		
-		afferc = user_doc_getList_escrito(item['affectedFileIdList_fileNbr'])
+		afferc = user_doc_getList_escrito(escrito_escrito_pago.affectedFileIdList_fileNbr)
 		if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
-			user_doc_afectado(item['documentId_docLog'],
-								item['documentId_docNbr'],
-								item['documentId_docOrigin'],
-								item['documentId_docSeries'],
+			user_doc_afectado(escrito_escrito_pago.documentId_docLog,
+								escrito_escrito_pago.documentId_docNbr,
+								escrito_escrito_pago.documentId_docOrigin,
+								escrito_escrito_pago.documentId_docSeries,
 								afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
 								afferc['affectedFileIdList'][0]['fileSeq'],
 								afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
@@ -523,24 +658,22 @@ async def compileAndInsertUserDocUserDoc(form_Id,typ):
 		else:
 			pass
 		
-		await asyncio.sleep(1)
+		time.sleep(1)
 		
-		afferc = str(user_doc_getList_escrito(item['documentId_docNbr'])['documentId']['docNbr']['doubleValue']).replace(".0","") 
-		if afferc == item['documentId_docNbr']:
-			cambio_estado(form_Id,item['documentId_docNbr'])
+		afferc = str(user_doc_getList_escrito(escrito_escrito_pago.documentId_docNbr)['documentId']['docNbr']['doubleValue']).replace(".0","") 
+		if afferc == escrito_escrito_pago.documentId_docNbr:
+			cambio_estado(form_Id,escrito_escrito_pago.documentId_docNbr)
 
 
 		try:
-			getFile(form_Id,item['documentId_docNbr'])
+			getFile(form_Id,escrito_escrito_pago.documentId_docNbr)
 		except Exception as e:
 			pass
-		
-
-
-
 
 
 listar()
+
+
 
 
 

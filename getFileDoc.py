@@ -20,7 +20,3 @@ def getFile(doc_id,fileNbr):
 	finally:
 		conn.close()
 
-
-
-
-getFile('1469','1720109')
