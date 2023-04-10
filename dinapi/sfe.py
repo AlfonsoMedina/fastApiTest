@@ -900,7 +900,7 @@ def reglas_me_ttasa(sig):
 		conn.close()
 
 def format_userdoc(doc_Id):
-	process_day_commit_Nbr()
+	#process_day_commit_Nbr()
 	documento_Typ:str = ''
 	ruc_Typ:str = ''
 	ci_Typ:str = ''	
@@ -1462,8 +1462,6 @@ def tasa_id(arg):
 		print(e)
 	finally:
 		conn.close()
-
-#print(pendiente_sfe('1474'))
 
 
 """def afected_relation_auth(arg):"""

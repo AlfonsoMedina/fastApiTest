@@ -53,8 +53,6 @@ def insert_list(arg0:string,arg1:string):
 	print(str(arg1)) #TIPO DE DOCUMENTO
 		
 
-
-
 	#CONSULTA SI HAY RELACION DE EXPEDIENTE__________________________________________________________________________________________ 
 	if exp_relation(arg1)[0] == 'S': 
 		#print('CON EXPEDIENTE RELACIONADO')# CONFIRMA RELACION
@@ -69,9 +67,6 @@ def insert_list(arg0:string,arg1:string):
 		#print('SIN EXPEDIENTE RELACIONADO')# CONFIRMA SIN RELACION
 		valid_rules.append('Not')
 	#FIN_____________________________________________________________________________________________________________________________ 
-
-
-
 
 
 	#CONSULTA SI HAY RELACION DE ESCRITO______________________________________________________________________________________________	
@@ -90,9 +85,6 @@ def insert_list(arg0:string,arg1:string):
 	#FIN_____________________________________________________________________________________________________________________________
 
 
-
-
-
 	#CONSULTA SI EL TIPO ES CON PAGO_____________________________________________________________________________________________________
 	if pago == 'S':
 			#print('CON PAGO')
@@ -108,12 +100,12 @@ def insert_list(arg0:string,arg1:string):
 		valid_rules.append('Not')
 	#FIN_____________________________________________________________________________________________________________________________	
 
+	####################################################################################################################################
+	####################################################################################################################################
+	####################################################################################################################################
+	####################################################################################################################################
+	####################################################################################################################################
 
-
-
-
-
-		
 	if valid_rules == ['Ok', 'Not', 'Not']: #con exp - sin esc - sin pago
 		#print('ESCRITO CON RELACION')		
 		print(compileAndInsert(arg0,arg1))
@@ -146,7 +138,7 @@ def insert_list(arg0:string,arg1:string):
 
 
 
-	if valid_rules == ['Not', 'Not', 'Ok']:
+	if valid_rules == ['Not', 'Not', 'Ok']:#sin exp - sin esc - con pago
 		#print('ESCRITO SIN RELACION')		
 		print(compileAndInsert(arg0,arg1))
 		time.sleep(0.5)
@@ -154,7 +146,7 @@ def insert_list(arg0:string,arg1:string):
 
 
 
-	if valid_rules == ['Not', 'Not', 'Not']:
+	if valid_rules == ['Not', 'Not', 'Not']:#sin exp - sin esc - sin pago
 		#print('ESCRITO SIN RELACION')		
 		print(compileAndInsert(arg0,arg1))
 		time.sleep(0.5)
@@ -166,209 +158,207 @@ def insert_list(arg0:string,arg1:string):
 		
 #Insert Escritos	
 def compileAndInsert(form_Id,typ):
+
+		insert_doc = userDocModel()
+		insert_doc.setData(form_Id)
 		
-		item = format_userdoc(form_Id)
-		try:
-			ttasa_Nbr = tasa_id(str(reglas_me_ttasa(str(typ))[0]))[0]			 
-			ttasa_Name = tasa_id(str(reglas_me_ttasa(str(typ))[0]))[1]
-		except Exception as e:
-			ttasa_Nbr = ""
-			ttasa_Name = ""
 		try:
 			insert_user_doc_escritos(
-						item['affectedFileIdList_fileNbr'],
-						item['affectedFileIdList_fileSeq'],
-						item['affectedFileIdList_fileSeries'],
-						item['affectedFileIdList_fileType'],
-						item['affectedFileSummaryList_disclaimer'],
-						item['affectedFileSummaryList_disclaimerInOtherLang'],
-						item['affectedFileSummaryList_fileNbr'],
-						item['affectedFileSummaryList_fileSeq'],
-						item['affectedFileSummaryList_fileSeries'],
-						item['affectedFileSummaryList_fileType'],
-						item['affectedFileSummaryList_fileIdAsString'],
-						item['affectedFileSummaryList_fileSummaryClasses'],
-						item['affectedFileSummaryList_fileSummaryCountry'],
-						item['affectedFileSummaryList_fileSummaryDescription'],
-						item['affectedFileSummaryList_fileSummaryDescriptionInOtherLang'],
-						item['affectedFileSummaryList_fileSummaryOwner'],
-						item['affectedFileSummaryList_fileSummaryOwnerInOtherLang'],
-						item['affectedFileSummaryList_fileSummaryRepresentative'],
-						item['affectedFileSummaryList_fileSummaryRepresentativeInOtherLang'],
-						item['affectedFileSummaryList_fileSummaryResponsibleName'],
-						item['affectedFileSummaryList_fileSummaryStatus'],
-						item['applicant_applicantNotes'],
-						item['applicant_person_addressStreet'],
-						item['applicant_person_addressStreetInOtherLang'],
-						item['applicant_person_addressZone'],
-						item['applicant_person_agentCode'],
-						item['applicant_person_cityCode'],
-						item['applicant_person_cityName'],
-						item['applicant_person_companyRegisterRegistrationDate'],
-						item['applicant_person_companyRegisterRegistrationNbr'],
-						item['applicant_person_email'],
-						item['applicant_person_individualIdNbr'],
-						item['applicant_person_individualIdType'],
-						item['applicant_person_legalIdNbr'],
-						item['applicant_person_legalIdType'],
-						item['applicant_person_legalNature'],
-						item['applicant_person_legalNatureInOtherLang'],
-						item['applicant_person_nationalityCountryCode'],
-						item['applicant_person_personGroupCode'],
-						item['applicant_person_personGroupName'],
-						item['applicant_person_personName'],
-						item['applicant_person_personNameInOtherLang'],
-						item['applicant_person_residenceCountryCode'],
-						item['applicant_person_stateCode'],
-						item['applicant_person_stateName'],
-						item['applicant_person_telephone'],
-						item['applicant_person_zipCode'],
-						item['documentId_docLog'],
-						item['documentId_docNbr'],
-						item['documentId_docOrigin'],
-						item['documentId_docSeries'],
-						item['documentId_selected'],
-						item['documentSeqId_docSeqName'],
-						item['documentSeqId_docSeqNbr'],
-						item['documentSeqId_docSeqSeries'],
-						item['documentSeqId_docSeqType'],
-						item['filingData_applicationSubtype'],
-						item['filingData_applicationType'],
-						item['filingData_captureDate'],
-						item['filingData_captureUserId'],
-						item['filingData_filingDate'],
-						item['filingData_lawCode'],
-						item['filingData_novelty1Date'],
-						item['filingData_novelty2Date'],
-						item['filingData_paymentList_currencyName'],
-						item['filingData_paymentList_currencyType'],
-						item['filingData_paymentList_receiptAmount'],
-						item['filingData_paymentList_receiptDate'],
-						item['filingData_paymentList_receiptNbr'],
-						item['filingData_paymentList_receiptNotes'],
-						item['filingData_paymentList_receiptType'],
-						item['filingData_paymentList_receiptTypeName'],
-						item['filingData_receptionDate'],
-						item['filingData_documentId_receptionDocument_docLog'],
-						item['filingData_documentId_receptionDocument_docNbr'],
-						item['filingData_documentId_receptionDocument_docOrigin'],
-						item['filingData_documentId_receptionDocument_docSeries'],
-						item['filingData_documentId_receptionDocument_selected'],
-						item['filingData_userdocTypeList_userdocName'],
-						item['filingData_userdocTypeList_userdocType'],
-						item['newOwnershipData_ownerList_orderNbr'],
-						item['newOwnershipData_ownerList_ownershipNotes'],
-						item['newOwnershipData_ownerList_person_addressStreet'],
-						item['newOwnershipData_ownerList_person_addressStreetInOtherLang'],
-						item['newOwnershipData_ownerList_person_addressZone'],
-						item['newOwnershipData_ownerList_person_agentCode'],
-						item['newOwnershipData_ownerList_person_cityCode'],
-						item['newOwnershipData_ownerList_person_cityName'],
-						item['newOwnershipData_ownerList_person_companyRegisterRegistrationDate'],
-						item['newOwnershipData_ownerList_person_companyRegisterRegistrationNbr'],
-						item['newOwnershipData_ownerList_person_email'],
-						item['newOwnershipData_ownerList_person_individualIdNbr'],
-						item['newOwnershipData_ownerList_person_individualIdType'],
-						item['newOwnershipData_ownerList_person_legalIdNbr'],
-						item['newOwnershipData_ownerList_person_legalIdType'],
-						item['newOwnershipData_ownerList_person_legalNature'],
-						item['newOwnershipData_ownerList_person_legalNatureInOtherLang'],
-						item['newOwnershipData_ownerList_person_nationalityCountryCode'],
-						item['newOwnershipData_ownerList_person_personGroupCode'],
-						item['newOwnershipData_ownerList_person_personGroupName'],
-						item['newOwnershipData_ownerList_person_personName'],
-						item['newOwnershipData_ownerList_person_personNameInOtherLang'],
-						item['newOwnershipData_ownerList_person_residenceCountryCode'],
-						item['newOwnershipData_ownerList_person_stateCode'],
-						item['newOwnershipData_ownerList_person_stateName'],
-						item['newOwnershipData_ownerList_person_telephone'],
-						item['newOwnershipData_ownerList_person_zipCode'],
-						item['notes'],
-						item['poaData_poaGranteeList_person_addressStreet'],
-						item['poaData_poaGranteeList_person_addressStreetInOtherLang'],
-						item['poaData_poaGranteeList_person_addressZone'],
-						item['poaData_poaGranteeList_person_agentCode'],
-						item['poaData_poaGranteeList_person_cityCode'],
-						item['poaData_poaGranteeList_person_cityName'],
-						item['poaData_poaGranteeList_person_companyRegisterRegistrationDate'],
-						item['poaData_poaGranteeList_person_companyRegisterRegistrationNbr'],
-						item['poaData_poaGranteeList_person_email'],
-						item['poaData_poaGranteeList_person_individualIdNbr'],
-						item['poaData_poaGranteeList_person_individualIdType'],
-						item['poaData_poaGranteeList_person_legalIdNbr'],
-						item['poaData_poaGranteeList_person_legalIdType'],
-						item['poaData_poaGranteeList_person_legalNature'],
-						item['poaData_poaGranteeList_person_legalNatureInOtherLang'],
-						item['poaData_poaGranteeList_person_nationalityCountryCode'],
-						item['poaData_poaGranteeList_person_personGroupCode'],
-						item['poaData_poaGranteeList_person_personGroupName'],
-						item['poaData_poaGranteeList_person_personName'],
-						item['poaData_poaGranteeList_person_personNameInOtherLang'],
-						item['poaData_poaGranteeList_person_residenceCountryCode'],
-						item['poaData_poaGranteeList_person_stateCode'],
-						item['poaData_poaGranteeList_person_stateName'],
-						item['poaData_poaGranteeList_person_telephone'],
-						item['poaData_poaGranteeList_person_zipCode'],
-						item['poaData_poaGrantor_person_addressStreet'],
-						item['poaData_poaGrantor_person_addressStreetInOtherLang'],
-						item['poaData_poaGrantor_person_addressZone'],
-						item['poaData_poaGrantor_person_agentCode'],
-						item['poaData_poaGrantor_person_cityCode'],
-						item['poaData_poaGrantor_person_cityName'],
-						item['poaData_poaGrantor_person_companyRegisterRegistrationDate'],
-						item['poaData_poaGrantor_person_companyRegisterRegistrationNbr'],
-						item['poaData_poaGrantor_person_email'],
-						item['poaData_poaGrantor_person_individualIdNbr'],
-						item['poaData_poaGrantor_person_individualIdType'],
-						item['poaData_poaGrantor_person_legalIdNbr'],
-						item['poaData_poaGrantor_person_legalIdType'],
-						item['poaData_poaGrantor_person_legalNature'],
-						item['poaData_poaGrantor_person_legalNatureInOtherLang'],
-						item['poaData_poaGrantor_person_nationalityCountryCode'],
-						item['poaData_poaGrantor_person_personGroupCode'],
-						item['poaData_poaGrantor_person_personGroupName'],
-						item['poaData_poaGrantor_person_personName'],
-						item['poaData_poaGrantor_person_personNameInOtherLang'],
-						item['poaData_poaGrantor_person_residenceCountryCode'],
-						item['poaData_poaGrantor_person_stateCode'],
-						item['poaData_poaGrantor_person_stateName'],
-						item['poaData_poaGrantor_person_telephone'],
-						item['poaData_poaGrantor_person_zipCode'],
-						item['poaData_poaRegNumber'],
-						item['poaData_scope'],
-						item['representationData_representativeList_person_addressStreet'],
-						item['representationData_representativeList_person_addressStreetInOtherLang'],
-						item['representationData_representativeList_person_addressZone'],
-						item['representationData_representativeList_person_agentCode'],
-						item['representationData_representativeList_person_cityCode'],
-						item['representationData_representativeList_person_cityName'],
-						item['representationData_representativeList_person_companyRegisterRegistrationDate'],
-						item['representationData_representativeList_person_companyRegisterRegistrationNbr'],
-						item['representationData_representativeList_person_email'],
-						item['representationData_representativeList_person_individualIdNbr'],
-						item['representationData_representativeList_person_individualIdType'],
-						item['representationData_representativeList_person_legalIdNbr'],
-						item['representationData_representativeList_person_legalIdType'],
-						item['representationData_representativeList_person_legalNature'],
-						item['representationData_representativeList_person_legalNatureInOtherLang'],
-						item['representationData_representativeList_person_nationalityCountryCode'],
-						item['representationData_representativeList_person_personGroupCode'],
-						item['representationData_representativeList_person_personGroupName'],
-						item['representationData_representativeList_person_personName'],
-						item['representationData_representativeList_person_personNameInOtherLang'],
-						item['representationData_representativeList_person_residenceCountryCode'],
-						item['representationData_representativeList_person_stateCode'],
-						item['representationData_representativeList_person_stateName'],
-						item['representationData_representativeList_person_telephone'],
-						item['representationData_representativeList_person_zipCode'],
-						item['representationData_representativeList_representativeType'])
+						insert_doc.affectedFileIdList_fileNbr,
+						insert_doc.affectedFileIdList_fileSeq,
+						insert_doc.affectedFileIdList_fileSeries,
+						insert_doc.affectedFileIdList_fileType,
+						insert_doc.affectedFileSummaryList_disclaimer,
+						insert_doc.affectedFileSummaryList_disclaimerInOtherLang,
+						insert_doc.affectedFileSummaryList_fileNbr,
+						insert_doc.affectedFileSummaryList_fileSeq,
+						insert_doc.affectedFileSummaryList_fileSeries,
+						insert_doc.affectedFileSummaryList_fileType,
+						insert_doc.affectedFileSummaryList_fileIdAsString,
+						insert_doc.affectedFileSummaryList_fileSummaryClasses,
+						insert_doc.affectedFileSummaryList_fileSummaryCountry,
+						insert_doc.affectedFileSummaryList_fileSummaryDescription,
+						insert_doc.affectedFileSummaryList_fileSummaryDescriptionInOtherLang,
+						insert_doc.affectedFileSummaryList_fileSummaryOwner,
+						insert_doc.affectedFileSummaryList_fileSummaryOwnerInOtherLang,
+						insert_doc.affectedFileSummaryList_fileSummaryRepresentative,
+						insert_doc.affectedFileSummaryList_fileSummaryRepresentativeInOtherLang,
+						insert_doc.affectedFileSummaryList_fileSummaryResponsibleName,
+						insert_doc.affectedFileSummaryList_fileSummaryStatus,
+						insert_doc.applicant_applicantNotes,
+						insert_doc.applicant_person_addressStreet,
+						insert_doc.applicant_person_addressStreetInOtherLang,
+						insert_doc.applicant_person_addressZone,
+						insert_doc.applicant_person_agentCode,
+						insert_doc.applicant_person_cityCode,
+						insert_doc.applicant_person_cityName,
+						insert_doc.applicant_person_companyRegisterRegistrationDate,
+						insert_doc.applicant_person_companyRegisterRegistrationNbr,
+						insert_doc.applicant_person_email,
+						insert_doc.applicant_person_individualIdNbr,
+						insert_doc.applicant_person_individualIdType,
+						insert_doc.applicant_person_legalIdNbr,
+						insert_doc.applicant_person_legalIdType,
+						insert_doc.applicant_person_legalNature,
+						insert_doc.applicant_person_legalNatureInOtherLang,
+						insert_doc.applicant_person_nationalityCountryCode,
+						insert_doc.applicant_person_personGroupCode,
+						insert_doc.applicant_person_personGroupName,
+						insert_doc.applicant_person_personName,
+						insert_doc.applicant_person_personNameInOtherLang,
+						insert_doc.applicant_person_residenceCountryCode,
+						insert_doc.applicant_person_stateCode,
+						insert_doc.applicant_person_stateName,
+						insert_doc.applicant_person_telephone,
+						insert_doc.applicant_person_zipCode,
+						insert_doc.documentId_docLog,
+						insert_doc.documentId_docNbr,
+						insert_doc.documentId_docOrigin,
+						insert_doc.documentId_docSeries,
+						insert_doc.documentId_selected,
+						insert_doc.documentSeqId_docSeqName,
+						insert_doc.documentSeqId_docSeqNbr,
+						insert_doc.documentSeqId_docSeqSeries,
+						insert_doc.documentSeqId_docSeqType,
+						insert_doc.filingData_applicationSubtype,
+						insert_doc.filingData_applicationType,
+						insert_doc.filingData_captureDate,
+						insert_doc.filingData_captureUserId,
+						insert_doc.filingData_filingDate,
+						insert_doc.filingData_lawCode,
+						insert_doc.filingData_novelty1Date,
+						insert_doc.filingData_novelty2Date,
+						insert_doc.filingData_paymentList_currencyName,
+						insert_doc.filingData_paymentList_currencyType,
+						insert_doc.filingData_paymentList_receiptAmount,
+						insert_doc.filingData_paymentList_receiptDate,
+						insert_doc.filingData_paymentList_receiptNbr,
+						insert_doc.filingData_paymentList_receiptNotes,
+						insert_doc.filingData_paymentList_receiptType,
+						insert_doc.filingData_paymentList_receiptTypeName,
+						insert_doc.filingData_receptionDate,
+						insert_doc.filingData_documentId_receptionDocument_docLog,
+						insert_doc.filingData_documentId_receptionDocument_docNbr,
+						insert_doc.filingData_documentId_receptionDocument_docOrigin,
+						insert_doc.filingData_documentId_receptionDocument_docSeries,
+						insert_doc.filingData_documentId_receptionDocument_selected,
+						insert_doc.filingData_userdocTypeList_userdocName,
+						insert_doc.filingData_userdocTypeList_userdocType,
+						insert_doc.newOwnershipData_ownerList_orderNbr,
+						insert_doc.newOwnershipData_ownerList_ownershipNotes,
+						insert_doc.newOwnershipData_ownerList_person_addressStreet,
+						insert_doc.newOwnershipData_ownerList_person_addressStreetInOtherLang,
+						insert_doc.newOwnershipData_ownerList_person_addressZone,
+						insert_doc.newOwnershipData_ownerList_person_agentCode,
+						insert_doc.newOwnershipData_ownerList_person_cityCode,
+						insert_doc.newOwnershipData_ownerList_person_cityName,
+						insert_doc.newOwnershipData_ownerList_person_companyRegisterRegistrationDate,
+						insert_doc.newOwnershipData_ownerList_person_companyRegisterRegistrationNbr,
+						insert_doc.newOwnershipData_ownerList_person_email,
+						insert_doc.newOwnershipData_ownerList_person_individualIdNbr,
+						insert_doc.newOwnershipData_ownerList_person_individualIdType,
+						insert_doc.newOwnershipData_ownerList_person_legalIdNbr,
+						insert_doc.newOwnershipData_ownerList_person_legalIdType,
+						insert_doc.newOwnershipData_ownerList_person_legalNature,
+						insert_doc.newOwnershipData_ownerList_person_legalNatureInOtherLang,
+						insert_doc.newOwnershipData_ownerList_person_nationalityCountryCode,
+						insert_doc.newOwnershipData_ownerList_person_personGroupCode,
+						insert_doc.newOwnershipData_ownerList_person_personGroupName,
+						insert_doc.newOwnershipData_ownerList_person_personName,
+						insert_doc.newOwnershipData_ownerList_person_personNameInOtherLang,
+						insert_doc.newOwnershipData_ownerList_person_residenceCountryCode,
+						insert_doc.newOwnershipData_ownerList_person_stateCode,
+						insert_doc.newOwnershipData_ownerList_person_stateName,
+						insert_doc.newOwnershipData_ownerList_person_telephone,
+						insert_doc.newOwnershipData_ownerList_person_zipCode,
+						insert_doc.notes,
+						insert_doc.poaData_poaGranteeList_person_addressStreet,
+						insert_doc.poaData_poaGranteeList_person_addressStreetInOtherLang,
+						insert_doc.poaData_poaGranteeList_person_addressZone,
+						insert_doc.poaData_poaGranteeList_person_agentCode,
+						insert_doc.poaData_poaGranteeList_person_cityCode,
+						insert_doc.poaData_poaGranteeList_person_cityName,
+						insert_doc.poaData_poaGranteeList_person_companyRegisterRegistrationDate,
+						insert_doc.poaData_poaGranteeList_person_companyRegisterRegistrationNbr,
+						insert_doc.poaData_poaGranteeList_person_email,
+						insert_doc.poaData_poaGranteeList_person_individualIdNbr,
+						insert_doc.poaData_poaGranteeList_person_individualIdType,
+						insert_doc.poaData_poaGranteeList_person_legalIdNbr,
+						insert_doc.poaData_poaGranteeList_person_legalIdType,
+						insert_doc.poaData_poaGranteeList_person_legalNature,
+						insert_doc.poaData_poaGranteeList_person_legalNatureInOtherLang,
+						insert_doc.poaData_poaGranteeList_person_nationalityCountryCode,
+						insert_doc.poaData_poaGranteeList_person_personGroupCode,
+						insert_doc.poaData_poaGranteeList_person_personGroupName,
+						insert_doc.poaData_poaGranteeList_person_personName,
+						insert_doc.poaData_poaGranteeList_person_personNameInOtherLang,
+						insert_doc.poaData_poaGranteeList_person_residenceCountryCode,
+						insert_doc.poaData_poaGranteeList_person_stateCode,
+						insert_doc.poaData_poaGranteeList_person_stateName,
+						insert_doc.poaData_poaGranteeList_person_telephone,
+						insert_doc.poaData_poaGranteeList_person_zipCode,
+						insert_doc.poaData_poaGrantor_person_addressStreet,
+						insert_doc.poaData_poaGrantor_person_addressStreetInOtherLang,
+						insert_doc.poaData_poaGrantor_person_addressZone,
+						insert_doc.poaData_poaGrantor_person_agentCode,
+						insert_doc.poaData_poaGrantor_person_cityCode,
+						insert_doc.poaData_poaGrantor_person_cityName,
+						insert_doc.poaData_poaGrantor_person_companyRegisterRegistrationDate,
+						insert_doc.poaData_poaGrantor_person_companyRegisterRegistrationNbr,
+						insert_doc.poaData_poaGrantor_person_email,
+						insert_doc.poaData_poaGrantor_person_individualIdNbr,
+						insert_doc.poaData_poaGrantor_person_individualIdType,
+						insert_doc.poaData_poaGrantor_person_legalIdNbr,
+						insert_doc.poaData_poaGrantor_person_legalIdType,
+						insert_doc.poaData_poaGrantor_person_legalNature,
+						insert_doc.poaData_poaGrantor_person_legalNatureInOtherLang,
+						insert_doc.poaData_poaGrantor_person_nationalityCountryCode,
+						insert_doc.poaData_poaGrantor_person_personGroupCode,
+						insert_doc.poaData_poaGrantor_person_personGroupName,
+						insert_doc.poaData_poaGrantor_person_personName,
+						insert_doc.poaData_poaGrantor_person_personNameInOtherLang,
+						insert_doc.poaData_poaGrantor_person_residenceCountryCode,
+						insert_doc.poaData_poaGrantor_person_stateCode,
+						insert_doc.poaData_poaGrantor_person_stateName,
+						insert_doc.poaData_poaGrantor_person_telephone,
+						insert_doc.poaData_poaGrantor_person_zipCode,
+						insert_doc.poaData_poaRegNumber,
+						insert_doc.poaData_scope,
+						insert_doc.representationData_representativeList_person_addressStreet,
+						insert_doc.representationData_representativeList_person_addressStreetInOtherLang,
+						insert_doc.representationData_representativeList_person_addressZone,
+						insert_doc.representationData_representativeList_person_agentCode,
+						insert_doc.representationData_representativeList_person_cityCode,
+						insert_doc.representationData_representativeList_person_cityName,
+						insert_doc.representationData_representativeList_person_companyRegisterRegistrationDate,
+						insert_doc.representationData_representativeList_person_companyRegisterRegistrationNbr,
+						insert_doc.representationData_representativeList_person_email,
+						insert_doc.representationData_representativeList_person_individualIdNbr,
+						insert_doc.representationData_representativeList_person_individualIdType,
+						insert_doc.representationData_representativeList_person_legalIdNbr,
+						insert_doc.representationData_representativeList_person_legalIdType,
+						insert_doc.representationData_representativeList_person_legalNature,
+						insert_doc.representationData_representativeList_person_legalNatureInOtherLang,
+						insert_doc.representationData_representativeList_person_nationalityCountryCode,
+						insert_doc.representationData_representativeList_person_personGroupCode,
+						insert_doc.representationData_representativeList_person_personGroupName,
+						insert_doc.representationData_representativeList_person_personName,
+						insert_doc.representationData_representativeList_person_personNameInOtherLang,
+						insert_doc.representationData_representativeList_person_residenceCountryCode,
+						insert_doc.representationData_representativeList_person_stateCode,
+						insert_doc.representationData_representativeList_person_stateName,
+						insert_doc.representationData_representativeList_person_telephone,
+						insert_doc.representationData_representativeList_person_zipCode,
+						insert_doc.representationData_representativeList_representativeType)
+			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
 			print(str(e))
 			cambio_estado_soporte(form_Id)
+		
 		try:
-			exists = str(user_doc_getList_escrito(item['documentId_docNbr'])['documentId']['docNbr']['doubleValue']).replace(".0","") 
-			if exists == item['documentId_docNbr']:
-				cambio_estado(form_Id,item['documentId_docNbr'])
+			exists = str(user_doc_getList_escrito(insert_doc.documentId_docNbr)['documentId']['docNbr']['doubleValue']).replace(".0","") 
+			if exists == insert_doc.documentId_docNbr:
+				cambio_estado(form_Id,insert_doc.documentId_docNbr)
 		except Exception as e:
 			cambio_estado_soporte(form_Id)
 
@@ -414,6 +404,7 @@ async def compileAndInsertUserDocUserDoc(form_Id,typ):
 						escrito_relacionado.documentId_docOrigin,
 						escrito_relacionado.documentId_docSeries,
 						escrito_relacionado.filingData_userdocTypeList_userdocType)
+			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
 			print(str(e))
 			cambio_estado_soporte(form_Id)
@@ -421,8 +412,7 @@ async def compileAndInsertUserDocUserDoc(form_Id,typ):
 		await asyncio.sleep(0.5)
 	
 		sigla_desc = str(escrito_relacionado.filingData_userdocTypeList_userdocName).split("- ")
-		
-		
+
 		try:
 			user_doc_update(
 						escrito_relacionado.affected_doc_Log,
@@ -490,7 +480,6 @@ async def compileAndInsertUserDocUserDoc(form_Id,typ):
 						escrito_relacionado.representationData_representativeList_person_zipCode,
 						escrito_relacionado.representationData_representativeList_representativeType,
 						escrito_relacionado.representationData_representativeList_person_email)
-			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
 			print(str(e))
 			cambio_estado_soporte(form_Id)
@@ -516,7 +505,6 @@ async def compileAndInsertUserDocUserDoc(form_Id,typ):
 		afferc = str(user_doc_getList_escrito(escrito_relacionado.documentId_docNbr)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 		if afferc == escrito_relacionado.documentId_docNbr:
 			cambio_estado(form_Id,escrito_relacionado.documentId_docNbr)
-
 
 		try:
 			getFile(form_Id,escrito_relacionado.documentId_docNbr)
@@ -562,6 +550,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 						escrito_escrito_pago.documentId_docOrigin,
 						escrito_escrito_pago.documentId_docSeries,
 						escrito_escrito_pago.filingData_userdocTypeList_userdocType)
+			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
 			print(str(e))
 			cambio_estado_soporte(form_Id)
@@ -569,8 +558,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		time.sleep(1)
 		
 		sigla_desc = str(escrito_escrito_pago.filingData_userdocTypeList_userdocName).split("- ")
-		
-				
+						
 		try:
 			user_doc_update(
 						escrito_escrito_pago.affected_doc_Log,
@@ -638,7 +626,6 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 						escrito_escrito_pago.representationData_representativeList_person_zipCode,
 						escrito_escrito_pago.representationData_representativeList_representativeType,
 						escrito_escrito_pago.representationData_representativeList_person_email)
-			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
 			print(str(e))
 			cambio_estado_soporte(form_Id)		
@@ -664,21 +651,11 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		if afferc == escrito_escrito_pago.documentId_docNbr:
 			cambio_estado(form_Id,escrito_escrito_pago.documentId_docNbr)
 
-
 		try:
 			getFile(form_Id,escrito_escrito_pago.documentId_docNbr)
 		except Exception as e:
 			pass
 
 
+#if __name__ == "__main__":
 listar()
-
-
-
-
-
-
-
-
-
-

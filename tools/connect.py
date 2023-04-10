@@ -6,6 +6,9 @@ MEA_DB_ORIGEN_host = config_parametro('58')['valor2']
 MEA_SFE_FORMULARIOS_ID_tipo = config_parametro('60')['valor3']
 MEA_SFE_FORMULARIOS_ID_estado = config_parametro('60')['valor4']
 MEA_SFE_FORMULARIOS_ID_Origin = config_parametro('60')['valor5']
+MEA_PERIODO_RECEPCION_userId = config_parametro('63')['valor5']
+MEA_PERIODO_RECEPCION_horaIn = config_parametro('63')['valor3']
+MEA_PERIODO_RECEPCION_horaOut = config_parametro('63')['valor4']
 
 ###################################################################
 

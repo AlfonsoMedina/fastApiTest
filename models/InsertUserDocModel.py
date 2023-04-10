@@ -253,7 +253,10 @@ class userDocModel(object):
 			self.affected_doc_docOrigin = str(user_doc_getList_escrito(data[0]['expediente_afectad'])['documentId']['docOrigin'])
 			self.affected_doc_docSeries = str(user_doc_getList_escrito(data[0]['expediente_afectad'])['documentId']['docSeries']['doubleValue'])
 		except Exception as e:
-			print('no existe el escrito')
+			self.affected_doc_Log = ""
+			self.affected_doc_docNbr = ""
+			self.affected_doc_docOrigin = ""
+			self.affected_doc_docSeries = ""
 
 
 		self.affectedFileIdList_fileNbr = str(data[0]['expediente_afectad']).replace("None","")
@@ -263,7 +266,6 @@ class userDocModel(object):
 			self.affectedFileIdList_fileSeries = str(int(mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeries']['doubleValue']))
 		except Exception as e:
 			self.affectedFileIdList_fileSeries=""
-		
 		
 		self.affectedFileIdList_fileType = fileTyp
 		self.affectedFileSummaryList_disclaimer= ""
@@ -680,9 +682,3 @@ class userDocModel(object):
 			self.representationData_representativeList_representativeType = ag_data['representativeType']
 		except Exception as e:
 			self.representationData_representativeList_representativeType = "AG"
-
-
-
-
-
-
