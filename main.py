@@ -1866,8 +1866,8 @@ async def sfe_opo_capture(item:for_id):
 	return(oposicion_sfe(item.ID))
 
 @app.post('/sis/test', summary="MEA", tags=["test insert"])
-def TEST_MEA():
-	return(format_userdoc('1521'))
+def TEST_MEA(id_tramite):
+	return(format_userdoc(id_tramite))
 
 @app.post('/api/getparametros', summary="API", tags=["Lista de parametros"])
 def get_params():

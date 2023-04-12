@@ -1,6 +1,6 @@
 import time
 import psycopg2
-from tools.connect import  PENDING, host_SFE_conn,user_SFE_conn,password_SFE_conn, database_SFE_conn ,MEA_SFE_FORMULARIOS_ID_estado,MEA_SFE_FORMULARIOS_ID_tipo
+from tools.connect import  PENDING, MEA_ADJUNTOS_DESTINO_location, host_SFE_conn,user_SFE_conn,password_SFE_conn, database_SFE_conn ,MEA_SFE_FORMULARIOS_ID_estado,MEA_SFE_FORMULARIOS_ID_tipo
 from urllib import request	
 	
 def getFile(doc_id,fileNbr):	
@@ -13,10 +13,9 @@ def getFile(doc_id,fileNbr):
 			for x in range(0,len(i[6])):
 				if i[6][x]['campo'] == 'observacion_documentos':
 					remote_url = i[6][x]['valor']['archivo']['url']
-					local_file = fileNbr+'.pdf' 
+					local_file = str(MEA_ADJUNTOS_DESTINO_location)+fileNbr+'.pdf' 
 					request.urlretrieve(remote_url, local_file)
 	except Exception as e:
 		conn.close()
 	finally:
 		conn.close()
-

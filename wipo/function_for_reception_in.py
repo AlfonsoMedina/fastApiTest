@@ -44,18 +44,21 @@ except Exception as e:
 def user_doc_getList_escrito(docNbr):
 	try:
 		udge = {
-				"arg0": {
-						"criteriaDocumentId": {
-									"docNbrFrom": {
+					"arg0": {
+							"criteriaDocumentId": {
+										"docNbrFrom": {
+											"doubleValue": docNbr
+										},
+							"docNbrTo": {
 										"doubleValue": docNbr
-									},
-						"docNbrTo": {
-									"doubleValue": docNbr
-								}
+									}
+							}
 						}
 					}
-				}
 		ipas = clientMark.service.UserdocGetList(**udge)
+	except zeep.exceptions.Fault as e:
+		pass
+	try:
 		if ipas[0].affectedFileIdList != []:
 			dat = {
 									"fileNbr": {
@@ -895,6 +898,41 @@ def user_doc_read(docLog, docNbr, docOrigin, docSeries): # {'docLog':'E','docNbr
 		return(data)
 	except Exception as e:
 		return([])
+
+
+def user_doc_read_min(docLog, docNbr, docOrigin, docSeries): # {'docLog':'E','docNbr':{'doubleValue':'2104647'},'docOrigin':'2','docSeries':{'doubleValue':'2021'}
+	try:
+		UserdocRead = {'arg0': {'docLog':docLog,'docNbr':{'doubleValue':docNbr},'docOrigin':docOrigin,'docSeries':{'doubleValue':docSeries}}}
+		ipas = clientMark.service.UserdocRead(**UserdocRead)
+		data={
+			"affectedFileIdList":ipas['affectedFileIdList'],
+			"documentId": {
+					"docLog": str(ipas['documentId']['docLog']),
+					"docNbr": {
+					"doubleValue": str(ipas['documentId']['docNbr']['doubleValue'])
+					},
+					"docOrigin": str(ipas['documentId']['docOrigin']),
+					"docSeries": {
+					"doubleValue": str(ipas['documentId']['docSeries']['doubleValue'])
+					}
+				}
+				}
+		return(data)
+	except Exception as e:
+		data={
+			'affectedFileIdList': [],
+				"documentId": {
+					"docLog": "",
+					"docNbr": {
+					"doubleValue": ""
+					},
+					"docOrigin": "",
+					"docSeries": {
+					"doubleValue": ""
+					}
+				}
+				}
+		return(data)
 
 def patent_user_doc_getlist_docnbr(docNbrFrom,docNbrTo):
 	pudgf = {"arg0": {"criteriaDocumentId": {"docNbrFrom": {"doubleValue": docNbrFrom},"docNbrTo": {"doubleValue": docNbrFrom}}}}

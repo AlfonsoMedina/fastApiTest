@@ -1,13 +1,16 @@
 
+from asyncio.windows_events import NULL
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr
+from getFileDoc import getFile
 from wipo.function_for_reception_in import user_doc_getList_escrito
 from wipo.ipas import mark_getlist, personAgente
 import tools.connect as connex
 import tools.filing_date as captureDate
-
+import tools.connect as connex
 
 
 default_val = lambda arg: arg if arg == "null" else "" 
+default_val_e99 = lambda arg: arg if arg != "" else ""
 
 class userDocModel(object):
 	affectedFileIdList_fileNbr:str = ""
@@ -207,8 +210,8 @@ class userDocModel(object):
 		
 		ruc_Typ:str = ''
 		ci_Typ:str = ''	
-		ruc_Nbr:str = ''
-		ci_Nbr:str = ''
+		ruc_Nbr:str = ""
+		ci_Nbr:str = ""
 		fileSeq:str =''
 		fileTyp:str = '' 
 		data = pendiente_sfe(doc_Id)
@@ -216,58 +219,99 @@ class userDocModel(object):
 		try:
 			ag_data = personAgente(code_ag(data[0]['usuario_id']))[0]
 		except Exception as e:
-			print("No existe el Agente")
+			print("")
+		
 		
 		try:
 			for i in range(0,len(data[0]['respuestas'])):
 				if data[0]['respuestas'][i]['campo'] == 'datospersonales_tipo':	
 					if str(data[0]['respuestas'][i]['valor']) == 'Persona Jurídica':
 						ruc_Typ = 'RUC'
-					else:
-						ci_Typ = 'CED'	 
+					
+					if str(data[0]['respuestas'][i]['valor']) == 'Persona Física':
+						ci_Typ = 'CED'
 		except Exception as e:
-			pass
+				pass
 		
-		try:
-			if ruc_Typ == 'RUC': 
-				for i in range(0,len(data[0]['respuestas'])):
-					if data[0]['respuestas'][i]['campo'] == 'datospersonales_documento':	
-						ruc_Nbr = str(data[0]['respuestas'][i]['valor'])
-			if ci_Typ == 'CED': 
-				for i in range(0,len(data[0]['respuestas'])):
-					if data[0]['respuestas'][i]['campo'] == 'datospersonales_documento':	
-						ci_Nbr = str(data[0]['respuestas'][i]['valor'])							
-		except Exception as e:
-			pass
 		
+
+
+		if ruc_Typ == 'RUC': 
+			for i in range(0,len(data[0]['respuestas'])):
+				if data[0]['respuestas'][i]['campo'] == 'datospersonales_documento':
+					ruc_Nbr = str(data[0]['respuestas'][i]['valor'])
+					ci_Nbr = ""
+					
+		elif ci_Typ == 'CED': 
+			for i in range(0,len(data[0]['respuestas'])):
+				if data[0]['respuestas'][i]['campo'] == 'datospersonales_documento':	
+					ci_Nbr = str(data[0]['respuestas'][i]['valor'])
+					ruc_Nbr = ""				
+		else:
+			pass
+						
+
+
 		if str(data[0]['expediente_afectad']) != "None":
 			fileSeq = "PY"
 			fileTyp = "M"
 		else:
 			fileSeq = ""
-			fileTyp = ""		
+			fileTyp = ""	
+
 		
+		"""
+		if str(data[0]['expediente_afectad']) != "None":
+			print(user_doc_getList_escrito(data[0]['expediente_afectad']))
+			"""
+
 		try:
-			self.affected_doc_Log = "E"
-			self.affected_doc_docNbr = str(user_doc_getList_escrito(data[0]['expediente_afectad'])['documentId']['docNbr']['doubleValue'])
-			self.affected_doc_docOrigin = str(user_doc_getList_escrito(data[0]['expediente_afectad'])['documentId']['docOrigin'])
-			self.affected_doc_docSeries = str(user_doc_getList_escrito(data[0]['expediente_afectad'])['documentId']['docSeries']['doubleValue'])
+			if str(data[0]['expediente_afectad']) != "None":
+				if user_doc_getList_escrito(data[0]['expediente_afectad']) != []:
+					self.affected_doc_Log = "E"
+					self.affected_doc_docNbr = str(user_doc_getList_escrito(data[0]['expediente_afectad'])['documentId']['docNbr']['doubleValue'])
+					self.affected_doc_docOrigin = str(user_doc_getList_escrito(data[0]['expediente_afectad'])['documentId']['docOrigin'])
+					self.affected_doc_docSeries = str(user_doc_getList_escrito(data[0]['expediente_afectad'])['documentId']['docSeries']['doubleValue'])
+				else:
+					self.affected_doc_Log = ""
+					self.affected_doc_docNbr = ""
+					self.affected_doc_docOrigin = ""
+					self.affected_doc_docSeries = ""					
+			else:
+				self.affected_doc_Log = ""
+				self.affected_doc_docNbr = ""
+				self.affected_doc_docOrigin = ""
+				self.affected_doc_docSeries = ""
 		except Exception as e:
 			self.affected_doc_Log = ""
 			self.affected_doc_docNbr = ""
 			self.affected_doc_docOrigin = ""
 			self.affected_doc_docSeries = ""
 
-
-		self.affectedFileIdList_fileNbr = str(data[0]['expediente_afectad']).replace("None","")
-		self.affectedFileIdList_fileSeq = fileSeq
-		
 		try:
-			self.affectedFileIdList_fileSeries = str(int(mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeries']['doubleValue']))
+			if str(data[0]['expediente_afectad']) != "None":
+				if mark_getlist(data[0]['expediente_afectad']) != []:
+					self.affectedFileIdList_fileNbr:str = mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileNbr']['doubleValue']
+					self.affectedFileIdList_fileSeq:str = mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeq']
+					self.affectedFileIdList_fileSeries:str = mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeries']['doubleValue']
+					self.affectedFileIdList_fileType:str = mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileType']
+				else:
+					self.affectedFileIdList_fileNbr:str = ""
+					self.affectedFileIdList_fileSeq:str = ""
+					self.affectedFileIdList_fileSeries:str = ""
+					self.affectedFileIdList_fileType:str = ""
+			else:
+				self.affectedFileIdList_fileNbr:str = ""
+				self.affectedFileIdList_fileSeq:str = ""
+				self.affectedFileIdList_fileSeries:str = ""
+				self.affectedFileIdList_fileType:str = ""
 		except Exception as e:
-			self.affectedFileIdList_fileSeries=""
-		
-		self.affectedFileIdList_fileType = fileTyp
+			self.affectedFileIdList_fileNbr:str = ""
+			self.affectedFileIdList_fileSeq:str = ""
+			self.affectedFileIdList_fileSeries:str = ""
+			self.affectedFileIdList_fileType:str = ""
+
+
 		self.affectedFileSummaryList_disclaimer= ""
 		self.affectedFileSummaryList_disclaimerInOtherLang= ""
 		self.affectedFileSummaryList_fileNbr= ""
@@ -287,12 +331,14 @@ class userDocModel(object):
 		self.affectedFileSummaryList_fileSummaryStatus= ""
 		self.applicant_applicantNotes = "Aplicante SPRINT M.E.A."
 		
+
 		try:
 			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_direccion':	
+				if data[0]['respuestas'][i]['campo'] == 'datospersonales_direccion':
 					self.applicant_person_addressStreet = str(data[0]['respuestas'][i]['valor'])
 		except Exception as e:
 			self.applicant_person_addressStreet= ""
+
 		
 		self.applicant_person_addressStreetInOtherLang= ""
 		self.applicant_person_addressZone= ""
@@ -304,7 +350,7 @@ class userDocModel(object):
 				if data[0]['respuestas'][i]['campo'] == 'datospersonales_ciudad':			
 					self.applicant_person_cityName = str(data[0]['respuestas'][i]['valor'])
 		except Exception as e:
-			self.applicant_person_cityName =""
+			self.applicant_person_cityName = ""
 		
 		self.applicant_person_companyRegisterRegistrationDate= ""
 		self.applicant_person_companyRegisterRegistrationNbr= ""
@@ -418,7 +464,7 @@ class userDocModel(object):
 		self.filingData_applicationSubtype= ""
 		self.filingData_applicationType= ""
 		self.filingData_captureDate = captureDate.capture_full()
-		self.filingData_captureUserId = "4"
+		self.filingData_captureUserId = connex.MEA_PERIODO_RECEPCION_userId
 		self.filingData_filingDate = captureDate.capture_full()
 		self.filingData_lawCode= ""
 		self.filingData_novelty1Date= ""
@@ -474,7 +520,7 @@ class userDocModel(object):
 				if data[0]['respuestas'][i]['campo'] == 'datospersonales_ciudad':			
 					self.newOwnershipData_ownerList_person_cityName = str(data[0]['respuestas'][i]['valor'])
 		except Exception as e:
-			self.newOwnershipData_ownerList_person_cityName =""
+			self.newOwnershipData_ownerList_person_cityName = ""
 		
 		self.newOwnershipData_ownerList_person_companyRegisterRegistrationDate= ""
 		self.newOwnershipData_ownerList_person_companyRegisterRegistrationNbr= ""
@@ -682,3 +728,6 @@ class userDocModel(object):
 			self.representationData_representativeList_representativeType = ag_data['representativeType']
 		except Exception as e:
 			self.representationData_representativeList_representativeType = "AG"
+
+
+

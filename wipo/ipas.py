@@ -47,8 +47,11 @@ print(sys.version)
 #---------------------------------------------------------------Marcas--------------------------------------------------------------------------------------------------
 # Envio => POST = "21107702" 
 def mark_getlist(fileNbr):
-	MarkGetList = {'arg0': {'criteriaFileId': {'fileNbrFrom': {'doubleValue':fileNbr,},'fileNbrTo': {'doubleValue':fileNbr}},},}
-	return clientMark.service.MarkGetList(**MarkGetList)
+	try:
+		MarkGetList = {'arg0': {'criteriaFileId': {'fileNbrFrom': {'doubleValue':fileNbr,},'fileNbrTo': {'doubleValue':fileNbr}},},}
+		return clientMark.service.MarkGetList(**MarkGetList)
+	except zeep.exceptions.Fault as e:
+		return([])		
 
 def mark_getlistReg(solidNbr):
 	MarkGetListReg = {'arg0': {'criteriaRegistrationData': {'registrationNbrFrom': {'doubleValue':solidNbr,},'registrationNbrTo': {'doubleValue':solidNbr}},},}

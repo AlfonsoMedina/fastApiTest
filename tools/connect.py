@@ -9,6 +9,7 @@ MEA_SFE_FORMULARIOS_ID_Origin = config_parametro('60')['valor5']
 MEA_PERIODO_RECEPCION_userId = config_parametro('63')['valor5']
 MEA_PERIODO_RECEPCION_horaIn = config_parametro('63')['valor3']
 MEA_PERIODO_RECEPCION_horaOut = config_parametro('63')['valor4']
+MEA_ADJUNTOS_DESTINO_location = config_parametro('61')['valor3']
 
 ###################################################################
 
@@ -149,7 +150,10 @@ respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id
 from tramites where id = {}
 """
 
+"""
+http://192.168.50.194:8050/Stat/stat?type=loggedUser
 
+"""
 
 
 
