@@ -1474,6 +1474,24 @@ def tasa_SIGLA(arg):
 	finally:
 		conn.close()
 
+def data_validator(msg):
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""INSERT INTO public.log_error( fecha_evento, evento, descripcion_evento, sistema_origen)
+						  VALUES( '{}', 'E99', '{}', 'M.E.A.');""".format(captureDate.capture_full(), msg ))
+		cursor.rowcount
+		conn.commit()
+		conn.close()
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+
+
+
+
 #print(tasa_SIGLA("AAS1")[0])
 
 """def afected_relation_auth(arg):"""

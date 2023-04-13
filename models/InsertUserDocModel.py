@@ -211,7 +211,7 @@ class userDocModel(object):
 		list_splits = {}
 		for i in range(0,len(data[0]['respuestas'])):
 			list_splits['campo'+str(i)] = data[0]['respuestas'][i]['campo']
-		exists = arg1 in list_splits.values()
+		exists = arg1 in list_splits.values()	
 		return(exists)
 
 
@@ -222,30 +222,24 @@ class userDocModel(object):
 	def setData(self,doc_Id):
 		ruc_Typ:str = ''
 		ci_Typ:str = ''	
-		ruc_Nbr:str = ""
-		ci_Nbr:str = ""
-		fileSeq:str =''
-		fileTyp:str = '' 
+		ruc_Nbr:str = "E99"
+		ci_Nbr:str = "E99"
 		data = pendiente_sfe(doc_Id)
 		
 		try:
 			ag_data = personAgente(code_ag(data[0]['usuario_id']))[0]
 		except Exception as e:
 			print("")
-		
-		## Primera llamada a respuesta ##
-		if self.exist_split(doc_Id,'observacion_documentos') != True:   ########## TEST ########### 
-			return('Error en Origen de datos...........')
-		#################################
 
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_tipo':	
-					if str(data[0]['respuestas'][i]['valor']) == 'Persona Jurídica':
-						ruc_Typ = 'RUC'
-					
-					if str(data[0]['respuestas'][i]['valor']) == 'Persona Física':
-						ci_Typ = 'CED'
+			if self.exist_split(doc_Id,'datospersonales_tipo') == True:  		 ########## TEST ########### 
+				for i in range(0,len(data[0]['respuestas'])):
+					if data[0]['respuestas'][i]['campo'] == 'datospersonales_tipo':	
+						if str(data[0]['respuestas'][i]['valor']) == 'Persona Jurídica':
+							ruc_Typ = 'RUC'
+						
+						if str(data[0]['respuestas'][i]['valor']) == 'Persona Física':
+							ci_Typ = 'CED'
 		except Exception as e:
 				pass
 		
@@ -263,14 +257,6 @@ class userDocModel(object):
 		else:
 			pass
 						
-		if str(data[0]['expediente_afectad']) != "None":
-			fileSeq = "PY"
-			fileTyp = "M"
-		else:
-			fileSeq = ""
-			fileTyp = ""	
-
-
 
 		try:
 			if str(data[0]['expediente_afectad']) != "None":

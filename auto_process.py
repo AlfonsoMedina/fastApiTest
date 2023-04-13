@@ -7,7 +7,7 @@ import time
 from time import sleep
 from unicodedata import numeric
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, tasa_id
+from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, tasa_id
 from getFileDoc import getFile
 import tools.filing_date as captureDate
 import tools.connect as connex
@@ -16,7 +16,7 @@ from wipo.ipas import user_doc_afectado, user_doc_receive, user_doc_update
 import zeep
 import asyncio
 
-
+default_val_e99 = lambda arg: arg if arg != "" else "E99"
 list_id = []
 sigla:string = ''
 def listar():
@@ -52,6 +52,13 @@ def insert_list(arg0:string,arg1:string):
 	print(' ')
 	print(arg0) #tramite ID	
 	print(str(arg1)) #TIPO DE DOCUMENTO
+
+	#////////////////////////////////////////||||||||||||||||||||||||||||||||||||||||///////////////////////////////////////#
+	exceptions = userDocModel()
+	if exceptions.exist_split(arg0,'observacion_documentos') == False:
+		data_validator(f'No existe documento adjunto, tabla tramites ID: {arg0}')
+		cambio_estado_soporte(arg0)
+		listar()
 
 	getFile(arg0,str(int(process_day_Nbr())+1))
 		
@@ -136,8 +143,9 @@ def insert_list(arg0:string,arg1:string):
 	#print(valid_rules)
 
 		
-#Insert Escritos	
+	
 def compileAndInsert(form_Id,typ):
+		catch_toError(form_Id)
 
 		insert_doc = userDocModel()
 		insert_doc.setData(form_Id)
@@ -342,9 +350,8 @@ def compileAndInsert(form_Id,typ):
 		except Exception as e:
 			cambio_estado_soporte(form_Id)			
 
-#Insert Escrito a Escrito
 def compileAndInsertUserDocUserDoc(form_Id,typ):	
-		
+		catch_toError(form_Id)
 		escrito_relacionado = userDocModel()
 		escrito_relacionado.setData(form_Id)
 
@@ -487,7 +494,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 		time.sleep(0.5)
 		
 def compileAndInsertUserDocUserDocPago(form_Id,typ):	
-		
+		catch_toError(form_Id)
 		escrito_escrito_pago = userDocModel()
 		escrito_escrito_pago.setData(form_Id)
 	
@@ -625,6 +632,205 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		afferc = str(user_doc_read_min('E',escrito_escrito_pago.documentId_docNbr,escrito_escrito_pago.documentId_docOrigin,escrito_escrito_pago.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 		if afferc == escrito_escrito_pago.documentId_docNbr:
 			cambio_estado(form_Id,escrito_escrito_pago.documentId_docNbr)
+
+def catch_toError(form_Id):
+	getExcept = userDocModel()
+	getExcept.setData(form_Id)
+	data_list = [getExcept.affectedFileIdList_fileNbr,
+	getExcept.affectedFileIdList_fileSeq,
+	getExcept.affectedFileIdList_fileSeries,
+	getExcept.affectedFileIdList_fileType,
+	getExcept.affected_doc_Log,
+	getExcept.affected_doc_docNbr,
+	getExcept.affected_doc_docOrigin,
+	getExcept.affected_doc_docSeries,
+	getExcept.affectedFileSummaryList_disclaimer,
+	getExcept.affectedFileSummaryList_disclaimerInOtherLang,
+	getExcept.affectedFileSummaryList_fileNbr,
+	getExcept.affectedFileSummaryList_fileSeq,
+	getExcept.affectedFileSummaryList_fileSeries,
+	getExcept.affectedFileSummaryList_fileType,
+	getExcept.affectedFileSummaryList_fileIdAsString,
+	getExcept.affectedFileSummaryList_fileSummaryClasses,
+	getExcept.affectedFileSummaryList_fileSummaryCountry,
+	getExcept.affectedFileSummaryList_fileSummaryDescription,
+	getExcept.affectedFileSummaryList_fileSummaryDescriptionInOtherLang,
+	getExcept.affectedFileSummaryList_fileSummaryOwner,
+	getExcept.affectedFileSummaryList_fileSummaryOwnerInOtherLang,
+	getExcept.affectedFileSummaryList_fileSummaryRepresentative,
+	getExcept.affectedFileSummaryList_fileSummaryRepresentativeInOtherLang,
+	getExcept.affectedFileSummaryList_fileSummaryResponsibleName,
+	getExcept.affectedFileSummaryList_fileSummaryStatus,
+	getExcept.applicant_applicantNotes,
+	default_val_e99(getExcept.applicant_person_addressStreet),
+	getExcept.applicant_person_addressStreetInOtherLang,
+	getExcept.applicant_person_addressZone,
+	getExcept.applicant_person_agentCode,
+	getExcept.applicant_person_cityCode,
+	getExcept.applicant_person_cityName,
+	getExcept.applicant_person_companyRegisterRegistrationDate,
+	getExcept.applicant_person_companyRegisterRegistrationNbr,
+	getExcept.applicant_person_email,
+	getExcept.applicant_person_individualIdNbr,
+	getExcept.applicant_person_individualIdType,
+	getExcept.applicant_person_legalIdNbr,
+	getExcept.applicant_person_legalIdType,
+	getExcept.applicant_person_legalNature,
+	getExcept.applicant_person_legalNatureInOtherLang,
+	default_val_e99(getExcept.applicant_person_nationalityCountryCode),
+	getExcept.applicant_person_personGroupCode,
+	getExcept.applicant_person_personGroupName,
+	default_val_e99(getExcept.applicant_person_personName),
+	getExcept.applicant_person_personNameInOtherLang,
+	default_val_e99(getExcept.applicant_person_residenceCountryCode),
+	getExcept.applicant_person_stateCode,
+	getExcept.applicant_person_stateName,
+	getExcept.applicant_person_telephone,
+	getExcept.applicant_person_zipCode,
+	default_val_e99(getExcept.documentId_docLog),
+	default_val_e99(getExcept.documentId_docNbr),
+	default_val_e99(getExcept.documentId_docOrigin),
+	default_val_e99(getExcept.documentId_docSeries),
+	getExcept.documentId_selected,
+	default_val_e99(getExcept.documentSeqId_docSeqName),
+	default_val_e99(getExcept.documentSeqId_docSeqNbr),
+	default_val_e99(getExcept.documentSeqId_docSeqSeries),
+	default_val_e99(getExcept.documentSeqId_docSeqType),
+	getExcept.filingData_applicationSubtype,
+	getExcept.filingData_applicationType,
+	default_val_e99(getExcept.filingData_captureDate),
+	default_val_e99(getExcept.filingData_captureUserId),
+	default_val_e99(getExcept.filingData_filingDate),
+	getExcept.filingData_lawCode,
+	getExcept.filingData_novelty1Date,
+	getExcept.filingData_novelty2Date,
+	getExcept.filingData_paymentList_currencyName,
+	getExcept.filingData_paymentList_currencyType,
+	getExcept.filingData_paymentList_receiptAmount,
+	getExcept.filingData_paymentList_receiptDate,
+	getExcept.filingData_paymentList_receiptNbr,
+	getExcept.filingData_paymentList_receiptNotes,
+	getExcept.filingData_paymentList_receiptType,
+	getExcept.filingData_paymentList_receiptTypeName,
+	default_val_e99(getExcept.filingData_receptionDate),
+	default_val_e99(getExcept.filingData_documentId_receptionDocument_docLog),
+	default_val_e99(getExcept.filingData_documentId_receptionDocument_docNbr),
+	default_val_e99(getExcept.filingData_documentId_receptionDocument_docOrigin),
+	default_val_e99(getExcept.filingData_documentId_receptionDocument_docSeries),
+	getExcept.filingData_documentId_receptionDocument_selected,
+	default_val_e99(getExcept.filingData_userdocTypeList_userdocName),
+	default_val_e99(getExcept.filingData_userdocTypeList_userdocType),
+	getExcept.newOwnershipData_ownerList_orderNbr,
+	getExcept.newOwnershipData_ownerList_ownershipNotes,
+	default_val_e99(getExcept.newOwnershipData_ownerList_person_addressStreet),
+	getExcept.newOwnershipData_ownerList_person_addressStreetInOtherLang,
+	getExcept.newOwnershipData_ownerList_person_addressZone,
+	getExcept.newOwnershipData_ownerList_person_agentCode,
+	getExcept.newOwnershipData_ownerList_person_cityCode,
+	getExcept.newOwnershipData_ownerList_person_cityName,
+	getExcept.newOwnershipData_ownerList_person_companyRegisterRegistrationDate,
+	getExcept.newOwnershipData_ownerList_person_companyRegisterRegistrationNbr,
+	getExcept.newOwnershipData_ownerList_person_email,
+	getExcept.newOwnershipData_ownerList_person_individualIdNbr,
+	getExcept.newOwnershipData_ownerList_person_individualIdType,
+	getExcept.newOwnershipData_ownerList_person_legalIdNbr,
+	getExcept.newOwnershipData_ownerList_person_legalIdType,
+	getExcept.newOwnershipData_ownerList_person_legalNature,
+	getExcept.newOwnershipData_ownerList_person_legalNatureInOtherLang,
+	default_val_e99(getExcept.newOwnershipData_ownerList_person_nationalityCountryCode),
+	getExcept.newOwnershipData_ownerList_person_personGroupCode,
+	getExcept.newOwnershipData_ownerList_person_personGroupName,
+	default_val_e99(getExcept.newOwnershipData_ownerList_person_personName),
+	getExcept.newOwnershipData_ownerList_person_personNameInOtherLang,
+	default_val_e99(getExcept.newOwnershipData_ownerList_person_residenceCountryCode),
+	getExcept.newOwnershipData_ownerList_person_stateCode,
+	getExcept.newOwnershipData_ownerList_person_stateName,
+	getExcept.newOwnershipData_ownerList_person_telephone,
+	getExcept.newOwnershipData_ownerList_person_zipCode,
+	getExcept.notes,
+	getExcept.poaData_poaGranteeList_person_addressStreet,
+	getExcept.poaData_poaGranteeList_person_addressStreetInOtherLang,
+	getExcept.poaData_poaGranteeList_person_addressZone,
+	getExcept.poaData_poaGranteeList_person_agentCode,
+	getExcept.poaData_poaGranteeList_person_cityCode,
+	getExcept.poaData_poaGranteeList_person_cityName,
+	getExcept.poaData_poaGranteeList_person_companyRegisterRegistrationDate,
+	getExcept.poaData_poaGranteeList_person_companyRegisterRegistrationNbr,
+	getExcept.poaData_poaGranteeList_person_email,
+	getExcept.poaData_poaGranteeList_person_individualIdNbr,
+	getExcept.poaData_poaGranteeList_person_individualIdType,
+	getExcept.poaData_poaGranteeList_person_legalIdNbr,
+	getExcept.poaData_poaGranteeList_person_legalIdType,
+	getExcept.poaData_poaGranteeList_person_legalNature,
+	getExcept.poaData_poaGranteeList_person_legalNatureInOtherLang,
+	getExcept.poaData_poaGranteeList_person_nationalityCountryCode,
+	getExcept.poaData_poaGranteeList_person_personGroupCode,
+	getExcept.poaData_poaGranteeList_person_personGroupName,
+	getExcept.poaData_poaGranteeList_person_personName,
+	getExcept.poaData_poaGranteeList_person_personNameInOtherLang,
+	getExcept.poaData_poaGranteeList_person_residenceCountryCode,
+	getExcept.poaData_poaGranteeList_person_stateCode,
+	getExcept.poaData_poaGranteeList_person_stateName,
+	getExcept.poaData_poaGranteeList_person_telephone,
+	getExcept.poaData_poaGranteeList_person_zipCode,
+	getExcept.poaData_poaGrantor_person_addressStreet,
+	getExcept.poaData_poaGrantor_person_addressStreetInOtherLang,
+	getExcept.poaData_poaGrantor_person_addressZone,
+	getExcept.poaData_poaGrantor_person_agentCode,
+	getExcept.poaData_poaGrantor_person_cityCode,
+	getExcept.poaData_poaGrantor_person_cityName,
+	getExcept.poaData_poaGrantor_person_companyRegisterRegistrationDate,
+	getExcept.poaData_poaGrantor_person_companyRegisterRegistrationNbr,
+	getExcept.poaData_poaGrantor_person_email,
+	getExcept.poaData_poaGrantor_person_individualIdNbr,
+	getExcept.poaData_poaGrantor_person_individualIdType,
+	getExcept.poaData_poaGrantor_person_legalIdNbr,
+	getExcept.poaData_poaGrantor_person_legalIdType,
+	getExcept.poaData_poaGrantor_person_legalNature,
+	getExcept.poaData_poaGrantor_person_legalNatureInOtherLang,
+	getExcept.poaData_poaGrantor_person_nationalityCountryCode,
+	getExcept.poaData_poaGrantor_person_personGroupCode,
+	getExcept.poaData_poaGrantor_person_personGroupName,
+	getExcept.poaData_poaGrantor_person_personName,
+	getExcept.poaData_poaGrantor_person_personNameInOtherLang,
+	getExcept.poaData_poaGrantor_person_residenceCountryCode,
+	getExcept.poaData_poaGrantor_person_stateCode,
+	getExcept.poaData_poaGrantor_person_stateName,
+	getExcept.poaData_poaGrantor_person_telephone,
+	getExcept.poaData_poaGrantor_person_zipCode,
+	getExcept.poaData_poaRegNumber,
+	getExcept.poaData_scope,
+	default_val_e99(getExcept.representationData_representativeList_person_addressStreet),
+	getExcept.representationData_representativeList_person_addressStreetInOtherLang,
+	getExcept.representationData_representativeList_person_addressZone,
+	default_val_e99(getExcept.representationData_representativeList_person_agentCode),
+	getExcept.representationData_representativeList_person_cityCode,
+	getExcept.representationData_representativeList_person_cityName,
+	getExcept.representationData_representativeList_person_companyRegisterRegistrationDate,
+	getExcept.representationData_representativeList_person_companyRegisterRegistrationNbr,
+	default_val_e99(getExcept.representationData_representativeList_person_email),
+	getExcept.representationData_representativeList_person_individualIdNbr,
+	getExcept.representationData_representativeList_person_individualIdType,
+	getExcept.representationData_representativeList_person_legalIdNbr,
+	getExcept.representationData_representativeList_person_legalIdType,
+	getExcept.representationData_representativeList_person_legalNature,
+	getExcept.representationData_representativeList_person_legalNatureInOtherLang,
+	default_val_e99(getExcept.representationData_representativeList_person_nationalityCountryCode),
+	getExcept.representationData_representativeList_person_personGroupCode,
+	getExcept.representationData_representativeList_person_personGroupName,
+	default_val_e99(getExcept.representationData_representativeList_person_personName),
+	getExcept.representationData_representativeList_person_personNameInOtherLang,
+	default_val_e99(getExcept.representationData_representativeList_person_residenceCountryCode),
+	getExcept.representationData_representativeList_person_stateCode,
+	getExcept.representationData_representativeList_person_stateName,
+	getExcept.representationData_representativeList_person_telephone,
+	getExcept.representationData_representativeList_person_zipCode,
+	getExcept.representationData_representativeList_representativeType]
+	for i in range(0,len(data_list)):
+		if data_list[i] == "E99":
+			data_validator(f'dato requerido posicion: {i}, tabla tramites ID: {form_Id}')
+			cambio_estado_soporte(form_Id)
+			listar()
 
 
 
