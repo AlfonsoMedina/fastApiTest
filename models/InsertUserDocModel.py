@@ -206,8 +206,20 @@ class userDocModel(object):
 	def __init__(self):
 		pass
 	
+	def exist_split(self,arg0,arg1):
+		data = pendiente_sfe(arg0)
+		list_splits = {}
+		for i in range(0,len(data[0]['respuestas'])):
+			list_splits['campo'+str(i)] = data[0]['respuestas'][i]['campo']
+		exists = arg1 in list_splits.values()
+		return(exists)
+
+
+	#Adjunto requerido 
+	
+	#actualizacion de front durante proceso
+
 	def setData(self,doc_Id):
-		
 		ruc_Typ:str = ''
 		ci_Typ:str = ''	
 		ruc_Nbr:str = ""
@@ -221,7 +233,11 @@ class userDocModel(object):
 		except Exception as e:
 			print("")
 		
-		
+		## Primera llamada a respuesta ##
+		if self.exist_split(doc_Id,'observacion_documentos') != True:   ########## TEST ########### 
+			return('Error en Origen de datos...........')
+		#################################
+
 		try:
 			for i in range(0,len(data[0]['respuestas'])):
 				if data[0]['respuestas'][i]['campo'] == 'datospersonales_tipo':	
@@ -234,14 +250,11 @@ class userDocModel(object):
 				pass
 		
 		
-
-
 		if ruc_Typ == 'RUC': 
 			for i in range(0,len(data[0]['respuestas'])):
 				if data[0]['respuestas'][i]['campo'] == 'datospersonales_documento':
 					ruc_Nbr = str(data[0]['respuestas'][i]['valor'])
-					ci_Nbr = ""
-					
+					ci_Nbr = ""				
 		elif ci_Typ == 'CED': 
 			for i in range(0,len(data[0]['respuestas'])):
 				if data[0]['respuestas'][i]['campo'] == 'datospersonales_documento':	
@@ -250,8 +263,6 @@ class userDocModel(object):
 		else:
 			pass
 						
-
-
 		if str(data[0]['expediente_afectad']) != "None":
 			fileSeq = "PY"
 			fileTyp = "M"
@@ -259,11 +270,7 @@ class userDocModel(object):
 			fileSeq = ""
 			fileTyp = ""	
 
-		
-		"""
-		if str(data[0]['expediente_afectad']) != "None":
-			print(user_doc_getList_escrito(data[0]['expediente_afectad']))
-			"""
+
 
 		try:
 			if str(data[0]['expediente_afectad']) != "None":
@@ -332,12 +339,15 @@ class userDocModel(object):
 		self.applicant_applicantNotes = "Aplicante SPRINT M.E.A."
 		
 
-		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_direccion':
-					self.applicant_person_addressStreet = str(data[0]['respuestas'][i]['valor'])
-		except Exception as e:
-			self.applicant_person_addressStreet= ""
+		if self.exist_split(doc_Id,'datospersonales_direccion') == True:   ########## TEST ########### 		
+			try:
+				for i in range(0,len(data[0]['respuestas'])):
+					if data[0]['respuestas'][i]['campo'] == 'datospersonales_direccion':				
+						self.applicant_person_addressStreet = str(data[0]['respuestas'][i]['valor'])
+			except Exception as e:
+				self.applicant_person_addressStreet= ""
+		else:
+			self.applicant_person_addressStreet= "E99"
 
 		
 		self.applicant_person_addressStreetInOtherLang= ""

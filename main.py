@@ -3,6 +3,7 @@ from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
 from dinapi.sfe import count_pendiente, format_userdoc, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, tip_doc
+from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
 from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, mark_insert_ren, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update, user_doc_update_sin_recibo #pip install "fastapi[all]"
@@ -25,6 +26,7 @@ app = FastAPI()
 
 origins = ["*"]
 
+default_val_e99 = lambda arg: arg if arg != "" else "E99"
 
 app.add_middleware(
 	CORSMiddleware,
@@ -1867,7 +1869,201 @@ async def sfe_opo_capture(item:for_id):
 
 @app.post('/sis/test', summary="MEA", tags=["test insert"])
 def TEST_MEA(id_tramite):
-	return(format_userdoc(id_tramite))
+	create_userdoc = {}
+	catch_data = userDocModel()
+	catch_data.setData(id_tramite)
+	create_userdoc['affectedFileIdList_fileNbr'] = catch_data.affectedFileIdList_fileNbr
+	create_userdoc['affectedFileIdList_fileSeq'] = catch_data.affectedFileIdList_fileSeq 
+	create_userdoc['affectedFileIdList_fileSeries'] = catch_data.affectedFileIdList_fileSeries 
+	create_userdoc['affectedFileIdList_fileType'] = catch_data.affectedFileIdList_fileType 
+	create_userdoc['affected_doc_Log'] = catch_data.affected_doc_Log 
+	create_userdoc['affected_doc_docNbr'] = catch_data.affected_doc_docNbr 
+	create_userdoc['affected_doc_docOrigin'] = catch_data.affected_doc_docOrigin 
+	create_userdoc['affected_doc_docSeries'] = catch_data.affected_doc_docSeries 
+	create_userdoc['affectedFileSummaryList_disclaimer'] = catch_data.affected_doc_docSeries 
+	create_userdoc['affectedFileSummaryList_disclaimerInOtherLang'] = catch_data.affectedFileSummaryList_disclaimerInOtherLang 
+	create_userdoc['affectedFileSummaryList_fileNbr'] = catch_data.affectedFileSummaryList_fileNbr 
+	create_userdoc['affectedFileSummaryList_fileSeq'] = catch_data.affectedFileSummaryList_fileSeq 
+	create_userdoc['affectedFileSummaryList_fileSeries'] = catch_data.affectedFileSummaryList_fileSeries 
+	create_userdoc['affectedFileSummaryList_fileType'] = catch_data.affectedFileSummaryList_fileType 
+	create_userdoc['affectedFileSummaryList_fileIdAsString'] = catch_data.affectedFileSummaryList_fileIdAsString 
+	create_userdoc['affectedFileSummaryList_fileSummaryClasses'] = catch_data.affectedFileSummaryList_fileSummaryClasses 
+	create_userdoc['affectedFileSummaryList_fileSummaryCountry'] = catch_data.affectedFileSummaryList_fileSummaryCountry 
+	create_userdoc['affectedFileSummaryList_fileSummaryDescription'] = catch_data.affectedFileSummaryList_fileSummaryDescription 
+	create_userdoc['affectedFileSummaryList_fileSummaryDescriptionInOtherLang'] = catch_data.affectedFileSummaryList_fileSummaryDescriptionInOtherLang 
+	create_userdoc['affectedFileSummaryList_fileSummaryOwner'] = catch_data.affectedFileSummaryList_fileSummaryOwner 
+	create_userdoc['affectedFileSummaryList_fileSummaryOwnerInOtherLang'] = catch_data.affectedFileSummaryList_fileSummaryOwnerInOtherLang 
+	create_userdoc['affectedFileSummaryList_fileSummaryRepresentative'] = catch_data.affectedFileSummaryList_fileSummaryRepresentative 
+	create_userdoc['affectedFileSummaryList_fileSummaryRepresentativeInOtherLang'] = catch_data.affectedFileSummaryList_fileSummaryRepresentativeInOtherLang 
+	create_userdoc['affectedFileSummaryList_fileSummaryResponsibleName'] = catch_data.affectedFileSummaryList_fileSummaryResponsibleName 
+	create_userdoc['affectedFileSummaryList_fileSummaryStatus'] = catch_data.affectedFileSummaryList_fileSummaryStatus 
+	create_userdoc['applicant_applicantNotes'] = catch_data.applicant_applicantNotes 
+	create_userdoc['applicant_person_addressStreet'] = default_val_e99(catch_data.applicant_person_addressStreet) 
+	create_userdoc['applicant_person_addressStreetInOtherLang'] = catch_data.applicant_person_addressStreetInOtherLang 
+	create_userdoc['applicant_person_addressZone'] = catch_data.applicant_person_addressZone 
+	create_userdoc['applicant_person_agentCode'] = catch_data.applicant_person_agentCode 
+	create_userdoc['applicant_person_cityCode'] = catch_data.applicant_person_cityCode 
+	create_userdoc['applicant_person_cityName'] = catch_data.applicant_person_cityName 
+	create_userdoc['applicant_person_companyRegisterRegistrationDate'] = catch_data.applicant_person_companyRegisterRegistrationDate 
+	create_userdoc['applicant_person_companyRegisterRegistrationNbr'] = catch_data.applicant_person_companyRegisterRegistrationNbr 
+	create_userdoc['applicant_person_email'] = catch_data.applicant_person_email 
+	create_userdoc['applicant_person_individualIdNbr'] = catch_data.applicant_person_individualIdNbr 
+	create_userdoc['applicant_person_individualIdType'] = catch_data.applicant_person_individualIdType 
+	create_userdoc['applicant_person_legalIdNbr'] = catch_data.applicant_person_legalIdNbr 
+	create_userdoc['applicant_person_legalIdType'] = catch_data.applicant_person_legalIdType 
+	create_userdoc['applicant_person_legalNature'] = catch_data.applicant_person_legalNature 
+	create_userdoc['applicant_person_legalNatureInOtherLang'] = catch_data.applicant_person_legalNatureInOtherLang 
+	create_userdoc['applicant_person_nationalityCountryCode'] = catch_data.applicant_person_nationalityCountryCode 
+	create_userdoc['applicant_person_personGroupCode'] = catch_data.applicant_person_personGroupCode 
+	create_userdoc['applicant_person_personGroupName'] = catch_data.applicant_person_personGroupName 
+	create_userdoc['applicant_person_personName'] = catch_data.applicant_person_personName 
+	create_userdoc['applicant_person_personNameInOtherLang'] = catch_data.applicant_person_personNameInOtherLang 
+	create_userdoc['applicant_person_residenceCountryCode'] = catch_data.applicant_person_residenceCountryCode 
+	create_userdoc['applicant_person_stateCode'] = catch_data.applicant_person_stateCode 
+	create_userdoc['applicant_person_stateName'] = catch_data.applicant_person_stateName 
+	create_userdoc['applicant_person_telephone'] = catch_data.applicant_person_telephone 
+	create_userdoc['applicant_person_zipCode'] = catch_data.applicant_person_zipCode 
+	create_userdoc['documentId_docLog'] = catch_data.documentId_docLog 
+	create_userdoc['documentId_docNbr'] = catch_data.documentId_docNbr 
+	create_userdoc['documentId_docOrigin'] = catch_data.documentId_docOrigin 
+	create_userdoc['documentId_docSeries'] = catch_data.documentId_docSeries 
+	create_userdoc['documentId_selected'] = catch_data.documentId_selected 
+	create_userdoc['documentSeqId_docSeqName'] = catch_data.documentSeqId_docSeqName 
+	create_userdoc['documentSeqId_docSeqNbr'] = catch_data.documentSeqId_docSeqNbr 
+	create_userdoc['documentSeqId_docSeqSeries'] = catch_data.documentSeqId_docSeqSeries 
+	create_userdoc['documentSeqId_docSeqType'] = catch_data.documentSeqId_docSeqType 
+	create_userdoc['filingData_applicationSubtype'] = catch_data.filingData_applicationSubtype 
+	create_userdoc['filingData_applicationType'] = catch_data.filingData_applicationType 
+	create_userdoc['filingData_captureDate'] = catch_data.filingData_captureDate 
+	create_userdoc['filingData_captureUserId'] = catch_data.filingData_captureUserId 
+	create_userdoc['filingData_filingDate'] = catch_data.filingData_filingDate 
+	create_userdoc['filingData_lawCode'] = catch_data.filingData_lawCode 
+	create_userdoc['filingData_novelty1Date'] = catch_data.filingData_novelty1Date 
+	create_userdoc['filingData_novelty2Date'] = catch_data.filingData_novelty2Date 
+	create_userdoc['filingData_paymentList_currencyName'] = catch_data.filingData_paymentList_currencyName 
+	create_userdoc['filingData_paymentList_currencyType'] = catch_data.filingData_paymentList_currencyType 
+	create_userdoc['filingData_paymentList_receiptAmount'] = catch_data.filingData_paymentList_receiptAmount 
+	create_userdoc['filingData_paymentList_receiptDate'] = catch_data.filingData_paymentList_receiptDate 
+	create_userdoc['filingData_paymentList_receiptNbr'] = catch_data.filingData_paymentList_receiptNbr 
+	create_userdoc['filingData_paymentList_receiptNotes'] = catch_data.filingData_paymentList_receiptNotes 
+	create_userdoc['filingData_paymentList_receiptType'] = catch_data.filingData_paymentList_receiptType 
+	create_userdoc['filingData_paymentList_receiptTypeName'] = catch_data.filingData_paymentList_receiptTypeName 
+	create_userdoc['filingData_receptionDate'] = catch_data.filingData_receptionDate 
+	create_userdoc['filingData_documentId_receptionDocument_docLog'] = catch_data.filingData_documentId_receptionDocument_docLog 
+	create_userdoc['filingData_documentId_receptionDocument_docNbr'] = catch_data.filingData_documentId_receptionDocument_docNbr 
+	create_userdoc['filingData_documentId_receptionDocument_docOrigin'] = catch_data.filingData_documentId_receptionDocument_docOrigin 
+	create_userdoc['filingData_documentId_receptionDocument_docSeries'] = catch_data.filingData_documentId_receptionDocument_docSeries 
+	create_userdoc['filingData_documentId_receptionDocument_selected'] = catch_data.filingData_documentId_receptionDocument_selected 
+	create_userdoc['filingData_userdocTypeList_userdocName'] = catch_data.filingData_userdocTypeList_userdocName 
+	create_userdoc['filingData_userdocTypeList_userdocType'] = catch_data.filingData_userdocTypeList_userdocType 
+	create_userdoc['newOwnershipData_ownerList_orderNbr'] = catch_data.newOwnershipData_ownerList_orderNbr 
+	create_userdoc['newOwnershipData_ownerList_ownershipNotes'] = catch_data.newOwnershipData_ownerList_ownershipNotes 
+	create_userdoc['newOwnershipData_ownerList_person_addressStreet'] = catch_data.newOwnershipData_ownerList_person_addressStreet 
+	create_userdoc['newOwnershipData_ownerList_person_addressStreetInOtherLang'] = catch_data.newOwnershipData_ownerList_person_addressStreetInOtherLang 
+	create_userdoc['newOwnershipData_ownerList_person_addressZone'] = catch_data.newOwnershipData_ownerList_person_addressZone 
+	create_userdoc['newOwnershipData_ownerList_person_agentCode'] = catch_data.newOwnershipData_ownerList_person_agentCode 
+	create_userdoc['newOwnershipData_ownerList_person_cityCode'] = catch_data.newOwnershipData_ownerList_person_cityCode 
+	create_userdoc['newOwnershipData_ownerList_person_cityName'] = catch_data.newOwnershipData_ownerList_person_cityName 
+	create_userdoc['newOwnershipData_ownerList_person_companyRegisterRegistrationDate'] = catch_data.newOwnershipData_ownerList_person_companyRegisterRegistrationDate 
+	create_userdoc['newOwnershipData_ownerList_person_companyRegisterRegistrationNbr'] = catch_data.newOwnershipData_ownerList_person_companyRegisterRegistrationNbr 
+	create_userdoc['newOwnershipData_ownerList_person_email'] = catch_data.newOwnershipData_ownerList_person_email 
+	create_userdoc['newOwnershipData_ownerList_person_individualIdNbr'] = catch_data.newOwnershipData_ownerList_person_individualIdNbr 
+	create_userdoc['newOwnershipData_ownerList_person_individualIdType'] = catch_data.newOwnershipData_ownerList_person_individualIdType 
+	create_userdoc['newOwnershipData_ownerList_person_legalIdNbr'] = catch_data.newOwnershipData_ownerList_person_legalIdNbr 
+	create_userdoc['newOwnershipData_ownerList_person_legalIdType'] = catch_data.newOwnershipData_ownerList_person_legalIdType 
+	create_userdoc['newOwnershipData_ownerList_person_legalNature'] = catch_data.newOwnershipData_ownerList_person_legalNature 
+	create_userdoc['newOwnershipData_ownerList_person_legalNatureInOtherLang'] = catch_data.newOwnershipData_ownerList_person_legalNatureInOtherLang 
+	create_userdoc['newOwnershipData_ownerList_person_nationalityCountryCode'] = catch_data.newOwnershipData_ownerList_person_nationalityCountryCode 
+	create_userdoc['newOwnershipData_ownerList_person_personGroupCode'] = catch_data.newOwnershipData_ownerList_person_personGroupCode 
+	create_userdoc['newOwnershipData_ownerList_person_personGroupName'] = catch_data.newOwnershipData_ownerList_person_personGroupName 
+	create_userdoc['newOwnershipData_ownerList_person_personName'] = catch_data.newOwnershipData_ownerList_person_personName 
+	create_userdoc['newOwnershipData_ownerList_person_personNameInOtherLang'] = catch_data.newOwnershipData_ownerList_person_personNameInOtherLang 
+	create_userdoc['newOwnershipData_ownerList_person_residenceCountryCode'] = catch_data.newOwnershipData_ownerList_person_residenceCountryCode 
+	create_userdoc['newOwnershipData_ownerList_person_stateCode'] = catch_data.newOwnershipData_ownerList_person_stateCode 
+	create_userdoc['newOwnershipData_ownerList_person_stateName'] = catch_data.newOwnershipData_ownerList_person_stateName 
+	create_userdoc['newOwnershipData_ownerList_person_telephone'] = catch_data.newOwnershipData_ownerList_person_telephone 
+	create_userdoc['newOwnershipData_ownerList_person_zipCode'] = catch_data.newOwnershipData_ownerList_person_zipCode 
+	create_userdoc['notes'] = catch_data.notes 
+	create_userdoc['poaData_poaGranteeList_person_addressStreet'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_addressStreetInOtherLang'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_addressZone'] = ""
+	create_userdoc['poaData_poaGranteeList_person_agentCode'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_cityCode'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_cityName'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_companyRegisterRegistrationDate'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_companyRegisterRegistrationNbr'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_email'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_individualIdNbr'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_individualIdType'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_legalIdNbr'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_legalIdType'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_legalNature'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_legalNatureInOtherLang'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_nationalityCountryCode'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_personGroupCode'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_personGroupName'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_personName'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_personNameInOtherLang'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_residenceCountryCode'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_stateCode'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_stateName'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_telephone'] = "" 
+	create_userdoc['poaData_poaGranteeList_person_zipCode'] = "" 
+	create_userdoc['poaData_poaGrantor_person_addressStreet'] = "" 
+	create_userdoc['poaData_poaGrantor_person_addressStreetInOtherLang'] = "" 
+	create_userdoc['poaData_poaGrantor_person_addressZone'] = "" 
+	create_userdoc['poaData_poaGrantor_person_agentCode'] = "" 
+	create_userdoc['poaData_poaGrantor_person_cityCode'] = "" 
+	create_userdoc['poaData_poaGrantor_person_cityName'] = "" 
+	create_userdoc['poaData_poaGrantor_person_companyRegisterRegistrationDate'] = "" 
+	create_userdoc['poaData_poaGrantor_person_companyRegisterRegistrationNbr'] = "" 
+	create_userdoc['poaData_poaGrantor_person_email'] = "" 
+	create_userdoc['poaData_poaGrantor_person_individualIdNbr'] = "" 
+	create_userdoc['poaData_poaGrantor_person_individualIdType'] = "" 
+	create_userdoc['poaData_poaGrantor_person_legalIdNbr'] = "" 
+	create_userdoc['poaData_poaGrantor_person_legalIdType'] = "" 
+	create_userdoc['poaData_poaGrantor_person_legalNature'] = "" 
+	create_userdoc['poaData_poaGrantor_person_legalNatureInOtherLang'] = "" 
+	create_userdoc['poaData_poaGrantor_person_nationalityCountryCode'] = "" 
+	create_userdoc['poaData_poaGrantor_person_personGroupCode'] = "" 
+	create_userdoc['poaData_poaGrantor_person_personGroupName'] = "" 
+	create_userdoc['poaData_poaGrantor_person_personName'] = "" 
+	create_userdoc['poaData_poaGrantor_person_personNameInOtherLang'] = "" 
+	create_userdoc['poaData_poaGrantor_person_residenceCountryCode'] = "" 
+	create_userdoc['poaData_poaGrantor_person_stateCode'] = "" 
+	create_userdoc['poaData_poaGrantor_person_stateName'] = "" 
+	create_userdoc['poaData_poaGrantor_person_telephone'] = "" 
+	create_userdoc['poaData_poaGrantor_person_zipCode'] = "" 
+	create_userdoc['poaData_poaRegNumber'] = "" 
+	create_userdoc['poaData_scope'] = "" 
+	create_userdoc['representationData_representativeList_person_addressStreet'] = catch_data.representationData_representativeList_person_addressStreet 
+	create_userdoc['representationData_representativeList_person_addressStreetInOtherLang'] = catch_data.representationData_representativeList_person_addressStreetInOtherLang 
+	create_userdoc['representationData_representativeList_person_addressZone'] = catch_data.representationData_representativeList_person_addressZone 
+	create_userdoc['representationData_representativeList_person_agentCode'] = catch_data.representationData_representativeList_person_agentCode 
+	create_userdoc['representationData_representativeList_person_cityCode'] = catch_data.representationData_representativeList_person_cityCode 
+	create_userdoc['representationData_representativeList_person_cityName'] = catch_data.representationData_representativeList_person_cityName 
+	create_userdoc['representationData_representativeList_person_companyRegisterRegistrationDate'] = catch_data.representationData_representativeList_person_companyRegisterRegistrationDate 
+	create_userdoc['representationData_representativeList_person_companyRegisterRegistrationNbr'] = catch_data.representationData_representativeList_person_companyRegisterRegistrationNbr 
+	create_userdoc['representationData_representativeList_person_email'] = catch_data.representationData_representativeList_person_email 
+	create_userdoc['representationData_representativeList_person_individualIdNbr'] = catch_data.representationData_representativeList_person_individualIdNbr 
+	create_userdoc['representationData_representativeList_person_individualIdType'] = catch_data.representationData_representativeList_person_individualIdType 
+	create_userdoc['representationData_representativeList_person_legalIdNbr'] = catch_data.representationData_representativeList_person_legalIdNbr 
+	create_userdoc['representationData_representativeList_person_legalIdType'] = catch_data.representationData_representativeList_person_legalIdType 
+	create_userdoc['representationData_representativeList_person_legalNature'] = catch_data.representationData_representativeList_person_legalNature 
+	create_userdoc['representationData_representativeList_person_legalNatureInOtherLang'] = catch_data.representationData_representativeList_person_legalNatureInOtherLang 
+	create_userdoc['representationData_representativeList_person_nationalityCountryCode'] = catch_data.representationData_representativeList_person_nationalityCountryCode 
+	create_userdoc['representationData_representativeList_person_personGroupCode'] = catch_data.representationData_representativeList_person_personGroupCode 
+	create_userdoc['representationData_representativeList_person_personGroupName'] = catch_data.representationData_representativeList_person_personGroupName 
+	create_userdoc['representationData_representativeList_person_personName'] = catch_data.representationData_representativeList_person_personName 
+	create_userdoc['representationData_representativeList_person_personNameInOtherLang'] = catch_data.representationData_representativeList_person_personNameInOtherLang 
+	create_userdoc['representationData_representativeList_person_residenceCountryCode'] = catch_data.representationData_representativeList_person_residenceCountryCode 
+	create_userdoc['representationData_representativeList_person_stateCode'] = catch_data.representationData_representativeList_person_stateCode 
+	create_userdoc['representationData_representativeList_person_stateName'] = catch_data.representationData_representativeList_person_stateName 
+	create_userdoc['representationData_representativeList_person_telephone'] = catch_data.representationData_representativeList_person_telephone 
+	create_userdoc['representationData_representativeList_person_zipCode'] = catch_data.representationData_representativeList_person_zipCode 
+	create_userdoc['representationData_representativeList_representativeType'] = catch_data.representationData_representativeList_representativeType 
+	return(create_userdoc)
+	#return(format_userdoc(id_tramite))
 
 @app.post('/api/getparametros', summary="API", tags=["Lista de parametros"])
 def get_params():
@@ -1923,7 +2119,6 @@ class pendientes_count(BaseModel):
 @app.post('/api/pendientes_count', summary="API", tags=["contador pendientes"])
 def pendientes_sfe_count(item:pendientes_count):
 	return(count_pendiente(item.fecha))
-
 
 @app.post('/sis/reload', summary="sis", tags=["reload"])
 def re_load():

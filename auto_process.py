@@ -20,7 +20,7 @@ import asyncio
 list_id = []
 sigla:string = ''
 def listar():
-	print('............................................................................')
+	#print('............................................................................')
 	captura_pendientes() # Captura lista pendiente
 	time.sleep(int(connex.MEA_TIEMPO_ACTUALIZACION))#int(connex.MEA_TIEMPO_ACTUALIZACION)
 	listar()
@@ -485,7 +485,6 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 			cambio_estado(form_Id,escrito_relacionado.documentId_docNbr)
 
 		time.sleep(0.5)
-
 		
 def compileAndInsertUserDocUserDocPago(form_Id,typ):	
 		

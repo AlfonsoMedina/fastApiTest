@@ -900,8 +900,6 @@ def reglas_me_ttasa(sig):
 		conn.close()
 
 def format_userdoc(doc_Id):
-	#process_day_commit_Nbr()
-	documento_Typ:str = ''
 	ruc_Typ:str = ''
 	ci_Typ:str = ''	
 	ruc_Nbr:str = ''
@@ -1463,10 +1461,22 @@ def tasa_id(arg):
 	finally:
 		conn.close()
 
+def tasa_SIGLA(arg):
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select ttasa from reglas_me where tipo_escrito = '{}'""".format(arg))
+		row=cursor.fetchall()
+		for i in row:
+			return(i)	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+#print(tasa_SIGLA("AAS1")[0])
 
 """def afected_relation_auth(arg):"""
-
-
 
 '''
 print(personAgente(code_ag('43'))[0].agentCode.doubleValue) #Consulta agente
