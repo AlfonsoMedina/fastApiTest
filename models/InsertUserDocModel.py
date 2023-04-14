@@ -232,7 +232,7 @@ class userDocModel(object):
 			print("")
 
 		try:
-			if self.exist_split(doc_Id,'datospersonales_tipo') == True:  		 ########## TEST ########### 
+			if self.exist_split(doc_Id,'datospersonales_tipo') == True:  		
 				for i in range(0,len(data[0]['respuestas'])):
 					if data[0]['respuestas'][i]['campo'] == 'datospersonales_tipo':	
 						if str(data[0]['respuestas'][i]['valor']) == 'Persona Jurídica':
@@ -325,7 +325,7 @@ class userDocModel(object):
 		self.applicant_applicantNotes = "Aplicante SPRINT M.E.A."
 		
 
-		if self.exist_split(doc_Id,'datospersonales_direccion') == True:   ########## TEST ########### 		
+		if self.exist_split(doc_Id,'datospersonales_direccion') == True:   		
 			try:
 				for i in range(0,len(data[0]['respuestas'])):
 					if data[0]['respuestas'][i]['campo'] == 'datospersonales_direccion':				

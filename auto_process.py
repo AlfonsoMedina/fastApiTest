@@ -64,46 +64,37 @@ def insert_list(arg0:string,arg1:string):
 		
 	#CONSULTA SI HAY RELACION DE EXPEDIENTE__________________________________________________________________________________________ 
 	if exp_relation(arg1)[0] == 'S': 
-		#print('CON EXPEDIENTE RELACIONADO')# CONFIRMA RELACION
 		if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
-			#print('relacion expediente Ok!') # insert
 			valid_rules.append('Ok')
 		else:
-			#print('falta expediente relacionado') # estado 99
+			data_validator(f'El expediente relacionado es requerido, tabla tramites ID: {arg0}')
 			valid_rules.append('Error')
 			cambio_estado_soporte(arg0)
 	else:
-		#print('SIN EXPEDIENTE RELACIONADO')# CONFIRMA SIN RELACION
 		valid_rules.append('Not')
 	#FIN_____________________________________________________________________________________________________________________________ 
 
 	#CONSULTA SI HAY RELACION DE ESCRITO______________________________________________________________________________________________	
 	if esc_relation(arg1)[0] == 'S':
-		#print('CON ESCRITO RELACIONADO')
 		if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
-			#print('relacion de escrito Ok!') # insert
 			valid_rules.append('Ok')
 		else:
-			#print('falta escrito relacionado') # estado 99
+			data_validator(f'El escrito relacionado es requerido, tabla tramites ID: {arg0}')
 			valid_rules.append('Error')
 			cambio_estado_soporte(arg0)
 	else:
-		#print('SIN ESCRITO RELACIONADO')
 		valid_rules.append('Not')
 	#FIN_____________________________________________________________________________________________________________________________
 
 	#CONSULTA SI EL TIPO ES CON PAGO_____________________________________________________________________________________________________
 	if pago == 'S':
-			#print('CON PAGO')
-			if pago_auth != 'sin dato en bancar': # CONFIRMA EL PAGO EN BANCAR
-				#print('Con pago Ok!') # INSERT
+			if pago_auth != 'sin dato en bancar':
 				valid_rules.append('Ok')
 			else:
-				#print(pago_auth) # ESTADO 99
+				data_validator(f'Confirmar relacion con pago (bancard transactions), tabla tramites ID: {arg0}')
 				valid_rules.append('Error')
 				cambio_estado_soporte(arg0)
 	else:
-		#print('SIN PAGO') # INSERT
 		valid_rules.append('Not')
 	#FIN_____________________________________________________________________________________________________________________________	
 
@@ -113,37 +104,34 @@ def insert_list(arg0:string,arg1:string):
 	####################################################################################################################################
 	####################################################################################################################################
 
-	if valid_rules == ['Ok', 'Not', 'Not']: #con exp - sin esc - sin pago
+	if valid_rules == ['Ok', 'Not', 'Not']: 
 		#print('ESCRITO CON RELACION')		
 		compileAndInsert(arg0,arg1)
 		time.sleep(1)
-	elif valid_rules == ['Ok', 'Not', 'Ok']: #con exp - sin esc - con pago
+	elif valid_rules == ['Ok', 'Not', 'Ok']:
 		#print('ESCRITO CON RELACION')		
 		compileAndInsert(arg0,arg1)
 		time.sleep(1)	
-	elif valid_rules == ['Not', 'Ok', 'Not']:#sin exp - con esc - sin pago
+	elif valid_rules == ['Not', 'Ok', 'Not']:
 		#print('ESCRTO A ESCRITO')
 		compileAndInsertUserDocUserDoc(arg0,arg1)
 		time.sleep(1)
-	elif valid_rules == ['Not', 'Ok', 'Ok']:#sin exp - con esc - sin pago
+	elif valid_rules == ['Not', 'Ok', 'Ok']:
 		#print('ESCRTO A ESCRITO')
 		compileAndInsertUserDocUserDocPago(arg0,arg1)
 		time.sleep(1)
-	elif valid_rules == ['Not', 'Not', 'Ok']:#sin exp - sin esc - con pago
+	elif valid_rules == ['Not', 'Not', 'Ok']:
 		#print('ESCRITO SIN RELACION')		
 		compileAndInsert(arg0,arg1)
 		time.sleep(1)
-	elif valid_rules == ['Not', 'Not', 'Not']:#sin exp - sin esc - sin pago
+	elif valid_rules == ['Not', 'Not', 'Not']:
 		#print('ESCRITO SIN RELACION')		
 		compileAndInsert(arg0,arg1)
 		time.sleep(1)
 	else:
 		pass		
 
-	#print(valid_rules)
 
-		
-	
 def compileAndInsert(form_Id,typ):
 		catch_toError(form_Id)
 
@@ -340,7 +328,7 @@ def compileAndInsert(form_Id,typ):
 						insert_doc.representationData_representativeList_representativeType)
 			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
-			print(str(e))
+			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
 		
 		try:
@@ -348,6 +336,7 @@ def compileAndInsert(form_Id,typ):
 			if exists == insert_doc.documentId_docNbr:
 				cambio_estado(form_Id,insert_doc.documentId_docNbr)
 		except Exception as e:
+			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)			
 
 def compileAndInsertUserDocUserDoc(form_Id,typ):	
@@ -391,7 +380,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 						escrito_relacionado.filingData_userdocTypeList_userdocType)
 			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
-			print(str(e))
+			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
 
 		time.sleep(1)
@@ -466,7 +455,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 						escrito_relacionado.representationData_representativeList_representativeType,
 						escrito_relacionado.representationData_representativeList_person_email)
 		except zeep.exceptions.Fault as e:
-			print(str(e))
+			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
 
 		time.sleep(1)
@@ -490,6 +479,9 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 		afferc = str(user_doc_read_min('E',escrito_relacionado.documentId_docNbr,escrito_relacionado.documentId_docOrigin,escrito_relacionado.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 		if afferc == escrito_relacionado.documentId_docNbr:
 			cambio_estado(form_Id,escrito_relacionado.documentId_docNbr)
+		else:
+			data_validator(f'Error al cambiar estado de esc. N° {escrito_relacionado.documentId_docNbr}, tabla tramites ID: {form_Id}')
+			cambio_estado_soporte(form_Id)
 
 		time.sleep(0.5)
 		
@@ -534,7 +526,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 						escrito_escrito_pago.filingData_userdocTypeList_userdocType)
 			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
-			print(str(e))
+			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
 
 		time.sleep(1)
@@ -609,7 +601,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 						escrito_escrito_pago.representationData_representativeList_representativeType,
 						escrito_escrito_pago.representationData_representativeList_person_email)
 		except zeep.exceptions.Fault as e:
-			print(str(e))
+			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)		
 		
 		time.sleep(1)
@@ -632,6 +624,9 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		afferc = str(user_doc_read_min('E',escrito_escrito_pago.documentId_docNbr,escrito_escrito_pago.documentId_docOrigin,escrito_escrito_pago.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 		if afferc == escrito_escrito_pago.documentId_docNbr:
 			cambio_estado(form_Id,escrito_escrito_pago.documentId_docNbr)
+		else:
+			data_validator(f'Error al cambiar estado de esc. N° {escrito_escrito_pago.documentId_docNbr}, tabla tramites ID: {form_Id}')
+			cambio_estado_soporte(form_Id)
 
 def catch_toError(form_Id):
 	getExcept = userDocModel()
@@ -834,7 +829,7 @@ def catch_toError(form_Id):
 
 
 
-#if __name__ == "__main__":
-listar()
+if __name__ == "__main__":
+	listar()
 
 
