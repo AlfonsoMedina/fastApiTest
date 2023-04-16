@@ -164,7 +164,6 @@ def publicarhoy(item:pub_day):
 	return(insertar_edicion(item.fecha,item.edicion))
 
 
-
 @app.post('/api/edicionnumber', tags=[""], summary="#", description="")
 def numberedition():
 	return(edicion_cont())
@@ -175,7 +174,6 @@ def user_admin():
 	return(user_admin_redpi())
 
 
-
 @app.post('/api/ultima_sesion_view', tags=[""], summary="#", description="")
 def ultima_sesion():
 	return(format_fecha_mes_hora())
@@ -184,7 +182,6 @@ def ultima_sesion():
 @app.post('/api/pubhoy', tags=[""], summary="#", description="")
 def pubtoday(item:por_fecha):
 	return previa_edicion(item.fecha)
-
 
 
 @app.post('/api/casificado_pdf', tags=[""], summary="#", description="")
