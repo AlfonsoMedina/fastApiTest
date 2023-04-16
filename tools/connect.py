@@ -2,7 +2,7 @@ from tools.service_system import config_parametro
 
 
 #Base de datos PUBLICACIONES posgresSql v14 
-#db_host = '192.168.50.216'
+#db_host = '192.168.50.215'
 #db_user='user_app_publicacion'
 #db_password='user_app_publicacion-202201!'
 #db_database='db_publicacion'
@@ -34,7 +34,7 @@ databaseME='db_sfe_presencial'
 ###################################################################
 
 #Base de datos MESA DE ENTRADA posgresSql v14
-#hostME = '192.168.50.216'
+#hostME = '192.168.50.215'
 #userME='user_app_recepcion'
 #passwordME='user_app_recepcion-202201!'
 #databaseME='db_sfe_presencial'
@@ -59,7 +59,7 @@ databaseCJ='db_caja_dinapi'
 
 #ipas Beta
 #                                192.168.80.42
-ipas_sprint = config_parametro('49')['valor1']
+ipas_sprint = config_parametro('49')['valor2']
 
 #                                     192.168.50.182
 ipas_produccion_A = config_parametro('50')['valor1']

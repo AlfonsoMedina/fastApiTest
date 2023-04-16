@@ -12,7 +12,7 @@ datos = ""
 def traer_data(exp):
     try:
         conn = psycopg2.connect(
-                                host = '192.168.50.216',
+                                host = '192.168.50.215',
                                 user = 'user_app_publicacion',
                                 password = 'user_app_publicacion-202201!',
                                 database = 'db_publicacion'

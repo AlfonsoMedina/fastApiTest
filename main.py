@@ -2,7 +2,7 @@ from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
 from publicaciones.pub_2023 import convert_fecha_hora, orden_emitida, orden_emitida_exp
-from redpi.Clasificados import consulta_Fop, consulta_caja, consulta_sfe, no_enviado_sfe
+from redpi.Clasificados import consulta_Fop, consulta_caja, consulta_sfe, full_package, no_enviado_sfe
 from wipo.ipas import Insert_Action, fetch_all_do_edoc_nuxeo, fetch_all_officdoc_nuxeo, get_agente, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
@@ -85,5 +85,13 @@ def fop_consulta(item:por_expediente):
 		pass
 	finally:
 		pass
+
+
+@app.post('/api/packageToDay', tags=["Conjunto de datos para llenar vista"], summary="#", description="Lista de pagos de caja y de SFE con su relacion en form_orden_publicacion")
+def packageToDay(fecha):
+	return(full_package(fecha))
+
+
+
 
 app.openapi = custom_openapi
