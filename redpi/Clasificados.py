@@ -85,9 +85,9 @@ def consulta_sfe(fecha):
         pagosSFE = []
         for i in row:
             pag_exp = ""
-
             for x in range(0,len(i[4])):
                 if i[4][x]['campo'] == 'marcaredpi_expediente' and i[4][x]['descripcion'] == 'Buscar Solicitud N°':
+                    pag_exp = str(str(i[4][x]['valor']))
                     Form_order = consulta_Fop_out(str(str(i[4][x]['valor'])))
             temp.append({'respuesta':i[3]})
             fpago = str(i[2]).split('/')
@@ -180,8 +180,6 @@ la fecha a procesar en testing 2022-12-01
 
 """
 
-
-
 #Soporte por fecha
 def consulta_Fop_fecha(facha):
     orden = []
@@ -269,13 +267,6 @@ def consulta_Fop_expediente(exp):
     finally:
         conn.close()
 
-"""
-53 expedientes
-[2292484, 2299422, 2295864, 2299327, 2299423, 2278118, 2259403, 2250102, 2257099, 2257100, 2298437, 2298439, 2298443, 2298856, 2298866, 2298870, 2298872, 2298875, 2298877, 2298879, 
-2298883, 2298886, 2298890, 2298893, 2298895, 2298896, 2298898, 2298900, 2298901, 2298905, 2298908, 2298910, 2298914, 2298916, 2298918, 2298924, 2298931, 2298933, 2292821, 2287664, 2285535, 2290361, 2297869, 2297872, 2297880, 2297881, 2297886, 2297899, 2297903, 2297907, 2297909, 2297912, 2297917]
-"""
-
-
 #Todo el proceso del la fecha en un click por backEnd 
 def sfe_fileNbr(fecha):
     orderNbr = []
@@ -321,9 +312,9 @@ def caja_fileNbr(fecha):
     finally:
         conn.close()
 
+#->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->
 def fileNbr_List(fecha):# Objeto iterador
     return(*sfe_fileNbr(fecha),*caja_fileNbr(fecha))
-
 
 def update_inicio_fin(exp):# UpDate form segun iterador  
         try: 
@@ -554,9 +545,25 @@ def insertar_edicion(fecha,edicion):# inserta la edicion despues de iterar todo 
         print(err)
     return('listo!!')
 
+def insert_only_new_pub(fecha):
+	try:
+		connH = psycopg2.connect(host=db_host,user=db_user,password=db_password,database=db_database)
+		cursor = connH.cursor()
+		cursor.execute("SELECT fecha_publicacion,nexpedientes FROM public.publicaciones_publicaciones where fecha_publicacion = '"+str(fecha)+"'")    
+		row=cursor.fetchall()
+		for i in row:
+			exp_ipas = str(i[1]).replace("[","").replace("]","").split(',')
+			for x in range(len(exp_ipas)):
+				print(Insert_Action_soporte(exp_ipas[x],str(date.today()),'47','Publicacion REDPI','573'))
+		connH.close()
+	except Exception as e:
+		pass
 
-def processToDay(fecha):
+#->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->
+def processToDate(fecha):
+
     print(len(fileNbr_List(fecha)))
+
     for i in fileNbr_List(fecha):
         try:
             if update_inicio_fin(str(i)) == 'ok':
@@ -567,28 +574,12 @@ def processToDay(fecha):
     time.sleep(1) 
 
     masUno = timedelta(1)                 
-    
     insertar_edicion(date.today()+masUno,'77')        
     
     time.sleep(1) 
-
-    #Capturar solo lista  procesada para mandar a ipas                
+                   
+    insert_only_new_pub('1977-09-01')
     
-    """
-    for i in fileNbr_List(fecha):
-        try:
-            Insert_Action_soporte(i,str(date.today()),'47','Publicacion REDPI','573')
-        except Exception as e: 
-            pass
-    """
-
-
-#processToDay('2022-12-01')
-
-insertar_edicion('2023-04-16','77')   
-
-
-
 def insertar_edicion_finde(fecha,edicion):
     lista_exp = []
     lista_id = []
@@ -701,7 +692,7 @@ def previa_edicion(fecha):
             lista_exp.append({"num_orden":i[0],"fecha_solicitud":i[2],"hora_solicitud":i[3],"tipo_solicitud":i[4],"tipo_signo":i[5],"tipo_marca":i[6],"clase":i[7],"denominacion":i[8],"solicitante":i[9],"direccion":i[10],"pais":i[11],"agente":i[12],"descripcion":i[13],"logo":i[14],"expediente":i[15],"nom_agente":i[16],"user_login":i[17],"edicion":i[18],"estado":i[19],"inicio":i[20],"fin":i[21],"fecha_pago":i[22],"fec_reg":i[23],})
         #print(len(lista_exp))
         conn.close()
-        return(jsonify(lista_exp))
+        return(lista_exp)
     except Exception as e:
         print(e)
 
@@ -815,12 +806,7 @@ def migrar_servicios(fecha):
 def insert_dia_proceso(fecha,sfe,caja,reg,ren,total,process):
     try:
             url = "INSERT INTO dia_proceso (fecha_proceso, sfe, caja, reg, ren, total, process) values ('"+fecha+"',"+str(sfe)+","+str(caja)+","+str(reg)+","+str(ren)+","+str(total)+",'"+process+"');"
-            conn = psycopg2.connect(
-                                host = db_host,
-                                user = db_user,
-                                password = db_password,
-                                database = db_database
-                )
+            conn = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
             cursor = conn.cursor()
             cursor.execute(url)
             cursor.rowcount
@@ -832,12 +818,7 @@ def insert_dia_proceso(fecha,sfe,caja,reg,ren,total,process):
 def select_dia_proceso():
     procesado = []
     try:
-        conn = psycopg2.connect(
-                                host = db_host,
-                                user = db_user,
-                                password = db_password,
-                                database = db_database
-        )
+        conn = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
         cursor = conn.cursor()
         cursor.execute("select * from dia_proceso where id = 1")
         row=cursor.fetchall()
@@ -852,12 +833,7 @@ def select_dia_proceso():
 def update_dia_proceso(fecha,sfe,caja,reg,ren,total,process):
     try:
             url = "update dia_proceso set fecha_proceso = '"+fecha+"', sfe = "+sfe+", caja = "+caja+", reg = "+reg+", ren = "+ren+", total = "+total+", process = '"+process+"' where id = 1"
-            conn = psycopg2.connect(
-                                host = db_host,
-                                user = db_user,
-                                password = db_password,
-                                database = db_database
-                )
+            conn = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
             cursor = conn.cursor()
             cursor.execute(url)
             cursor.rowcount
@@ -867,12 +843,7 @@ def update_dia_proceso(fecha,sfe,caja,reg,ren,total,process):
         print(err)
 
 def serv_img(exp):
-    conn = psycopg2.connect(
-                                host = db_host,
-                                user = db_user,
-                                password = db_password,
-                                database = db_database
-                )
+    conn = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
     cursor = conn.cursor()
     cursor.execute("select * from public.new_ordenes_publicaciones where expediente = '"+exp+"'")    
     row=cursor.fetchall()

@@ -160,7 +160,7 @@ def crear_pub(fecha):
                 pdf.add_page()
                 pdf.image("static/g1046.png", 0, 0, 210)
 
-                pdf.output(f"pdf/clasificados_{dia_mas_nom.strip()}.pdf") 
+                pdf.output(f"static/clasificados_{dia_mas_nom.strip()}.pdf") 
 
             except Exception as e:
                 print(e)

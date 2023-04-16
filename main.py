@@ -2,10 +2,14 @@ from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
 from publicaciones.pub_2023 import convert_fecha_hora, orden_emitida, orden_emitida_exp
-from redpi.Clasificados import consulta_Fop, consulta_caja, consulta_sfe, full_package, no_enviado_sfe
-from wipo.ipas import Insert_Action, fetch_all_do_edoc_nuxeo, fetch_all_officdoc_nuxeo, get_agente, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
+from redpi.Clasificados import consulta_Fop, consulta_caja, consulta_sfe, edicion_cont, full_package, insert_dia_proceso, insertar_edicion, no_enviado_sfe, previa_edicion, processToDate, select_dia_proceso, update_dia_proceso, user_admin_redpi
+from tools.data_format import format_fecha_mes_hora
+from wipo.ipas import Insert_Action, fetch_all_do_edoc_nuxeo, fetch_all_officdoc_nuxeo, fetch_all_user_mark, get_agente, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
+from tools.revista import crear_pub
+#from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 
 description = """
@@ -17,6 +21,8 @@ las rutas reciben un objeto **JSON** como parametro y retornar un objeto **JSON*
 """
 
 app = FastAPI()
+
+#app.mount("/static", StaticFiles(directory="static"), name="static")
 
 origins = ["*"]
 
@@ -52,7 +58,19 @@ class por_fecha(BaseModel):
 	fecha:str = ""
 class por_expediente(BaseModel):
 	expediente:str = ""
-
+class process_day(BaseModel):
+	fecha:str = "" 
+	sfe:str = ""
+	caja:str = ""
+	reg:str = ""
+	ren:str = ""
+	total:str = ""
+	process:str = ""
+class pub_day(BaseModel):
+	fecha:str = "" 
+	edicion:str = ""
+class user_mark(BaseModel):
+	login:str = "" 
 @app.post('/api/sfe', tags=["Pagos SFE"], summary="#", description="Pagos desde sfe por fecha")
 def sfe_consulta(item: por_fecha):
 	try:
@@ -91,6 +109,92 @@ def fop_consulta(item:por_expediente):
 def packageToDay(fecha):
 	return(full_package(fecha))
 
+
+@app.post('/api/processToDate', tags=["Procesar fecha"], summary="#", description="consulta pagos, inserta clasificados, actualiza form, inserta en ipas")
+def process_To_Date(fecha):
+	processToDate(fecha)
+	return('end')
+
+
+@app.post('/api/diaproceso_nuevo', tags=["Proceso nuevo"], summary="#", description="")
+def select_back_process():
+	return(select_dia_proceso())
+
+@app.post('/api/diaproceso_nuevo_insert', tags=["dia proceso nuevo insert"], summary="#", description="")
+def insertar_nuevo_proceso(item:process_day):
+	try:
+		insert_dia_proceso(item.fecha,item.sfe,item.caja,item.reg,item.ren,item.total,item.process) 
+		return('ok')
+	except Exception as e:
+		pass
+
+@app.post('/api/updatediaproceso_nuevo', tags=["update dia proceso nuevo"], summary="#", description="")
+def update_nuevo_proceso(item:process_day):
+	try:
+		update_dia_proceso(item.fecha,item.sfe,item.caja,item.reg,item.ren,item.total,item.process) 
+		return('ok')
+	except Exception as e:
+		pass	
+
+
+@app.post('/api/edicionnumber', tags=[""], summary="#", description="")
+def numberedition():
+	return(edicion_cont())
+
+
+@app.post('/api/admin_soporte', tags=[""], summary="#", description="")
+def user_admin():	
+	return(user_admin_redpi())
+
+
+@app.post('/api/user_mark', tags=[""], summary="#", description="")
+def fetchallusermark(item:user_mark):
+	try:	
+		return({
+		"USER_ID":str(fetch_all_user_mark(item.login)[0].sqlColumnList[0].sqlColumnValue),
+		"LOGIN":str(fetch_all_user_mark(item.login)[0].sqlColumnList[1].sqlColumnValue)
+		}
+		)
+	except Exception as e:
+		return({"error":"undefine"})
+
+
+@app.post('/api/publicar', tags=["update dia proceso nuevo"], summary="#", description="")
+def publicarhoy(item:pub_day):
+	return(insertar_edicion(item.fecha,item.edicion))
+
+
+
+@app.post('/api/edicionnumber', tags=[""], summary="#", description="")
+def numberedition():
+	return(edicion_cont())
+
+
+@app.post('/api/admin_soporte', tags=[""], summary="#", description="")
+def user_admin():	
+	return(user_admin_redpi())
+
+
+
+@app.post('/api/ultima_sesion_view', tags=[""], summary="#", description="")
+def ultima_sesion():
+	return(format_fecha_mes_hora())
+
+
+@app.post('/api/pubhoy', tags=[""], summary="#", description="")
+def pubtoday(item:por_fecha):
+	return previa_edicion(item.fecha)
+
+
+
+@app.post('/api/casificado_pdf', tags=[""], summary="#", description="")
+def pub_pdf_revista(fecha):
+	return(crear_pub(fecha))
+
+
+@app.get("/api/pdf_redpi")
+def get_pdf_redpi(fileName):
+	return FileResponse(f'static/clasificados_{fileName}.pdf')
 
 
 
