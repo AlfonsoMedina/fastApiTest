@@ -134,8 +134,6 @@ async def consulta_titularDisenio(item: gettitular):
 	personName = item.nombre					
 	return(personTitularDisenio(str(personName)))
 
-
-
 class process_fecha(BaseModel):
 	fecha_from:str = ""
 	fecha_to:str = ""
@@ -246,8 +244,6 @@ async def procesados_disenios(item: process_fecha):
 	except Exception as e:
 		print(e)	
 	return(resp)
-
-
 
 @app.post('/api/user_doc_patentes', summary="Patentes", tags=["Consulta escritos procesados de patentes por rango de fecha (yy-mm-dd)"])
 async def user_doc_patent(item: process_fecha):
