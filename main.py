@@ -2,7 +2,7 @@ from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
 from publicaciones.pub_2023 import convert_fecha_hora, orden_emitida, orden_emitida_exp
-from redpi.Clasificados import consulta_Fop, consulta_caja, consulta_sfe, edicion_cont, full_package, insert_dia_proceso, insertar_edicion, no_enviado_sfe, previa_edicion, processToDate, select_dia_proceso, update_dia_proceso, user_admin_redpi
+from redpi.Clasificados import consulta_Fop, consulta_Fop_expediente, consulta_Fop_fecha, consulta_caja, consulta_sfe, edicion_cont, existexp, full_package, insert_clasificado, insert_dia_proceso, insert_form_orden_publicacion, insertar_edicion, no_enviado_sfe, previa_edicion, processToDate, select_dia_proceso, update_dia_proceso, update_inicio_fin, update_inicio_fin_soporte, user_admin_redpi
 from tools.data_format import format_fecha_mes_hora
 from wipo.ipas import Insert_Action, fetch_all_do_edoc_nuxeo, fetch_all_officdoc_nuxeo, fetch_all_user_mark, get_agente, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
 from fastapi.middleware.cors import CORSMiddleware
@@ -71,6 +71,12 @@ class pub_day(BaseModel):
 	edicion:str = ""
 class user_mark(BaseModel):
 	login:str = "" 
+class user_exp(BaseModel):
+	exp:str = ""
+	user:str = "" 
+class sop_in(BaseModel):
+	exp:str = ""
+	pago:str = "" 
 @app.post('/api/sfe', tags=["Pagos SFE"], summary="#", description="Pagos desde sfe por fecha")
 def sfe_consulta(item: por_fecha):
 	try:
@@ -173,25 +179,70 @@ def numberedition():
 def user_admin():	
 	return(user_admin_redpi())
 
-
-@app.post('/api/ultima_sesion_view', tags=[""], summary="#", description="")
+@app.post('/api/ultima_sesion_view', tags=["Fecha y hora"], summary="#", description="")
 def ultima_sesion():
 	return(format_fecha_mes_hora())
 
 
-@app.post('/api/pubhoy', tags=[""], summary="#", description="")
+@app.post('/api/pubhoy', tags=["Clasificados por fecha"], summary="#", description="Devuelve una lista de clasificados segun la fecha indicada")
 def pubtoday(item:por_fecha):
 	return previa_edicion(item.fecha)
 
 
-@app.post('/api/casificado_pdf', tags=[""], summary="#", description="")
+@app.post('/api/casificado_pdf', tags=["Crear PDF"], summary="#", description="Crea la revista de clasificados como un archivo PDF")
 def pub_pdf_revista(fecha):
 	return(crear_pub(fecha))
 
 
-@app.get("/api/pdf_redpi")
+@app.get("/api/pdf_redpi", tags=["Consultar PDF"], summary="#", description="Consulta una revista segun su fecha de publicacion")
 def get_pdf_redpi(fileName):
 	return FileResponse(f'static/clasificados_{fileName}.pdf')
+
+
+@app.post('/api/soporteExp', tags=["Consulta expediente"], summary="#", description="")
+def soporte_exp(item:por_expediente):
+	return(consulta_Fop_expediente(item.expediente))
+
+@app.post('/api/soporteFecha', tags=["Consulta por fecha"], summary="#", description="")
+def soporte_fecha(item:por_fecha):
+	return(consulta_Fop_fecha(item.fecha))
+
+@app.post('/api/indetalleclasificado', tags=["Inserta clasificado por soporte"], summary="#", description="")
+def insert_clas(item:user_exp):
+	return(insert_clasificado(item.exp,item.user))	
+
+@app.post('/api/iniciofin', tags=["UpDate form para soporte"], summary="#", description="")
+def update_fop_inicio(item:sop_in):
+	return update_inicio_fin_soporte(item.exp,item.pago)
+
+class insert_ipas(BaseModel):
+	exp:str = ""
+	pago:str = ""
+	userid:str = ""
+	nota:str = ""
+	evento:str = ""
+@app.post('/api/insert_ipas', tags=["Isert IPAS para soporte"], summary="#", description="")
+def insert_redpi(item:insert_ipas):	
+	Insert_Action(item.exp,item.pago,item.userid,item.nota,item.evento)
+	return('573 ok')
+
+@app.post('/api/cargar_nuevo_form_op', tags=["Isert en form_orden_publicacion"], summary="#", description="")
+def nuevo_en_form(item:por_expediente):
+	if str(existexp(item.expediente)) == 'None':
+		insert_form_orden_publicacion(item.expediente)
+		return('true')
+	else:	
+		return('false')
+
+
+
+
+
+
+
+
+
+
 
 
 

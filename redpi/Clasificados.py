@@ -9,7 +9,7 @@ from io import BytesIO
 from flask import jsonify
 import psycopg2
 from datetime import date, timedelta
-from wipo.ipas import Insert_Action_soporte, mark_getlist, mark_read
+from wipo.ipas import Fech_All_Exp, Insert_Action_soporte, mark_getlist, mark_read
 from tools.data_format import Fecha_atras, signo_format
 from datetime import datetime
 from tools.connect import db_host, db_user, db_password, db_database, hostCJ, userCJ, passwordCJ, databaseCJ, host_SFE_conn, user_SFE_conn, password_SFE_conn, database_SFE_conn,host_centura, user_centura, password_centura, database_centura
@@ -259,13 +259,13 @@ def consulta_Fop_expediente(exp):
                         'tip_signo':signo_format(i[7]),
                         'nom_denominacion':i[8],
                         'origen':'Soporte'
-                }) 
-        #print(orden)               
+                })             
         return(orden)
     except Exception as e:
         print(e)
     finally:
         conn.close()
+
 
 #Todo el proceso del la fecha en un click por backEnd 
 def sfe_fileNbr(fecha):
@@ -343,7 +343,35 @@ def update_inicio_fin(exp):# UpDate form segun iterador
             pass
         finally:
             connif.close()
- 
+
+def update_inicio_fin_soporte(exp,pago):# UpDate form segun iterador  
+        try: 
+            today = date.today()#Día actual
+            today_date = date.today()
+            td = timedelta(3)
+            registro = today_date + td
+            td_mañana = timedelta(1) # Fecha mañana inicio 
+            fecha_mañana = today + td_mañana
+            Form_order = consulta_Fop_out(exp)
+            connif = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
+            cursor = connif.cursor()
+
+            if Form_order[0]['fecha_inicio'] == "":
+                if(Form_order[0]['tipo_solicitud'] == 'REG'):
+                    cursor.execute("update public.form_orden_publicacion set fecha_inicio='"+str(fecha_mañana)+"',fecha_fin='"+str(registro)+"',fecha_pago='"+str(pago)+"' where num_acta = '"+str(exp)+"'")
+                else:
+                    cursor.execute("update public.form_orden_publicacion set fecha_inicio='"+str(fecha_mañana)+"',fecha_fin='"+str(fecha_mañana)+"',fecha_pago='"+str(pago)+"' where num_acta = '"+str(exp)+"'")    
+            else:
+                pass
+            cursor.rowcount
+            connif.commit()
+            connif.close()
+            return('ok') 
+        except Exception as e:
+            pass
+        finally:
+            connif.close()
+
 def insert_clasificado(exp,userp):# Inserta la info del clasificado segun iterador
         try:
             todaypub = date.today()#Día actual
@@ -891,6 +919,62 @@ def consulta_sfe_prueba(fecha):
         print(e)
     finally:
         conn.close()
+
+def insert_form_orden_publicacion(exp):
+    try:
+        item = Fech_All_Exp(exp)
+        position = int(len(item))-1
+        todaypub = datetime.now()
+        event_date = str(todaypub).split(' ')
+        des_mov=""
+
+
+        if(item[position].sqlColumnList[13].sqlColumnValue == '549'):
+            des_mov = "Emisión Orden Publicación"
+        if(item[position].sqlColumnList[13].sqlColumnValue == '550'):
+            des_mov = "Informe de renovación"
+        if(item[position].sqlColumnList[13].sqlColumnValue == '560'):
+            des_mov = "Segunda orden de publicacion"
+
+        if(item[position].sqlColumnList[13].sqlColumnValue == '549'):
+            tip_sol = "REG"
+        if(item[position].sqlColumnList[13].sqlColumnValue == '550'):
+            tip_sol = "REN"
+        if(item[position].sqlColumnList[13].sqlColumnValue == '560'):
+            tip_sol = "SOP"
+
+    #insert registro en form_o_p
+    
+        connG = psycopg2.connect(
+                                host = db_host,
+                                user = db_user,
+                                password = db_password,
+                                database = db_database
+                    )
+        cursorG = connG.cursor()
+        cursorG.execute("INSERT INTO public.form_orden_publicacion (num_acta, tip_movimiento, tip_signo, fec_movimiento, tip_solicitud, cod_usuario, estado, tipo, num_agente, des_movimiento, nom_denominacion, nom_agente, fecha_pago, fecha_inicio, fecha_fin, pdf, fecha_reg, proceso_id)VALUES("+str(item[position].sqlColumnList[0].sqlColumnValue)+", '"+str(item[position].sqlColumnList[13].sqlColumnValue)+"', '"+str(item[position].sqlColumnList[4].sqlColumnValue)+"','"+str(item[position].sqlColumnList[12].sqlColumnValue)+"', '"+str(tip_sol)+"', '"+str(item[position].sqlColumnList[17].sqlColumnValue)+"', 'A', 'FOP', "+str(item[position].sqlColumnList[9].sqlColumnValue)+", '"+str(des_mov)+"', '"+str(item[position].sqlColumnList[6].sqlColumnValue).replace("'","\'")+"', '"+str(item[position].sqlColumnList[10].sqlColumnValue)+"', NULL,  NULL, NULL, NULL, '"+str(todaypub)+"', NULL);")    
+        cursorG.rowcount
+        connG.commit()
+        connG.close()
+    except Exception as e:
+        print(e)
+
+def existexp(exp):
+    try:    
+        connA = psycopg2.connect(
+                                host = db_host,
+                                user = db_user,
+                                password = db_password,
+                                database = db_database
+                    )
+        cursorA = connA.cursor()
+        cursorA.execute("SELECT num_acta FROM public.form_orden_publicacion WHERE num_acta = " + str(exp))    
+        row=cursorA.fetchall()
+        for i in row: # capturar datos de registro 
+            return(len(i))
+        connA.close()
+    except Exception as e:
+        print(e)
 
 #print(consulta_sfe_prueba('10/01/2023'))
 

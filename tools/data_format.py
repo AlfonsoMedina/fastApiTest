@@ -175,7 +175,8 @@ def format_fecha_mes_hora():
     obj_dia = str(f_h[0]).split("-")
     format_dia = str(obj_dia[2])+' '+str(meses[int(obj_dia[1])])+' '+str(obj_dia[0])
     obj_hora = (f_h[1]).split(".")
-    return(str(format_dia)+' a las '+str(obj_hora[0]))
+    cadena = f"{format_dia} a las {obj_hora[0]}"
+    return(cadena)
 
 
 
