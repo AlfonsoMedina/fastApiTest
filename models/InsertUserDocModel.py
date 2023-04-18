@@ -324,6 +324,7 @@ class userDocModel(object):
 		self.affectedFileSummaryList_fileSummaryStatus= ""
 		self.applicant_applicantNotes = "Aplicante SPRINT M.E.A."
 		
+		######( expedienteoescrito_denominacion )####### verificar nombre razon social
 
 		if self.exist_split(doc_Id,'datospersonales_direccion') == True:   		
 			try:

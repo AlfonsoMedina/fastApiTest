@@ -15,6 +15,7 @@ from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_ge
 from wipo.ipas import user_doc_afectado, user_doc_receive, user_doc_update
 import zeep
 import asyncio
+import threading
 
 default_val_e99 = lambda arg: arg if arg != "" else "E99"
 list_id = []
@@ -35,7 +36,6 @@ def captura_pendientes():
 				list_id.append(str(i['Id'])+"/"+str(sigla_doc[0]))
 		except Exception as e:
 			pass
-	
 	#print(list_id)
 	if list_id != []:
 		for i in list_id:
@@ -43,7 +43,9 @@ def captura_pendientes():
 			#print('doc pendiente '+str(params[0]))
 			insert_list(str(params[0]),str(params[1]))
 			time.sleep(1)
-		
+
+
+#arg0 id and arg1 sigla in state 7
 def insert_list(arg0:string,arg1:string):
 	
 	pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
@@ -129,7 +131,9 @@ def insert_list(arg0:string,arg1:string):
 		compileAndInsert(arg0,arg1)
 		time.sleep(1)
 	else:
-		pass		
+		pass
+
+	return()		
 
 
 def compileAndInsert(form_Id,typ):
@@ -828,8 +832,48 @@ def catch_toError(form_Id):
 			listar()
 
 
+"""
+def timer(timer_runs):
+    while timer_runs.is_set():
+        captura_pendientes()
+		#print("¡Hola, mundo!")
+        #time.sleep(1)   # 3 segundos.
+timer_runs = threading.Event()
+timer_runs.set()
+t = threading.Thread(target=timer, args=(timer_runs,))
+t.start()
+# Esperar 10 segundos y luego detener el timer.
+time.sleep(30)
+timer_runs.clear()
+print("¡El timer ha sido detenido!")
+"""
 
-if __name__ == "__main__":
-	listar()
+#if __name__ == "__main__":
+	#listar()
 
 
+
+
+
+
+
+
+
+
+"""
+- consulta por paquete 
+- proceso por paquete
+- front refleja proceso de backend
+
+
+- spin para consulta
+		traer de tramies
+- barra para procesamiento
+		insertar los pendientes
+
+
+
+
+
+
+"""

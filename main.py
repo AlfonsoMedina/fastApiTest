@@ -2,6 +2,7 @@ from time import sleep
 from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
+from auto_process import insert_list
 from dinapi.sfe import count_pendiente, format_userdoc, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, tip_doc
 from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
@@ -114,8 +115,6 @@ async def consulta_agente_Disenio(item: agent_code):
 					"zipCode":personAgenteDisenio(item.code)[0].zipCode})
 	#print(data)
 	return(data)
-
-
 
 class gettitular(BaseModel):
 	nombre:str = ""
@@ -310,7 +309,6 @@ async def disenio_for_fileNBR(item: for_exp):
 					})
 	except Exception as e:
 		return([])
-
 
 ################################# Insert ################################################################## 
 class userdoc_insert_OPO(BaseModel):
@@ -2100,6 +2098,19 @@ class pendientes(BaseModel):
 def pendientes_sfe_m(item:pendientes):
 	return(pendientes_sfe(item.fecha,item.ver,item.pag))
 
+class pendientes_full(BaseModel):
+	fecha:str
+@app.post('/api/pendientes_sfe_full', summary="API", tags=["Lista de pendientes para spi  args( Id - tipo_documento_id )"])
+def pendientes_sfe_notPag(item:pendientes_full):
+	return(pendientes_sfe_not_pag(item.fecha))
+
+class insert_n_doc(BaseModel):
+	arg0:str = ""
+	arg1:str = ""
+@app.post('/sfe/insert_new_doc', summary="API", tags=["inserta documentos, testigo visual progressBar "])
+def auto_insert_mea(item:insert_n_doc):
+	return insert_list(item.arg0,item.arg1)
+
 class pendientes_fecha(BaseModel):
 	fecha:str              
 @app.post('/api/pendientes_sfe_sop', summary="API", tags=["Lista de pendientes para soporte"])
@@ -2129,5 +2140,4 @@ def re_load():
 	return(True)
 
 app.openapi = custom_openapi
-
 
