@@ -1,6 +1,8 @@
+
 from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
+from login.LogIn import authentication, new_password
 from publicaciones.pub_2023 import convert_fecha_hora, orden_emitida, orden_emitida_exp
 from redpi.Clasificados import consulta_Fop, consulta_Fop_expediente, consulta_Fop_fecha, consulta_caja, consulta_sfe, edicion_cont, existexp, full_package, insert_clasificado, insert_dia_proceso, insert_form_orden_publicacion, insertar_edicion, no_enviado_sfe, previa_edicion, processToDate, select_dia_proceso, update_dia_proceso, update_inicio_fin, update_inicio_fin_soporte, user_admin_redpi
 from tools.data_format import format_fecha_mes_hora
@@ -77,6 +79,13 @@ class user_exp(BaseModel):
 class sop_in(BaseModel):
 	exp:str = ""
 	pago:str = "" 
+class user_pwr(BaseModel):
+	user:str = ""
+	pwr:str = ""
+class user_pwr_new(BaseModel):
+	user:str = ""
+	npass:str = ""
+	vnpass:str = ""
 @app.post('/api/sfe', tags=["Pagos SFE"], summary="#", description="Pagos desde sfe por fecha")
 def sfe_consulta(item: por_fecha):
 	try:
@@ -235,11 +244,24 @@ def nuevo_en_form(item:por_expediente):
 		return('false')
 
 
+@app.post('/api/edicionnumber', tags=["Consulta edicion"], summary="#", description="")
+def numberedition():
+	return(edicion_cont())
 
 
+@app.post('/api/admin_soporte', tags=["User soporte"], summary="#", description="")
+def user_admin():
+	return(user_admin_redpi())
 
 
+@app.post('/api/autentication', tags=["Auth"], summary="#", description="")
+def auth(item:user_pwr):
+	return(authentication(item.user,item.pwr))
 
+
+@app.post('/api/change_autentication', tags=["change_autentication"], summary="#", description="")
+def change_auth(item:user_pwr_new):
+	return(new_password(item.user,item.npass,item.vnpass))
 
 
 

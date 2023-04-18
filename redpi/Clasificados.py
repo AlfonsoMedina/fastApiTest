@@ -3,7 +3,6 @@ from base64 import encode
 import base64
 from time import sleep
 import time
-from tkinter.tix import Form
 from zeep import Client
 from io import BytesIO
 from flask import jsonify
