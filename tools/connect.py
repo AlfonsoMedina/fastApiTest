@@ -47,7 +47,7 @@ databaseME='db_sfe_presencial'
 
 ###################################################################
 #Base de datos CAJA posgresSql v14 
-hostCJ = '192.168.50.215'
+hostCJ = '192.168.50.216'
 userCJ='user_app_caja'
 passwordCJ='user_app_caja-202201!'
 databaseCJ='db_caja_dinapi'
@@ -55,7 +55,7 @@ databaseCJ='db_caja_dinapi'
 ###################################################################
 #ipas Beta
 #                                192.168.80.42
-ipas_sprint = config_parametro('49')['valor1']
+ipas_sprint = config_parametro('49')['valor2']
 
 #                                     192.168.50.182
 ipas_produccion_A = config_parametro('50')['valor1']

@@ -264,8 +264,4 @@ def change_auth(item:user_pwr_new):
 	return(new_password(item.user,item.npass,item.vnpass))
 
 
-
-
-
-
 app.openapi = custom_openapi
