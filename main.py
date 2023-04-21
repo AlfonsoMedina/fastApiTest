@@ -3,6 +3,7 @@ from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
 from auto_process import insert_list
+from tools.connect import MEA_TIEMPO_ACTUALIZACION
 from dinapi.sfe import count_pendiente, format_userdoc, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, tip_doc
 from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
@@ -2058,6 +2059,10 @@ def TEST_MEA(id_tramite):
 	create_userdoc['representationData_representativeList_representativeType'] = catch_data.representationData_representativeList_representativeType 
 	return(create_userdoc)
 	#return(format_userdoc(id_tramite))
+
+@app.post('/sfe/getTime', summary="MEA", tags=["Tiempo de busqueda para capturar pendientes en tabla tramites en segundos"])
+def get_time():
+	return(int(MEA_TIEMPO_ACTUALIZACION))
 
 @app.post('/api/getparametros', summary="API", tags=["Lista de parametros"])
 def get_params():

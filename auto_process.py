@@ -51,16 +51,17 @@ def insert_list(arg0:string,arg1:string):
 	pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
 	pago_auth:str = str(pago_id(arg0)).replace("None","sin dato en bancar")
 	valid_rules:str = []
-	print(' ')
-	print(arg0) #tramite ID	
-	print(str(arg1)) #TIPO DE DOCUMENTO
+	#print(' ')
+	#print(arg0) #tramite ID	
+	#print(str(arg1)) #TIPO DE DOCUMENTO
 
 	#////////////////////////////////////////||||||||||||||||||||||||||||||||||||||||///////////////////////////////////////#
 	exceptions = userDocModel()
 	if exceptions.exist_split(arg0,'observacion_documentos') == False:
 		data_validator(f'No existe documento adjunto, tabla tramites ID: {arg0}')
 		cambio_estado_soporte(arg0)
-		listar()
+		#listar()
+		return("E99")
 
 	getFile(arg0,str(int(process_day_Nbr())+1))
 		
@@ -133,7 +134,7 @@ def insert_list(arg0:string,arg1:string):
 	else:
 		pass
 
-	return()		
+	return("Ok")		
 
 
 def compileAndInsert(form_Id,typ):
@@ -829,7 +830,8 @@ def catch_toError(form_Id):
 		if data_list[i] == "E99":
 			data_validator(f'dato requerido posicion: {i}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
-			listar()
+			return("E99")
+			#listar()
 
 
 """
