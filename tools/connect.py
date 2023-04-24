@@ -220,10 +220,12 @@ prod_database='MARCAS_PY
 
 ###################################################################
 
+'''
 prod_server='192.168.50.195' 
 prod_user='ADMIN' 
 prod_password='ipas4PY$' 
-prod_database='MARCAS_PY'
+prod_database='MARCAS_PY
+'''
 
 
 
