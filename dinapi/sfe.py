@@ -861,7 +861,7 @@ def tip_doc():
 		tipo_form = []
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""select nombre  from tipos_documento  where formulario_id  in  ({})""".format(connex.MEA_SFE_FORMULARIOS_ID_tipo))
+		cursor.execute("""select siglas  from tipos_documento  where formulario_id  in  ({})""".format(connex.MEA_SFE_FORMULARIOS_ID_tipo))
 		row=cursor.fetchall()
 		for i in row:
 			tipo_form.append(i)
@@ -876,7 +876,7 @@ def reglas_me():
 		reglas = []
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""select tipo_doc,ma,pa,di,ig,rq_cb,rq_pago,ttasa,exp_ri,esc_ri,rq_sol,rq_ag,estado from reglas_me where tipo_doc in ({})""".format(str(tip_doc()).replace("[","").replace("]","").replace("(","").replace(",)","")))
+		cursor.execute("""select tipo_doc,ma,pa,di,ig,rq_cb,rq_pago,ttasa,exp_ri,esc_ri,rq_sol,rq_ag,estado from reglas_me where tipo_escrito in ({})""".format(str(tip_doc()).replace("[","").replace("]","").replace("(","").replace(",)","")))
 		row=cursor.fetchall()
 		for i in row:
 			reglas.append(i)
