@@ -47,14 +47,9 @@ def captura_pendientes():
 
 #arg0 id and arg1 sigla in state 7
 def insert_list(arg0:string,arg1:string):
-	
 	pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
 	pago_auth:str = str(pago_id(arg0)).replace("None","sin dato en bancar")
 	valid_rules:str = []
-	#print(' ')
-	#print(arg0) #tramite ID	
-	#print(str(arg1)) #TIPO DE DOCUMENTO
-
 	#////////////////////////////////////////||||||||||||||||||||||||||||||||||||||||///////////////////////////////////////#
 	exceptions = userDocModel()
 	if exceptions.exist_split(arg0,'observacion_documentos') == False:
@@ -63,8 +58,7 @@ def insert_list(arg0:string,arg1:string):
 		#listar()
 		return("E99")
 
-	getFile(arg0,str(int(process_day_Nbr())+1))
-		
+	getFile(arg0,str(int(process_day_Nbr())+1))	
 	#CONSULTA SI HAY RELACION DE EXPEDIENTE__________________________________________________________________________________________ 
 	if exp_relation(arg1)[0] == 'S': 
 		if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
@@ -135,6 +129,10 @@ def insert_list(arg0:string,arg1:string):
 		pass
 
 	return("Ok")		
+
+
+
+
 
 def compileAndInsert(form_Id,typ):
 		catch_toError(form_Id)
@@ -464,20 +462,26 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 
 		time.sleep(1)
 		
+		"""	
 		afferc = user_doc_read_min(escrito_relacionado.affected_doc_Log,escrito_relacionado.affected_doc_docNbr,escrito_relacionado.affected_doc_docOrigin,escrito_relacionado.affected_doc_docSeries)
-		if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
-			user_doc_afectado(
-								escrito_relacionado.documentId_docLog,
-								escrito_relacionado.documentId_docNbr,
-								escrito_relacionado.documentId_docOrigin,
-								escrito_relacionado.documentId_docSeries,
-								afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
-								afferc['affectedFileIdList'][0]['fileSeq'],
-								afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
-								afferc['affectedFileIdList'][0]['fileType'])
-		else:
-			pass
-
+		print(afferc)
+		try:
+			if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
+				user_doc_afectado(
+									escrito_relacionado.documentId_docLog,
+									escrito_relacionado.documentId_docNbr,
+									escrito_relacionado.documentId_docOrigin,
+									escrito_relacionado.documentId_docSeries,
+									afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
+									afferc['affectedFileIdList'][0]['fileSeq'],
+									afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
+									afferc['affectedFileIdList'][0]['fileType'])
+			else:
+				pass
+		except Exception as e:
+				data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}')
+				cambio_estado_soporte(form_Id)
+		"""		
 		time.sleep(1)
 		
 		afferc = str(user_doc_read_min('E',escrito_relacionado.documentId_docNbr,escrito_relacionado.documentId_docOrigin,escrito_relacionado.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
@@ -611,18 +615,21 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		time.sleep(1)
 		
 		afferc = user_doc_read_min('E',escrito_escrito_pago.affected_doc_docNbr,escrito_escrito_pago.affected_doc_docOrigin,escrito_escrito_pago.affected_doc_docSeries)
-		if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
-			user_doc_afectado(escrito_escrito_pago.documentId_docLog,
-								escrito_escrito_pago.documentId_docNbr,
-								escrito_escrito_pago.documentId_docOrigin,
-								escrito_escrito_pago.documentId_docSeries,
-								afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
-								afferc['affectedFileIdList'][0]['fileSeq'],
-								afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
-								afferc['affectedFileIdList'][0]['fileType'])
-		else:
-			pass
-		
+		try:
+			if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
+				user_doc_afectado(escrito_escrito_pago.documentId_docLog,
+									escrito_escrito_pago.documentId_docNbr,
+									escrito_escrito_pago.documentId_docOrigin,
+									escrito_escrito_pago.documentId_docSeries,
+									afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
+									afferc['affectedFileIdList'][0]['fileSeq'],
+									afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
+									afferc['affectedFileIdList'][0]['fileType'])
+			else:
+				pass
+		except Exception as e:
+				data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}')
+				cambio_estado_soporte(form_Id)
 		time.sleep(1)
 		
 		afferc = str(user_doc_read_min('E',escrito_escrito_pago.documentId_docNbr,escrito_escrito_pago.documentId_docOrigin,escrito_escrito_pago.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 

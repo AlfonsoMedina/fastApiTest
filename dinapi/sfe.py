@@ -27,6 +27,7 @@ def registro_sfe(arg):
 						where t.id = {};""".format(int(arg)))
 		row=cursor.fetchall()
 		global_data['fecha_envio'] = str(row[0][17])
+		global_data['form_id'] = str(row[0][2])
 		global_data['expediente'] = str(row[0][15])
 		global_data['fecha_solicitud'] = str(row[0][18])
 		global_data['codigo_barr'] = str(row[0][12])
