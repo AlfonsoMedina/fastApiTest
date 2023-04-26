@@ -39,14 +39,16 @@ def registro_sfe(arg):
 		global_data['nombre_formulario'] = str(row[0][3])
 		global_data['pais_agente'] = "PY"
 		for i in row[0][8]:
+
 			if(i['descripcion'] == "Clase" and i['campo'] == 'marca_clase'):
 				clase_tipo = i['valor']
 				if(int(clase_tipo.replace(".0","")) <= 34):
 					#print('PRODUCTO')
-					global_data['clasificacion']= 'PRODUCTO'
+					global_data['clasificacion']= 'PRODUCTOS'
 				if(int(clase_tipo.replace(".0","")) >= 35):
 					#print('SERVICIOS')
 					global_data['clasificacion']= 'SERVICIOS'
+
 			try:
 				if(i['campo'] == "marca_distintivo"):
 					global_data['distintivo'] = i['valor']['archivo']['url']
@@ -168,6 +170,7 @@ def registro_sfe(arg):
 		print(e)
 	finally:
 		conn.close()
+
 
 def renovacion_sfe(arg):
 	try:

@@ -830,42 +830,4 @@ def catch_toError(form_Id):
 			data_validator(f'dato requerido: {E99_code[i]}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
 			return("E99")
-			#listar()
 
-
-"""
-def timer(timer_runs):
-    while timer_runs.is_set():
-        captura_pendientes()
-		#print("¡Hola, mundo!")
-        #time.sleep(1)   # 3 segundos.
-timer_runs = threading.Event()
-timer_runs.set()
-t = threading.Thread(target=timer, args=(timer_runs,))
-t.start()
-# Esperar 10 segundos y luego detener el timer.
-time.sleep(30)
-timer_runs.clear()
-print("¡El timer ha sido detenido!")
-"""
-
-#if __name__ == "__main__":
-	#listar()
-
-"""
-- consulta por paquete 
-- proceso por paquete
-- front refleja proceso de backend
-
-
-- spin para consulta
-		traer de tramies
-- barra para procesamiento
-		insertar los pendientes
-
-
-
-
-
-
-"""

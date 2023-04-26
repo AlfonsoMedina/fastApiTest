@@ -3,6 +3,7 @@ from urllib import request
 from fastapi import FastAPI
 from pydantic import BaseModel
 from auto_process import insert_list
+from models.insertRegModel import insertRegModel
 from tools.connect import MEA_TIEMPO_ACTUALIZACION
 from dinapi.sfe import count_pendiente, format_userdoc, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, tip_doc
 from models.InsertUserDocModel import userDocModel
@@ -2059,6 +2060,50 @@ def TEST_MEA(id_tramite):
 	create_userdoc['representationData_representativeList_representativeType'] = catch_data.representationData_representativeList_representativeType 
 	return(create_userdoc)
 	#return(format_userdoc(id_tramite))
+
+@app.post('/sis/test_insert_reg', summary="MEA", tags=["test insert reg"])
+def test_insert_reg(id_tramite):
+	dataReg = {}
+	catch_data = insertRegModel()
+	catch_data.setData(id_tramite)
+	dataReg['file_fileId_fileNbr'] = catch_data.file_fileId_fileNbr
+	dataReg['file_fileId_fileSeq'] = catch_data.file_fileId_fileSeq
+	dataReg['file_fileId_fileSeries'] = catch_data.file_fileId_fileSeries
+	dataReg['file_fileId_fileType'] = catch_data.file_fileId_fileType
+	dataReg['file_filingData_applicationSubtype'] = catch_data.file_filingData_applicationSubtype
+	dataReg['file_filingData_applicationType'] = catch_data.file_filingData_applicationType
+	dataReg['file_filingData_captureUserId'] = catch_data.file_filingData_captureUserId
+	dataReg['file_filingData_filingDate'] = catch_data.file_filingData_filingDate
+	dataReg['file_filingData_captureDate'] = catch_data.file_filingData_captureDate
+	dataReg['file_filingData_lawCode'] = catch_data.file_filingData_lawCode
+	dataReg['file_filingData_paymentList_currencyType'] = catch_data.file_filingData_paymentList_currencyType
+	dataReg['file_filingData_paymentList_receiptAmount'] = catch_data.file_filingData_paymentList_receiptAmount
+	dataReg['file_filingData_paymentList_receiptDate'] = catch_data.file_filingData_paymentList_receiptDate
+	dataReg['file_filingData_paymentList_receiptNbr'] = catch_data.file_filingData_paymentList_receiptNbr
+	dataReg['file_filingData_paymentList_receiptNotes'] = catch_data.file_filingData_paymentList_receiptNotes
+	dataReg['file_filingData_paymentList_receiptType'] = catch_data.file_filingData_paymentList_receiptType
+	dataReg['file_filingData_receptionUserId'] = catch_data.file_filingData_receptionUserId
+	dataReg['file_ownershipData_ownerList_person_addressStreet'] = catch_data.file_ownershipData_ownerList_person_addressStreet
+	dataReg['file_ownershipData_ownerList_person_nationalityCountryCode'] = catch_data.file_ownershipData_ownerList_person_nationalityCountryCode
+	dataReg['file_ownershipData_ownerList_person_personName'] = catch_data.file_ownershipData_ownerList_person_personName
+	dataReg['file_ownershipData_ownerList_person_residenceCountryCode'] = catch_data.file_ownershipData_ownerList_person_residenceCountryCode
+	dataReg['file_rowVersion'] = catch_data.file_rowVersion
+	dataReg['agentCode'] = catch_data.agentCode
+	dataReg['file_representationData_representativeList_representativeType'] = catch_data.file_representationData_representativeList_representativeType
+	dataReg['rowVersion'] = catch_data.rowVersion
+	dataReg['protectionData_dummy'] = catch_data.protectionData_dummy
+	dataReg['protectionData_niceClassList_niceClassDescription'] = catch_data.protectionData_niceClassList_niceClassDescription
+	dataReg['protectionData_niceClassList_niceClassDetailedStatus'] = catch_data.protectionData_niceClassList_niceClassDetailedStatus
+	dataReg['protectionData_niceClassList_niceClassEdition'] = catch_data.protectionData_niceClassList_niceClassEdition
+	dataReg['protectionData_niceClassList_niceClassGlobalStatus'] = catch_data.protectionData_niceClassList_niceClassGlobalStatus
+	dataReg['protectionData_niceClassList_niceClassNbr'] = catch_data.protectionData_niceClassList_niceClassNbr
+	dataReg['protectionData_niceClassList_niceClassVersion'] = catch_data.protectionData_niceClassList_niceClassVersion
+	dataReg['logoData'] = catch_data.logoData
+	dataReg['logoType'] = catch_data.logoType
+	dataReg['signData_markName'] = catch_data.signData_markName
+	dataReg['signData_signType'] = catch_data.signData_signType
+	return(dataReg)
+	
 
 @app.post('/sfe/getTime', summary="MEA", tags=["Tiempo de busqueda para capturar pendientes en tabla tramites en segundos"])
 def get_time():
