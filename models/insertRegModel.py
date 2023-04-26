@@ -62,9 +62,6 @@ class insertRegModel(object):
 		return(exists)
 
 
-	#Adjunto requerido 
-	
-	#actualizacion de front durante proceso
 
 	def setData(self,doc_Id):
 		ruc_Typ:str = ''
@@ -162,7 +159,6 @@ class insertRegModel(object):
 			desc_serv = 'MP'
 		if data['clasificacion'] == 'SERVICIOS':
 			desc_serv = 'MS'			
-
 
 		self.file_fileId_fileNbr = str(int(process_day_Nbr())+1)
 		self.file_fileId_fileSeq = "PY"

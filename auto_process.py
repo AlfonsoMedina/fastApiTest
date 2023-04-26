@@ -9,10 +9,11 @@ from unicodedata import numeric
 from models.InsertUserDocModel import userDocModel
 from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, tasa_id
 from getFileDoc import getFile
+from models.insertRegModel import insertRegModel
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito, user_doc_read_min
-from wipo.ipas import user_doc_afectado, user_doc_receive, user_doc_update
+from wipo.ipas import mark_insert_reg, user_doc_afectado, user_doc_receive, user_doc_update
 import zeep
 import asyncio
 import threading
@@ -630,6 +631,50 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		else:
 			data_validator(f'Error al cambiar estado de esc. N° {escrito_escrito_pago.documentId_docNbr}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
+
+def compileAndInsertReg(form_Id):
+	data_reg = insertRegModel()
+	data_reg.setData(form_Id)
+	try:
+		mark_insert_reg(data_reg.file_fileId_fileNbr,
+					data_reg.file_fileId_fileSeq,
+					data_reg.file_fileId_fileSeries,
+					data_reg.file_fileId_fileType,
+					data_reg.file_filingData_applicationSubtype,
+					data_reg.file_filingData_applicationType,
+					data_reg.file_filingData_captureUserId,
+					data_reg.file_filingData_filingDate,
+					data_reg.file_filingData_captureDate,
+					data_reg.file_filingData_lawCode,
+					data_reg.file_filingData_paymentList_currencyType,
+					data_reg.file_filingData_paymentList_receiptAmount,
+					data_reg.file_filingData_paymentList_receiptDate,
+					data_reg.file_filingData_paymentList_receiptNbr,
+					data_reg.file_filingData_paymentList_receiptNotes,
+					data_reg.file_filingData_paymentList_receiptType,
+					data_reg.file_filingData_receptionUserId,
+					data_reg.file_ownershipData_ownerList_person_addressStreet,
+					data_reg.file_ownershipData_ownerList_person_nationalityCountryCode,
+					data_reg.file_ownershipData_ownerList_person_personName,
+					data_reg.file_ownershipData_ownerList_person_residenceCountryCode,
+					data_reg.file_rowVersion,
+					data_reg.agentCode,
+					data_reg.file_representationData_representativeList_representativeType,
+					data_reg.rowVersion,
+					data_reg.protectionData_dummy,
+					data_reg.protectionData_niceClassList_niceClassDescription,
+					data_reg.protectionData_niceClassList_niceClassDetailedStatus,
+					data_reg.protectionData_niceClassList_niceClassEdition,
+					data_reg.protectionData_niceClassList_niceClassGlobalStatus,
+					data_reg.protectionData_niceClassList_niceClassNbr,
+					data_reg.protectionData_niceClassList_niceClassVersion,
+					data_reg.logoData,
+					data_reg.logoType,
+					data_reg.signData_markName,
+					data_reg.signData_signType)
+	except zeep.exceptions.Fault as e:
+		return(str(e))
+	process_day_commit_Nbr()
 
 def catch_toError(form_Id):
 	getExcept = userDocModel()
