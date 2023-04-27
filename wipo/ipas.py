@@ -108,7 +108,6 @@ def mark_getlistFecha(filingDateFrom, filingDateTo):
 # Envio => POST = {"arg0": {"fileNbr":  "2017020","fileSeq": "PY","fileSeries": "2020","fileType": "M"},"arg1": "","arg2": ""}
 def mark_read(fileNbr, fileSeq, fileSeries, fileType):
 	MarkRead = {'arg0': {'fileNbr': {'doubleValue': fileNbr,},'fileSeq': fileSeq,'fileSeries': {'doubleValue': fileSeries, },'fileType': fileType, }, 'arg1':'?', 'arg2':'?',	}
-	#print(clientMark.service.MarkRead(**MarkRead))
 	return clientMark.service.MarkRead(**MarkRead)
 
 # Envio => POST = {"arg0": {"fileNbr":  "2017020","fileSeq": "PY","fileSeries": "2020","fileType": "M"},"arg1": "","arg2": ""}
