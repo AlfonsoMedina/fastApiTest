@@ -19,6 +19,7 @@ import asyncio
 import threading
 
 default_val_e99 = lambda arg: arg if arg != "" else "E99"
+
 list_id = []
 sigla:string = ''
 def listar():
@@ -44,6 +45,7 @@ def captura_pendientes():
 			#print('doc pendiente '+str(params[0]))
 			insert_list(str(params[0]),str(params[1]))
 			time.sleep(1)
+"""////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////"""
 
 #arg0 id and arg1 sigla in state 7
 def insert_list(arg0:string,arg1:string):
@@ -57,6 +59,7 @@ def insert_list(arg0:string,arg1:string):
 		cambio_estado_soporte(arg0)
 		#listar()
 		return("E99")
+	#////////////////////////////////////////||||||||||||||||||||||||||||||||||||||||///////////////////////////////////////#
 
 	getFile(arg0,str(int(process_day_Nbr())+1))	
 	#CONSULTA SI HAY RELACION DE EXPEDIENTE__________________________________________________________________________________________ 
@@ -102,19 +105,15 @@ def insert_list(arg0:string,arg1:string):
 	####################################################################################################################################
 
 	if valid_rules == ['Ok', 'Not', 'Not']: 
-		#print('ESCRITO CON RELACION')		
 		compileAndInsert(arg0,arg1)
 		time.sleep(1)
 	elif valid_rules == ['Ok', 'Not', 'Ok']:
-		#print('ESCRITO CON RELACION')		
 		compileAndInsert(arg0,arg1)
 		time.sleep(1)	
 	elif valid_rules == ['Not', 'Ok', 'Not']:
-		#print('ESCRTO A ESCRITO')
 		compileAndInsertUserDocUserDoc(arg0,arg1)
 		time.sleep(1)
 	elif valid_rules == ['Not', 'Ok', 'Ok']:
-		#print('ESCRTO A ESCRITO')
 		compileAndInsertUserDocUserDocPago(arg0,arg1)
 		time.sleep(1)
 	elif valid_rules == ['Not', 'Not', 'Ok']:
@@ -135,11 +134,9 @@ def insert_list(arg0:string,arg1:string):
 
 
 def compileAndInsert(form_Id,typ):
-		catch_toError(form_Id)
-
+	if	catch_toError(form_Id) != "E99":
 		insert_doc = userDocModel()
 		insert_doc.setData(form_Id)
-		
 		try:
 			insert_user_doc_escritos(
 						insert_doc.affectedFileIdList_fileNbr,
@@ -342,162 +339,161 @@ def compileAndInsert(form_Id,typ):
 			cambio_estado_soporte(form_Id)			
 
 def compileAndInsertUserDocUserDoc(form_Id,typ):	
-		catch_toError(form_Id)
-		escrito_relacionado = userDocModel()
-		escrito_relacionado.setData(form_Id)
+		if	catch_toError(form_Id) != "E99":
+			escrito_relacionado = userDocModel()
+			escrito_relacionado.setData(form_Id)
 
-		try:
-			user_doc_receive(
-						"1",
-						escrito_relacionado.filingData_userdocTypeList_userdocType,
-						"true",
-						"",
-						"",
-						"",
-						"",
-						"",
-						"",
-						"",
-						str(captureDate.capture_day()),
-						"",
-						"",
-						"",
-						"",
-						"",
-						escrito_relacionado.filingData_captureUserId,#item['filingData_captureUserId']
-						"SFE test - Aplicante M.E.A",
-						escrito_relacionado.affected_doc_Log,
-						escrito_relacionado.affected_doc_docNbr,
-						escrito_relacionado.affected_doc_docOrigin, 
-						escrito_relacionado.affected_doc_docSeries,
-						"",
-						"",
-						"",
-						"",
-						"",
-						escrito_relacionado.documentId_docLog,
-						escrito_relacionado.documentId_docNbr,
-						escrito_relacionado.documentId_docOrigin,
-						escrito_relacionado.documentId_docSeries,
-						escrito_relacionado.filingData_userdocTypeList_userdocType)
-			process_day_commit_Nbr()
-		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}')
-			cambio_estado_soporte(form_Id)
-
-		time.sleep(1)
-	
-		sigla_desc = str(escrito_relacionado.filingData_userdocTypeList_userdocName).split("- ")
-
-		try:
-			user_doc_update(
-						escrito_relacionado.affected_doc_Log,
-						escrito_relacionado.affected_doc_docNbr,
-						escrito_relacionado.affected_doc_docOrigin, 
-						escrito_relacionado.affected_doc_docSeries,
-						escrito_relacionado.applicant_applicantNotes,
-						escrito_relacionado.applicant_person_addressStreet,
-						escrito_relacionado.applicant_person_cityName,
-						escrito_relacionado.applicant_person_email,
-						escrito_relacionado.applicant_person_nationalityCountryCode,
-						escrito_relacionado.applicant_person_personName,
-						escrito_relacionado.applicant_person_residenceCountryCode,
-						escrito_relacionado.applicant_person_telephone,
-						escrito_relacionado.applicant_person_zipCode,
-						escrito_relacionado.documentId_docLog,
-						escrito_relacionado.documentId_docNbr,
-						escrito_relacionado.documentId_docOrigin,
-						escrito_relacionado.documentId_docSeries,
-						escrito_relacionado.documentSeqId_docSeqNbr,
-						escrito_relacionado.documentSeqId_docSeqSeries,
-						escrito_relacionado.documentSeqId_docSeqType,
-						escrito_relacionado.filingData_captureDate,
-						escrito_relacionado.filingData_captureUserId,
-						escrito_relacionado.filingData_filingDate,
-						escrito_relacionado.filingData_receptionDate,
-						escrito_relacionado.filingData_paymentList_currencyName,
-						escrito_relacionado.filingData_paymentList_currencyType,
-						escrito_relacionado.filingData_paymentList_receiptAmount,
-						escrito_relacionado.filingData_paymentList_receiptDate,
-						escrito_relacionado.filingData_paymentList_receiptNbr,
-						escrito_relacionado.filingData_paymentList_receiptNotes,
-						escrito_relacionado.filingData_paymentList_receiptType,
-						escrito_relacionado.filingData_paymentList_receiptTypeName,		
-						escrito_relacionado.filingData_documentId_receptionDocument_docNbr,
-						escrito_relacionado.filingData_documentId_receptionDocument_docOrigin,
-						escrito_relacionado.filingData_documentId_receptionDocument_docSeries,
-						sigla_desc[1],
-						escrito_relacionado.filingData_userdocTypeList_userdocType,					
-						"1",
-						escrito_relacionado.newOwnershipData_ownerList_ownershipNotes,
-						escrito_relacionado.newOwnershipData_ownerList_person_addressStreet,
-						escrito_relacionado.newOwnershipData_ownerList_person_cityName,
-						escrito_relacionado.newOwnershipData_ownerList_person_email,
-						escrito_relacionado.newOwnershipData_ownerList_person_nationalityCountryCode,
-						escrito_relacionado.newOwnershipData_ownerList_person_personName,
-						escrito_relacionado.newOwnershipData_ownerList_person_residenceCountryCode,
-						escrito_relacionado.newOwnershipData_ownerList_person_telephone,
-						escrito_relacionado.newOwnershipData_ownerList_person_zipCode,
-						escrito_relacionado.notes,
-						escrito_relacionado.representationData_representativeList_person_addressStreet,
-						escrito_relacionado.representationData_representativeList_person_addressZone,
-						escrito_relacionado.representationData_representativeList_person_agentCode,
-						escrito_relacionado.representationData_representativeList_person_cityName,
-						escrito_relacionado.representationData_representativeList_person_individualIdNbr,
-						escrito_relacionado.representationData_representativeList_person_individualIdType,
-						escrito_relacionado.representationData_representativeList_person_legalIdNbr,
-						escrito_relacionado.representationData_representativeList_person_legalIdType,
-						escrito_relacionado.representationData_representativeList_person_legalNature,					
-						escrito_relacionado.representationData_representativeList_person_nationalityCountryCode,
-						escrito_relacionado.representationData_representativeList_person_personName,
-						escrito_relacionado.representationData_representativeList_person_personNameInOtherLang,
-						escrito_relacionado.representationData_representativeList_person_residenceCountryCode,
-						escrito_relacionado.representationData_representativeList_person_telephone,
-						escrito_relacionado.representationData_representativeList_person_zipCode,
-						escrito_relacionado.representationData_representativeList_representativeType,
-						escrito_relacionado.representationData_representativeList_person_email)
-		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}')
-			cambio_estado_soporte(form_Id)
-
-		time.sleep(1)
-		
-		"""	
-		afferc = user_doc_read_min(escrito_relacionado.affected_doc_Log,escrito_relacionado.affected_doc_docNbr,escrito_relacionado.affected_doc_docOrigin,escrito_relacionado.affected_doc_docSeries)
-		print(afferc)
-		try:
-			if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
-				user_doc_afectado(
-									escrito_relacionado.documentId_docLog,
-									escrito_relacionado.documentId_docNbr,
-									escrito_relacionado.documentId_docOrigin,
-									escrito_relacionado.documentId_docSeries,
-									afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
-									afferc['affectedFileIdList'][0]['fileSeq'],
-									afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
-									afferc['affectedFileIdList'][0]['fileType'])
-			else:
-				pass
-		except Exception as e:
-				data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}')
+			try:
+				user_doc_receive(
+							"1",
+							escrito_relacionado.filingData_userdocTypeList_userdocType,
+							"true",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							str(captureDate.capture_day()),
+							"",
+							"",
+							"",
+							"",
+							"",
+							escrito_relacionado.filingData_captureUserId,#item['filingData_captureUserId']
+							"SFE test - Aplicante M.E.A",
+							escrito_relacionado.affected_doc_Log,
+							escrito_relacionado.affected_doc_docNbr,
+							escrito_relacionado.affected_doc_docOrigin, 
+							escrito_relacionado.affected_doc_docSeries,
+							"",
+							"",
+							"",
+							"",
+							"",
+							escrito_relacionado.documentId_docLog,
+							escrito_relacionado.documentId_docNbr,
+							escrito_relacionado.documentId_docOrigin,
+							escrito_relacionado.documentId_docSeries,
+							escrito_relacionado.filingData_userdocTypeList_userdocType)
+				process_day_commit_Nbr()
+			except zeep.exceptions.Fault as e:
+				data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}')
 				cambio_estado_soporte(form_Id)
-		"""		
-		time.sleep(1)
-		
-		afferc = str(user_doc_read_min('E',escrito_relacionado.documentId_docNbr,escrito_relacionado.documentId_docOrigin,escrito_relacionado.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
-		if afferc == escrito_relacionado.documentId_docNbr:
-			cambio_estado(form_Id,escrito_relacionado.documentId_docNbr)
-		else:
-			data_validator(f'Error al cambiar estado de esc. N° {escrito_relacionado.documentId_docNbr}, tabla tramites ID: {form_Id}')
-			cambio_estado_soporte(form_Id)
 
-		time.sleep(0.5)
+			time.sleep(1)
+		
+			sigla_desc = str(escrito_relacionado.filingData_userdocTypeList_userdocName).split("- ")
+
+			try:
+				user_doc_update(
+							escrito_relacionado.affected_doc_Log,
+							escrito_relacionado.affected_doc_docNbr,
+							escrito_relacionado.affected_doc_docOrigin, 
+							escrito_relacionado.affected_doc_docSeries,
+							escrito_relacionado.applicant_applicantNotes,
+							escrito_relacionado.applicant_person_addressStreet,
+							escrito_relacionado.applicant_person_cityName,
+							escrito_relacionado.applicant_person_email,
+							escrito_relacionado.applicant_person_nationalityCountryCode,
+							escrito_relacionado.applicant_person_personName,
+							escrito_relacionado.applicant_person_residenceCountryCode,
+							escrito_relacionado.applicant_person_telephone,
+							escrito_relacionado.applicant_person_zipCode,
+							escrito_relacionado.documentId_docLog,
+							escrito_relacionado.documentId_docNbr,
+							escrito_relacionado.documentId_docOrigin,
+							escrito_relacionado.documentId_docSeries,
+							escrito_relacionado.documentSeqId_docSeqNbr,
+							escrito_relacionado.documentSeqId_docSeqSeries,
+							escrito_relacionado.documentSeqId_docSeqType,
+							escrito_relacionado.filingData_captureDate,
+							escrito_relacionado.filingData_captureUserId,
+							escrito_relacionado.filingData_filingDate,
+							escrito_relacionado.filingData_receptionDate,
+							escrito_relacionado.filingData_paymentList_currencyName,
+							escrito_relacionado.filingData_paymentList_currencyType,
+							escrito_relacionado.filingData_paymentList_receiptAmount,
+							escrito_relacionado.filingData_paymentList_receiptDate,
+							escrito_relacionado.filingData_paymentList_receiptNbr,
+							escrito_relacionado.filingData_paymentList_receiptNotes,
+							escrito_relacionado.filingData_paymentList_receiptType,
+							escrito_relacionado.filingData_paymentList_receiptTypeName,		
+							escrito_relacionado.filingData_documentId_receptionDocument_docNbr,
+							escrito_relacionado.filingData_documentId_receptionDocument_docOrigin,
+							escrito_relacionado.filingData_documentId_receptionDocument_docSeries,
+							sigla_desc[1],
+							escrito_relacionado.filingData_userdocTypeList_userdocType,					
+							"1",
+							escrito_relacionado.newOwnershipData_ownerList_ownershipNotes,
+							escrito_relacionado.newOwnershipData_ownerList_person_addressStreet,
+							escrito_relacionado.newOwnershipData_ownerList_person_cityName,
+							escrito_relacionado.newOwnershipData_ownerList_person_email,
+							escrito_relacionado.newOwnershipData_ownerList_person_nationalityCountryCode,
+							escrito_relacionado.newOwnershipData_ownerList_person_personName,
+							escrito_relacionado.newOwnershipData_ownerList_person_residenceCountryCode,
+							escrito_relacionado.newOwnershipData_ownerList_person_telephone,
+							escrito_relacionado.newOwnershipData_ownerList_person_zipCode,
+							escrito_relacionado.notes,
+							escrito_relacionado.representationData_representativeList_person_addressStreet,
+							escrito_relacionado.representationData_representativeList_person_addressZone,
+							escrito_relacionado.representationData_representativeList_person_agentCode,
+							escrito_relacionado.representationData_representativeList_person_cityName,
+							escrito_relacionado.representationData_representativeList_person_individualIdNbr,
+							escrito_relacionado.representationData_representativeList_person_individualIdType,
+							escrito_relacionado.representationData_representativeList_person_legalIdNbr,
+							escrito_relacionado.representationData_representativeList_person_legalIdType,
+							escrito_relacionado.representationData_representativeList_person_legalNature,					
+							escrito_relacionado.representationData_representativeList_person_nationalityCountryCode,
+							escrito_relacionado.representationData_representativeList_person_personName,
+							escrito_relacionado.representationData_representativeList_person_personNameInOtherLang,
+							escrito_relacionado.representationData_representativeList_person_residenceCountryCode,
+							escrito_relacionado.representationData_representativeList_person_telephone,
+							escrito_relacionado.representationData_representativeList_person_zipCode,
+							escrito_relacionado.representationData_representativeList_representativeType,
+							escrito_relacionado.representationData_representativeList_person_email)
+			except zeep.exceptions.Fault as e:
+				data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}')
+				cambio_estado_soporte(form_Id)
+
+			time.sleep(1)
+			
+			"""	
+			afferc = user_doc_read_min(escrito_relacionado.affected_doc_Log,escrito_relacionado.affected_doc_docNbr,escrito_relacionado.affected_doc_docOrigin,escrito_relacionado.affected_doc_docSeries)
+			print(afferc)
+			try:
+				if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
+					user_doc_afectado(
+										escrito_relacionado.documentId_docLog,
+										escrito_relacionado.documentId_docNbr,
+										escrito_relacionado.documentId_docOrigin,
+										escrito_relacionado.documentId_docSeries,
+										afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
+										afferc['affectedFileIdList'][0]['fileSeq'],
+										afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
+										afferc['affectedFileIdList'][0]['fileType'])
+				else:
+					pass
+			except Exception as e:
+					data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}')
+					cambio_estado_soporte(form_Id)
+			"""		
+			time.sleep(1)
+			
+			afferc = str(user_doc_read_min('E',escrito_relacionado.documentId_docNbr,escrito_relacionado.documentId_docOrigin,escrito_relacionado.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
+			if afferc == escrito_relacionado.documentId_docNbr:
+				cambio_estado(form_Id,escrito_relacionado.documentId_docNbr)
+			else:
+				data_validator(f'Error al cambiar estado de esc. N° {escrito_relacionado.documentId_docNbr}, tabla tramites ID: {form_Id}')
+				cambio_estado_soporte(form_Id)
+
+			time.sleep(0.5)
 		
 def compileAndInsertUserDocUserDocPago(form_Id,typ):	
-		catch_toError(form_Id)
+	if	catch_toError(form_Id) != "E99":
 		escrito_escrito_pago = userDocModel()
 		escrito_escrito_pago.setData(form_Id)
-	
 		try:
 			user_doc_receive(
 						"1",
@@ -638,6 +634,8 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		else:
 			data_validator(f'Error al cambiar estado de esc. N° {escrito_escrito_pago.documentId_docNbr}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
+	else:
+		pass
 
 def compileAndInsertReg(form_Id):
 	data_reg = insertRegModel()
@@ -686,7 +684,8 @@ def compileAndInsertReg(form_Id):
 def catch_toError(form_Id):
 	getExcept = userDocModel()
 	getExcept.setData(form_Id)
-	data_list = [getExcept.affectedFileIdList_fileNbr,
+	data_list = [
+	getExcept.affectedFileIdList_fileNbr,
 	getExcept.affectedFileIdList_fileSeq,
 	getExcept.affectedFileIdList_fileSeries,
 	getExcept.affectedFileIdList_fileType,

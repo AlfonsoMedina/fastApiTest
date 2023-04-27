@@ -82,4 +82,8 @@ ProcessReadAction - METODO  = actionType
 </arg0>
 
 
+- https://www.youtube.com/watch?v=xjMP0hspNLE
 
+- https://www.youtube.com/watch?v=2EemvteGLr4
+
+- https://django-rest-framework-simplejwt.readthedocs.io/en/latest/getting_started.html
