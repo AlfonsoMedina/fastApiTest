@@ -13,7 +13,7 @@ import tools.connect as connex
 default_val = lambda arg: arg if arg == "null" else "" 
 default_val_e99 = lambda arg: arg if arg != "" else ""
 
-class insertReModel(object):
+class insertRegModel(object):
 	file_fileId_fileNbr:str = ""
 	file_fileId_fileSeq:str = ""
 	file_fileId_fileSeries:str = ""

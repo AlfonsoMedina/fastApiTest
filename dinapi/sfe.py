@@ -161,11 +161,129 @@ def registro_sfe(arg):
 					global_data['pais_pri']=i['valor']
 			except Exception as e:
 				global_data['pais_pri'] = "No definido"
+
 			try:
 				if(i['descripcion'] == "Especificar" and i['campo'] == 'marca_especificar'):
 					global_data['espe']=i['valor']
 			except Exception as e:
 				global_data['espe'] = "No definido"
+
+
+			try:
+				if(i['campo'] == 'marcarenov_registrono'):
+					global_data['espe']=i['valor']
+			except Exception as e:
+				global_data['espe'] = "No definido"
+
+
+			try:
+				if(i['campo'] == 'datospersonalesrenov_calle'):
+					global_data['direccion']=i['valor']
+			except Exception as e:
+				global_data['direccion']= ""
+
+			try:
+				if(i['campo'] == 'datospersonalesrenov_nombrerazon'):
+					global_data['nombrerazon']=i['valor']
+			except Exception as e:
+				global_data['nombrerazon']= ""
+
+			try:
+				if(i['campo'] == 'datospersonalesrenov_pais'):
+					global_data['pais']=i['valor']
+			except Exception as e:
+				global_data['pais'] = ""
+
+			try:
+				if(i['campo'] == 'datospersonalesrenov_nodocumentoruc'):
+					global_data['ci-ruc']=i['valor']
+			except Exception as e:
+				global_data['ci-ruc'] = ""
+
+			try:
+				if(i['campo'] == 'datospersonalesrenov_numero'):
+					global_data['']=i['valor']
+			except Exception as e:
+				global_data[''] = ""
+
+			try:
+				if(i['campo'] == 'datospersonalesrenov_numero'):
+					global_data['numero']=i['valor']
+			except Exception as e:
+				global_data[''] = ""
+
+			try:
+				if(i['campo'] == ''):
+					global_data['']=i['valor']
+			except Exception as e:
+				global_data[''] = ""
+
+			try:
+				if(i['campo'] == ''):
+					global_data['']=i['valor']
+			except Exception as e:
+				global_data[''] = ""
+
+			try:
+				if(i['campo'] == ''):
+					global_data['']=i['valor']
+			except Exception as e:
+				global_data[''] = ""
+
+			try:
+				if(i['campo'] == ''):
+					global_data['']=i['valor']
+			except Exception as e:
+				global_data[''] = ""
+
+			try:
+				if(i['campo'] == ''):
+					global_data['']=i['valor']
+			except Exception as e:
+				global_data[''] = ""
+
+			try:
+				if(i['campo'] == ''):
+					global_data['']=i['valor']
+			except Exception as e:
+				global_data[''] = ""
+
+			try:
+				if(i['campo'] == ''):
+					global_data['']=i['valor']
+			except Exception as e:
+				global_data[''] = ""
+
+			try:
+				if(i['campo'] == ''):
+					global_data['']=i['valor']
+			except Exception as e:
+				global_data[''] = ""
+
+			try:
+				if(i['campo'] == ''):
+					global_data['']=i['valor']
+			except Exception as e:
+				global_data[''] = ""
+
+			try:
+				if(i['campo'] == ''):
+					global_data['']=i['valor']
+			except Exception as e:
+				global_data[''] = ""				
+
+
+
+
+
+
+
+
+
+
+
+
+
 		return(global_data)
 	except Exception as e:
 		print(e)

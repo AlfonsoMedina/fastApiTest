@@ -4,7 +4,7 @@ from tools.base64Decode import image_url_to_b64
 from dinapi.sfe import pago_id, pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe
 from getFileDoc import getFile
 from wipo.function_for_reception_in import user_doc_getList_escrito
-from wipo.ipas import mark_getlist, mark_read, personAgente
+from wipo.ipas import mark_getlist, mark_getlistReg, mark_read, personAgente
 import tools.connect as connex
 import tools.filing_date as captureDate
 import tools.connect as connex
@@ -67,49 +67,135 @@ class insertRenModel(object):
 		exists = arg1 in list_splits.values()	
 		return(exists)
 
+
 	def setData(self,doc_Id):
-		#data = mark_read()
-		self.file_fileId_fileNbr = ""
-		self.file_fileId_fileSeq = ""
-		self.file_fileId_fileSeries = ""
-		self.file_fileId_fileType = ""
-		self.file_filingData_applicationSubtype = ""
-		self.file_filingData_applicationType = ""
-		self.file_filingData_captureUserId = ""
-		self.file_filingData_captureDate = ""
-		self.file_filingData_filingDate = ""
-		self.file_filingData_lawCode = ""
-		self.file_filingData_paymentList_currencyType = ""
-		self.file_filingData_paymentList_receiptAmount = ""
-		self.file_filingData_paymentList_receiptDate = ""
-		self.file_filingData_paymentList_receiptNbr = ""
-		self.file_filingData_paymentList_receiptNotes = ""
-		self.file_filingData_paymentList_receiptType = ""
-		self.file_filingData_receptionUserId = ""
-		self.file_ownershipData_ownerList_person_addressStreet = ""
-		self.file_ownershipData_ownerList_person_nationalityCountryCode = ""
-		self.file_ownershipData_ownerList_person_personName = ""
-		self.file_ownershipData_ownerList_person_residenceCountryCode = ""
-		self.file_representationData_representativeList_representativeType = ""
-		self.agentCode = ""
+		ruc_Typ:str = ''
+		ci_Typ:str = ''	
+		ruc_Nbr:str = "E99"
+		ci_Nbr:str = "E99"
+		typ_signo:str = ''
+		desc_serv:str = ''
+		logo_url:str = ''
+		logo_typ:str = ''
+		data = registro_sfe(doc_Id)
+
+		try:
+			ag_data = personAgente(code_ag(data[0]['usuario_id']))[0]
+		except Exception as e:
+			print("")
+
+		try:
+			if self.exist_split(doc_Id,'datospersonales_tipo') == True:  		
+				for i in range(0,len(data[0]['respuestas'])):
+					if data[0]['respuestas'][i]['campo'] == 'datospersonales_tipo':	
+						if str(data[0]['respuestas'][i]['valor']) == 'Persona Jurídica':
+							ruc_Typ = 'RUC'
+
+						if str(data[0]['respuestas'][i]['valor']) == 'Persona Física':
+							ci_Typ = 'CED'
+		except Exception as e:
+				pass
+		try:
+			
+			data_ren = mark_getlistReg(solidNbr)
+		except Exception as e:
+			pass
+
+		if data['tipo_on'] == "Denominativa":
+			typ_signo = 'N'
+			logo_url = ""
+			logo_typ = ""			
+		if data['tipo_on'] == "D":
+			typ_signo = 'N'
+			logo_url = ""
+			logo_typ = ""						
+		if data['tipo_on'] == "Figurativa":
+			typ_signo = 'L'
+			logo_url = image_url_to_b64(str(data['distintivo']))
+			logo_typ = "JPG"			
+		if data['tipo_on'] == "F":
+			typ_signo = 'L'
+			logo_url = image_url_to_b64(str(data['distintivo']))
+			logo_typ = "JPG"			
+		if data['tipo_on'] == "Mixta":
+			typ_signo = 'B'
+			logo_url = image_url_to_b64(str(data['distintivo']))
+			logo_typ = "JPG"
+		if data['tipo_on'] == "M":
+			typ_signo = 'B'
+			logo_url = image_url_to_b64(str(data['distintivo']))
+			logo_typ = "JPG"	
+		if data['tipo_on'] == "Tridimensional":
+			typ_signo = 'T'
+			logo_url = image_url_to_b64(str(data['distintivo']))
+			logo_typ = "JPG"			
+		if data['tipo_on'] == "T":
+			typ_signo = 'T'
+			logo_url = image_url_to_b64(str(data['distintivo']))
+			logo_typ = "JPG"
+		if data['tipo_on'] == "Sonora":
+			typ_signo = 'S'
+			logo_url = ""
+			logo_typ = ""			
+		if data['tipo_on'] == "S":
+			typ_signo = 'S'
+			logo_url = ""
+			logo_typ = ""			
+		if data['tipo_on'] == "Olfativa":
+			typ_signo = 'O'
+			logo_url = ""
+			logo_typ = ""			
+		if data['tipo_on'] == "O":
+			typ_signo = 'O'
+			logo_url = ""
+			logo_typ = ""												
+
+		if data['clasificacion'] == 'PRODUCTOS':
+			desc_serv = 'MP'
+		if data['clasificacion'] == 'SERVICIOS':
+			desc_serv = 'MS'
+
+		self.file_fileId_fileNbr = str(int(process_day_Nbr())+1)
+		self.file_fileId_fileSeq = "PY"
+		self.file_fileId_fileSeries = captureDate.capture_year() 
+		self.file_fileId_fileType = "M"
+		self.file_filingData_applicationSubtype = desc_serv
+		self.file_filingData_applicationType = "REN"
+		self.file_filingData_captureUserId = "4"
+		self.file_filingData_captureDate = captureDate.capture_full()
+		self.file_filingData_filingDate = captureDate.capture_full()
+		self.file_filingData_lawCode = "1.0"
+		self.file_filingData_paymentList_currencyType = "GS"
+		self.file_filingData_paymentList_receiptAmount = str(pago_data(doc_Id)[1])
+		self.file_filingData_paymentList_receiptDate = str(pago_data(doc_Id)[2])
+		self.file_filingData_paymentList_receiptNbr = str(pago_data(doc_Id)[0])
+		self.file_filingData_paymentList_receiptNotes = "Recibo Sprint MEA"
+		self.file_filingData_paymentList_receiptType = "2"
+		self.file_filingData_receptionUserId = "4"
+		self.file_ownershipData_ownerList_person_addressStreet = data['direccion']
+		self.file_ownershipData_ownerList_person_nationalityCountryCode = data['pais']
+		self.file_ownershipData_ownerList_person_personName = data['razon_social'] + data['nombre_soli']
+		self.file_ownershipData_ownerList_person_residenceCountryCode = data['pais']
+		self.file_representationData_representativeList_representativeType = "AG"
+		self.agentCode = data['code_agente']
 		self.file_relationshipList_fileId_fileNbr = ""
 		self.file_relationshipList_fileId_fileSeq = ""
 		self.file_relationshipList_fileId_fileSeries = ""
 		self.file_relationshipList_fileId_fileType = ""
-		self.file_relationshipList_relationshipRole = ""
-		self.file_relationshipList_relationshipType = ""
-		self.file_rowVersion = ""
-		self.protectionData_dummy = ""
-		self.protectionData_niceClassList_niceClassDescription = ""
-		self.protectionData_niceClassList_niceClassDetailedStatus = ""
-		self.protectionData_niceClassList_niceClassEdition = ""
-		self.protectionData_niceClassList_niceClassGlobalStatus = ""
-		self.protectionData_niceClassList_niceClassNbr = ""
-		self.protectionData_niceClassList_niceClassVersion = ""
+		self.file_relationshipList_relationshipRole = "2"
+		self.file_relationshipList_relationshipType = "REN"
+		self.file_rowVersion = "1.0"
+		self.protectionData_dummy = "false"
+		self.protectionData_niceClassList_niceClassDescription = data['distingue']
+		self.protectionData_niceClassList_niceClassDetailedStatus = "P"
+		self.protectionData_niceClassList_niceClassEdition = "12.0"
+		self.protectionData_niceClassList_niceClassGlobalStatus = "P"
+		self.protectionData_niceClassList_niceClassNbr = data['clase_on']
+		self.protectionData_niceClassList_niceClassVersion = "2023.01"
 		self.rowVersion = ""
-		self.logoData = ""
-		self.logoType = ""
+		self.logoData = logo_url
+		self.logoType = logo_typ
 		self.signData_markName = ""
-		self.signData_signType = ""						
+		self.signData_signType = typ_signo						
 
 		
