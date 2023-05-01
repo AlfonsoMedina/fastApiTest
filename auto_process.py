@@ -833,6 +833,22 @@ def catch_toError(form_Id):
 			#listar()
 
 
+
+
+data = pendiente_sfe('1547')
+
+for i in range(0,len(data[0]['respuestas'])):
+	try:
+		print(data[0]['respuestas'][i]['descripcion'])
+	except Exception as e:
+		print("sin descripcion")
+	print("")		
+	try:
+		print(data[0]['respuestas'][i]['valor'])
+	except Exception as e:
+		print("no existe etiqueta (valor) en el bloque")
+	print("----------------------------------------------------------------")
+
 """
 def timer(timer_runs):
     while timer_runs.is_set():
