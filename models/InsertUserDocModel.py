@@ -332,22 +332,23 @@ class userDocModel(object):
  		
 		try:
 			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_direccion' and data[0]['respuestas'][i]['descripcion'] == 'Direccion':				
+				if data[0]['respuestas'][i]['campo'] == 'datospersonales_direccion' :				
 					datospersonales_direccion = str(data[0]['respuestas'][i]['valor'])
 		except Exception as e:
 			datospersonales_direccion= ""
 		try:
 			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_direccion' and data[0]['respuestas'][i]['descripcion'] == 'Direccion':				
+				if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_direccion' :				
 					expedienteoescrito_direccion = str(data[0]['respuestas'][i]['valor'])
 		except Exception as e:
 			expedienteoescrito_direccion= ""
 
-		self.applicant_person_addressStreet= datospersonales_direccion + expedienteoescrito_direccion
+		if datospersonales_direccion != '':
+			self.applicant_person_addressStreet= datospersonales_direccion
+		elif expedienteoescrito_direccion != '':
+			self.applicant_person_addressStreet= expedienteoescrito_direccion
 
 
-
-		
 		self.applicant_person_addressStreetInOtherLang= ""
 		self.applicant_person_addressZone= ""
 		self.applicant_person_agentCode= ""
@@ -392,8 +393,12 @@ class userDocModel(object):
 		self.applicant_person_legalNatureInOtherLang= ""
 		
 
-		self.applicant_person_nationalityCountryCode= datospersonales_pais + expedienteoescrito_pais 
+		if datospersonales_pais != '':
+			self.applicant_person_nationalityCountryCode = datospersonales_pais
+		else:
+			self.applicant_person_nationalityCountryCode = expedienteoescrito_pais  
 		
+
 		self.applicant_person_personGroupCode= ""
 		self.applicant_person_personGroupName= ""
 		
@@ -422,9 +427,13 @@ class userDocModel(object):
 			nombreapellido= ""
 		
 		self.applicant_person_personNameInOtherLang= ""
-		self.applicant_person_personName = nombrerazon + razonsocial + nombreapellido
 
-
+		if nombrerazon != '':
+			self.applicant_person_personName = nombrerazon
+		elif razonsocial != '':
+			self.applicant_person_personName = razonsocial
+		elif nombreapellido != '':
+			self.applicant_person_personName = nombreapellido
 
 
 		self.applicant_person_residenceCountryCode= datospersonales_pais + expedienteoescrito_pais 
@@ -539,8 +548,11 @@ class userDocModel(object):
 		self.newOwnershipData_ownerList_ownershipNotes= ""
 		
 
-		
-		self.newOwnershipData_ownerList_person_addressStreet= datospersonales_direccion + expedienteoescrito_direccion
+		if datospersonales_direccion != '':
+			self.newOwnershipData_ownerList_person_addressStreet = datospersonales_direccion
+		elif expedienteoescrito_direccion != '':
+			self.newOwnershipData_ownerList_person_addressStreet = expedienteoescrito_direccion
+
 		
 		self.newOwnershipData_ownerList_person_addressStreetInOtherLang= ""
 		self.newOwnershipData_ownerList_person_addressZone= ""
@@ -598,8 +610,13 @@ class userDocModel(object):
 		self.newOwnershipData_ownerList_person_personGroupCode= ""
 		self.newOwnershipData_ownerList_person_personGroupName= ""
 		
+		if nombrerazon != '':
+			self.newOwnershipData_ownerList_person_personName = nombrerazon
+		elif razonsocial != '':
+			self.newOwnershipData_ownerList_person_personName = razonsocial
+		elif nombreapellido != '':
+			self.newOwnershipData_ownerList_person_personName = nombreapellido
 
-		self.newOwnershipData_ownerList_person_personName= nombrerazon + razonsocial + nombreapellido
 		
 		self.newOwnershipData_ownerList_person_personNameInOtherLang= ""
 		
