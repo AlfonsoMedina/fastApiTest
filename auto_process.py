@@ -348,7 +348,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 		escrito_relacionado.setData(form_Id)
 
 		try:
-			user_doc_receive(
+			print(user_doc_receive(
 						"1",
 						escrito_relacionado.filingData_userdocTypeList_userdocType,
 						"true",
@@ -380,7 +380,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 						escrito_relacionado.documentId_docNbr,
 						escrito_relacionado.documentId_docOrigin,
 						escrito_relacionado.documentId_docSeries,
-						escrito_relacionado.filingData_userdocTypeList_userdocType)
+						escrito_relacionado.filingData_userdocTypeList_userdocType))
 			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}')
@@ -391,7 +391,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 		sigla_desc = str(escrito_relacionado.filingData_userdocTypeList_userdocName).split("- ")
 
 		try:
-			user_doc_update(
+			print(user_doc_update(
 						escrito_relacionado.affected_doc_Log,
 						escrito_relacionado.affected_doc_docNbr,
 						escrito_relacionado.affected_doc_docOrigin, 
@@ -456,7 +456,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 						escrito_relacionado.representationData_representativeList_person_telephone,
 						escrito_relacionado.representationData_representativeList_person_zipCode,
 						escrito_relacionado.representationData_representativeList_representativeType,
-						escrito_relacionado.representationData_representativeList_person_email)
+						escrito_relacionado.representationData_representativeList_person_email))
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
@@ -464,6 +464,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 		time.sleep(1)
 		
 		afferc = user_doc_read_min(escrito_relacionado.affected_doc_Log,escrito_relacionado.affected_doc_docNbr,escrito_relacionado.affected_doc_docOrigin,escrito_relacionado.affected_doc_docSeries)
+		#print(afferc)
 		try:
 			if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
 				user_doc_afectado(
@@ -478,13 +479,14 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 			else:
 				pass
 		except Exception as e:
-				data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}')
-				cambio_estado_soporte(form_Id)
+				pass
+				#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}')
+				#cambio_estado_soporte(form_Id)
 
 		time.sleep(1)
 		
-		afferc = str(user_doc_read_min('E',escrito_relacionado.documentId_docNbr,escrito_relacionado.documentId_docOrigin,escrito_relacionado.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
-		if afferc == escrito_relacionado.documentId_docNbr:
+		newDoc = str(user_doc_read_min('E',escrito_relacionado.documentId_docNbr,escrito_relacionado.documentId_docOrigin,escrito_relacionado.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
+		if newDoc == escrito_relacionado.documentId_docNbr:
 			cambio_estado(form_Id,escrito_relacionado.documentId_docNbr)
 		else:
 			data_validator(f'Error al cambiar estado de esc. N° {escrito_relacionado.documentId_docNbr}, tabla tramites ID: {form_Id}')
@@ -496,9 +498,9 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		catch_toError(form_Id)
 		escrito_escrito_pago = userDocModel()
 		escrito_escrito_pago.setData(form_Id)
-	
+
 		try:
-			user_doc_receive(
+			print(user_doc_receive(
 						"1",
 						escrito_escrito_pago.filingData_userdocTypeList_userdocType,
 						"true",
@@ -530,7 +532,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 						escrito_escrito_pago.documentId_docNbr,
 						escrito_escrito_pago.documentId_docOrigin,
 						escrito_escrito_pago.documentId_docSeries,
-						escrito_escrito_pago.filingData_userdocTypeList_userdocType)
+						escrito_escrito_pago.filingData_userdocTypeList_userdocType))
 			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}')
@@ -538,10 +540,9 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 
 		time.sleep(1)
 		
-		sigla_desc = str(escrito_escrito_pago.filingData_userdocTypeList_userdocName).split("- ")
-						
+		sigla_desc = str(escrito_escrito_pago.filingData_userdocTypeList_userdocName).split("- ")				
 		try:
-			user_doc_update(
+			print(user_doc_update(
 						escrito_escrito_pago.affected_doc_Log,
 						escrito_escrito_pago.affected_doc_docNbr,
 						escrito_escrito_pago.affected_doc_docOrigin, 
@@ -606,7 +607,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 						escrito_escrito_pago.representationData_representativeList_person_telephone,
 						escrito_escrito_pago.representationData_representativeList_person_zipCode,
 						escrito_escrito_pago.representationData_representativeList_representativeType,
-						escrito_escrito_pago.representationData_representativeList_person_email)
+						escrito_escrito_pago.representationData_representativeList_person_email))
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)		
@@ -614,6 +615,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		time.sleep(1)
 		
 		afferc = user_doc_read_min('E',escrito_escrito_pago.affected_doc_docNbr,escrito_escrito_pago.affected_doc_docOrigin,escrito_escrito_pago.affected_doc_docSeries)
+		#print(afferc)
 		try:
 			if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
 				user_doc_afectado(escrito_escrito_pago.documentId_docLog,
@@ -627,13 +629,14 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 			else:
 				pass
 		except Exception as e:
-				data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}')
-				cambio_estado_soporte(form_Id)
+				pass
+				#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}')
+				#cambio_estado_soporte(form_Id)
 		
 		time.sleep(1)
 		
-		afferc = str(user_doc_read_min('E',escrito_escrito_pago.documentId_docNbr,escrito_escrito_pago.documentId_docOrigin,escrito_escrito_pago.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
-		if afferc == escrito_escrito_pago.documentId_docNbr:
+		newDoc = str(user_doc_read_min('E',escrito_escrito_pago.documentId_docNbr,escrito_escrito_pago.documentId_docOrigin,escrito_escrito_pago.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
+		if newDoc == escrito_escrito_pago.documentId_docNbr:
 			cambio_estado(form_Id,escrito_escrito_pago.documentId_docNbr)
 		else:
 			data_validator(f'Error al cambiar estado de esc. N° {escrito_escrito_pago.documentId_docNbr}, tabla tramites ID: {form_Id}')
@@ -667,8 +670,8 @@ def catch_toError(form_Id):
 	getExcept.affectedFileSummaryList_fileSummaryRepresentativeInOtherLang,
 	getExcept.affectedFileSummaryList_fileSummaryResponsibleName,
 	getExcept.affectedFileSummaryList_fileSummaryStatus,
+
 	getExcept.applicant_applicantNotes,
-	#default_val_e99(getExcept.applicant_person_addressStreet),
 	getExcept.applicant_person_addressStreet,
 	getExcept.applicant_person_addressStreetInOtherLang,
 	getExcept.applicant_person_addressZone,
@@ -684,16 +687,17 @@ def catch_toError(form_Id):
 	getExcept.applicant_person_legalIdType,
 	getExcept.applicant_person_legalNature,
 	getExcept.applicant_person_legalNatureInOtherLang,
-	default_val_e99(getExcept.applicant_person_nationalityCountryCode),
+	getExcept.applicant_person_nationalityCountryCode,
 	getExcept.applicant_person_personGroupCode,
 	getExcept.applicant_person_personGroupName,
-	default_val_e99(getExcept.applicant_person_personName),
+	getExcept.applicant_person_personName,
 	getExcept.applicant_person_personNameInOtherLang,
-	default_val_e99(getExcept.applicant_person_residenceCountryCode),
+	getExcept.applicant_person_residenceCountryCode,
 	getExcept.applicant_person_stateCode,
 	getExcept.applicant_person_stateName,
 	getExcept.applicant_person_telephone,
 	getExcept.applicant_person_zipCode,
+
 	default_val_e99(getExcept.documentId_docLog),
 	default_val_e99(getExcept.documentId_docNbr),
 	default_val_e99(getExcept.documentId_docOrigin),
@@ -727,9 +731,10 @@ def catch_toError(form_Id):
 	getExcept.filingData_documentId_receptionDocument_selected,
 	default_val_e99(getExcept.filingData_userdocTypeList_userdocName),
 	default_val_e99(getExcept.filingData_userdocTypeList_userdocType),
+
 	getExcept.newOwnershipData_ownerList_orderNbr,
 	getExcept.newOwnershipData_ownerList_ownershipNotes,
-	default_val_e99(getExcept.newOwnershipData_ownerList_person_addressStreet),
+	getExcept.newOwnershipData_ownerList_person_addressStreet,
 	getExcept.newOwnershipData_ownerList_person_addressStreetInOtherLang,
 	getExcept.newOwnershipData_ownerList_person_addressZone,
 	getExcept.newOwnershipData_ownerList_person_agentCode,
@@ -744,16 +749,17 @@ def catch_toError(form_Id):
 	getExcept.newOwnershipData_ownerList_person_legalIdType,
 	getExcept.newOwnershipData_ownerList_person_legalNature,
 	getExcept.newOwnershipData_ownerList_person_legalNatureInOtherLang,
-	default_val_e99(getExcept.newOwnershipData_ownerList_person_nationalityCountryCode),
+	getExcept.newOwnershipData_ownerList_person_nationalityCountryCode,
 	getExcept.newOwnershipData_ownerList_person_personGroupCode,
 	getExcept.newOwnershipData_ownerList_person_personGroupName,
-	default_val_e99(getExcept.newOwnershipData_ownerList_person_personName),
+	getExcept.newOwnershipData_ownerList_person_personName,
 	getExcept.newOwnershipData_ownerList_person_personNameInOtherLang,
-	default_val_e99(getExcept.newOwnershipData_ownerList_person_residenceCountryCode),
+	getExcept.newOwnershipData_ownerList_person_residenceCountryCode,
 	getExcept.newOwnershipData_ownerList_person_stateCode,
 	getExcept.newOwnershipData_ownerList_person_stateName,
 	getExcept.newOwnershipData_ownerList_person_telephone,
 	getExcept.newOwnershipData_ownerList_person_zipCode,
+
 	getExcept.notes,
 	getExcept.poaData_poaGranteeList_person_addressStreet,
 	getExcept.poaData_poaGranteeList_person_addressStreetInOtherLang,
@@ -839,7 +845,22 @@ def catch_toError(form_Id):
 			data_validator(f'dato requerido: {E99_code[i]}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
 			return("E99")
-			#listar()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

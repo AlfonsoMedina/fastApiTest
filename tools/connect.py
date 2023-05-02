@@ -10,7 +10,7 @@ MEA_PERIODO_RECEPCION_userId = config_parametro('63')['valor5']
 MEA_PERIODO_RECEPCION_horaIn = config_parametro('63')['valor3']
 MEA_PERIODO_RECEPCION_horaOut = config_parametro('63')['valor4']
 MEA_ADJUNTOS_DESTINO_location = config_parametro('61')['valor3']
-MEA_IPAS_DESTINO = config_parametro('59')['valor2']
+MEA_IPAS_DESTINO = config_parametro('59')['valor3']
 
 ###################################################################
 
@@ -72,7 +72,7 @@ databaseCJ='db_caja_dinapi'
 
 #ipas Beta
 #                                192.168.80.42
-ipas_sprint = config_parametro('49')['valor2']
+ipas_sprint = config_parametro('49')['valor1']
 
 #                                     192.168.50.182
 ipas_produccion_A = config_parametro('50')['valor1']
