@@ -464,18 +464,22 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 		time.sleep(1)
 		
 		afferc = user_doc_read_min(escrito_relacionado.affected_doc_Log,escrito_relacionado.affected_doc_docNbr,escrito_relacionado.affected_doc_docOrigin,escrito_relacionado.affected_doc_docSeries)
-		if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
-			user_doc_afectado(
-								escrito_relacionado.documentId_docLog,
-								escrito_relacionado.documentId_docNbr,
-								escrito_relacionado.documentId_docOrigin,
-								escrito_relacionado.documentId_docSeries,
-								afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
-								afferc['affectedFileIdList'][0]['fileSeq'],
-								afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
-								afferc['affectedFileIdList'][0]['fileType'])
-		else:
-			pass
+		try:
+			if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
+				user_doc_afectado(
+									escrito_relacionado.documentId_docLog,
+									escrito_relacionado.documentId_docNbr,
+									escrito_relacionado.documentId_docOrigin,
+									escrito_relacionado.documentId_docSeries,
+									afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
+									afferc['affectedFileIdList'][0]['fileSeq'],
+									afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
+									afferc['affectedFileIdList'][0]['fileType'])
+			else:
+				pass
+		except Exception as e:
+				data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}')
+				cambio_estado_soporte(form_Id)
 
 		time.sleep(1)
 		
@@ -610,17 +614,21 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		time.sleep(1)
 		
 		afferc = user_doc_read_min('E',escrito_escrito_pago.affected_doc_docNbr,escrito_escrito_pago.affected_doc_docOrigin,escrito_escrito_pago.affected_doc_docSeries)
-		if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
-			user_doc_afectado(escrito_escrito_pago.documentId_docLog,
-								escrito_escrito_pago.documentId_docNbr,
-								escrito_escrito_pago.documentId_docOrigin,
-								escrito_escrito_pago.documentId_docSeries,
-								afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
-								afferc['affectedFileIdList'][0]['fileSeq'],
-								afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
-								afferc['affectedFileIdList'][0]['fileType'])
-		else:
-			pass
+		try:
+			if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
+				user_doc_afectado(escrito_escrito_pago.documentId_docLog,
+									escrito_escrito_pago.documentId_docNbr,
+									escrito_escrito_pago.documentId_docOrigin,
+									escrito_escrito_pago.documentId_docSeries,
+									afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
+									afferc['affectedFileIdList'][0]['fileSeq'],
+									afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
+									afferc['affectedFileIdList'][0]['fileType'])
+			else:
+				pass
+		except Exception as e:
+				data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}')
+				cambio_estado_soporte(form_Id)
 		
 		time.sleep(1)
 		
@@ -660,7 +668,8 @@ def catch_toError(form_Id):
 	getExcept.affectedFileSummaryList_fileSummaryResponsibleName,
 	getExcept.affectedFileSummaryList_fileSummaryStatus,
 	getExcept.applicant_applicantNotes,
-	default_val_e99(getExcept.applicant_person_addressStreet),
+	#default_val_e99(getExcept.applicant_person_addressStreet),
+	getExcept.applicant_person_addressStreet,
 	getExcept.applicant_person_addressStreetInOtherLang,
 	getExcept.applicant_person_addressZone,
 	getExcept.applicant_person_agentCode,
@@ -834,54 +843,18 @@ def catch_toError(form_Id):
 
 
 
-
-data = pendiente_sfe('1547')
-
+"""
+data = pendiente_sfe('1551')
 for i in range(0,len(data[0]['respuestas'])):
 	try:
 		print(data[0]['respuestas'][i]['descripcion'])
 	except Exception as e:
 		print("sin descripcion")
-	print("")		
+	#print("")		
 	try:
 		print(data[0]['respuestas'][i]['valor'])
 	except Exception as e:
 		print("no existe etiqueta (valor) en el bloque")
 	print("----------------------------------------------------------------")
-
-"""
-def timer(timer_runs):
-    while timer_runs.is_set():
-        captura_pendientes()
-		#print("¡Hola, mundo!")
-        #time.sleep(1)   # 3 segundos.
-timer_runs = threading.Event()
-timer_runs.set()
-t = threading.Thread(target=timer, args=(timer_runs,))
-t.start()
-# Esperar 10 segundos y luego detener el timer.
-time.sleep(30)
-timer_runs.clear()
-print("¡El timer ha sido detenido!")
-"""
-
-#if __name__ == "__main__":
-	#listar()
-
-"""
-- consulta por paquete 
-- proceso por paquete
-- front refleja proceso de backend
-
-
-- spin para consulta
-		traer de tramies
-- barra para procesamiento
-		insertar los pendientes
-
-
-
-
-
 
 """

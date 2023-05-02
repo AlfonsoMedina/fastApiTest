@@ -37,6 +37,147 @@ datospersonales_ciudad
 datospersonales_sexo
 
 
+
+
+Nro de Escrito
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Pais
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Direccion
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Telefono
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Correo Electrónico
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Fecha
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Tipo de Signo / Tipo Documento
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Nro de Expediente
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Clase de Niza
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Denominación
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Nro de Registro
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Nombres y Apellidos / Razón Social
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Descripción
+
+Prueba de  Informe Oficial
+----------------------------------------------------------------
+Tipo de escrito a presentar
+
+IO - Informe Oficial
+----------------------------------------------------------------
+Agregar documento adjunto
+
+{'id': '706', 'campo': 'observacion_documentos', 'archivo': {'id': 'eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcklDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--af55298da773126c27b5cd2046f6b2f43280e7eb', 'url': 'https://sfe-beta.dinapi.gov.py/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcklDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--af55298da773126c27b5cd2046f6b2f43280e7eb/tramite%20(3).pdf', 'name': 'tramite (3).pdf', 'type': 'application/pdf'}}
+----------------------------------------------------------------
+Código Postal
+
+
+----------------------------------------------------------------
+N° de Documento
+
+80005554-0
+----------------------------------------------------------------
+País
+
+PY
+----------------------------------------------------------------
+Tipo
+
+Persona Juridica
+----------------------------------------------------------------
+Teléfono
+
+0965000444
+----------------------------------------------------------------
+Datos de Contacto
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Departamento
+
+Central
+----------------------------------------------------------------
+Actividad Económica
+
+Actividad 2
+----------------------------------------------------------------
+RUC
+
+80005554-0
+----------------------------------------------------------------
+Razón Social
+
+DINAPI S.R.L.
+----------------------------------------------------------------
+Correo Electrónico
+
+prueba@gmail.com
+----------------------------------------------------------------
+Dirección
+
+Roa Bastos 1561
+----------------------------------------------------------------
+Nombres y Apellidos
+
+
+----------------------------------------------------------------
+Ciudad
+
+Lambare
+----------------------------------------------------------------
+Sexo
+
+
+----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 -----------------------------1549 - ABM - form 68------------------------ 
 
 observacion_descobservacion
@@ -108,3 +249,102 @@ expedienteoescrito_clase
 expedienteoescrito_denominacion
 expedienteoescrito_registro
 expedienteoescrito_nombrerazon
+
+
+
+
+
+
+Datos tramite 1551
+
+Descripción
+Prueba de Caducidad de Instancia OPO
+----------------------------------------------------------------
+Tipo de escrito a presentar
+CEX - Contesta Expresión de Agravios
+----------------------------------------------------------------
+Agregar documento adjunto
+{'id': '710', 'campo': 'observacion_documentos', 'archivo': {'id': 'eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcllDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--03e1f80997d04f5df6ea7b630b04443f5174dc59', 
+'url': 'https://sfe-beta.dinapi.gov.py/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcllDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--03e1f80997d04f5df6ea7b630b04443f5174dc59/tramite%20(4).pdf', 'name': 'tramite (4).pdf', 'type': 'application/pdf'}}
+----------------------------------------------------------------
+Código Postal
+
+----------------------------------------------------------------
+N° de Documento
+
+----------------------------------------------------------------
+País
+
+----------------------------------------------------------------
+Tipo
+
+----------------------------------------------------------------
+Teléfono
+
+----------------------------------------------------------------
+Datos de Contacto
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Departamento
+
+----------------------------------------------------------------
+Actividad Económica
+
+----------------------------------------------------------------
+RUC
+
+----------------------------------------------------------------
+Razón Social
+
+----------------------------------------------------------------
+Correo Electrónico
+
+----------------------------------------------------------------
+Dirección
+
+----------------------------------------------------------------
+Nombres y Apellidos
+
+----------------------------------------------------------------
+Ciudad
+
+----------------------------------------------------------------
+Sexo
+
+----------------------------------------------------------------
+Nro de Escrito
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Pais
+XX
+----------------------------------------------------------------
+Direccion
+Sin Direccion Definida
+----------------------------------------------------------------
+Telefono
+None
+----------------------------------------------------------------
+Correo Electrónico
+None
+----------------------------------------------------------------
+Fecha
+1980-07-11T00:00:00.000-04:00
+----------------------------------------------------------------
+Tipo de Signo / Tipo Documento
+Denominativa
+----------------------------------------------------------------
+Nro de Expediente
+8200386
+----------------------------------------------------------------
+Clase de Niza
+39.0
+----------------------------------------------------------------
+Denominación
+NUESTRA SENORA DE LAASUNCION
+----------------------------------------------------------------
+Nro de Registro
+101010
+----------------------------------------------------------------
+Nombres y Apellidos / Razón Social
+Emp. Ntra. Sra. De La Asuncion C.i.s.a.
+----------------------------------------------------------------

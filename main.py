@@ -1893,7 +1893,7 @@ def TEST_MEA(id_tramite):
 	create_userdoc['affectedFileSummaryList_fileSummaryResponsibleName'] = catch_data.affectedFileSummaryList_fileSummaryResponsibleName 
 	create_userdoc['affectedFileSummaryList_fileSummaryStatus'] = catch_data.affectedFileSummaryList_fileSummaryStatus 
 	create_userdoc['applicant_applicantNotes'] = catch_data.applicant_applicantNotes 
-	create_userdoc['applicant_person_addressStreet'] = default_val_e99(catch_data.applicant_person_addressStreet) 
+	create_userdoc['applicant_person_addressStreet'] = catch_data.applicant_person_addressStreet 
 	create_userdoc['applicant_person_addressStreetInOtherLang'] = catch_data.applicant_person_addressStreetInOtherLang 
 	create_userdoc['applicant_person_addressZone'] = catch_data.applicant_person_addressZone 
 	create_userdoc['applicant_person_agentCode'] = catch_data.applicant_person_agentCode 

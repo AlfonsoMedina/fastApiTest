@@ -772,7 +772,7 @@ def pago_id(pago):
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""select authorization_number from bancard_transactions where status = 2 and  payable_id = {} """.format(str(pago)))
+		cursor.execute("""select authorization_number from bancard_transactions where status = 1 and  payable_id = {} """.format(str(pago)))
 		row=cursor.fetchall()
 		for i in row:
 			return(i[0])	
@@ -1399,7 +1399,7 @@ def pago_data(pago):
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""select authorization_number,amount,created_at from bancard_transactions where status = 2 and  payable_id = {} """.format(str(pago)))
+		cursor.execute("""select authorization_number,amount,created_at from bancard_transactions where status = 1 and  payable_id = {} """.format(str(pago)))
 		row=cursor.fetchall()
 		for i in row:
 			return(i)	
