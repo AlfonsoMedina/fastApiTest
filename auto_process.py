@@ -340,7 +340,7 @@ def compileAndInsert(form_Id,typ):
 			if exists == insert_doc.documentId_docNbr:
 				cambio_estado(form_Id,insert_doc.documentId_docNbr)
 				time.sleep(1)
-				envio_agente_recibido(form_Id)	#Crear PDF
+				envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)	#Crear PDF
 				time.sleep(1)
 				delete_file(enviar('notificacion-DINAPI.pdf','alfonso.medina@dinapi.gov.py','M.E.A',''))	#Enviar Correo Electronico				
 		except Exception as e:
@@ -494,7 +494,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 		if newDoc == escrito_relacionado.documentId_docNbr:
 			cambio_estado(form_Id,escrito_relacionado.documentId_docNbr)
 			time.sleep(1)
-			envio_agente_recibido(form_Id)		#Crear PDF
+			envio_agente_recibido(form_Id,escrito_relacionado.documentId_docNbr)		#Crear PDF
 			time.sleep(1)
 			delete_file(enviar('notificacion-DINAPI.pdf','alfonso.medina@dinapi.gov.py','M.E.A',''))	#Enviar Correo Electronico
 		else:
@@ -648,7 +648,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		if newDoc == escrito_escrito_pago.documentId_docNbr:
 			cambio_estado(form_Id,escrito_escrito_pago.documentId_docNbr)
 			time.sleep(1)
-			envio_agente_recibido(form_Id)#Crear PDF
+			envio_agente_recibido(form_Id,escrito_escrito_pago.documentId_docNbr)#Crear PDF
 			time.sleep(1)
 			delete_file(enviar(
 			'notificacion-DINAPI.pdf',
@@ -864,6 +864,7 @@ def catch_toError(form_Id):
 			return("E99")
 
 
+#envio_agente_recibido('1547','2277877')
 
 
 
