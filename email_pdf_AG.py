@@ -291,5 +291,29 @@ def description(arg):
 		conn.close()
 
 
+def agent_email(arg):
+	try:
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select usuario_id from tramites where id = {}""".format(str(arg)))
+		row=cursor.fetchall()
+		for i in row:
+			return(agent_id(i[0]))	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
 
+def agent_id(arg):
+	try:
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select email from usuarios where id = {}""".format(str(arg)))
+		row=cursor.fetchall()
+		for i in row:
+			return(i[0])	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
 

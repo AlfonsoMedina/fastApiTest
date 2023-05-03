@@ -1,6 +1,7 @@
 
 from asyncio.windows_events import NULL
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr
+from email_pdf_AG import agent_email
 from getFileDoc import getFile
 from wipo.function_for_reception_in import user_doc_getList_escrito
 from wipo.ipas import mark_getlist, personAgente
@@ -630,6 +631,7 @@ class userDocModel(object):
 			self.newOwnershipData_ownerList_person_residenceCountryCode= datospersonales_pais
 		if expedienteoescrito_pais != '':
 			self.newOwnershipData_ownerList_person_residenceCountryCode= expedienteoescrito_pais
+
 		
 		self.newOwnershipData_ownerList_person_stateCode= ""
 		self.newOwnershipData_ownerList_person_stateName= ""
@@ -730,7 +732,7 @@ class userDocModel(object):
 		except Exception as e:
 			self.representationData_representativeList_person_companyRegisterRegistrationNbr= ""		
 		try:		
-			self.representationData_representativeList_person_email = ag_data['email']
+			self.representationData_representativeList_person_email = agent_email(doc_Id) #ag_data['email']
 		except Exception as e:
 			self.representationData_representativeList_person_email= ""		
 		try:		
