@@ -436,8 +436,10 @@ class userDocModel(object):
 			self.applicant_person_personName = nombreapellido
 
 
-		self.applicant_person_residenceCountryCode= datospersonales_pais + expedienteoescrito_pais 
-
+		if datospersonales_pais != '':
+			self.applicant_person_residenceCountryCode= datospersonales_pais
+		elif expedienteoescrito_pais != '':
+			self.applicant_person_residenceCountryCode= expedienteoescrito_pais
 
 
 
@@ -605,7 +607,11 @@ class userDocModel(object):
 		self.newOwnershipData_ownerList_person_legalNatureInOtherLang = ""
 		
 
-		self.newOwnershipData_ownerList_person_nationalityCountryCode= datospersonales_pais + expedienteoescrito_pais 
+		if datospersonales_pais != '':
+			self.newOwnershipData_ownerList_person_nationalityCountryCode= datospersonales_pais
+		if expedienteoescrito_pais != '':
+			self.newOwnershipData_ownerList_person_nationalityCountryCode= expedienteoescrito_pais
+
 		
 		self.newOwnershipData_ownerList_person_personGroupCode= ""
 		self.newOwnershipData_ownerList_person_personGroupName= ""
@@ -619,8 +625,11 @@ class userDocModel(object):
 
 		
 		self.newOwnershipData_ownerList_person_personNameInOtherLang= ""
-		
-		self.newOwnershipData_ownerList_person_residenceCountryCode= datospersonales_pais + expedienteoescrito_pais
+
+		if datospersonales_pais != '':
+			self.newOwnershipData_ownerList_person_residenceCountryCode= datospersonales_pais
+		if expedienteoescrito_pais != '':
+			self.newOwnershipData_ownerList_person_residenceCountryCode= expedienteoescrito_pais
 		
 		self.newOwnershipData_ownerList_person_stateCode= ""
 		self.newOwnershipData_ownerList_person_stateName= ""

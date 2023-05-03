@@ -1,0 +1,221 @@
+from dataclasses import replace
+import json
+import os
+from time import sleep
+from fpdf import FPDF, HTMLMixin  #pip install fpdf2
+from os import getcwd
+import barcode
+from barcode.writer import ImageWriter
+import psycopg2
+from dinapi.sfe import pendiente_sfe
+from wipo.ipas import *
+from tools.base64Decode import decode_pdf
+from tools.data_format import signo_format
+
+global_data = {}
+def envio_agente_recibido(arg0):
+	try:
+		"""
+		data = pendiente_sfe(arg0)
+
+
+		try:
+			for i in range(0,len(data[0]['respuestas'])):
+				if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_pais':
+					global_data = str(data[0]['respuestas'][i]['valor'])
+		except Exception as e:
+			global_data = ""
+
+		
+		def codebarheard(arg):
+			#Define content of the barcode as a string
+			number = arg
+			#Get the required barcode format
+			barcode_format = barcode.get_barcode_class('code128')
+			#Generate barcode and render as image
+			my_barcode = barcode_format(number, writer=ImageWriter())
+			#Save barcode as PNG
+			my_barcode.save("static/sfe_no_pres_head")
+
+		def codebarfoot(arg):
+			#Define content of the barcode as a string
+			number = arg
+			#Get the required barcode format
+			barcode_format = barcode.get_barcode_class('code128')
+			#Generate barcode and render as image
+			my_barcode = barcode_format(number, writer=ImageWriter())
+			#Save barcode as PNG
+			my_barcode.save("static/sfe_no_pres_foot")
+		def convert_fecha_hora_sfe(data):
+				date_fullE = str(data).split(" ")
+				fecha_fullE = date_fullE[0].split("-")
+				fecha_formatE = fecha_fullE[2]+"/"+fecha_fullE[1]+"/"+fecha_fullE[0]
+				hora_puntoE = date_fullE[1].split(".")
+				hora_guionE = hora_puntoE[0].split("-")
+				a=hora_guionE[0].split(":")
+				backhour = str(int(a[0])-3)+":"+a[1]+":"+a[2]
+				print(backhour)
+				return(str(fecha_formatE+" "+str(backhour)))
+		def convert_fecha_hora(data):
+			date_fullE = str(data).split(" ")
+			fecha_fullE = date_fullE[0].split("-")
+			fecha_formatE = fecha_fullE[2]+"/"+fecha_fullE[1]+"/"+fecha_fullE[0]
+			hora_puntoE = date_fullE[1].split(".")
+			hora_guionE = hora_puntoE[0].split("-")
+			return(str(fecha_formatE+" "+str(hora_guionE[0])))
+		"""
+		def traer_datos_pdf():
+
+			#codebarheard(str(global_data['expediente']))
+			#codebarfoot(str(global_data['codigo_barr']))
+
+			pdf = FPDF()
+			pdf.add_page()
+			pdf.set_font("helvetica", "B", 12)
+			"""
+			pdf.image('static/IMG.PNG',x=76,y=4,w=50,h=18)
+			
+			pdf.cell(0, 20, "________________________________________________________________________________________________________", align='c',ln=1)
+			
+			pdf.cell(0, 0, "------", align='c',ln=1)
+
+
+			pdf.set_font('helvetica', 'I', 8)
+			pdf.text(x=18, y=38, txt='Dirección General de Propiedad Industrial')
+			pdf.text(x=18, y=43, txt='Dirección de Asuntos Marcarios Litigiosos')
+			pdf.text(x=18, y=48, txt='Secretaría General - Mesa de Entradas')
+			pdf.image("static/sfe_no_pres_head.png",x=145,y=(pdf.get_y() + 4),w=30,h=15)
+
+			pdf.set_font("helvetica", "B", 9)
+
+			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
+			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
+			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
+			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
+			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
+			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
+
+
+			pdf.cell(w=40, h=8, txt='Fecha de Envío', border=1 , align='c' )
+			
+			pdf.cell(w=150, h=8, txt="", border=1, align='l' )
+		
+
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			pdf.set_font("helvetica", "B", 9)
+			pdf.cell(w=40, h=8, txt='Expediente Nro.', border=1, align='c')
+			
+			pdf.cell(w=50, h=8, txt="", border=1, align='l' )
+			pdf.set_font("helvetica", "B", 9)	
+			pdf.cell(w=50, h=8, txt='Fecha y Hora de Recepción', border=1, align='c' )
+			
+			pdf.cell(w=50, h=8, txt="", border=1, align='l' )
+
+
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			pdf.set_font("helvetica", "B", 12)
+			pdf.cell(w=190, h=8, txt='DATOS DE LA SOLICITUD A LA QUE SE OPONE', border=1, align='c' )
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.cell(w=30, h=8, txt='Solicitud Nro.:', border=1, align='c')
+			
+			pdf.cell(w=32, h=8, txt="", border=1, align='l' )
+			pdf.set_font("helvetica", "B", 9)	
+			pdf.cell(w=32, h=8, txt='Fecha', border=1, align='c' )
+			
+			pdf.cell(w=32, h=8, txt="", border=1, align='l' )
+			pdf.set_font("helvetica", "B", 9)	
+			pdf.cell(w=32, h=8, txt='Clase', border=1, align='c' )
+			
+			pdf.cell(w=32, h=8, txt="", border=1, align='l' )
+
+			
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			pdf.set_font("helvetica", "B", 9)
+			pdf.cell(w=40, h=8, txt='Denominación', border=1 , align='c' )
+			
+			pdf.cell(w=150, h=8, txt="", border=1, align='l' )
+
+
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			pdf.set_font("helvetica", "B", 12)
+			pdf.cell(w=190, h=8, txt='DATOS DE LA MARCA POR LA CUAL SE OPONE', border=1, align='c' )
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.cell(w=30, h=8, txt='Solicitud Nro.:', border=1, align='c')
+			
+			pdf.cell(w=32, h=8, txt="", border=1, align='l' )
+			pdf.set_font("helvetica", "B", 9)	
+			pdf.cell(w=32, h=8, txt='Fecha', border=1, align='c' )
+			
+			pdf.cell(w=32, h=8, txt="", border=1, align='l' )
+			pdf.set_font("helvetica", "B", 9)	
+			pdf.cell(w=32, h=8, txt='Clase', border=1, align='c' )
+			
+			pdf.cell(w=32, h=8, txt="------", border=1, align='l' )
+
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			pdf.set_font("helvetica", "B", 9)
+			pdf.cell(w=40, h=8, txt='Registro Nro:', border=1 , align='c' )
+			
+			pdf.cell(w=150, h=8, txt="", border=1, align='l' )
+
+
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			pdf.set_font("helvetica", "B", 9)
+			pdf.cell(w=40, h=8, txt='Denominación', border=1 , align='c' )
+			
+			pdf.cell(w=150, h=8, txt="", border=1, align='l' )
+			
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
+			"""
+
+
+
+			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=14)
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=76, y=20, txt='Formulario')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=20, txt='[EXPEL][DGPI][FE-061][J1]Escritos Marcas')			
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=74, y=25, txt='Fecha envio')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=25, txt='02/05/2023 12:00:50')			
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=85, y=30, txt='Tipo')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=30, txt='RP')			
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=66, y=35, txt='Fecha Recepcion')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=35, txt='02/05/2023 12:00:50')			
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=75, y=40, txt='Expediente')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=40, txt='2023-2300458')
+			pdf.image('static/qr.PNG',x=170,y=20,w=18,h=18)			
+
+			pdf.multi_cell(w=190, h=40, txt='', border=1 , align='c' )
+
+			
+
+
+
+
+			#pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
+
+			
+			pdf.output('pdf/notificacion-DINAPI.pdf')
+
+		traer_datos_pdf()
+
+		#print(global_data)
+		return(True)
+	except Exception as e:
+		print(e)
+

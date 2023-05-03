@@ -348,3 +348,74 @@ Nro de Registro
 Nombres y Apellidos / Razón Social
 Emp. Ntra. Sra. De La Asuncion C.i.s.a.
 ----------------------------------------------------------------
+
+
+
+
+
+
+1 DSA true        2023-05-02      4 SFE test - Aplicante M.E.A E 2299441.0 1 2022.0      E 23005467 1 2023 DSA
+
+
+
+
+
+
+def userdata(nombre):
+  con = sqlite3.connect('db.sqlite3')
+  cur = con.cursor()
+  cur.execute("""SELECT is_staff FROM auth_user WHERE username = '{}'""".format(str(nombre)))
+  print(cur.fetchone())
+
+userdata('innovatica')
+
+
+
+
+
+
+import sqlite3
+
+conexion=sqlite3.connect("bd1.sqlite3")
+try:
+    conexion.execute("""create table articulos (
+                              codigo integer primary key autoincrement,
+                              descripcion text,
+                              precio real
+                        )""")
+    print("se creo la tabla articulos")                        
+except sqlite3.OperationalError:
+    print("La tabla articulos ya existe")                    
+conexion.close()
+
+conexion=sqlite3.connect("bd1.sqlite3")
+conexion.execute("insert into articulos(descripcion,precio) values (?,?)", ("naranjas", 23.50))
+conexion.execute("insert into articulos(descripcion,precio) values (?,?)", ("peras", 34))
+conexion.execute("insert into articulos(descripcion,precio) values (?,?)", ("bananas", 25))
+conexion.commit()
+conexion.close()
+
+conexion=sqlite3.connect("bd1.sqlite3")
+cursor=conexion.execute("select codigo,descripcion,precio from articulos where descripcion = 'bananas' ")
+for fila in cursor:
+    print(fila)
+conexion.close()
+
+
+
+
+
+
+
+
+
+<py-config>
+  packages = ["sqlite3"]
+  [[fetch]]
+  files = ["./controls.py"]
+</py-config>
+
+<py-script>
+from controls import userdata
+print(userdata('Alfonso'))
+</py-script>

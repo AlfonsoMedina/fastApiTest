@@ -5,10 +5,11 @@ from sqlite3 import Time
 import string
 import time
 from time import sleep
-from unicodedata import numeric
+from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
 from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, tasa_id
 from getFileDoc import getFile
+#from send_mail import delete_file, enviar
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito, user_doc_read_min
@@ -330,6 +331,10 @@ def compileAndInsert(form_Id,typ):
 						insert_doc.representationData_representativeList_person_zipCode,
 						insert_doc.representationData_representativeList_representativeType)
 			process_day_commit_Nbr()
+			time.sleep(1)
+			#envio_agente_recibido()		#Crear PDF
+			time.sleep(1)
+			#delete_file(enviar())	#Enviar Correo Electronico
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
@@ -850,7 +855,7 @@ def catch_toError(form_Id):
 
 
 
-
+envio_agente_recibido("1547")
 
 
 
