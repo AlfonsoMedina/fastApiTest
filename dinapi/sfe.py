@@ -876,7 +876,7 @@ def reglas_me():
 		reglas = []
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""select tipo_doc,ma,pa,di,ig,rq_cb,rq_pago,ttasa,exp_ri,esc_ri,rq_sol,rq_ag,estado from reglas_me where tipo_escrito in ({})""".format(str(tip_doc()).replace("[","").replace("]","").replace("(","").replace(",)","")))
+		cursor.execute("""select tipo_doc,ma,pa,di,ig,rq_cb,rq_pago,ttasa,exp_ri,esc_ri,rq_sol,rq_ag,estado from reglas_me where estado = 'Activo' and tipo_escrito in ({})""".format(str(tip_doc()).replace("[","").replace("]","").replace("(","").replace(",)","")))
 		row=cursor.fetchall()
 		for i in row:
 			reglas.append(i)

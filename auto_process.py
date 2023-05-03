@@ -47,10 +47,16 @@ def captura_pendientes():
 
 #arg0 id and arg1 sigla in state 7
 def insert_list(arg0:string,arg1:string):
-	
-	pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
+	try:
+		pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
+	except Exception as e:
+		data_validator(f'Regla inactiva , tabla tramites ID: {arg0}')
+		cambio_estado_soporte(arg0)	
+		return()	
 	pago_auth:str = str(pago_id(arg0)).replace("None","sin dato en bancar")
 	valid_rules:str = []
+
+
 	#print(' ')
 	#print(arg0) #tramite ID	
 	#print(str(arg1)) #TIPO DE DOCUMENTO
@@ -864,9 +870,9 @@ def catch_toError(form_Id):
 			return("E99")
 
 
-#envio_agente_recibido('1547','2277877')
+#envio_agente_recibido('1540','2277877')
 
-
+#https://sfe-beta.dinapi.gov.py/dashboard/expedientes/tramites/1547
 
 
 
