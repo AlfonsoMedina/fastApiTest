@@ -332,7 +332,7 @@ def compileAndInsert(form_Id,typ):
 						insert_doc.representationData_representativeList_representativeType)
 			process_day_commit_Nbr()
 			time.sleep(1)
-			#envio_agente_recibido()		#Crear PDF
+			envio_agente_recibido(form_Id)		#Crear PDF
 			time.sleep(1)
 			#delete_file(enviar())	#Enviar Correo Electronico
 		except zeep.exceptions.Fault as e:
@@ -855,7 +855,7 @@ def catch_toError(form_Id):
 
 
 
-envio_agente_recibido("1547")
+
 
 
 

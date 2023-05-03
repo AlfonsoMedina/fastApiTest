@@ -10,7 +10,8 @@ import psycopg2
 from dinapi.sfe import pendiente_sfe
 from wipo.ipas import *
 from tools.base64Decode import decode_pdf
-from tools.data_format import signo_format
+from tools.data_format import fecha_barra, hora, signo_format
+import tools.connect as connex
 
 global_data = {}
 def envio_agente_recibido(arg0):
@@ -64,6 +65,8 @@ def envio_agente_recibido(arg0):
 			hora_guionE = hora_puntoE[0].split("-")
 			return(str(fecha_formatE+" "+str(hora_guionE[0])))
 		"""
+		
+		
 		def traer_datos_pdf():
 
 			#codebarheard(str(global_data['expediente']))
@@ -72,6 +75,9 @@ def envio_agente_recibido(arg0):
 			pdf = FPDF()
 			pdf.add_page()
 			pdf.set_font("helvetica", "B", 12)
+
+
+
 			"""
 			pdf.image('static/IMG.PNG',x=76,y=4,w=50,h=18)
 			
@@ -175,25 +181,26 @@ def envio_agente_recibido(arg0):
 
 			"""
 
+			hora_envio = hora(str(form_id(arg0)[1])).split(".")
+			hora_recep = hora(str(form_id(arg0)[2])).split(".")
 
-
-			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=14)
+			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=15)
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=76, y=20, txt='Formulario')
 			pdf.set_font("helvetica", "", 8)
-			pdf.text(x=100, y=20, txt='[EXPEL][DGPI][FE-061][J1]Escritos Marcas')			
+			pdf.text(x=100, y=20, txt=str(form_descrip(str(form_id(arg0)[0]))))			
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=74, y=25, txt='Fecha envio')
 			pdf.set_font("helvetica", "", 8)
-			pdf.text(x=100, y=25, txt='02/05/2023 12:00:50')			
+			pdf.text(x=100, y=25, txt=fecha_barra(str(form_id(arg0)[1]))+" "+hora_envio[0])			
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=85, y=30, txt='Tipo')
 			pdf.set_font("helvetica", "", 8)
-			pdf.text(x=100, y=30, txt='RP')			
+			pdf.text(x=100, y=30, txt=str(sigla_id(str(form_id(arg0)[3]))))			
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=66, y=35, txt='Fecha Recepcion')
 			pdf.set_font("helvetica", "", 8)
-			pdf.text(x=100, y=35, txt='02/05/2023 12:00:50')			
+			pdf.text(x=100, y=35, txt=fecha_barra(str(form_id(arg0)[2]))+" "+ hora_recep[0])			
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=75, y=40, txt='Expediente')
 			pdf.set_font("helvetica", "", 8)
@@ -219,3 +226,43 @@ def envio_agente_recibido(arg0):
 	except Exception as e:
 		print(e)
 
+
+
+def form_descrip(arg):
+	try:
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select nombre  from formularios where id = {}""".format(str(arg)))
+		row=cursor.fetchall()
+		for i in row:
+			return(i[0])	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+def form_id(arg):
+	try:
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select formulario_id, enviado_at, recepcionado_at, tipo_documento_id from tramites where id = {}""".format(str(arg)))
+		row=cursor.fetchall()
+		for i in row:
+			return(i)	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+def sigla_id(arg):
+	try:
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select siglas from tipos_documento where id = {}""".format(str(arg)))
+		row=cursor.fetchall()
+		for i in row:
+			return(i[0])	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
