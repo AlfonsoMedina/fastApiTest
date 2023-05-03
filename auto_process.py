@@ -9,7 +9,7 @@ from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
 from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, tasa_id
 from getFileDoc import getFile
-#from send_mail import delete_file, enviar
+from tools.send_mail import delete_file, enviar
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito, user_doc_read_min
@@ -331,10 +331,6 @@ def compileAndInsert(form_Id,typ):
 						insert_doc.representationData_representativeList_person_zipCode,
 						insert_doc.representationData_representativeList_representativeType)
 			process_day_commit_Nbr()
-			time.sleep(1)
-			envio_agente_recibido(form_Id)		#Crear PDF
-			time.sleep(1)
-			#delete_file(enviar())	#Enviar Correo Electronico
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
@@ -343,6 +339,10 @@ def compileAndInsert(form_Id,typ):
 			exists = str(user_doc_read_min('E',insert_doc.documentId_docNbr,insert_doc.documentId_docOrigin,insert_doc.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 			if exists == insert_doc.documentId_docNbr:
 				cambio_estado(form_Id,insert_doc.documentId_docNbr)
+				time.sleep(1)
+				envio_agente_recibido(form_Id)	#Crear PDF
+				time.sleep(1)
+				delete_file(enviar('notificacion-DINAPI.pdf','alfonso.medina@dinapi.gov.py','M.E.A',''))	#Enviar Correo Electronico				
 		except Exception as e:
 			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)			
@@ -493,6 +493,10 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 		newDoc = str(user_doc_read_min('E',escrito_relacionado.documentId_docNbr,escrito_relacionado.documentId_docOrigin,escrito_relacionado.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 		if newDoc == escrito_relacionado.documentId_docNbr:
 			cambio_estado(form_Id,escrito_relacionado.documentId_docNbr)
+			time.sleep(1)
+			envio_agente_recibido(form_Id)		#Crear PDF
+			time.sleep(1)
+			delete_file(enviar('notificacion-DINAPI.pdf','alfonso.medina@dinapi.gov.py','M.E.A',''))	#Enviar Correo Electronico
 		else:
 			data_validator(f'Error al cambiar estado de esc. N° {escrito_relacionado.documentId_docNbr}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
@@ -643,6 +647,14 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		newDoc = str(user_doc_read_min('E',escrito_escrito_pago.documentId_docNbr,escrito_escrito_pago.documentId_docOrigin,escrito_escrito_pago.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 		if newDoc == escrito_escrito_pago.documentId_docNbr:
 			cambio_estado(form_Id,escrito_escrito_pago.documentId_docNbr)
+			time.sleep(1)
+			envio_agente_recibido(form_Id)#Crear PDF
+			time.sleep(1)
+			delete_file(enviar(
+			'notificacion-DINAPI.pdf',
+			'alfonso.medina@dinapi.gov.py',
+			'M.E.A',
+			''))#Enviar Correo Electronico			
 		else:
 			data_validator(f'Error al cambiar estado de esc. N° {escrito_escrito_pago.documentId_docNbr}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)

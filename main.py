@@ -1,8 +1,9 @@
 from time import sleep
 from urllib import request
-from fastapi import FastAPI
+from fastapi import  FastAPI
 from pydantic import BaseModel
 from auto_process import insert_list
+from tools.send_mail import enviar
 from tools.connect import MEA_TIEMPO_ACTUALIZACION
 from dinapi.sfe import count_pendiente, format_userdoc, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, tip_doc
 from models.InsertUserDocModel import userDocModel
@@ -2125,6 +2126,23 @@ def pendientes_sfe_sop(item:pendientes_fecha):
 @app.post('/api/pendientes_sfe_not_pag', summary="API", tags=["Lista de pendientes sin paginar"])
 def pendientes_sfe_m(item:pendientes_fecha):
 	return(pendientes_sfe_not_pag(item.fecha))
+
+
+
+class send_mail_ag(BaseModel):
+	fileName:str = ""
+	ag_mail:str = ""
+	affair:str = "" 
+@app.post('/sfe/send_mail_ag', summary="SFE", tags=["Envio de correo al agente"])
+async def send_pdf_mail_ag(item:send_mail_ag):
+	return(enviar(item.fileName,item.ag_mail,item.affair,''))
+
+
+
+
+
+
+
 
 class pendientes_count(BaseModel):
 	fecha:str = ""                
