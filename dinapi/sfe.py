@@ -89,7 +89,7 @@ def registro_sfe(arg):
 			except Exception as e:
 				global_data['especificar'] = "No definido"	
 			try:
-				if(i['descripcion'] == "Nombres y Apellidos" and i['campo'] == 'datospersonales_nombreapellido'):
+				if(i['descripcion'] == "Nombres y Apellidos" and i['campo'] == 'datospersonales_nombreapellido'): 
 					global_data['nombre_soli'] = i['valor']
 			except Exception as e:
 				global_data['nombre_soli'] = "No definido"											
@@ -1487,8 +1487,6 @@ def data_validator(msg):
 		print(e)
 	finally:
 		conn.close()
-
-
 
 
 

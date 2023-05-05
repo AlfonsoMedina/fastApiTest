@@ -9,11 +9,12 @@ from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
 from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, tasa_id
 from getFileDoc import getFile
+from models.insertRegModel import insertRegModel
 from tools.send_mail import delete_file, enviar
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito, user_doc_read_min
-from wipo.ipas import user_doc_afectado, user_doc_receive, user_doc_update
+from wipo.ipas import mark_insert_reg, user_doc_afectado, user_doc_receive, user_doc_update
 import zeep
 import asyncio
 import threading
@@ -147,7 +148,6 @@ def compileAndInsert(form_Id,typ):
 
 		insert_doc = userDocModel()
 		insert_doc.setData(form_Id)
-		
 		try:
 			insert_user_doc_escritos(
 						insert_doc.affectedFileIdList_fileNbr,
@@ -664,6 +664,53 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		else:
 			data_validator(f'Error al cambiar estado de esc. N° {escrito_escrito_pago.documentId_docNbr}, tabla tramites ID: {form_Id}')
 			cambio_estado_soporte(form_Id)
+
+def insertReg(form_Id):
+	insert_mark = insertRegModel()
+	insert_mark.setData(form_Id)
+	try:
+		print(mark_insert_reg(
+			insert_mark.file_fileId_fileNbr,
+			insert_mark.file_fileId_fileSeq,
+			insert_mark.file_fileId_fileSeries,
+			insert_mark.file_fileId_fileType,
+			insert_mark.file_filingData_applicationSubtype,
+			insert_mark.file_filingData_applicationType,
+			insert_mark.file_filingData_captureUserId,
+			insert_mark.file_filingData_filingDate,
+			insert_mark.file_filingData_captureDate,
+			insert_mark.file_filingData_lawCode,
+			insert_mark.file_filingData_paymentList_currencyType,
+			insert_mark.file_filingData_paymentList_receiptAmount,
+			insert_mark.file_filingData_paymentList_receiptDate,
+			insert_mark.file_filingData_paymentList_receiptNbr,
+			insert_mark.file_filingData_paymentList_receiptNotes,
+			insert_mark.file_filingData_paymentList_receiptType,
+			insert_mark.file_filingData_receptionUserId,
+			insert_mark.file_ownershipData_ownerList_person_addressStreet,
+			insert_mark.file_ownershipData_ownerList_person_nationalityCountryCode,
+			insert_mark.file_ownershipData_ownerList_person_personName,
+			insert_mark.file_ownershipData_ownerList_person_residenceCountryCode,
+			insert_mark.file_rowVersion,
+			insert_mark.agentCode,
+			insert_mark.file_representationData_representativeList_representativeType,
+			insert_mark.rowVersion,
+			insert_mark.protectionData_dummy,
+			insert_mark.protectionData_niceClassList_niceClassDescription,
+			insert_mark.protectionData_niceClassList_niceClassDetailedStatus,
+			insert_mark.protectionData_niceClassList_niceClassEdition,
+			insert_mark.protectionData_niceClassList_niceClassGlobalStatus,
+			insert_mark.protectionData_niceClassList_niceClassNbr,
+			insert_mark.protectionData_niceClassList_niceClassVersion,
+			insert_mark.logoData,
+			insert_mark.logoType,
+			insert_mark.signData_markName,
+			insert_mark.signData_signType
+		))
+		process_day_commit_Nbr()
+		cambio_estado(form_Id,insert_mark.file_fileId_fileNbr)
+	except Exception as e:
+		print(e)
 
 def catch_toError(form_Id):
 	getExcept = userDocModel()

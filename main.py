@@ -2,7 +2,8 @@ from time import sleep
 from urllib import request
 from fastapi import  FastAPI
 from pydantic import BaseModel
-from auto_process import insert_list
+from auto_process import insert_list, insertReg
+from models.insertRegModel import insertRegModel
 from tools.send_mail import enviar
 from tools.connect import MEA_TIEMPO_ACTUALIZACION
 from dinapi.sfe import count_pendiente, format_userdoc, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, tip_doc
@@ -2060,6 +2061,53 @@ def TEST_MEA(id_tramite):
 	create_userdoc['representationData_representativeList_representativeType'] = catch_data.representationData_representativeList_representativeType 
 	return(create_userdoc)
 	#return(format_userdoc(id_tramite))
+
+@app.post('/sis/test_reg', summary="MEA", tags=["test insert registro"])
+def TEST_MEA_reg(id_tramite):
+	create_userdoc = {}
+	catch_data = insertRegModel()
+	catch_data.setData(id_tramite)
+	create_userdoc['file_fileId_fileNbr'] = catch_data.file_fileId_fileNbr
+	create_userdoc['file_fileId_fileSeq'] = catch_data.file_fileId_fileSeq
+	create_userdoc['file_fileId_fileSeries'] = catch_data.file_fileId_fileSeries
+	create_userdoc['file_fileId_fileType'] = catch_data.file_fileId_fileType
+	create_userdoc['file_filingData_applicationSubtype'] = catch_data.file_filingData_applicationSubtype
+	create_userdoc['file_filingData_applicationType'] = catch_data.file_filingData_applicationType
+	create_userdoc['file_filingData_captureUserId'] = catch_data.file_filingData_captureUserId
+	create_userdoc['file_filingData_filingDate'] = catch_data.file_filingData_filingDate
+	create_userdoc['file_filingData_captureDate'] = catch_data.file_filingData_captureDate
+	create_userdoc['file_filingData_lawCode'] = catch_data.file_filingData_lawCode
+	create_userdoc['file_filingData_paymentList_currencyType'] = catch_data.file_filingData_paymentList_currencyType
+	create_userdoc['file_filingData_paymentList_receiptAmount'] = catch_data.file_filingData_paymentList_receiptAmount
+	create_userdoc['file_filingData_paymentList_receiptDate'] = catch_data.file_filingData_paymentList_receiptDate
+	create_userdoc['file_filingData_paymentList_receiptNbr'] = catch_data.file_filingData_paymentList_receiptNbr
+	create_userdoc['file_filingData_paymentList_receiptNotes'] = catch_data.file_filingData_paymentList_receiptNotes
+	create_userdoc['file_filingData_paymentList_receiptType'] = catch_data.file_filingData_paymentList_receiptType
+	create_userdoc['file_filingData_receptionUserId'] = catch_data.file_filingData_receptionUserId
+	create_userdoc['file_ownershipData_ownerList_person_addressStreet'] = catch_data.file_ownershipData_ownerList_person_addressStreet
+	create_userdoc['file_ownershipData_ownerList_person_nationalityCountryCode'] = catch_data.file_ownershipData_ownerList_person_nationalityCountryCode
+	create_userdoc['file_ownershipData_ownerList_person_personName'] = catch_data.file_ownershipData_ownerList_person_personName
+	create_userdoc['file_ownershipData_ownerList_person_residenceCountryCode'] = catch_data.file_ownershipData_ownerList_person_residenceCountryCode
+	create_userdoc['file_rowVersion'] = catch_data.file_rowVersion
+	create_userdoc['agentCode'] = catch_data.agentCode
+	create_userdoc['file_representationData_representativeList_representativeType'] = catch_data.file_representationData_representativeList_representativeType
+	create_userdoc['rowVersion'] = catch_data.rowVersion
+	create_userdoc['protectionData_dummy'] = catch_data.protectionData_dummy
+	create_userdoc['protectionData_niceClassList_niceClassDescription'] = catch_data.protectionData_niceClassList_niceClassDescription
+	create_userdoc['protectionData_niceClassList_niceClassDetailedStatus'] = catch_data.protectionData_niceClassList_niceClassDetailedStatus
+	create_userdoc['protectionData_niceClassList_niceClassEdition'] = catch_data.protectionData_niceClassList_niceClassEdition
+	create_userdoc['protectionData_niceClassList_niceClassGlobalStatus'] = catch_data.protectionData_niceClassList_niceClassGlobalStatus
+	create_userdoc['protectionData_niceClassList_niceClassNbr'] = catch_data.protectionData_niceClassList_niceClassNbr
+	create_userdoc['protectionData_niceClassList_niceClassVersion'] = catch_data.protectionData_niceClassList_niceClassVersion
+	create_userdoc['logoData'] = catch_data.logoData
+	create_userdoc['logoType']= catch_data.logoType
+	create_userdoc['signData_markName'] = catch_data.signData_markName
+	create_userdoc['signData_signType'] = catch_data.signData_signType
+	return(create_userdoc)
+
+@app.post('/sfe/insert_mea_reg', summary="MEA", tags=["Insert registro de marcas MEA"])
+def insert_mea_reg(id_tramite):
+	return(insertReg(id_tramite))
 
 @app.post('/sfe/getTime', summary="MEA", tags=["Tiempo de busqueda para capturar pendientes en tabla tramites en segundos"])
 def get_time():
