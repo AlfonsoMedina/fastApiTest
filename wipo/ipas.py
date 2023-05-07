@@ -577,7 +577,6 @@ def office_doc_read():
 						}
 	return(clientMark.service.OfficedocRead(**params))
 
-
 def mark_insert_reg(
 					fileId_fileId_fileNbr,
 					file_fileId_fileSeq,
@@ -741,7 +740,6 @@ def mark_insert_reg(
 	except zeep.exceptions.Fault as e:
 		return(str(e))
 		
-
 def mark_insert_ren(
 					file_fileId_fileNbr,
 					file_fileId_fileSeq,

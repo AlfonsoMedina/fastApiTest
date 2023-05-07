@@ -74,7 +74,7 @@ def registro_sfe(arg):
 			except Exception as e:
 				global_data['reivindicaciones'] = "No definido"	
 			try:
-				if(i['descripcion'] == "Tipo de Marca" and i['campo'] == 'marca_tipomarca'):
+				if(i['descripcion'] == "Tipo de Marca" or i['descripcion'] == "Tipo de marca"):
 					global_data["tipo_on"] = i['valor']
 			except Exception as e:
 				global_data['tipo_on'] = "No definido"	
@@ -200,12 +200,21 @@ def renovacion_sfe(arg):
 		global_data['email_agente'] = str(row[0][27])
 		global_data['nombre_formulario'] = str(row[0][3])
 		for i in row[0][8]:
+
 			if(i['descripcion'] == "Clase" and i['campo'] == 'marcarenov_clase'):
 				clase_tipo = i['valor']
 				if(int(clase_tipo.replace(".0","")) <= 34):
 					global_data['clasificacion']= 'PRODUCTO'
 				if(int(clase_tipo.replace(".0","")) >= 35):
-					global_data['clasificacion']= 'SERVICIOS'						
+					global_data['clasificacion']= 'SERVICIOS'
+
+			if(i['descripcion'] == "Clasificación" and i['campo'] == 'marcarenov_clase'):
+				clase_tipo = i['valor']
+				if(int(clase_tipo.replace(".0","")) <= 34):
+					global_data['clasificacion']= 'PRODUCTO'
+				if(int(clase_tipo.replace(".0","")) >= 35):
+					global_data['clasificacion']= 'SERVICIOS'
+
 			try:					
 				if(i['campo'] == "marca_distintivo"):
 					global_data['distintivo'] = i['valor']['archivo']['url']
@@ -252,12 +261,12 @@ def renovacion_sfe(arg):
 			except Exception as e:
 						global_data['especificar'] = "No definido"							
 			try:	
-						if(i['descripcion'] == "Nombres y Apellidos / Razón Social" and i['campo'] == 'datospersonalesrenov_nombrerazon'):
+						if(i['campo'] == 'datospersonalesrenov_nombrerazon'):
 							global_data['nombre_soli'] = i['valor']
 			except Exception as e:
 						global_data['nombre_soli'] = "No definido"							
 			try:						
-						if(i['descripcion'] == "Razón Social" and i['campo'] == 'datospersonales_razonsocial'):
+						if(i['campo'] == 'marcarenov_denominacion'):
 							global_data['razon_social']=i['valor']
 			except Exception as e:
 						global_data['razon_social'] = "No definido"							
@@ -302,7 +311,7 @@ def renovacion_sfe(arg):
 			except Exception as e:
 						global_data['act_numero'] = "No definido"
 			try:	
-						if(i['descripcion'] == "País " and i['campo'] == 'actualizacion_pais'):
+						if(i['campo'] == 'actualizacion_pais'):
 							global_data['act_pais']=i['valor']
 			except Exception as e:
 						global_data['act_pais'] = "No definido"
@@ -1478,8 +1487,8 @@ def data_validator(msg):
 	try:
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""INSERT INTO public.log_error( fecha_evento, evento, descripcion_evento, sistema_origen)
-						  VALUES( '{}', 'E99', '{}', 'M.E.A.');""".format(captureDate.capture_full(), msg ))
+		cursor.execute("""INSERT INTO public.log_error( fecha_evento, evento, descripcion_evento, sistema_origen,break)
+						  VALUES( '{}', 'E99', '{}', 'M.E.A.','false');""".format(captureDate.capture_full(), msg ))
 		cursor.rowcount
 		conn.commit()
 		conn.close()

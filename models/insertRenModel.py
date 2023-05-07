@@ -1,6 +1,6 @@
 
 from asyncio.windows_events import NULL
-from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe
+from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe, renovacion_sfe
 from getFileDoc import getFile
 from wipo.function_for_reception_in import user_doc_getList_escrito
 from wipo.ipas import mark_getlist, personAgente
@@ -13,7 +13,7 @@ from tools.base64Decode import image_url_to_b64
 default_val = lambda arg: arg if arg == "null" else "" 
 default_val_e99 = lambda arg: arg if arg != "" else ""
 
-class insertRegModel(object):
+class insertRenModel(object):
 	file_fileId_fileNbr:str = ""
 	file_fileId_fileSeq:str = ""
 	file_fileId_fileSeries:str = ""
@@ -37,6 +37,14 @@ class insertRegModel(object):
 	file_ownershipData_ownerList_person_residenceCountryCode:str = ""
 	file_rowVersion:str = ""
 	agentCode:str = ""
+
+	file_relationshipList_fileId_fileNbr:str = ""
+	file_relationshipList_fileId_fileSeq:str = ""
+	file_relationshipList_fileId_fileSeries:str = ""
+	file_relationshipList_fileId_fileType:str = ""
+	file_relationshipList_relationshipRole:str = ""
+	file_relationshipList_relationshipType:str = ""
+
 	file_representationData_representativeList_representativeType:str = ""
 	rowVersion:str = ""
 	protectionData_dummy:str = ""
@@ -63,64 +71,67 @@ class insertRegModel(object):
 
 	def setData(self,doc_Id):
 		
-		self.data = registro_sfe(doc_Id) #pendiente_sfe(doc_Id)
+		self.data = renovacion_sfe(doc_Id) #pendiente_sfe(doc_Id)
+		
+
+		#print(self.data)
 		
 		try:
 			ag_data = personAgente(code_ag(self.data[0]['usuario_id']))[0]
 		except Exception as e:
 			print("")
 
-		if self.data['tipo_on'] == "Denominativa": 
+		if self.data['tipo_guion'] == "Denominativa": 
 			self.signType="N"
 			self.LogData = ""
 			self.LogTyp = ""			
 
-		if self.data['tipo_on'] == "D": 
+		if self.data['tipo_guion'] == "D": 
 			self.signType="N"
 			self.LogData = ""
 			self.LogTyp = ""						
 
-		if self.data['tipo_on'] == "Figurativa": 
+		if self.data['tipo_guion'] == "Figurativa": 
 			self.signType="L"
 			self.LogData = image_url_to_b64(self.data['distintivo'])
 			self.LogTyp = "JPG"			
 
-		if self.data['tipo_on'] == "F": 
+		if self.data['tipo_guion'] == "F": 
 			self.signType="L"
 			self.LogData = image_url_to_b64(self.data['distintivo'])
 			self.LogTyp = "JPG"							
 
-		if self.data['tipo_on'] == "Mixta": 
+		if self.data['tipo_guion'] == "Mixta": 
 			self.signType="B"
 			self.LogData = image_url_to_b64(self.data['distintivo'])
 			self.LogTyp = "JPG"				
 
-		if self.data['tipo_on'] == "M": 
+		if self.data['tipo_guion'] == "M": 
 			self.signType="B"
 			self.LogData = image_url_to_b64(self.data['distintivo'])
 			self.LogTyp = "JPG"				
 
-		if self.data['tipo_on'] == "Tridimensional": 
+		if self.data['tipo_guion'] == "Tridimensional": 
 			self.signType="T"
 			self.LogData = image_url_to_b64(self.data['distintivo'])
 			self.LogTyp = "JPG"				
 
-		if self.data['tipo_on'] == "T": 
+		if self.data['tipo_guion'] == "T": 
 			self.signType="T"
 			self.LogData = image_url_to_b64(self.data['distintivo'])
 			self.LogTyp = "JPG"										
 		
-		if self.data['tipo_on'] == "Sonora": 
+		if self.data['tipo_guion'] == "Sonora": 
 			self.signType="S"
 			self.LogData = ""
 			self.LogTyp = ""			
 
-		if self.data['tipo_on'] == "S": 
+		if self.data['tipo_guion'] == "S": 
 			self.signType="S"
 			self.LogData = ""
 			self.LogTyp = ""			
 
-		if self.data['tipo_on'] == "Olfativa": 
+		if self.data['tipo_guion'] == "Olfativa": 
 			self.signType="O"
 			self.LogData = ""
 			self.LogTyp = ""				
@@ -141,7 +152,7 @@ class insertRegModel(object):
 		self.file_fileId_fileSeries = captureDate.capture_year()
 		self.file_fileId_fileType = "M"
 		self.file_filingData_applicationSubtype = self.tipo_clase
-		self.file_filingData_applicationType = "REG"
+		self.file_filingData_applicationType = "REN"
 		self.file_filingData_captureUserId = "4"
 		self.file_filingData_filingDate = captureDate.capture_full()
 		self.file_filingData_captureDate = captureDate.capture_full()
@@ -154,13 +165,25 @@ class insertRegModel(object):
 		self.file_filingData_paymentList_receiptType = "1"
 		self.file_filingData_receptionUserId = "4"
 
-		self.file_ownershipData_ownerList_person_addressStreet = self.data['direccion']
-		self.file_ownershipData_ownerList_person_nationalityCountryCode = self.data['pais']
-		self.file_ownershipData_ownerList_person_personName = self.data['razon_social'] + self.data['nombre_soli']
-		self.file_ownershipData_ownerList_person_residenceCountryCode = self.data['pais']
+
+		self.file_ownershipData_ownerList_person_owneraddressStreet = self.data['solic_dir']
+		self.file_ownershipData_ownerList_person_ownernationalityCountryCode = self.data['act_pais']
+		self.file_ownershipData_ownerList_person_ownerpersonName = self.data['nombre_soli']
+		self.file_ownershipData_ownerList_person_ownerresidenceCountryCode = self.data['act_pais']
+
 
 		self.file_rowVersion = "1.0"
 		self.agentCode = self.data['code_agente']
+
+
+		self.file_relationshipList_fileId_fileNbr:str = ""
+		self.file_relationshipList_fileId_fileSeq:str = ""
+		self.file_relationshipList_fileId_fileSeries:str = ""
+		self.file_relationshipList_fileId_fileType:str = ""
+		self.file_relationshipList_relationshipRole:str = ""
+		self.file_relationshipList_relationshipType:str = ""
+
+
 		self.file_representationData_representativeList_representativeType = "AG"
 		self.rowVersion = "1.0"
 		self.protectionData_dummy = "false"
