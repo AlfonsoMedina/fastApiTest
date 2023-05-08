@@ -3,7 +3,7 @@ from asyncio.windows_events import NULL
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe, renovacion_sfe
 from getFileDoc import getFile
 from wipo.function_for_reception_in import user_doc_getList_escrito
-from wipo.ipas import mark_getlist, personAgente
+from wipo.ipas import mark_getlist, mark_getlistReg, personAgente
 import tools.connect as connex
 import tools.filing_date as captureDate
 import tools.connect as connex
@@ -62,7 +62,9 @@ class insertRenModel(object):
 	tipo_clase:str = ''
 	data:str = ''
 	LogData:str = ''
+	LogDataUri:str = ''
 	LogTyp:str = ''
+	relacion:str = ''
 	def __init__(self):
 		self.signType = ""
 		self.tipo_clase = ""
@@ -71,15 +73,34 @@ class insertRenModel(object):
 
 	def setData(self,doc_Id):
 		
-		self.data = renovacion_sfe(doc_Id) #pendiente_sfe(doc_Id)
-		
-
+		self.data = renovacion_sfe(doc_Id) 
+	
 		#print(self.data)
-		
+
+		if self.data['distintivo'] == "No definido":
+			self.LogDataUri = self.data['distintivoAct']
+		else:
+			self.LogDataUri = self.data['distintivo']
+
+		#print(self.LogDataUri)
+
 		try:
 			ag_data = personAgente(code_ag(self.data[0]['usuario_id']))[0]
 		except Exception as e:
 			print("")
+
+		try:
+			self.relacion = mark_getlistReg(self.data['registro_nbr'])
+			fileNbr = str(self.relacion[0]['fileId']['fileNbr']['doubleValue'])
+			fileSeq = self.relacion[0]['fileId']['fileSeq']
+			fileSeries = str(self.relacion[0]['fileId']['fileSeries']['doubleValue'])
+			fileId = self.relacion[0]['fileId']['fileType']	
+		except Exception as e:
+			fileNbr = ""
+			fileSeq = ""
+			fileSeries = ""
+			fileId = ""
+
 
 		if self.data['tipo_guion'] == "Denominativa": 
 			self.signType="N"
@@ -93,32 +114,32 @@ class insertRenModel(object):
 
 		if self.data['tipo_guion'] == "Figurativa": 
 			self.signType="L"
-			self.LogData = image_url_to_b64(self.data['distintivo'])
+			self.LogData = image_url_to_b64(self.LogDataUri)
 			self.LogTyp = "JPG"			
 
 		if self.data['tipo_guion'] == "F": 
 			self.signType="L"
-			self.LogData = image_url_to_b64(self.data['distintivo'])
+			self.LogData = image_url_to_b64(self.LogDataUri)
 			self.LogTyp = "JPG"							
 
 		if self.data['tipo_guion'] == "Mixta": 
 			self.signType="B"
-			self.LogData = image_url_to_b64(self.data['distintivo'])
+			self.LogData = image_url_to_b64(self.LogDataUri)
 			self.LogTyp = "JPG"				
 
-		if self.data['tipo_guion'] == "M": 
+		if self.data['tipo_guion'] == "B": 
 			self.signType="B"
-			self.LogData = image_url_to_b64(self.data['distintivo'])
+			self.LogData = image_url_to_b64(self.LogDataUri)
 			self.LogTyp = "JPG"				
 
 		if self.data['tipo_guion'] == "Tridimensional": 
 			self.signType="T"
-			self.LogData = image_url_to_b64(self.data['distintivo'])
+			self.LogData = image_url_to_b64(self.LogDataUri)
 			self.LogTyp = "JPG"				
 
 		if self.data['tipo_guion'] == "T": 
 			self.signType="T"
-			self.LogData = image_url_to_b64(self.data['distintivo'])
+			self.LogData = image_url_to_b64(self.LogDataUri)
 			self.LogTyp = "JPG"										
 		
 		if self.data['tipo_guion'] == "Sonora": 
@@ -176,12 +197,12 @@ class insertRenModel(object):
 		self.agentCode = self.data['code_agente']
 
 
-		self.file_relationshipList_fileId_fileNbr:str = ""
-		self.file_relationshipList_fileId_fileSeq:str = ""
-		self.file_relationshipList_fileId_fileSeries:str = ""
-		self.file_relationshipList_fileId_fileType:str = ""
-		self.file_relationshipList_relationshipRole:str = ""
-		self.file_relationshipList_relationshipType:str = ""
+		self.file_relationshipList_fileId_fileNbr:str = fileNbr 
+		self.file_relationshipList_fileId_fileSeq:str = fileSeq 
+		self.file_relationshipList_fileId_fileSeries:str = fileSeries 
+		self.file_relationshipList_fileId_fileType:str = fileId 
+		self.file_relationshipList_relationshipRole:str = "2"
+		self.file_relationshipList_relationshipType:str = "REN"
 
 
 		self.file_representationData_representativeList_representativeType = "AG"

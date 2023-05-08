@@ -2106,7 +2106,7 @@ def TEST_MEA_reg(id_tramite):
 	create_userdoc['signData_signType'] = catch_data.signData_signType
 	return(create_userdoc)
 
-@app.post('/sis/test_ren', summary="MEA", tags=["test insert registro"])
+@app.post('/sis/test_ren', summary="MEA", tags=["test insert renovacion"])
 def TEST_MEA_ren(id_tramite):
 	create_userdoc = {}
 	catch_data = insertRenModel()

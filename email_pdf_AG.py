@@ -7,7 +7,7 @@ from os import getcwd
 import barcode
 from barcode.writer import ImageWriter
 import psycopg2
-from dinapi.sfe import pendiente_sfe
+from dinapi.sfe import pendiente_sfe, qr_code
 import tools.filing_date as captureDate
 from wipo.ipas import *
 from tools.base64Decode import decode_pdf
@@ -17,6 +17,7 @@ import tools.connect as connex
 global_data = {}
 def envio_agente_recibido(arg0,arg1):
 	try:
+		qr_code('https://sfe-beta.dinapi.gov.py/dashboard/expedientes/tramites/'+str(arg0))
 		"""
 		data = pendiente_sfe(arg0)
 
@@ -222,7 +223,7 @@ def envio_agente_recibido(arg0,arg1):
 			pdf.multi_cell(w=190, h=8, txt="                                                                                         "+str(description(arg0)), border="LRB", align='L' )
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 
-			pdf.image('static/qr.PNG',x=170,y=20,w=18,h=18)			
+			pdf.image('pdf/qr.PNG',x=170,y=20,w=18,h=18)			
 
 			
 			pdf.output('pdf/notificacion-DINAPI.pdf')

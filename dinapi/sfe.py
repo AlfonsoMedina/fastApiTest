@@ -1,3 +1,4 @@
+import base64
 from math import ceil
 import string
 import time
@@ -6,6 +7,7 @@ import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.ipas import mark_getlist, personAgente
 from urllib import request
+import qrcode
 
 
 global_data = {}
@@ -216,10 +218,17 @@ def renovacion_sfe(arg):
 					global_data['clasificacion']= 'SERVICIOS'
 
 			try:					
-				if(i['campo'] == "marca_distintivo"):
+				if(i['campo'] == "marcarenov_distintivo"):
 					global_data['distintivo'] = i['valor']['archivo']['url']
 			except Exception as e:
-					global_data['distintivo'] = "No definido"							
+					global_data['distintivo'] = "No definido"	
+
+			try:					
+				if(i['campo'] == "actualizacion_refdistitivo"):
+					global_data['distintivoAct'] = i['valor']['archivo']['url']
+			except Exception as e:
+					global_data['distintivoAct'] = "No definido"					
+
 			try:	
 						if(i['campo'] == "actualizacion_refdistitivo"):
 							global_data['distintivo2'] = i['valor']['archivo']['url']
@@ -246,7 +255,7 @@ def renovacion_sfe(arg):
 			except Exception as e:
 						global_data['reivindicaciones'] = "No definido"							
 			try:	
-						if(i['descripcion'] == "-" and i['campo'] == 'marcarenov_tipomarca'):
+						if(i['campo'] == 'marcarenov_tipomarca'):
 							global_data["tipo_guion"] = i['valor']
 			except Exception as e:
 						global_data['tipo_guion'] = "No definido"
@@ -1496,6 +1505,16 @@ def data_validator(msg):
 		print(e)
 	finally:
 		conn.close()
+
+def qr_code(text): # convierte el texto en codigo QR y crea fichero .png
+    img = qrcode.make(text)
+    f = open("pdf/output.png", "wb")
+    img.save(f)
+    f.close()
+
+    with open("pdf/output.png", "rb") as image2string: 
+        converted_string = base64.b64encode(image2string.read()) 
+    return(str(converted_string).replace("b'",'').replace("'","")) 
 
 
 
