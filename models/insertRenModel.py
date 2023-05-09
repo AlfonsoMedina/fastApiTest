@@ -77,10 +77,15 @@ class insertRenModel(object):
 	
 		#print(self.data)
 
-		if self.data['distintivo'] == "No definido":
-			self.LogDataUri = self.data['distintivoAct']
-		else:
-			self.LogDataUri = self.data['distintivo']
+		try:
+			if self.data['distintivo'] == "No definido":
+				self.LogDataUri = self.data['distintivoAct']
+			elif self.data['distintivoAct'] == "No definido":
+				self.LogDataUri = self.data['distintivo']
+			else:
+				self.LogDataUri = ""
+		except Exception as e:
+			self.LogDataUri = ""	
 
 		#print(self.LogDataUri)
 

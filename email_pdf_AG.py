@@ -67,8 +67,7 @@ def envio_agente_recibido(arg0,arg1):
 			hora_guionE = hora_puntoE[0].split("-")
 			return(str(fecha_formatE+" "+str(hora_guionE[0])))
 		"""
-		
-		
+
 		def traer_datos_pdf():
 
 			#codebarheard(str(global_data['expediente']))
@@ -223,7 +222,7 @@ def envio_agente_recibido(arg0,arg1):
 			pdf.multi_cell(w=190, h=8, txt="                                                                                         "+str(description(arg0)), border="LRB", align='L' )
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 
-			pdf.image('pdf/qr.PNG',x=170,y=20,w=18,h=18)			
+			pdf.image('pdf/output.png',x=170,y=20,w=18,h=18)			
 
 			
 			pdf.output('pdf/notificacion-DINAPI.pdf')
@@ -234,8 +233,6 @@ def envio_agente_recibido(arg0,arg1):
 		return(True)
 	except Exception as e:
 		print(e)
-
-
 
 def form_descrip(arg):
 	try:
@@ -290,7 +287,6 @@ def description(arg):
 		print(e)
 	finally:
 		conn.close()
-
 
 def agent_email(arg):
 	try:

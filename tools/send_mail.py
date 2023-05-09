@@ -116,6 +116,4 @@ def delete_file(req):
             return('true')
     
 
-
-
 #enviar('SFE_REGISTRO_22107264.pdf')

@@ -52,7 +52,7 @@ def insert_list(arg0:string,arg1:string):
 	try:
 		pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
 	except Exception as e:
-		data_validator(f'Regla inactiva , tabla tramites ID: {arg0}')
+		data_validator(f'Regla inactiva , tabla tramites ID: {arg0}','false')
 		cambio_estado_soporte(arg0)	
 		return()	
 	pago_auth:str = str(pago_id(arg0)).replace("None","sin dato en bancar")
@@ -66,7 +66,7 @@ def insert_list(arg0:string,arg1:string):
 	#////////////////////////////////////////||||||||||||||||||||||||||||||||||||||||///////////////////////////////////////#
 	exceptions = userDocModel()
 	if exceptions.exist_split(arg0,'observacion_documentos') == False:
-		data_validator(f'No existe documento adjunto, tabla tramites ID: {arg0}')
+		data_validator(f'No existe documento adjunto, tabla tramites ID: {arg0}','false')
 		cambio_estado_soporte(arg0)
 		#listar()
 		return("E99")
@@ -78,7 +78,7 @@ def insert_list(arg0:string,arg1:string):
 		if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
 			valid_rules.append('Ok')
 		else:
-			data_validator(f'El expediente relacionado es requerido, tabla tramites ID: {arg0}')
+			data_validator(f'El expediente relacionado es requerido, tabla tramites ID: {arg0}','false')
 			valid_rules.append('Error')
 			cambio_estado_soporte(arg0)
 	else:
@@ -90,7 +90,7 @@ def insert_list(arg0:string,arg1:string):
 		if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
 			valid_rules.append('Ok')
 		else:
-			data_validator(f'El escrito relacionado es requerido, tabla tramites ID: {arg0}')
+			data_validator(f'El escrito relacionado es requerido, tabla tramites ID: {arg0}','false')
 			valid_rules.append('Error')
 			cambio_estado_soporte(arg0)
 	else:
@@ -102,7 +102,7 @@ def insert_list(arg0:string,arg1:string):
 			if pago_auth != 'sin dato en bancar':
 				valid_rules.append('Ok')
 			else:
-				data_validator(f'Confirmar relacion con pago (bancard transactions), tabla tramites ID: {arg0}')
+				data_validator(f'Confirmar relacion con pago (bancard transactions), tabla tramites ID: {arg0}','false')
 				valid_rules.append('Error')
 				cambio_estado_soporte(arg0)
 	else:
@@ -339,7 +339,7 @@ def compileAndInsert(form_Id,typ):
 						insert_doc.representationData_representativeList_representativeType)
 			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}')
+			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}','false')
 			cambio_estado_soporte(form_Id)
 		
 		try:
@@ -351,7 +351,7 @@ def compileAndInsert(form_Id,typ):
 				time.sleep(1)
 				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico				
 		except Exception as e:
-			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}')
+			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false')
 			cambio_estado_soporte(form_Id)			
 
 def compileAndInsertUserDocUserDoc(form_Id,typ):	
@@ -395,7 +395,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 						escrito_relacionado.filingData_userdocTypeList_userdocType))
 			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}')
+			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false')
 			cambio_estado_soporte(form_Id)
 
 		time.sleep(1)
@@ -470,7 +470,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 						escrito_relacionado.representationData_representativeList_representativeType,
 						escrito_relacionado.representationData_representativeList_person_email))
 		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}')
+			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false')
 			cambio_estado_soporte(form_Id)
 
 		time.sleep(1)
@@ -492,7 +492,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 				pass
 		except Exception as e:
 				pass
-				#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}')
+				#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false')
 				#cambio_estado_soporte(form_Id)
 
 		time.sleep(1)
@@ -505,7 +505,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 			time.sleep(1)
 			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico
 		else:
-			data_validator(f'Error al cambiar estado de esc. N° {escrito_relacionado.documentId_docNbr}, tabla tramites ID: {form_Id}')
+			data_validator(f'Error al cambiar estado de esc. N° {escrito_relacionado.documentId_docNbr}, tabla tramites ID: {form_Id}','false')
 			cambio_estado_soporte(form_Id)
 
 		time.sleep(0.5)
@@ -551,7 +551,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 						escrito_escrito_pago.filingData_userdocTypeList_userdocType))
 			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}')
+			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false')
 			cambio_estado_soporte(form_Id)
 
 		time.sleep(1)
@@ -625,7 +625,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 						escrito_escrito_pago.representationData_representativeList_representativeType,
 						escrito_escrito_pago.representationData_representativeList_person_email))
 		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}')
+			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false')
 			cambio_estado_soporte(form_Id)		
 		
 		time.sleep(1)
@@ -646,7 +646,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 				pass
 		except Exception as e:
 				pass
-				#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}')
+				#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false')
 				#cambio_estado_soporte(form_Id)
 		
 		time.sleep(1)
@@ -663,7 +663,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 			'M.E.A',
 			''))#Enviar Correo Electronico			
 		else:
-			data_validator(f'Error al cambiar estado de esc. N° {escrito_escrito_pago.documentId_docNbr}, tabla tramites ID: {form_Id}')
+			data_validator(f'Error al cambiar estado de esc. N° {escrito_escrito_pago.documentId_docNbr}, tabla tramites ID: {form_Id}','false')
 			cambio_estado_soporte(form_Id)
 
 def insertReg(form_Id):
@@ -713,7 +713,9 @@ def insertReg(form_Id):
 		enviar_back_notFile('jose.ramirez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Se ha recibido una solicitud de Registro de Marcas. N° '+ str(insert_mark.file_fileId_fileNbr))
 		enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Se ha recibido una solicitud de Registro de Marcas. N° '+ str(insert_mark.file_fileId_fileNbr))
 	except Exception as e:
-		print(e)
+		data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true')
+		cambio_estado_soporte(form_Id)
+		enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Error en solicitud, tabla tramites ID:'+ str(form_Id))		
 
 def insertRen(form_Id):
 	insert_mark_ren = insertRenModel()
@@ -767,7 +769,9 @@ def insertRen(form_Id):
 		enviar_back_notFile("jose.ramirez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
 		enviar_back_notFile("carlos.benitez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
 	except Exception as e:
-		print(e)
+		data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true')
+		cambio_estado_soporte(form_Id)
+		enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Error en solicitud, tabla tramites ID:'+ str(form_Id))		
 
 def catch_toError(form_Id):
 	getExcept = userDocModel()

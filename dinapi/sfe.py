@@ -1492,12 +1492,12 @@ def tasa_SIGLA(arg):
 	finally:
 		conn.close()
 
-def data_validator(msg):
+def data_validator(msg,status):
 	try:
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
 		cursor.execute("""INSERT INTO public.log_error( fecha_evento, evento, descripcion_evento, sistema_origen,break)
-						  VALUES( '{}', 'E99', '{}', 'M.E.A.','false');""".format(captureDate.capture_full(), msg ))
+						  VALUES( '{}', 'E99', '{}', 'M.E.A.','{}');""".format(captureDate.capture_full(), msg, status ))
 		cursor.rowcount
 		conn.commit()
 		conn.close()
@@ -1515,6 +1515,19 @@ def qr_code(text): # convierte el texto en codigo QR y crea fichero .png
     with open("pdf/output.png", "rb") as image2string: 
         converted_string = base64.b64encode(image2string.read()) 
     return(str(converted_string).replace("b'",'').replace("'","")) 
+
+def sendToUser(arg):
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select email_user from reglas_notificacion where status_cod = '{}'""".format(arg))
+		row=cursor.fetchall()
+		for i in row:
+			return(i)	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()	
 
 
 
