@@ -931,10 +931,6 @@ def reglas_me_ttasa(sig):
 	finally:
 		conn.close()
 
-
-#print(reglas_me_ttasa('IAJ1'))
-
-
 def format_userdoc(doc_Id):
 	ruc_Typ:str = ''
 	ci_Typ:str = ''	
