@@ -174,9 +174,9 @@ def registro_sfe(arg):
 def renovacion_sfe(arg):
 	try:
 		conn = psycopg2.connect(
-					host = 'pgsql-sprint.dinapi.gov.py',
-					user= 'user-sprint',
-					password = 'user-sprint--201901',
+					host = '192.168.50.219',
+					user= 'user-developer',
+					password = 'user-developer--201901',
 					database = 'db_sfe_production'
 				)
 		cursor = conn.cursor()
@@ -203,19 +203,20 @@ def renovacion_sfe(arg):
 		global_data['nombre_formulario'] = str(row[0][3])
 		for i in row[0][8]:
 
-			if(i['descripcion'] == "Clase" and i['campo'] == 'marcarenov_clase'):
+			if(i['campo'] == 'marcarenov_clase'):
+				print(i['valor'])
 				clase_tipo = i['valor']
 				if(int(clase_tipo.replace(".0","")) <= 34):
-					global_data['clasificacion']= 'PRODUCTO'
+					global_data['clasificacion']= 'PRODUCTOS'
 				if(int(clase_tipo.replace(".0","")) >= 35):
 					global_data['clasificacion']= 'SERVICIOS'
 
-			if(i['descripcion'] == "Clasificación" and i['campo'] == 'marcarenov_clase'):
+			if(i['campo'] == 'marcarenov_clase'):
 				clase_tipo = i['valor']
 				if(int(clase_tipo.replace(".0","")) <= 34):
 					global_data['clasificacion']= 'PRODUCTO'
 				if(int(clase_tipo.replace(".0","")) >= 35):
-					global_data['clasificacion']= 'SERVICIOS'
+					global_data['clasificacion']= 'SERVICIO'
 
 			try:					
 				if(i['campo'] == "marcarenov_distintivo"):
@@ -234,16 +235,20 @@ def renovacion_sfe(arg):
 							global_data['distintivo2'] = i['valor']['archivo']['url']
 			except Exception as e:
 						global_data['distintivo2'] = "No definido"							
+			
+			
 			try:	
 						if(i['descripcion'] == "N° de Documento"):
 							global_data['documento'] = i['valor']
 			except Exception as e:
 						global_data['documento'] = "No definido"							
+			
 			try:	
 						if(i['descripcion'] == "RUC"):				
 							global_data['RUC']=i['valor']
 			except Exception as e:
 						global_data['RUC'] = "No definido"							
+			
 			try:	
 						if(i['descripcion'] == "Productos o Servicios que distingue"):
 							global_data['distingue'] = i['valor']
@@ -319,11 +324,13 @@ def renovacion_sfe(arg):
 							global_data['act_numero']=i['valor']
 			except Exception as e:
 						global_data['act_numero'] = "No definido"
+
 			try:	
 						if(i['campo'] == 'actualizacion_pais'):
 							global_data['act_pais']=i['valor']
 			except Exception as e:
 						global_data['act_pais'] = "No definido"
+						
 			try:	
 						if(i['descripcion'] == "Ciudad" and i['campo'] == 'actualizacion_ciudad'):
 							global_data['act_ciudad']=i['valor']
@@ -360,10 +367,17 @@ def renovacion_sfe(arg):
 			except Exception as e:
 						global_data['solic_pais'] = "No definido"
 			try:	
-						if(i['descripcion'] == "Dirección" and i['campo'] == 'datospersonalesrenov_calle'):
+						if(i['campo'] == 'datospersonalesrenov_calle'):
 							global_data['solic_dir'] = str(i['valor']).replace(" – "," | ")
 			except Exception as e:
 						global_data['solic_dir'] = "No definido"
+
+			try:
+						if(i['campo'] == 'actualizacion_calle'):
+							global_data['solic_dir2'] = str(i['valor']).replace(" – "," | ")
+			except Exception as e:
+						global_data['solic_dir2'] = "No definido"
+
 			try:	
 						if(i['descripcion'] == "Teléfono" and i['campo'] == 'datospersonalesrenov_telefono'):
 							global_data['solic_tel']=i['valor']
@@ -908,7 +922,7 @@ def reglas_me_ttasa(sig):
 	try:
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""select ttasa from reglas_me where tipo_doc like '{} %'""".format(sig))
+		cursor.execute("""select ttasa from reglas_me where tipo_escrito = '{}'""".format(sig)) #select ttasa from reglas_me where tipo_doc like '{} %'
 		row=cursor.fetchall()
 		for i in row:
 			return(i)	
@@ -916,6 +930,10 @@ def reglas_me_ttasa(sig):
 		print(e)
 	finally:
 		conn.close()
+
+
+print(reglas_me_ttasa('IAJ1'))
+
 
 def format_userdoc(doc_Id):
 	ruc_Typ:str = ''
@@ -1529,8 +1547,20 @@ def sendToUser(arg):
 	finally:
 		conn.close()	
 
+def stop_request():
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select count(break)  from log_error where  break = 'true'""")
+		row=cursor.fetchall()
+		for i in row:
+			return(i[0])	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
 
-
+#
 #print(tasa_SIGLA("AAS1")[0])
 
 """def afected_relation_auth(arg):"""

@@ -65,6 +65,7 @@ class insertRenModel(object):
 	LogDataUri:str = ''
 	LogTyp:str = ''
 	relacion:str = ''
+	dir_owner:str = ''
 	def __init__(self):
 		self.signType = ""
 		self.tipo_clase = ""
@@ -75,7 +76,7 @@ class insertRenModel(object):
 		
 		self.data = renovacion_sfe(doc_Id) 
 	
-		#print(self.data)
+		print(self.data)
 
 		try:
 			if self.data['distintivo'] == "No definido":
@@ -106,72 +107,118 @@ class insertRenModel(object):
 			fileSeries = ""
 			fileId = ""
 
-
-		if self.data['tipo_guion'] == "Denominativa": 
-			self.signType="N"
-			self.LogData = ""
-			self.LogTyp = ""			
-
-		if self.data['tipo_guion'] == "D": 
-			self.signType="N"
-			self.LogData = ""
-			self.LogTyp = ""						
-
-		if self.data['tipo_guion'] == "Figurativa": 
-			self.signType="L"
-			self.LogData = image_url_to_b64(self.LogDataUri)
-			self.LogTyp = "JPG"			
-
-		if self.data['tipo_guion'] == "F": 
-			self.signType="L"
-			self.LogData = image_url_to_b64(self.LogDataUri)
-			self.LogTyp = "JPG"							
-
-		if self.data['tipo_guion'] == "Mixta": 
-			self.signType="B"
-			self.LogData = image_url_to_b64(self.LogDataUri)
-			self.LogTyp = "JPG"				
-
-		if self.data['tipo_guion'] == "B": 
-			self.signType="B"
-			self.LogData = image_url_to_b64(self.LogDataUri)
-			self.LogTyp = "JPG"				
-
-		if self.data['tipo_guion'] == "Tridimensional": 
-			self.signType="T"
-			self.LogData = image_url_to_b64(self.LogDataUri)
-			self.LogTyp = "JPG"				
-
-		if self.data['tipo_guion'] == "T": 
-			self.signType="T"
-			self.LogData = image_url_to_b64(self.LogDataUri)
-			self.LogTyp = "JPG"										
+		try:
+			if self.data['tipo_guion'] == "Denominativa": 
+				self.signType="N"
+				self.LogData = ""
+				self.LogTyp = ""			
+		except Exception as e:
+			pass
 		
-		if self.data['tipo_guion'] == "Sonora": 
-			self.signType="S"
-			self.LogData = ""
-			self.LogTyp = ""			
+		try:
+			if self.data['tipo_guion'] == "N": 
+				self.signType="N"
+				self.LogData = ""
+				self.LogTyp = ""						
+		except Exception as e:
+			pass
+		
+		try:
+			if self.data['tipo_guion'] == "Figurativa": 
+				self.signType="L"
+				self.LogData = image_url_to_b64(self.LogDataUri)
+				self.LogTyp = "JPG"			
+		except Exception as e:
+			pass
 
-		if self.data['tipo_guion'] == "S": 
-			self.signType="S"
-			self.LogData = ""
-			self.LogTyp = ""			
+		try:
+			if self.data['tipo_guion'] == "L": 
+				self.signType="L"
+				self.LogData = image_url_to_b64(self.LogDataUri)
+				self.LogTyp = "JPG"							
+		except Exception as e:
+			pass
 
-		if self.data['tipo_guion'] == "Olfativa": 
-			self.signType="O"
-			self.LogData = ""
-			self.LogTyp = ""				
+		try:
+			if self.data['tipo_guion'] == "Mixta": 
+				self.signType="B"
+				self.LogData = image_url_to_b64(self.LogDataUri)
+				self.LogTyp = "JPG"				
+		except Exception as e:
+			pass
+		
+		try:
+			if self.data['tipo_guion'] == "B": 
+				self.signType="B"
+				self.LogData = image_url_to_b64(self.LogDataUri)
+				self.LogTyp = "JPG"				
+		except Exception as e:
+			pass
+		
+		try:
+			if self.data['tipo_guion'] == "Tridimensional": 
+				self.signType="T"
+				self.LogData = image_url_to_b64(self.LogDataUri)
+				self.LogTyp = "JPG"				
+		except Exception as e:
+			pass
+		
+		try:
+			if self.data['tipo_guion'] == "T": 
+				self.signType="T"
+				self.LogData = image_url_to_b64(self.LogDataUri)
+				self.LogTyp = "JPG"										
+		except Exception as e:
+			pass
 					
-
-		if self.data['clasificacion'] == 'PRODUCTO':
-			self.tipo_clase = "MP"
-		if self.data['clasificacion'] == 'SERVICIO':
-			self.tipo_clase = 'MS'
-
-		if self.data['clasificacion'] == 'PRODUCTOS':
-			self.tipo_clase = "MP"
-		if self.data['clasificacion'] == 'SERVICIOS':
-			self.tipo_clase = 'MS'
+		try:	
+			if self.data['tipo_guion'] == "Sonora": 
+				self.signType="S"
+				self.LogData = ""
+				self.LogTyp = ""			
+		except Exception as e:
+			pass
+		
+		try:
+			if self.data['tipo_guion'] == "S": 
+				self.signType="S"
+				self.LogData = ""
+				self.LogTyp = ""			
+		except Exception as e:
+			pass
+		
+		try:
+			if self.data['tipo_guion'] == "Olfativa": 
+				self.signType="O"
+				self.LogData = ""
+				self.LogTyp = ""				
+		except Exception as e:
+			pass
+								
+		try:
+			if self.data['clasificacion'] == 'PRODUCTO':
+				self.tipo_clase = "MP"
+		except Exception as e:
+			pass
+								
+		try:
+			if self.data['clasificacion'] == 'SERVICIO':
+				self.tipo_clase = 'MS'
+		except Exception as e:
+			pass
+								
+		try:
+			if self.data['clasificacion'] == 'PRODUCTOS':
+				self.tipo_clase = "MP"
+		except Exception as e:
+			pass
+								
+		try:				
+			if self.data['clasificacion'] == 'SERVICIOS':
+				self.tipo_clase = 'MS'
+		except Exception as e:
+			pass
+								
 
 		self.file_fileId_fileNbr = str(int(process_day_Nbr())+1)
 		self.file_fileId_fileSeq = "PY"
@@ -191,11 +238,24 @@ class insertRenModel(object):
 		self.file_filingData_paymentList_receiptType = "1"
 		self.file_filingData_receptionUserId = "4"
 
+		try:
+			if self.data['solic_dir'] == "No definido":
+				self.dir_owner = self.data['solic_dir2']
+			elif self.data['solic_dir'] == "No definido":
+				self.dir_owner = self.data['solic_dir']
+		except Exception as e:
+			pass
+			
+			
+		self.file_ownershipData_ownerList_person_owneraddressStreet = self.dir_owner	
 
-		self.file_ownershipData_ownerList_person_owneraddressStreet = self.data['solic_dir']
-		self.file_ownershipData_ownerList_person_ownernationalityCountryCode = self.data['act_pais']
+
+
+		self.file_ownershipData_ownerList_person_ownernationalityCountryCode = "PY"#self.data['act_pais']
+
 		self.file_ownershipData_ownerList_person_ownerpersonName = self.data['nombre_soli']
-		self.file_ownershipData_ownerList_person_ownerresidenceCountryCode = self.data['act_pais']
+
+		self.file_ownershipData_ownerList_person_ownerresidenceCountryCode = "PY"#self.data['act_pais']
 
 
 		self.file_rowVersion = "1.0"

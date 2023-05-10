@@ -82,6 +82,10 @@ def enviar_back(mail, asunto, mensaje, fileName):
     server.quit()
     return('Ok!!')
 
+#DEFAULT envio (GENE) 
+#escrito a escrito envio por estado de exp principal
+#escrito normal envio por sigla
+
 #send all params 
 def enviar_back_notFile(mail, asunto, mensaje):
     email = "noreply@dinapi.gov.py"#noreply@dinapi.gov.py
