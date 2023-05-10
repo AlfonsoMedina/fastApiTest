@@ -55,6 +55,7 @@ class insertRegModel(object):
 	data:str = ''
 	LogData:str = ''
 	LogTyp:str = ''
+	dir_variant:str = ''
 	def __init__(self):
 		self.signType = ""
 		self.tipo_clase = ""
@@ -154,7 +155,23 @@ class insertRegModel(object):
 		self.file_filingData_paymentList_receiptType = "1"
 		self.file_filingData_receptionUserId = "4"
 
-		self.file_ownershipData_ownerList_person_addressStreet = self.data['direccion']
+		try:
+			if self.data['direccion'] == "No definido":
+				self.dir_variant = self.data['direccion_dir']
+		except Exception as e:
+			pass
+		try:
+			if self.data['direccion_dir'] == "No definido":
+				self.dir_variant = self.data['direccion']
+		except Exception as e:
+			pass
+
+
+		self.file_ownershipData_ownerList_person_addressStreet = self.dir_variant
+
+
+
+
 		self.file_ownershipData_ownerList_person_nationalityCountryCode = self.data['pais']
 		self.file_ownershipData_ownerList_person_personName = self.data['razon_social'] + self.data['nombre_soli']
 		self.file_ownershipData_ownerList_person_residenceCountryCode = self.data['pais']

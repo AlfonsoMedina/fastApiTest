@@ -7,7 +7,7 @@ from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
 from tools.send_mail import enviar
 from tools.connect import MEA_TIEMPO_ACTUALIZACION
-from dinapi.sfe import count_pendiente, format_userdoc, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, tip_doc
+from dinapi.sfe import count_pendiente, format_userdoc, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc
 from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
@@ -2258,6 +2258,11 @@ def re_load():
 	print (TextoFichero)
 	ObjFichero2.close()
 	return(True)
+
+@app.get('/sis/stop_and_run', summary="sis", tags=["Estado de solicitudes"])
+def stop_and_run_sol():
+	return(stop_request())
+
 
 app.openapi = custom_openapi
 
