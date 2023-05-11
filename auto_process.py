@@ -52,7 +52,7 @@ def insert_list(arg0:string,arg1:string):
 	try:
 		pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
 	except Exception as e:
-		data_validator(f'Regla inactiva , tabla tramites ID: {arg0}','false')
+		data_validator(f'Regla inactiva , tabla tramites ID: {arg0}','false',{arg0})
 		cambio_estado_soporte(arg0)	
 		return()	
 	pago_auth:str = str(pago_id(arg0)).replace("None","sin dato en bancar")
@@ -66,7 +66,7 @@ def insert_list(arg0:string,arg1:string):
 	#////////////////////////////////////////||||||||||||||||||||||||||||||||||||||||///////////////////////////////////////#
 	exceptions = userDocModel()
 	if exceptions.exist_split(arg0,'observacion_documentos') == False:
-		data_validator(f'No existe documento adjunto, tabla tramites ID: {arg0}','false')
+		data_validator(f'No existe documento adjunto, tabla tramites ID: {arg0}','false',{arg0})
 		cambio_estado_soporte(arg0)
 		#listar()
 		return("E99")
@@ -78,7 +78,7 @@ def insert_list(arg0:string,arg1:string):
 		if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
 			valid_rules.append('Ok')
 		else:
-			data_validator(f'El expediente relacionado es requerido, tabla tramites ID: {arg0}','false')
+			data_validator(f'El expediente relacionado es requerido, tabla tramites ID: {arg0}','false',{arg0})
 			valid_rules.append('Error')
 			cambio_estado_soporte(arg0)
 	else:
@@ -90,7 +90,7 @@ def insert_list(arg0:string,arg1:string):
 		if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
 			valid_rules.append('Ok')
 		else:
-			data_validator(f'El escrito relacionado es requerido, tabla tramites ID: {arg0}','false')
+			data_validator(f'El escrito relacionado es requerido, tabla tramites ID: {arg0}','false',{arg0})
 			valid_rules.append('Error')
 			cambio_estado_soporte(arg0)
 	else:
@@ -102,7 +102,7 @@ def insert_list(arg0:string,arg1:string):
 			if pago_auth != 'sin dato en bancar':
 				valid_rules.append('Ok')
 			else:
-				data_validator(f'Confirmar relacion con pago (bancard transactions), tabla tramites ID: {arg0}','false')
+				data_validator(f'Confirmar relacion con pago (bancard transactions), tabla tramites ID: {arg0}','false',{arg0})
 				valid_rules.append('Error')
 				cambio_estado_soporte(arg0)
 	else:
@@ -339,7 +339,7 @@ def compileAndInsert(form_Id,typ):
 						insert_doc.representationData_representativeList_representativeType)
 			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}','false')
+			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}','false',{form_Id})
 			cambio_estado_soporte(form_Id)
 		
 		try:
@@ -351,7 +351,7 @@ def compileAndInsert(form_Id,typ):
 				time.sleep(1)
 				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico				
 		except Exception as e:
-			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false')
+			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',{form_Id})
 			cambio_estado_soporte(form_Id)			
 
 def compileAndInsertUserDocUserDoc(form_Id,typ):	
@@ -395,7 +395,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 						escrito_relacionado.filingData_userdocTypeList_userdocType))
 			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false')
+			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',{form_Id})
 			cambio_estado_soporte(form_Id)
 
 		time.sleep(1)
@@ -470,7 +470,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 						escrito_relacionado.representationData_representativeList_representativeType,
 						escrito_relacionado.representationData_representativeList_person_email))
 		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false')
+			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 
 		time.sleep(1)
@@ -505,7 +505,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 			time.sleep(1)
 			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico
 		else:
-			data_validator(f'Error al cambiar estado de esc. N° {escrito_relacionado.documentId_docNbr}, tabla tramites ID: {form_Id}','false')
+			data_validator(f'Error al cambiar estado de esc. N° {escrito_relacionado.documentId_docNbr}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 
 		time.sleep(0.5)
@@ -551,7 +551,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 						escrito_escrito_pago.filingData_userdocTypeList_userdocType))
 			process_day_commit_Nbr()
 		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false')
+			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 
 		time.sleep(1)
@@ -625,7 +625,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 						escrito_escrito_pago.representationData_representativeList_representativeType,
 						escrito_escrito_pago.representationData_representativeList_person_email))
 		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false')
+			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)		
 		
 		time.sleep(1)
@@ -713,7 +713,7 @@ def insertReg(form_Id):
 		enviar_back_notFile('jose.ramirez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Se ha recibido una solicitud de Registro de Marcas. N° '+ str(insert_mark.file_fileId_fileNbr))
 		enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Se ha recibido una solicitud de Registro de Marcas. N° '+ str(insert_mark.file_fileId_fileNbr))
 	except Exception as e:
-		data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true')
+		data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true',form_Id)
 		cambio_estado_soporte(form_Id)
 		enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Error en solicitud, tabla tramites ID:'+ str(form_Id))		
 
@@ -769,7 +769,7 @@ def insertRen(form_Id):
 		enviar_back_notFile("jose.ramirez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
 		enviar_back_notFile("carlos.benitez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
 	except Exception as e:
-		data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true')
+		data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true',form_Id)
 		cambio_estado_soporte(form_Id)
 		enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Error en solicitud, tabla tramites ID:'+ str(form_Id))		
 
@@ -973,7 +973,7 @@ def catch_toError(form_Id):
 	E99_code = ["affectedFileIdList_fileNbr","affectedFileIdList_fileSeq","affectedFileIdList_fileSeries","affectedFileIdList_fileType","affected_doc_Log","affected_doc_docNbr","affected_doc_docOrigin","affected_doc_docSeries","affectedFileSummaryList_disclaimer","affectedFileSummaryList_disclaimerInOtherLang","affectedFileSummaryList_fileNbr","affectedFileSummaryList_fileSeq","affectedFileSummaryList_fileSeries","affectedFileSummaryList_fileType","affectedFileSummaryList_fileIdAsString","affectedFileSummaryList_fileSummaryClasses","affectedFileSummaryList_fileSummaryCountry","affectedFileSummaryList_fileSummaryDescription","affectedFileSummaryList_fileSummaryDescriptionInOtherLang","affectedFileSummaryList_fileSummaryOwner","affectedFileSummaryList_fileSummaryOwnerInOtherLang","affectedFileSummaryList_fileSummaryRepresentative","affectedFileSummaryList_fileSummaryRepresentativeInOtherLang","affectedFileSummaryList_fileSummaryResponsibleName","affectedFileSummaryList_fileSummaryStatus","applicant_applicantNotes","applicant_person_addressStreet","applicant_person_addressStreetInOtherLang","applicant_person_addressZone","applicant_person_agentCode","applicant_person_cityCode","applicant_person_cityName","applicant_person_companyRegisterRegistrationDate","applicant_person_companyRegisterRegistrationNbr","applicant_person_email","applicant_person_individualIdNbr","applicant_person_individualIdType","applicant_person_legalIdNbr","applicant_person_legalIdType","applicant_person_legalNature","applicant_person_legalNatureInOtherLang","applicant_person_nationalityCountryCode","applicant_person_personGroupCode","applicant_person_personGroupName","applicant_person_personName","applicant_person_personNameInOtherLang","applicant_person_residenceCountryCode","applicant_person_stateCode","applicant_person_stateName","applicant_person_telephone","applicant_person_zipCode","documentId_docLog","documentId_docNbr","documentId_docOrigin","documentId_docSeries","documentId_selected","documentSeqId_docSeqName","documentSeqId_docSeqNbr","documentSeqId_docSeqSeries","documentSeqId_docSeqType","filingData_applicationSubtype","filingData_applicationType","filingData_captureDate","filingData_captureUserId","filingData_filingDate","filingData_lawCode","filingData_novelty1Date","filingData_novelty2Date","filingData_paymentList_currencyName","filingData_paymentList_currencyType","filingData_paymentList_receiptAmount","filingData_paymentList_receiptDate","filingData_paymentList_receiptNbr","filingData_paymentList_receiptNotes","filingData_paymentList_receiptType","filingData_paymentList_receiptTypeName","filingData_receptionDate","filingData_documentId_receptionDocument_docLog","filingData_documentId_receptionDocument_docNbr","filingData_documentId_receptionDocument_docOrigin","filingData_documentId_receptionDocument_docSeries","filingData_documentId_receptionDocument_selected","filingData_userdocTypeList_userdocName","filingData_userdocTypeList_userdocType","newOwnershipData_ownerList_orderNbr","newOwnershipData_ownerList_ownershipNotes","newOwnershipData_ownerList_person_addressStreet","newOwnershipData_ownerList_person_addressStreetInOtherLang","newOwnershipData_ownerList_person_addressZone","newOwnershipData_ownerList_person_agentCode","newOwnershipData_ownerList_person_cityCode","newOwnershipData_ownerList_person_cityName","newOwnershipData_ownerList_person_companyRegisterRegistrationDate","newOwnershipData_ownerList_person_companyRegisterRegistrationNbr","newOwnershipData_ownerList_person_email","newOwnershipData_ownerList_person_individualIdNbr","newOwnershipData_ownerList_person_individualIdType","newOwnershipData_ownerList_person_legalIdNbr","newOwnershipData_ownerList_person_legalIdType","newOwnershipData_ownerList_person_legalNature","newOwnershipData_ownerList_person_legalNatureInOtherLang","newOwnershipData_ownerList_person_nationalityCountryCode","newOwnershipData_ownerList_person_personGroupCode","newOwnershipData_ownerList_person_personGroupName","newOwnershipData_ownerList_person_personName","newOwnershipData_ownerList_person_personNameInOtherLang","newOwnershipData_ownerList_person_residenceCountryCode","newOwnershipData_ownerList_person_stateCode","newOwnershipData_ownerList_person_stateName","newOwnershipData_ownerList_person_telephone","newOwnershipData_ownerList_person_zipCode","notes","poaData_poaGranteeList_person_addressStreet","poaData_poaGranteeList_person_addressStreetInOtherLang","poaData_poaGranteeList_person_addressZone","poaData_poaGranteeList_person_agentCode","poaData_poaGranteeList_person_cityCode","poaData_poaGranteeList_person_cityName","poaData_poaGranteeList_person_companyRegisterRegistrationDate","poaData_poaGranteeList_person_companyRegisterRegistrationNbr","poaData_poaGranteeList_person_email","poaData_poaGranteeList_person_individualIdNbr","poaData_poaGranteeList_person_individualIdType","poaData_poaGranteeList_person_legalIdNbr","poaData_poaGranteeList_person_legalIdType","poaData_poaGranteeList_person_legalNature","poaData_poaGranteeList_person_legalNatureInOtherLang","poaData_poaGranteeList_person_nationalityCountryCode","poaData_poaGranteeList_person_personGroupCode","poaData_poaGranteeList_person_personGroupName","poaData_poaGranteeList_person_personName","poaData_poaGranteeList_person_personNameInOtherLang","poaData_poaGranteeList_person_residenceCountryCode","poaData_poaGranteeList_person_stateCode","poaData_poaGranteeList_person_stateName","poaData_poaGranteeList_person_telephone","poaData_poaGranteeList_person_zipCode","poaData_poaGrantor_person_addressStreet","poaData_poaGrantor_person_addressStreetInOtherLang","poaData_poaGrantor_person_addressZone","poaData_poaGrantor_person_agentCode","poaData_poaGrantor_person_cityCode","poaData_poaGrantor_person_cityName","poaData_poaGrantor_person_companyRegisterRegistrationDate","poaData_poaGrantor_person_companyRegisterRegistrationNbr","poaData_poaGrantor_person_email","poaData_poaGrantor_person_individualIdNbr","poaData_poaGrantor_person_individualIdType","poaData_poaGrantor_person_legalIdNbr","poaData_poaGrantor_person_legalIdType","poaData_poaGrantor_person_legalNature","poaData_poaGrantor_person_legalNatureInOtherLang","poaData_poaGrantor_person_nationalityCountryCode","poaData_poaGrantor_person_personGroupCode","poaData_poaGrantor_person_personGroupName","poaData_poaGrantor_person_personName","poaData_poaGrantor_person_personNameInOtherLang","poaData_poaGrantor_person_residenceCountryCode","poaData_poaGrantor_person_stateCode","poaData_poaGrantor_person_stateName","poaData_poaGrantor_person_telephone","poaData_poaGrantor_person_zipCode","poaData_poaRegNumber","poaData_scope","representationData_representativeList_person_addressStreet","representationData_representativeList_person_addressStreetInOtherLang","representationData_representativeList_person_addressZone","representationData_representativeList_person_agentCode","representationData_representativeList_person_cityCode","representationData_representativeList_person_cityName","representationData_representativeList_person_companyRegisterRegistrationDate","representationData_representativeList_person_companyRegisterRegistrationNbr","representationData_representativeList_person_email","representationData_representativeList_person_individualIdNbr","representationData_representativeList_person_individualIdType","representationData_representativeList_person_legalIdNbr","representationData_representativeList_person_legalIdType","representationData_representativeList_person_legalNature","representationData_representativeList_person_legalNatureInOtherLang","representationData_representativeList_person_nationalityCountryCode","representationData_representativeList_person_personGroupCode","representationData_representativeList_person_personGroupName","representationData_representativeList_person_personName","representationData_representativeList_person_personNameInOtherLang","representationData_representativeList_person_residenceCountryCode","representationData_representativeList_person_stateCode","representationData_representativeList_person_stateName","representationData_representativeList_person_telephone","representationData_representativeList_person_zipCode","representationData_representativeList_representativeType"]
 	for i in range(0,len(data_list)):
 		if data_list[i] == "E99":
-			data_validator(f'dato requerido: {E99_code[i]}, tabla tramites ID: {form_Id}')
+			data_validator(f'dato requerido: {E99_code[i]}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 			return("E99")
 

@@ -70,72 +70,106 @@ class insertRegModel(object):
 			ag_data = personAgente(code_ag(self.data[0]['usuario_id']))[0]
 		except Exception as e:
 			print("")
-
-		if self.data['tipo_on'] == "Denominativa": 
-			self.signType="N"
-			self.LogData = ""
-			self.LogTyp = ""			
-
-		if self.data['tipo_on'] == "D": 
-			self.signType="N"
-			self.LogData = ""
-			self.LogTyp = ""						
-
-		if self.data['tipo_on'] == "Figurativa": 
-			self.signType="L"
-			self.LogData = image_url_to_b64(self.data['distintivo'])
-			self.LogTyp = "JPG"			
-
-		if self.data['tipo_on'] == "F": 
-			self.signType="L"
-			self.LogData = image_url_to_b64(self.data['distintivo'])
-			self.LogTyp = "JPG"							
-
-		if self.data['tipo_on'] == "Mixta": 
-			self.signType="B"
-			self.LogData = image_url_to_b64(self.data['distintivo'])
-			self.LogTyp = "JPG"				
-
-		if self.data['tipo_on'] == "M": 
-			self.signType="B"
-			self.LogData = image_url_to_b64(self.data['distintivo'])
-			self.LogTyp = "JPG"				
-
-		if self.data['tipo_on'] == "Tridimensional": 
-			self.signType="T"
-			self.LogData = image_url_to_b64(self.data['distintivo'])
-			self.LogTyp = "JPG"				
-
-		if self.data['tipo_on'] == "T": 
-			self.signType="T"
-			self.LogData = image_url_to_b64(self.data['distintivo'])
-			self.LogTyp = "JPG"										
 		
-		if self.data['tipo_on'] == "Sonora": 
-			self.signType="S"
-			self.LogData = ""
-			self.LogTyp = ""			
+		try:
+			if self.data['tipo_on'] == "Denominativa": 
+				self.signType="N"
+				self.LogData = ""
+				self.LogTyp = ""
+		except Exception as e:
+			pass			
 
-		if self.data['tipo_on'] == "S": 
-			self.signType="S"
-			self.LogData = ""
-			self.LogTyp = ""			
+		try:
+			if self.data['tipo_on'] == "D": 
+				self.signType="N"
+				self.LogData = ""
+				self.LogTyp = ""						
+		except Exception as e:
+			pass
+		try:
+			if self.data['tipo_on'] == "Figurativa": 
+				self.signType="L"
+				self.LogData = image_url_to_b64(self.data['distintivo'])
+				self.LogTyp = "JPG"			
+		except Exception as e:
+			pass
+		try:
+			if self.data['tipo_on'] == "F": 
+				self.signType="L"
+				self.LogData = image_url_to_b64(self.data['distintivo'])
+				self.LogTyp = "JPG"							
+		except Exception as e:
+			pass
+		try:
+			if self.data['tipo_on'] == "Mixta": 
+				self.signType="B"
+				self.LogData = image_url_to_b64(self.data['distintivo'])
+				self.LogTyp = "JPG"				
+		except Exception as e:
+			pass
+		try:
+			if self.data['tipo_on'] == "M": 
+				self.signType="B"
+				self.LogData = image_url_to_b64(self.data['distintivo'])
+				self.LogTyp = "JPG"				
+		except Exception as e:
+			pass
+		try:
+			if self.data['tipo_on'] == "Tridimensional": 
+				self.signType="T"
+				self.LogData = image_url_to_b64(self.data['distintivo'])
+				self.LogTyp = "JPG"				
+		except Exception as e:
+			pass
+		try:
+			if self.data['tipo_on'] == "T": 
+				self.signType="T"
+				self.LogData = image_url_to_b64(self.data['distintivo'])
+				self.LogTyp = "JPG"										
+		except Exception as e:
+			pass
+		try:			
+			if self.data['tipo_on'] == "Sonora": 
+				self.signType="S"
+				self.LogData = ""
+				self.LogTyp = ""			
+		except Exception as e:
+			pass
+		try:
+			if self.data['tipo_on'] == "S": 
+				self.signType="S"
+				self.LogData = ""
+				self.LogTyp = ""			
+		except Exception as e:
+			pass
+		try:
+			if self.data['tipo_on'] == "Olfativa": 
+				self.signType="O"
+				self.LogData = ""
+				self.LogTyp = ""				
+		except Exception as e:
+			pass					
 
-		if self.data['tipo_on'] == "Olfativa": 
-			self.signType="O"
-			self.LogData = ""
-			self.LogTyp = ""				
-					
-
-		if self.data['clasificacion'] == 'PRODUCTO':
-			self.tipo_clase = "MP"
-		if self.data['clasificacion'] == 'SERVICIO':
-			self.tipo_clase = 'MS'
-
-		if self.data['clasificacion'] == 'PRODUCTOS':
-			self.tipo_clase = "MP"
-		if self.data['clasificacion'] == 'SERVICIOS':
-			self.tipo_clase = 'MS'
+		try:
+			if self.data['clasificacion'] == 'PRODUCTO':
+				self.tipo_clase = "MP"
+		except Exception as e:
+			pass
+		try:						
+			if self.data['clasificacion'] == 'SERVICIO':
+				self.tipo_clase = 'MS'
+		except Exception as e:
+			pass				
+		try:
+			if self.data['clasificacion'] == 'PRODUCTOS':
+				self.tipo_clase = "MP"
+		except Exception as e:
+			pass				
+		try:
+			if self.data['clasificacion'] == 'SERVICIOS':
+				self.tipo_clase = 'MS'
+		except Exception as e:
+			pass				
 
 		self.file_fileId_fileNbr = str(int(process_day_Nbr())+1)
 		self.file_fileId_fileSeq = "PY"
@@ -173,6 +207,7 @@ class insertRegModel(object):
 
 
 		self.file_ownershipData_ownerList_person_nationalityCountryCode = self.data['pais']
+		
 		self.file_ownershipData_ownerList_person_personName = self.data['razon_social'] + self.data['nombre_soli']
 		self.file_ownershipData_ownerList_person_residenceCountryCode = self.data['pais']
 

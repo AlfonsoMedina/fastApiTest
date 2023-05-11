@@ -3,9 +3,10 @@ from math import ceil
 import string
 import time
 import psycopg2
+from tools.send_mail import enviar_back_notFile
 import tools.filing_date as captureDate
 import tools.connect as connex
-from wipo.ipas import mark_getlist, personAgente
+from wipo.ipas import Process_Read, mark_getlist, mark_read, personAgente
 from urllib import request
 import qrcode
 
@@ -13,7 +14,8 @@ import qrcode
 global_data = {}
 create_userdoc = {}
 default_val = lambda arg: arg if arg == "null" else "" 
-
+global_data_titu = {}
+list_titulare = []
 def registro_sfe(arg):
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
@@ -76,7 +78,7 @@ def registro_sfe(arg):
 			except Exception as e:
 				global_data['reivindicaciones'] = "No definido"	
 			try:
-				if(i['descripcion'] == "Tipo de Marca" or i['descripcion'] == "Tipo de marca"):
+				if(i['descripcion'] == "Tipo de marca"):
 					global_data["tipo_on"] = i['valor']
 			except Exception as e:
 				global_data['tipo_on'] = "No definido"	
@@ -100,915 +102,17 @@ def registro_sfe(arg):
 					global_data['razon_social']=i['valor']
 			except Exception as e:
 				global_data['razon_social'] = "No definido"	
-
 			try:
 				if(i['campo'] == 'datospersonales_calle'):
 					global_data['direccion']=i['valor']
 			except Exception as e:
 				global_data['direccion'] = "No definido"
-
 			try:
 				if(i['campo'] == 'datospersonales_direccion'):
 					global_data['direccion_dir']=i['valor']
 			except Exception as e:
 				global_data['direccion_dir'] = "No definido"
-			# Segmento de titulares#######################################################################################################
-
-
-			try:
-				try:
-					if(i['campo'] == "titular2_pais2"):
-						global_data['t2_pais'] = i['valor']
-				except Exception as e:
-					global_data['t2_pais'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_datoscontacto2"):
-						global_data['t2_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t2_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_datoscontacto2"):
-						global_data['t2_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t2_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_telefono2"):
-						global_data['t2_telefono'] = i['valor']
-				except Exception as e:
-					global_data['t2_telefono'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_codigopostal2"):
-						global_data['t2_codigopostal'] = i['valor']
-				except Exception as e:
-					global_data['t2_codigopostal'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_nombreapellido2"):
-						global_data['t2_nombreapellido'] = i['valor']
-				except Exception as e:
-					global_data['t2_nombreapellido'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_correoelectronico2"):
-						global_data['t2_correoelectronico'] = i['valor']
-				except Exception as e:
-					global_data['t2_correoelectronico'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_sexo2"):
-						global_data['t2_sexo'] = i['valor']
-				except Exception as e:
-					global_data['t2_sexo'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_ruc2"):
-						global_data['t2_ruc'] = i['valor']
-				except Exception as e:
-					global_data['t2_ruc'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_nrodocumento2"):
-						global_data['t2_nrodocumento'] = i['valor']
-				except Exception as e:
-					global_data['t2_nrodocumento'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_ciudad2"):
-						global_data['t2_ciudad'] = i['valor']
-				except Exception as e:
-					global_data['t2_ciudad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_calle2"):
-						global_data['t2_calle'] = i['valor']
-				except Exception as e:
-					global_data[''] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_razonsocial2"):
-						global_data['t2_razonsocial'] = i['valor']
-				except Exception as e:
-					global_data['t2_razonsocial'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_actividad2"):
-						global_data['t2_actividad'] = i['valor']
-				except Exception as e:
-					global_data['t2_actividad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular2_departamento2"):
-						global_data['t2_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t2_departamento'] = "No definido"								
-
-				try:
-					if(i['campo'] == "titular2_departamento2"):
-						global_data['t2_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t2_departamento'] = "No definido"
-			except Exception as e:
-				pass
-
-			try:
-				try:
-					if(i['campo'] == "titular3_pais3"):
-						global_data['t3_pais'] = i['valor']
-				except Exception as e:
-					global_data['t3_pais'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_datoscontacto3"):
-						global_data['t3_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t3_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_datoscontacto3"):
-						global_data['t3_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t3_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_telefono3"):
-						global_data['t3_telefono'] = i['valor']
-				except Exception as e:
-					global_data['t3_telefono'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_codigopostal3"):
-						global_data['t3_codigopostal'] = i['valor']
-				except Exception as e:
-					global_data['t3_codigopostal'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_nombreapellido3"):
-						global_data['t3_nombreapellido'] = i['valor']
-				except Exception as e:
-					global_data['t3_nombreapellido'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_correoelectronico3"):
-						global_data['t3_correoelectronico'] = i['valor']
-				except Exception as e:
-					global_data['t3_correoelectronico'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_sexo3"):
-						global_data['t3_sexo'] = i['valor']
-				except Exception as e:
-					global_data['t3_sexo'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_ruc3"):
-						global_data['t3_ruc'] = i['valor']
-				except Exception as e:
-					global_data['t3_ruc'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_nrodocumento3"):
-						global_data['t3_nrodocumento'] = i['valor']
-				except Exception as e:
-					global_data['t3_nrodocumento'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_ciudad3"):
-						global_data['t3_ciudad'] = i['valor']
-				except Exception as e:
-					global_data['t3_ciudad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_calle3"):
-						global_data['t3_calle'] = i['valor']
-				except Exception as e:
-					global_data[''] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_razonsocial3"):
-						global_data['t3_razonsocial'] = i['valor']
-				except Exception as e:
-					global_data['t3_razonsocial'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_actividad3"):
-						global_data['t3_actividad'] = i['valor']
-				except Exception as e:
-					global_data['t3_actividad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular3_departamento3"):
-						global_data['t3_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t3_departamento'] = "No definido"								
-
-				try:
-					if(i['campo'] == "titular3_departamento3"):
-						global_data['t3_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t3_departamento'] = "No definido"
-			except Exception as e:
-				pass
-
-			try:
-				try:
-					if(i['campo'] == "titular4_pais4"):
-						global_data['t4_pais'] = i['valor']
-				except Exception as e:
-					global_data['t4_pais'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_datoscontacto4"):
-						global_data['t4_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t4_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_datoscontacto4"):
-						global_data['t4_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t4_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_telefono4"):
-						global_data['t4_telefono'] = i['valor']
-				except Exception as e:
-					global_data['t4_telefono'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_codigopostal4"):
-						global_data['t4_codigopostal'] = i['valor']
-				except Exception as e:
-					global_data['t4_codigopostal'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_nombreapellido4"):
-						global_data['t4_nombreapellido'] = i['valor']
-				except Exception as e:
-					global_data['t4_nombreapellido'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_correoelectronico4"):
-						global_data['t4_correoelectronico'] = i['valor']
-				except Exception as e:
-					global_data['t4_correoelectronico'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_sexo4"):
-						global_data['t4_sexo'] = i['valor']
-				except Exception as e:
-					global_data['t4_sexo'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_ruc4"):
-						global_data['t4_ruc'] = i['valor']
-				except Exception as e:
-					global_data['t4_ruc'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_nrodocumento4"):
-						global_data['t4_nrodocumento'] = i['valor']
-				except Exception as e:
-					global_data['t4_nrodocumento'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_ciudad4"):
-						global_data['t4_ciudad'] = i['valor']
-				except Exception as e:
-					global_data['t4_ciudad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_calle4"):
-						global_data['t4_calle'] = i['valor']
-				except Exception as e:
-					global_data[''] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_razonsocial4"):
-						global_data['t4_razonsocial'] = i['valor']
-				except Exception as e:
-					global_data['t4_razonsocial'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_actividad4"):
-						global_data['t4_actividad'] = i['valor']
-				except Exception as e:
-					global_data['t4_actividad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular4_departamento4"):
-						global_data['t4_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t4_departamento'] = "No definido"								
-
-				try:
-					if(i['campo'] == "titular4_departamento4"):
-						global_data['t4_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t4_departamento'] = "No definido"
-			except Exception as e:
-				pass
-
-			try:
-				try:
-					if(i['campo'] == "titular5_pais5"):
-						global_data['t5_pais'] = i['valor']
-				except Exception as e:
-					global_data['t5_pais'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_datoscontacto5"):
-						global_data['t5_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t5_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_datoscontacto5"):
-						global_data['t5_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t5_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_telefono5"):
-						global_data['t5_telefono'] = i['valor']
-				except Exception as e:
-					global_data['t5_telefono'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_codigopostal5"):
-						global_data['t5_codigopostal'] = i['valor']
-				except Exception as e:
-					global_data['t5_codigopostal'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_nombreapellido5"):
-						global_data['t5_nombreapellido'] = i['valor']
-				except Exception as e:
-					global_data['t5_nombreapellido'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_correoelectronico5"):
-						global_data['t5_correoelectronico'] = i['valor']
-				except Exception as e:
-					global_data['t5_correoelectronico'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_sexo5"):
-						global_data['t5_sexo'] = i['valor']
-				except Exception as e:
-					global_data['t5_sexo'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_ruc5"):
-						global_data['t5_ruc'] = i['valor']
-				except Exception as e:
-					global_data['t5_ruc'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_nrodocumento5"):
-						global_data['t5_nrodocumento'] = i['valor']
-				except Exception as e:
-					global_data['t5_nrodocumento'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_ciudad5"):
-						global_data['t5_ciudad'] = i['valor']
-				except Exception as e:
-					global_data['t5_ciudad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_calle5"):
-						global_data['t5_calle'] = i['valor']
-				except Exception as e:
-					global_data[''] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_razonsocial5"):
-						global_data['t5_razonsocial'] = i['valor']
-				except Exception as e:
-					global_data['t5_razonsocial'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_actividad5"):
-						global_data['t5_actividad'] = i['valor']
-				except Exception as e:
-					global_data['t5_actividad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular5_departamento5"):
-						global_data['t5_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t5_departamento'] = "No definido"								
-
-				try:
-					if(i['campo'] == "titular5_departamento5"):
-						global_data['t5_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t5_departamento'] = "No definido"
-			except Exception as e:
-				pass
-
-			try:
-				try:
-					if(i['campo'] == "titular6_pais6"):
-						global_data['t6_pais'] = i['valor']
-				except Exception as e:
-					global_data['t6_pais'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_datoscontacto6"):
-						global_data['t6_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t6_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_datoscontacto6"):
-						global_data['t6_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t6_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_telefono6"):
-						global_data['t6_telefono'] = i['valor']
-				except Exception as e:
-					global_data['t6_telefono'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_codigopostal6"):
-						global_data['t6_codigopostal'] = i['valor']
-				except Exception as e:
-					global_data['t6_codigopostal'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_nombreapellido6"):
-						global_data['t6_nombreapellido'] = i['valor']
-				except Exception as e:
-					global_data['t6_nombreapellido'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_correoelectronico6"):
-						global_data['t6_correoelectronico'] = i['valor']
-				except Exception as e:
-					global_data['t6_correoelectronico'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_sexo6"):
-						global_data['t6_sexo'] = i['valor']
-				except Exception as e:
-					global_data['t6_sexo'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_ruc6"):
-						global_data['t6_ruc'] = i['valor']
-				except Exception as e:
-					global_data['t6_ruc'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_nrodocumento6"):
-						global_data['t6_nrodocumento'] = i['valor']
-				except Exception as e:
-					global_data['t6_nrodocumento'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_ciudad6"):
-						global_data['t6_ciudad'] = i['valor']
-				except Exception as e:
-					global_data['t6_ciudad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_calle6"):
-						global_data['t6_calle'] = i['valor']
-				except Exception as e:
-					global_data[''] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_razonsocial6"):
-						global_data['t6_razonsocial'] = i['valor']
-				except Exception as e:
-					global_data['t6_razonsocial'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_actividad6"):
-						global_data['t6_actividad'] = i['valor']
-				except Exception as e:
-					global_data['t6_actividad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular6_departamento6"):
-						global_data['t6_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t6_departamento'] = "No definido"								
-
-				try:
-					if(i['campo'] == "titular6_departamento6"):
-						global_data['t6_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t6_departamento'] = "No definido"
-			except Exception as e:
-				pass
-
-			try:
-				try:
-					if(i['campo'] == "titular7_pais7"):
-						global_data['t7_pais'] = i['valor']
-				except Exception as e:
-					global_data['t7_pais'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_datoscontacto7"):
-						global_data['t7_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t7_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_datoscontacto7"):
-						global_data['t7_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t7_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_telefono7"):
-						global_data['t7_telefono'] = i['valor']
-				except Exception as e:
-					global_data['t7_telefono'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_codigopostal7"):
-						global_data['t7_codigopostal'] = i['valor']
-				except Exception as e:
-					global_data['t7_codigopostal'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_nombreapellido7"):
-						global_data['t7_nombreapellido'] = i['valor']
-				except Exception as e:
-					global_data['t7_nombreapellido'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_correoelectronico7"):
-						global_data['t7_correoelectronico'] = i['valor']
-				except Exception as e:
-					global_data['t7_correoelectronico'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_sexo7"):
-						global_data['t7_sexo'] = i['valor']
-				except Exception as e:
-					global_data['t7_sexo'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_ruc7"):
-						global_data['t7_ruc'] = i['valor']
-				except Exception as e:
-					global_data['t7_ruc'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_nrodocumento7"):
-						global_data['t7_nrodocumento'] = i['valor']
-				except Exception as e:
-					global_data['t7_nrodocumento'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_ciudad7"):
-						global_data['t7_ciudad'] = i['valor']
-				except Exception as e:
-					global_data['t7_ciudad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_calle7"):
-						global_data['t7_calle'] = i['valor']
-				except Exception as e:
-					global_data[''] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_razonsocial7"):
-						global_data['t7_razonsocial'] = i['valor']
-				except Exception as e:
-					global_data['t7_razonsocial'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_actividad7"):
-						global_data['t7_actividad'] = i['valor']
-				except Exception as e:
-					global_data['t7_actividad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular7_departamento7"):
-						global_data['t7_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t7_departamento'] = "No definido"								
-
-				try:
-					if(i['campo'] == "titular7_departamento7"):
-						global_data['t7_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t7_departamento'] = "No definido"
-			except Exception as e:
-				pass
-
-			try:
-				try:
-					if(i['campo'] == "titular8_pais8"):
-						global_data['t8_pais'] = i['valor']
-				except Exception as e:
-					global_data['t8_pais'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_datoscontacto8"):
-						global_data['t8_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t8_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_datoscontacto8"):
-						global_data['t8_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t8_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_telefono8"):
-						global_data['t8_telefono'] = i['valor']
-				except Exception as e:
-					global_data['t8_telefono'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_codigopostal8"):
-						global_data['t8_codigopostal'] = i['valor']
-				except Exception as e:
-					global_data['t8_codigopostal'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_nombreapellido8"):
-						global_data['t8_nombreapellido'] = i['valor']
-				except Exception as e:
-					global_data['t8_nombreapellido'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_correoelectronico8"):
-						global_data['t8_correoelectronico'] = i['valor']
-				except Exception as e:
-					global_data['t8_correoelectronico'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_sexo8"):
-						global_data['t8_sexo'] = i['valor']
-				except Exception as e:
-					global_data['t8_sexo'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_ruc8"):
-						global_data['t8_ruc'] = i['valor']
-				except Exception as e:
-					global_data['t8_ruc'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_nrodocumento8"):
-						global_data['t8_nrodocumento'] = i['valor']
-				except Exception as e:
-					global_data['t8_nrodocumento'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_ciudad8"):
-						global_data['t8_ciudad'] = i['valor']
-				except Exception as e:
-					global_data['t8_ciudad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_calle8"):
-						global_data['t8_calle'] = i['valor']
-				except Exception as e:
-					global_data[''] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_razonsocial8"):
-						global_data['t8_razonsocial'] = i['valor']
-				except Exception as e:
-					global_data['t8_razonsocial'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_actividad8"):
-						global_data['t8_actividad'] = i['valor']
-				except Exception as e:
-					global_data['t8_actividad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular8_departamento8"):
-						global_data['t8_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t8_departamento'] = "No definido"								
-
-				try:
-					if(i['campo'] == "titular8_departamento8"):
-						global_data['t8_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t8_departamento'] = "No definido"
-			except Exception as e:
-				pass									
-
-			try:
-				try:
-					if(i['campo'] == "titular9_pais9"):
-						global_data['t9_pais'] = i['valor']
-				except Exception as e:
-					global_data['t9_pais'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_datoscontacto9"):
-						global_data['t9_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t9_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_datoscontacto9"):
-						global_data['t9_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t9_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_telefono9"):
-						global_data['t9_telefono'] = i['valor']
-				except Exception as e:
-					global_data['t9_telefono'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_codigopostal9"):
-						global_data['t9_codigopostal'] = i['valor']
-				except Exception as e:
-					global_data['t9_codigopostal'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_nombreapellido9"):
-						global_data['t9_nombreapellido'] = i['valor']
-				except Exception as e:
-					global_data['t9_nombreapellido'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_correoelectronico9"):
-						global_data['t9_correoelectronico'] = i['valor']
-				except Exception as e:
-					global_data['t9_correoelectronico'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_sexo9"):
-						global_data['t9_sexo'] = i['valor']
-				except Exception as e:
-					global_data['t9_sexo'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_ruc9"):
-						global_data['t9_ruc'] = i['valor']
-				except Exception as e:
-					global_data['t9_ruc'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_nrodocumento9"):
-						global_data['t9_nrodocumento'] = i['valor']
-				except Exception as e:
-					global_data['t9_nrodocumento'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_ciudad9"):
-						global_data['t9_ciudad'] = i['valor']
-				except Exception as e:
-					global_data['t9_ciudad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_calle9"):
-						global_data['t9_calle'] = i['valor']
-				except Exception as e:
-					global_data[''] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_razonsocial9"):
-						global_data['t9_razonsocial'] = i['valor']
-				except Exception as e:
-					global_data['t9_razonsocial'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_actividad9"):
-						global_data['t9_actividad'] = i['valor']
-				except Exception as e:
-					global_data['t9_actividad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular9_departamento9"):
-						global_data['t9_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t9_departamento'] = "No definido"								
-
-				try:
-					if(i['campo'] == "titular9_departamento9"):
-						global_data['t9_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t9_departamento'] = "No definido"
-			except Exception as e:
-				pass
-
-			try:
-				try:
-					if(i['campo'] == "titular10_pais10"):
-						global_data['t10_pais'] = i['valor']
-				except Exception as e:
-					global_data['t10_pais'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_datoscontacto10"):
-						global_data['t10_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t10_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_datoscontacto10"):
-						global_data['t10_datoscontacto'] = i['valor']
-				except Exception as e:
-					global_data['t10_datoscontacto'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_telefono10"):
-						global_data['t10_telefono'] = i['valor']
-				except Exception as e:
-					global_data['t10_telefono'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_codigopostal10"):
-						global_data['t10_codigopostal'] = i['valor']
-				except Exception as e:
-					global_data['t10_codigopostal'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_nombreapellido10"):
-						global_data['t10_nombreapellido'] = i['valor']
-				except Exception as e:
-					global_data['t10_nombreapellido'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_correoelectronico10"):
-						global_data['t10_correoelectronico'] = i['valor']
-				except Exception as e:
-					global_data['t10_correoelectronico'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_sexo10"):
-						global_data['t10_sexo'] = i['valor']
-				except Exception as e:
-					global_data['t10_sexo'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_ruc10"):
-						global_data['t10_ruc'] = i['valor']
-				except Exception as e:
-					global_data['t10_ruc'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_nrodocumento10"):
-						global_data['t10_nrodocumento'] = i['valor']
-				except Exception as e:
-					global_data['t10_nrodocumento'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_ciudad10"):
-						global_data['t10_ciudad'] = i['valor']
-				except Exception as e:
-					global_data['t10_ciudad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_calle10"):
-						global_data['t10_calle'] = i['valor']
-				except Exception as e:
-					global_data[''] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_razonsocial10"):
-						global_data['t10_razonsocial'] = i['valor']
-				except Exception as e:
-					global_data['t10_razonsocial'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_actividad10"):
-						global_data['t10_actividad'] = i['valor']
-				except Exception as e:
-					global_data['t10_actividad'] = "No definido"
-
-				try:
-					if(i['campo'] == "titular10_departamento10"):
-						global_data['t10_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t10_departamento'] = "No definido"								
-
-				try:
-					if(i['campo'] == "titular10_departamento10"):
-						global_data['t10_departamento'] = i['valor']
-				except Exception as e:
-					global_data['t10_departamento'] = "No definido"
-			except Exception as e:
-				pass
-
-
-			# Segmento de titulares#######################################################################################################
-
+		
 			try:
 				if(i['descripcion'] == "Ciudad" and i['campo'] == 'datospersonales_ciudad'):
 					global_data['ciudad']=i['valor']
@@ -1069,13 +173,1097 @@ def registro_sfe(arg):
 					global_data['espe']=i['valor']
 			except Exception as e:
 				global_data['espe'] = "No definido"
+		
 		return(global_data)
+	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+	
+def titulare_reg(arg):
+	count = 0
+	try:
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
+						to_char(t.created_at,'yyyy-mm-dd hh24:mi:ss')created_at,to_char(t.updated_at,'yyyy-mm-dd hh24:mi:ss')updated_at,t.respuestas,t.costo,t.usuario_id, t.deleted_at,
+						t.codigo,t.firmado_at,to_char(t.pagado_at,'yyyy-mm-dd hh24:mi:ss') as pagado_at,t.expediente_id,t.pdf_url,to_char(t.enviado_at,'yyyy-mm-dd hh24:mi:ss') as enviado_at,
+						to_char(t.recepcionado_at,'yyyy-mm-dd hh24:mi:ss') as recepcionado_at,t.nom_funcionario,t.pdf,t.expediente_afectado,t.notificacion_id,t.expedientes_autor,t.autorizado_por_id,u.nombre as nombre_agente,pa.numero_agente,
+						u.email as email_agente,pa.celular as telefonoAgente,pa.domicilio_agpi,t.nom_funcionario as funcionario_autorizado 
+						from tramites t join formularios f on t.formulario_id  = f.id  
+						join usuarios u on u.id = t.usuario_id  
+						join perfiles_agentes pa on pa.usuario_id = u.id         
+						where t.id = {};""".format(int(arg)))
+		row=cursor.fetchall()
+		for i in row[0][8]:
+			"""
+			try:
+				if(i['campo'] == "titular1_pais1"):
+					global_data_titu['t1_pais'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_pais'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_datoscontacto1"):
+					global_data_titu['t1_datoscontacto'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_datoscontacto'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_datoscontacto1"):
+					global_data_titu['t1_datoscontacto'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_datoscontacto'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_telefono1"):
+					global_data_titu['t1_telefono'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_telefono'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_codigopostal1"):
+					global_data_titu['t1_codigopostal'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_codigopostal'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_nombreapellido1"):
+					global_data_titu['t1_nombreapellido'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_nombreapellido'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_correoelectronico1"):
+					global_data_titu['t1_correoelectronico'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_correoelectronico'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_sexo1"):
+					global_data_titu['t1_sexo'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_sexo'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_ruc1"):
+					global_data_titu['t1_ruc'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_ruc'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_nrodocumento1"):
+					global_data_titu['t1_nrodocumento'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_nrodocumento'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_ciudad1"):
+					global_data_titu['t1_ciudad'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_ciudad'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_calle1"):
+					global_data_titu['t1_calle'] = i['valor']
+			except Exception as e:
+				global_data_titu[''] = "No definido"
+			try:
+				if(i['campo'] == "titular1_razonsocial1"):
+					global_data_titu['t1_razonsocial'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_razonsocial'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_actividad1"):
+					global_data_titu['t1_actividad'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_actividad'] = "No definido"
+			try:
+				if(i['campo'] == "titular1_departamento1"):
+					global_data_titu['t1_departamento'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_departamento'] = "No definido"								
+			try:
+				if(i['campo'] == "titular1_departamento1"):
+					global_data_titu['t1_departamento'] = i['valor']
+			except Exception as e:
+				global_data_titu['t1_departamento'] = "No definido"		
+
+			try:
+				list_titulare.append({'person': {
+											'addressStreet': global_data_titu['t1_calle'],
+											'nationalityCountryCode': global_data_titu['t1_pais'],
+											'personName': global_data_titu['t1_razonsocial'],
+											'residenceCountryCode': global_data_titu['t1_pais']
+										}})						 
+			except Exception as e:
+				pass
+
+			try:
+				try:
+					if(i['campo'] == "titular2_pais2"):
+						global_data_titu['t2_pais'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_pais'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_datoscontacto2"):
+						global_data_titu['t2_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_datoscontacto2"):
+						global_data_titu['t2_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_telefono2"):
+						global_data_titu['t2_telefono'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_telefono'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_codigopostal2"):
+						global_data_titu['t2_codigopostal'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_codigopostal'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_nombreapellido2"):
+						global_data_titu['t2_nombreapellido'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_nombreapellido'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_correoelectronico2"):
+						global_data_titu['t2_correoelectronico'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_correoelectronico'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_sexo2"):
+						global_data_titu['t2_sexo'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_sexo'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_ruc2"):
+						global_data_titu['t2_ruc'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_ruc'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_nrodocumento2"):
+						global_data_titu['t2_nrodocumento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_nrodocumento'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_ciudad2"):
+						global_data_titu['t2_ciudad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_ciudad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_calle2"):
+						global_data_titu['t2_calle'] = i['valor']
+				except Exception as e:
+					global_data_titu[''] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_razonsocial2"):
+						global_data_titu['t2_razonsocial'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_razonsocial'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_actividad2"):
+						global_data_titu['t2_actividad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_actividad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular2_departamento2"):
+						global_data_titu['t2_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_departamento'] = "No definido"								
+
+				try:
+					if(i['campo'] == "titular2_departamento2"):
+						global_data_titu['t2_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t2_departamento'] = "No definido"
+			except Exception as e:
+				pass
+			try:
+				list_titulare.append({'person': {
+											'addressStreet': global_data_titu['t2_calle'],
+											'nationalityCountryCode': global_data_titu['t2_pais'],
+											'personName': global_data_titu['t2_razonsocial'],
+											'residenceCountryCode': global_data_titu['t2_pais']
+										}})
+			except Exception as e:
+				pass
+			try:
+				try:
+					if(i['campo'] == "titular3_pais3"):
+						global_data_titu['t3_pais'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_pais'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_datoscontacto3"):
+						global_data_titu['t3_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_datoscontacto3"):
+						global_data_titu['t3_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_telefono3"):
+						global_data_titu['t3_telefono'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_telefono'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_codigopostal3"):
+						global_data_titu['t3_codigopostal'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_codigopostal'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_nombreapellido3"):
+						global_data_titu['t3_nombreapellido'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_nombreapellido'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_correoelectronico3"):
+						global_data_titu['t3_correoelectronico'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_correoelectronico'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_sexo3"):
+						global_data_titu['t3_sexo'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_sexo'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_ruc3"):
+						global_data_titu['t3_ruc'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_ruc'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_nrodocumento3"):
+						global_data_titu['t3_nrodocumento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_nrodocumento'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_ciudad3"):
+						global_data_titu['t3_ciudad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_ciudad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_calle3"):
+						global_data_titu['t3_calle'] = i['valor']
+				except Exception as e:
+					global_data_titu[''] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_razonsocial3"):
+						global_data_titu['t3_razonsocial'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_razonsocial'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_actividad3"):
+						global_data_titu['t3_actividad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_actividad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular3_departamento3"):
+						global_data_titu['t3_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_departamento'] = "No definido"								
+
+				try:
+					if(i['campo'] == "titular3_departamento3"):
+						global_data_titu['t3_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t3_departamento'] = "No definido"
+			except Exception as e:
+				pass
+			try:
+				list_titulare.append({'person': {
+											'addressStreet': global_data_titu['t3_calle'],
+											'nationalityCountryCode': global_data_titu['t3_pais'],
+											'personName': global_data_titu['t3_razonsocial'],
+											'residenceCountryCode': global_data_titu['t3_pais']
+										}})
+			except Exception as e:
+				pass
+			try:
+				try:
+					if(i['campo'] == "titular4_pais4"):
+						global_data_titu['t4_pais'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_pais'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_datoscontacto4"):
+						global_data_titu['t4_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_datoscontacto4"):
+						global_data_titu['t4_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_telefono4"):
+						global_data_titu['t4_telefono'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_telefono'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_codigopostal4"):
+						global_data_titu['t4_codigopostal'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_codigopostal'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_nombreapellido4"):
+						global_data_titu['t4_nombreapellido'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_nombreapellido'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_correoelectronico4"):
+						global_data_titu['t4_correoelectronico'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_correoelectronico'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_sexo4"):
+						global_data_titu['t4_sexo'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_sexo'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_ruc4"):
+						global_data_titu['t4_ruc'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_ruc'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_nrodocumento4"):
+						global_data_titu['t4_nrodocumento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_nrodocumento'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_ciudad4"):
+						global_data_titu['t4_ciudad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_ciudad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_calle4"):
+						global_data_titu['t4_calle'] = i['valor']
+				except Exception as e:
+					global_data_titu[''] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_razonsocial4"):
+						global_data_titu['t4_razonsocial'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_razonsocial'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_actividad4"):
+						global_data_titu['t4_actividad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_actividad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular4_departamento4"):
+						global_data_titu['t4_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_departamento'] = "No definido"								
+
+				try:
+					if(i['campo'] == "titular4_departamento4"):
+						global_data_titu['t4_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t4_departamento'] = "No definido"
+			except Exception as e:
+				pass
+			try:
+				list_titulare.append({'person': {
+											'addressStreet': global_data_titu['t4_calle'],
+											'nationalityCountryCode': global_data_titu['t4_pais'],
+											'personName': global_data_titu['t4_razonsocial'],
+											'residenceCountryCode': global_data_titu['t4_pais']
+										}})
+			except Exception as e:
+				pass
+			try:
+				try:
+					if(i['campo'] == "titular5_pais5"):
+						global_data_titu['t5_pais'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_pais'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_datoscontacto5"):
+						global_data_titu['t5_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_datoscontacto5"):
+						global_data_titu['t5_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_telefono5"):
+						global_data_titu['t5_telefono'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_telefono'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_codigopostal5"):
+						global_data_titu['t5_codigopostal'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_codigopostal'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_nombreapellido5"):
+						global_data_titu['t5_nombreapellido'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_nombreapellido'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_correoelectronico5"):
+						global_data_titu['t5_correoelectronico'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_correoelectronico'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_sexo5"):
+						global_data_titu['t5_sexo'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_sexo'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_ruc5"):
+						global_data_titu['t5_ruc'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_ruc'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_nrodocumento5"):
+						global_data_titu['t5_nrodocumento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_nrodocumento'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_ciudad5"):
+						global_data_titu['t5_ciudad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_ciudad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_calle5"):
+						global_data_titu['t5_calle'] = i['valor']
+				except Exception as e:
+					global_data_titu[''] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_razonsocial5"):
+						global_data_titu['t5_razonsocial'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_razonsocial'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_actividad5"):
+						global_data_titu['t5_actividad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_actividad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular5_departamento5"):
+						global_data_titu['t5_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_departamento'] = "No definido"								
+
+				try:
+					if(i['campo'] == "titular5_departamento5"):
+						global_data_titu['t5_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t5_departamento'] = "No definido"
+			except Exception as e:
+				pass
+			try:
+				list_titulare.append({'person': {
+											'addressStreet': global_data_titu['t5_calle'],
+											'nationalityCountryCode': global_data_titu['t5_pais'],
+											'personName': global_data_titu['t5_razonsocial'],
+											'residenceCountryCode': global_data_titu['t5_pais']
+										}})
+			except Exception as e:
+				pass
+			try:
+				try:
+					if(i['campo'] == "titular6_pais6"):
+						global_data_titu['t6_pais'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_pais'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_datoscontacto6"):
+						global_data_titu['t6_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_datoscontacto6"):
+						global_data_titu['t6_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_telefono6"):
+						global_data_titu['t6_telefono'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_telefono'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_codigopostal6"):
+						global_data_titu['t6_codigopostal'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_codigopostal'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_nombreapellido6"):
+						global_data_titu['t6_nombreapellido'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_nombreapellido'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_correoelectronico6"):
+						global_data_titu['t6_correoelectronico'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_correoelectronico'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_sexo6"):
+						global_data_titu['t6_sexo'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_sexo'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_ruc6"):
+						global_data_titu['t6_ruc'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_ruc'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_nrodocumento6"):
+						global_data_titu['t6_nrodocumento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_nrodocumento'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_ciudad6"):
+						global_data_titu['t6_ciudad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_ciudad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_calle6"):
+						global_data_titu['t6_calle'] = i['valor']
+				except Exception as e:
+					global_data_titu[''] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_razonsocial6"):
+						global_data_titu['t6_razonsocial'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_razonsocial'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_actividad6"):
+						global_data_titu['t6_actividad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_actividad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular6_departamento6"):
+						global_data_titu['t6_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_departamento'] = "No definido"								
+
+				try:
+					if(i['campo'] == "titular6_departamento6"):
+						global_data_titu['t6_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t6_departamento'] = "No definido"
+			except Exception as e:
+				pass
+			try:
+				list_titulare.append({'person': {
+											'addressStreet': global_data_titu['t6_calle'],
+											'nationalityCountryCode': global_data_titu['t6_pais'],
+											'personName': global_data_titu['t6_razonsocial'],
+											'residenceCountryCode': global_data_titu['t6_pais']
+										}})
+			except Exception as e:
+				pass
+			try:
+				try:
+					if(i['campo'] == "titular7_pais7"):
+						global_data_titu['t7_pais'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_pais'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_datoscontacto7"):
+						global_data_titu['t7_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_datoscontacto7"):
+						global_data_titu['t7_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_telefono7"):
+						global_data_titu['t7_telefono'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_telefono'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_codigopostal7"):
+						global_data_titu['t7_codigopostal'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_codigopostal'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_nombreapellido7"):
+						global_data_titu['t7_nombreapellido'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_nombreapellido'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_correoelectronico7"):
+						global_data_titu['t7_correoelectronico'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_correoelectronico'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_sexo7"):
+						global_data_titu['t7_sexo'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_sexo'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_ruc7"):
+						global_data_titu['t7_ruc'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_ruc'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_nrodocumento7"):
+						global_data_titu['t7_nrodocumento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_nrodocumento'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_ciudad7"):
+						global_data_titu['t7_ciudad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_ciudad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_calle7"):
+						global_data_titu['t7_calle'] = i['valor']
+				except Exception as e:
+					global_data_titu[''] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_razonsocial7"):
+						global_data_titu['t7_razonsocial'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_razonsocial'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_actividad7"):
+						global_data_titu['t7_actividad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_actividad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular7_departamento7"):
+						global_data_titu['t7_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_departamento'] = "No definido"								
+
+				try:
+					if(i['campo'] == "titular7_departamento7"):
+						global_data_titu['t7_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t7_departamento'] = "No definido"
+			except Exception as e:
+				pass
+			try:
+				list_titulare.append({'person': {
+											'addressStreet': global_data_titu['t7_calle'],
+											'nationalityCountryCode': global_data_titu['t7_pais'],
+											'personName': global_data_titu['t7_razonsocial'],
+											'residenceCountryCode': global_data_titu['t7_pais']
+										}})
+			except Exception as e:
+				pass
+			try:
+				try:
+					if(i['campo'] == "titular8_pais8"):
+						global_data_titu['t8_pais'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_pais'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_datoscontacto8"):
+						global_data_titu['t8_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_datoscontacto8"):
+						global_data_titu['t8_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_telefono8"):
+						global_data_titu['t8_telefono'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_telefono'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_codigopostal8"):
+						global_data_titu['t8_codigopostal'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_codigopostal'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_nombreapellido8"):
+						global_data_titu['t8_nombreapellido'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_nombreapellido'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_correoelectronico8"):
+						global_data_titu['t8_correoelectronico'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_correoelectronico'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_sexo8"):
+						global_data_titu['t8_sexo'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_sexo'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_ruc8"):
+						global_data_titu['t8_ruc'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_ruc'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_nrodocumento8"):
+						global_data_titu['t8_nrodocumento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_nrodocumento'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_ciudad8"):
+						global_data_titu['t8_ciudad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_ciudad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_calle8"):
+						global_data_titu['t8_calle'] = i['valor']
+				except Exception as e:
+					global_data_titu[''] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_razonsocial8"):
+						global_data_titu['t8_razonsocial'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_razonsocial'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_actividad8"):
+						global_data_titu['t8_actividad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_actividad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular8_departamento8"):
+						global_data_titu['t8_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_departamento'] = "No definido"								
+
+				try:
+					if(i['campo'] == "titular8_departamento8"):
+						global_data_titu['t8_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t8_departamento'] = "No definido"
+			except Exception as e:
+				pass									
+			try:
+				list_titulare.append({'person': {
+											'addressStreet': global_data_titu['t8_calle'],
+											'nationalityCountryCode': global_data_titu['t8_pais'],
+											'personName': global_data_titu['t8_razonsocial'],
+											'residenceCountryCode': global_data_titu['t8_pais']
+										}})
+			except Exception as e:
+				pass
+			try:
+				try:
+					if(i['campo'] == "titular9_pais9"):
+						global_data_titu['t9_pais'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_pais'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_datoscontacto9"):
+						global_data_titu['t9_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_datoscontacto9"):
+						global_data_titu['t9_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_telefono9"):
+						global_data_titu['t9_telefono'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_telefono'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_codigopostal9"):
+						global_data_titu['t9_codigopostal'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_codigopostal'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_nombreapellido9"):
+						global_data_titu['t9_nombreapellido'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_nombreapellido'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_correoelectronico9"):
+						global_data_titu['t9_correoelectronico'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_correoelectronico'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_sexo9"):
+						global_data_titu['t9_sexo'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_sexo'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_ruc9"):
+						global_data_titu['t9_ruc'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_ruc'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_nrodocumento9"):
+						global_data_titu['t9_nrodocumento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_nrodocumento'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_ciudad9"):
+						global_data_titu['t9_ciudad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_ciudad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_calle9"):
+						global_data_titu['t9_calle'] = i['valor']
+				except Exception as e:
+					global_data_titu[''] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_razonsocial9"):
+						global_data_titu['t9_razonsocial'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_razonsocial'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_actividad9"):
+						global_data_titu['t9_actividad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_actividad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular9_departamento9"):
+						global_data_titu['t9_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_departamento'] = "No definido"								
+
+				try:
+					if(i['campo'] == "titular9_departamento9"):
+						global_data_titu['t9_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t9_departamento'] = "No definido"
+			except Exception as e:
+				pass
+			try:
+				list_titulare.append({'person': {
+											'addressStreet': global_data_titu['t9_calle'],
+											'nationalityCountryCode': global_data_titu['t9_pais'],
+											'personName': global_data_titu['t9_razonsocial'],
+											'residenceCountryCode': global_data_titu['t9_pais']
+										}})
+			except Exception as e:
+				pass
+			try:
+				try:
+					if(i['campo'] == "titular10_pais10"):
+						global_data_titu['t10_pais'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_pais'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_datoscontacto10"):
+						global_data_titu['t10_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_datoscontacto10"):
+						global_data_titu['t10_datoscontacto'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_datoscontacto'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_telefono10"):
+						global_data_titu['t10_telefono'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_telefono'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_codigopostal10"):
+						global_data_titu['t10_codigopostal'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_codigopostal'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_nombreapellido10"):
+						global_data_titu['t10_nombreapellido'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_nombreapellido'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_correoelectronico10"):
+						global_data_titu['t10_correoelectronico'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_correoelectronico'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_sexo10"):
+						global_data_titu['t10_sexo'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_sexo'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_ruc10"):
+						global_data_titu['t10_ruc'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_ruc'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_nrodocumento10"):
+						global_data_titu['t10_nrodocumento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_nrodocumento'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_ciudad10"):
+						global_data_titu['t10_ciudad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_ciudad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_calle10"):
+						global_data_titu['t10_calle'] = i['valor']
+				except Exception as e:
+					global_data_titu[''] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_razonsocial10"):
+						global_data_titu['t10_razonsocial'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_razonsocial'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_actividad10"):
+						global_data_titu['t10_actividad'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_actividad'] = "No definido"
+
+				try:
+					if(i['campo'] == "titular10_departamento10"):
+						global_data_titu['t10_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_departamento'] = "No definido"								
+
+				try:
+					if(i['campo'] == "titular10_departamento10"):
+						global_data_titu['t10_departamento'] = i['valor']
+				except Exception as e:
+					global_data_titu['t10_departamento'] = "No definido"
+			except Exception as e:
+				pass
+			try:
+				list_titulare.append({'person': {
+											'addressStreet': global_data_titu['t10_calle'],
+											'nationalityCountryCode': global_data_titu['t10_pais'],
+											'personName': global_data_titu['t10_razonsocial'],
+											'residenceCountryCode': global_data_titu['t10_pais']
+										}})
+			except Exception as e:
+				pass
+								"""
+			
+			print(i['campo'])
+		
+
+	
 	except Exception as e:
 		print(e)
 	finally:
 		conn.close()
 
-print(registro_sfe('1586'))
+#print(titulare_reg('1586'))			
 
 def renovacion_sfe(arg):
 	try:
@@ -2412,12 +2600,12 @@ def tasa_SIGLA(arg):
 	finally:
 		conn.close()
 
-def data_validator(msg,status):
+def data_validator(msg,status,t_id):
 	try:
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""INSERT INTO public.log_error( fecha_evento, evento, descripcion_evento, sistema_origen,break)
-						  VALUES( '{}', 'E99', '{}', 'M.E.A.','{}');""".format(captureDate.capture_full(), msg, status ))
+		cursor.execute("""INSERT INTO public.log_error( fecha_evento, evento, descripcion_evento, sistema_origen,break,id_tramite)
+						  VALUES( '{}', 'E99', '{}', 'M.E.A.','{}',{});""".format(captureDate.capture_full(), msg, status,t_id))
 		cursor.rowcount
 		conn.commit()
 		conn.close()
@@ -2462,8 +2650,51 @@ def stop_request():
 	finally:
 		conn.close()
 
-#
-#print(tasa_SIGLA("AAS1")[0])
+def main_State(exp):
+	data_exp = mark_getlist(exp)[0]
+	data_exp_process = mark_read(data_exp.fileId.fileNbr.doubleValue, data_exp.fileId.fileSeq, data_exp.fileId.fileSeries.doubleValue, data_exp.fileId.fileType)
+	status_exp = Process_Read(data_exp_process.file.processId.processNbr.doubleValue, data_exp_process.file.processId.processType)
+	return(status_exp.status.statusId.statusCode)
+
+def email_receiver(sig):
+	data_user = {}
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select email_user,notas from reglas_notificacion where status_cod = '{}'""".format(str(sig)))
+		row=cursor.fetchall()
+		return(row)	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+
+def rule_notification(sig,exp):
+	if sig == 'AAS1':
+		status_exp = main_State(exp)
+		print(status_exp)
+		rule = email_receiver(str(status_exp))
+		print(rule)
+		try:	
+			enviar_back_notFile(str(rule[0][0]), 'Asunto de prueba', f"{str(rule[0][1])} - N° {exp} status {str(status_exp)}")
+		except Exception as e:
+			pass			
+	else:
+		rule = email_receiver(str(sig))
+		print(rule)
+		try:	
+			enviar_back_notFile(str(rule[0][0]), 'Asunto de prueba', f"{str(rule[0][1])}")
+		except Exception as e:
+			pass		
+		try:	
+			enviar_back_notFile(str(rule[1][0]), 'Asunto de prueba', f"{str(rule[0][1])}")
+		except Exception as e:
+			pass
+
+
+print(rule_notification('APO1',''))
+
 
 """def afected_relation_auth(arg):"""
 
