@@ -7,7 +7,7 @@ from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
 from tools.send_mail import enviar
 from tools.connect import MEA_TIEMPO_ACTUALIZACION
-from dinapi.sfe import count_pendiente, format_userdoc, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc
+from dinapi.sfe import count_pendiente, format_userdoc, log_info, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc
 from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
@@ -2263,6 +2263,20 @@ def re_load():
 def stop_and_run_sol():
 	return(stop_request())
 
+@app.get('/sfe/logs', summary="sfe", tags=["Devuelve logs de error"])
+def error_log():
+	return(log_info())
 
+
+
+
+
+
+
+
+
+
+
+	
 app.openapi = custom_openapi
 

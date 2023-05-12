@@ -7,7 +7,7 @@ import time
 from time import sleep
 from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exp_relation, format_userdoc, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, tasa_id
+from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exp_relation, format_userdoc, log_info, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, rule_notification, tasa_id
 from getFileDoc import getFile
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
@@ -345,11 +345,12 @@ def compileAndInsert(form_Id,typ):
 		try:
 			exists = str(user_doc_read_min('E',insert_doc.documentId_docNbr,insert_doc.documentId_docOrigin,insert_doc.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 			if exists == insert_doc.documentId_docNbr:
-				cambio_estado(form_Id,insert_doc.documentId_docNbr)
+				cambio_estado(form_Id,insert_doc.documentId_docNbr) # Cambio de estado
 				time.sleep(1)
 				envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)	#Crear PDF
 				time.sleep(1)
-				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico				
+				rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr))# Correo al funcionario
+				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Agente				
 		except Exception as e:
 			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',{form_Id})
 			cambio_estado_soporte(form_Id)			
@@ -502,6 +503,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 			cambio_estado(form_Id,escrito_relacionado.documentId_docNbr)
 			time.sleep(1)
 			envio_agente_recibido(form_Id,escrito_relacionado.documentId_docNbr)		#Crear PDF
+			rule_notification(typ,'')# Correo al funcionario
 			time.sleep(1)
 			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico
 		else:
@@ -656,12 +658,12 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 			cambio_estado(form_Id,escrito_escrito_pago.documentId_docNbr)
 			time.sleep(1)
 			envio_agente_recibido(form_Id,escrito_escrito_pago.documentId_docNbr)#Crear PDF
+			try:
+				rule_notification(typ,'')# Correo al funcionario
+			except Exception as e:
+				pass	
 			time.sleep(1)
-			delete_file(enviar(
-			'notificacion-DINAPI.pdf',
-			escrito_escrito_pago.representationData_representativeList_person_email,
-			'M.E.A',
-			''))#Enviar Correo Electronico			
+			delete_file(enviar('notificacion-DINAPI.pdf',escrito_escrito_pago.representationData_representativeList_person_email,'M.E.A',''))#Enviar Correo Electronico			
 		else:
 			data_validator(f'Error al cambiar estado de esc. N° {escrito_escrito_pago.documentId_docNbr}, tabla tramites ID: {form_Id}','false')
 			cambio_estado_soporte(form_Id)
@@ -710,6 +712,7 @@ def insertReg(form_Id):
 		))
 		process_day_commit_Nbr()
 		cambio_estado(form_Id,insert_mark.file_fileId_fileNbr)
+		rule_notification('REG','')# Correo al funcionario
 		enviar_back_notFile('jose.ramirez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Se ha recibido una solicitud de Registro de Marcas. N° '+ str(insert_mark.file_fileId_fileNbr))
 		enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Se ha recibido una solicitud de Registro de Marcas. N° '+ str(insert_mark.file_fileId_fileNbr))
 	except Exception as e:
@@ -766,6 +769,7 @@ def insertRen(form_Id):
 					insert_mark_ren.signData_signType))
 		process_day_commit_Nbr()
 		cambio_estado(form_Id,insert_mark_ren.file_fileId_fileNbr)
+		rule_notification('REN','')# Correo al funcionario
 		enviar_back_notFile("jose.ramirez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
 		enviar_back_notFile("carlos.benitez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
 	except Exception as e:
@@ -976,7 +980,6 @@ def catch_toError(form_Id):
 			data_validator(f'dato requerido: {E99_code[i]}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 			return("E99")
-
 
 
 

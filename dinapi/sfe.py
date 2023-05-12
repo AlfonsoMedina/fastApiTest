@@ -2669,9 +2669,8 @@ def email_receiver(sig):
 	finally:
 		conn.close()
 
-
 def rule_notification(sig,exp):
-	if sig == 'AAS1':
+	if sig == 'AAS1' or sig == 'APO1' or sig == 'DAJ1' or sig == 'DSA1' or sig == 'EDJ1' or sig == 'IAJ1' or sig == 'UGD1':
 		status_exp = main_State(exp)
 		print(status_exp)
 		rule = email_receiver(str(status_exp))
@@ -2692,13 +2691,24 @@ def rule_notification(sig,exp):
 		except Exception as e:
 			pass
 
+def log_info():
+	log_data = {}
+	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+	cursor = conn.cursor()
+	cursor.execute("""SELECT * FROM public.log_error where evento = 'E99'""")
+	row=cursor.fetchall()
+	log_data = row
+	conn.close()	
+	return(log_data)	
 
-print(rule_notification('APO1',''))
 
 
 """def afected_relation_auth(arg):"""
 
 '''
+
+SELECT * FROM public.log_error where evento = 'E99'
+
 print(personAgente(code_ag('43'))[0].agentCode.doubleValue) #Consulta agente
 
 select * from tramites where formulario_id IN (39, 40, 66, 67,69,70,3,4,27,95) and estado  in (7)
