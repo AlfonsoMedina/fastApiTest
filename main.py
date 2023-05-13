@@ -6,7 +6,7 @@ from auto_process import insert_list, insertReg, insertRen
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
 from tools.send_mail import enviar
-from tools.connect import MEA_TIEMPO_ACTUALIZACION
+from tools.connect import MEA_TIEMPO_ACTUALIZACION, WORKING_DAY_AND_TIME
 from dinapi.sfe import count_pendiente, format_userdoc, log_info, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc
 from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
@@ -2267,6 +2267,9 @@ def stop_and_run_sol():
 def error_log():
 	return(log_info())
 
+@app.get('/sis/workingDayAndTime', summary="sis", tags=["dias y rango horacio mea"])
+def working_Day_AndTime():
+	return(WORKING_DAY_AND_TIME)
 
 
 
@@ -2277,6 +2280,5 @@ def error_log():
 
 
 
-	
 app.openapi = custom_openapi
 

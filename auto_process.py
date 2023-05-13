@@ -982,6 +982,24 @@ def catch_toError(form_Id):
 			return("E99")
 
 
+"""
+
+	lunes(07:00,14:15);
+	martes(07:00,14:15);
+	miercoles(07:00,14:15);
+	jueves(07:00,14:15);
+	viernes(07:00,14:15);
+	sabado(00:00,00:00);
+	domingo(00:00,00:00);
+
+	estructura de correo
+	Asunto: status_name (recepcion de formulario electronico)
+	msg:  (notas columna)
+
+	Claudia: correo de soporte 
+
+
+"""
 
 
 #envio_agente_recibido('1540','2277877')
