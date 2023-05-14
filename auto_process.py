@@ -665,8 +665,12 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 			time.sleep(1)
 			delete_file(enviar('notificacion-DINAPI.pdf',escrito_escrito_pago.representationData_representativeList_person_email,'M.E.A',''))#Enviar Correo Electronico			
 		else:
-			data_validator(f'Error al cambiar estado de esc. N° {escrito_escrito_pago.documentId_docNbr}, tabla tramites ID: {form_Id}','false')
-			cambio_estado_soporte(form_Id)
+			try:
+				data_validator(f'Error al cambiar estado de esc. N° {escrito_escrito_pago.documentId_docNbr}, tabla tramites ID: {form_Id}','false',form_Id)
+				cambio_estado_soporte(form_Id)
+			except Exception as e:
+				data_validator(f'El escrito afectado no existe, tabla tramites ID: {form_Id}','false',form_Id)
+				cambio_estado_soporte(form_Id)
 
 def insertReg(form_Id):
 	insert_mark = insertRegModel()
@@ -994,9 +998,9 @@ def catch_toError(form_Id):
 
 	estructura de correo
 	Asunto: status_name (recepcion de formulario electronico)
-	msg:  (notas columna)
+	msg:  columna (notas)
 
-	Claudia: correo de soporte 
+	Claudia: correo para soporte 
 
 
 """
