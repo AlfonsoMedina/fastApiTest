@@ -975,6 +975,29 @@ def existexp(exp):
     except Exception as e:
         print(e)
 
+def checking_payment_suport(exp):
+    try:
+        #________________________________________________________
+        conn = psycopg2.connect(host =  hostCJ,user =  userCJ,password =  passwordCJ,database =  databaseCJ)
+        cursor = conn.cursor()
+        #                                                RECIBO,                TASA,                EXPEDIENTE,                                        FECHA_RECIBO
+        cursor.execute(f"""select distinct r.num_recibo as RECIBO, dr.tasa_id as TASA, dr.expediente_nro as EXPEDIENTE, to_char(r.fec_recibo,'DD/MM/YYYY') as FECHA_RECIBO
+                            from public.recibo r left join public.recibo_tipo_tasa rtt on rtt.recibo_id = r.id 
+                            left join public.detalles_recibo dr on dr.recibo_tipo_tasa_id = rtt.id 
+                            where dr.tasa_id = 80
+                            --and to_char(r.fec_recibo,'DD/MM/YYYY') like '01/12/2022%'; --28/11/2022 primera fecha
+                            and dr.expediente_nro = {exp}""")
+        row = cursor.fetchall()
+        #________________________________________________________  
+        if row != []:  
+            return(True)
+        else:
+            return(False)   
+    except Exception as e:
+        print('Error de conexion DINAPI')
+    finally:
+        conn.close() 
+
 #print(consulta_sfe_prueba('10/01/2023'))
 
 #insertar_edicion_finde('2022-12-02','0')

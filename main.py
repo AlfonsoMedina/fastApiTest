@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from login.LogIn import authentication, new_password
 from publicaciones.pub_2023 import convert_fecha_hora, orden_emitida, orden_emitida_exp
-from redpi.Clasificados import consulta_Fop, consulta_Fop_expediente, consulta_Fop_fecha, consulta_caja, consulta_sfe, edicion_cont, existexp, full_package, insert_clasificado, insert_dia_proceso, insert_form_orden_publicacion, insertar_edicion, no_enviado_sfe, previa_edicion, processToDate, select_dia_proceso, update_dia_proceso, update_inicio_fin, update_inicio_fin_soporte, user_admin_redpi
+from redpi.Clasificados import checking_payment_suport, consulta_Fop, consulta_Fop_expediente, consulta_Fop_fecha, consulta_caja, consulta_sfe, edicion_cont, existexp, full_package, insert_clasificado, insert_dia_proceso, insert_form_orden_publicacion, insertar_edicion, no_enviado_sfe, previa_edicion, processToDate, select_dia_proceso, update_dia_proceso, update_inicio_fin, update_inicio_fin_soporte, user_admin_redpi
 from tools.data_format import format_fecha_mes_hora
 from wipo.ipas import Insert_Action, fetch_all_do_edoc_nuxeo, fetch_all_officdoc_nuxeo, fetch_all_user_mark, get_agente, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
 from fastapi.middleware.cors import CORSMiddleware
@@ -262,6 +262,12 @@ def auth(item:user_pwr):
 @app.post('/api/change_autentication', tags=["change_autentication"], summary="#", description="")
 def change_auth(item:user_pwr_new):
 	return(new_password(item.user,item.npass,item.vnpass))
+
+
+@app.post('/api/checking_payment_suport', tags=["Suport payment checking"], summary="#", description="Chekar pago para soporte REDPI")
+def checkingpaymentsuport(exp):
+	return(checking_payment_suport(exp))
+
 
 
 app.openapi = custom_openapi
