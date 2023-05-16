@@ -181,8 +181,9 @@ def registro_sfe(arg):
 		conn.close()
 	
 def titulare_reg(arg):
-	return()# suspendi para ver redpi
-
+	for i in range(2,10):
+		list_titulare.append(catch_owner(arg,i))
+	return(list_titulare)
 def catch_owner(arg,number):
 	global_data_titu = {}
 	try:
@@ -213,9 +214,7 @@ def catch_owner(arg,number):
 	finally:
 		conn.close()	
 
-print(catch_owner('1586',8))
-
-#print(titulare_reg())			
+print(titulare_reg('1586'))#Paquete de titulares
 
 def renovacion_sfe(arg):
 	try:
