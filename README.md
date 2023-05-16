@@ -83,3 +83,10 @@ ProcessReadAction - METODO  = actionType
 
 
 
+
+- netstat -aon | findstr :443
+
+- taskkill /pid 10720 /F
+
+
+
