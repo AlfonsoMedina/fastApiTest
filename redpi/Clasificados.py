@@ -20,7 +20,7 @@ def consulta_Fop(exp):
     orden = []
     try:
         conn = psycopg2.connect(
-                                host = '192.168.50.215',
+                                host = '192.168.50.216',
                                 user='user_app_publicacion',
                                 password='user_app_publicacion-202201!',
                                 database='db_publicacion'
@@ -44,7 +44,7 @@ def consulta_Fop_out(exp):
     orden_out = []
     try:
         conn = psycopg2.connect(
-                                host = '192.168.50.215',
+                                host = '192.168.50.216',
                                 user='user_app_publicacion',
                                 password='user_app_publicacion-202201!',
                                 database='db_publicacion'
@@ -184,7 +184,7 @@ def consulta_Fop_fecha(facha):
     orden = []
     try:
         conn = psycopg2.connect(
-                                host = '192.168.50.215',
+                                host = '192.168.50.216',
                                 user='user_app_publicacion',
                                 password='user_app_publicacion-202201!',
                                 database='db_publicacion'
