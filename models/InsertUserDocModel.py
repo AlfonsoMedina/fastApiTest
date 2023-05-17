@@ -535,18 +535,31 @@ class userDocModel(object):
 			self.filingData_paymentList_receiptNbr= ""		
 		
 		self.filingData_paymentList_receiptNotes = " Caja MEA"
-		self.filingData_paymentList_receiptType = str(data[0]['tasa_id'])
-		self.filingData_paymentList_receiptTypeName = str(data[0]['tasa_desc'])
+		try:
+			self.filingData_paymentList_receiptType = str(data[0]['tasa_id'])
+		except Exception as e:
+			self.filingData_paymentList_receiptType = ""
+		try:	
+			self.filingData_paymentList_receiptTypeName = str(data[0]['tasa_desc'])
+		except Exception as e:
+			self.filingData_paymentList_receiptTypeName = ""
+
 		self.filingData_receptionDate = captureDate.capture_full()
 		self.filingData_documentId_receptionDocument_docLog = "E"
 		self.filingData_documentId_receptionDocument_docNbr = str(int(process_day_Nbr())+1)
 		self.filingData_documentId_receptionDocument_docOrigin = str(connex.MEA_SFE_FORMULARIOS_ID_Origin)
 		self.filingData_documentId_receptionDocument_docSeries = captureDate.capture_year()
 		self.filingData_documentId_receptionDocument_selected= ""
-		self.filingData_userdocTypeList_userdocName = str(data[0]['tool_tip'])
-		self.filingData_userdocTypeList_userdocType = str(data[0]['tipo_documento_id'])
-		
-		
+		try:
+			self.filingData_userdocTypeList_userdocName = str(data[0]['tool_tip'])
+		except Exception as e:
+			self.filingData_userdocTypeList_userdocName = ""
+
+		try:		
+			self.filingData_userdocTypeList_userdocType = str(data[0]['tipo_documento_id'])
+		except Exception as e:
+			self.filingData_userdocTypeList_userdocType = ""
+			
 		self.newOwnershipData_ownerList_orderNbr= ""
 		self.newOwnershipData_ownerList_ownershipNotes= ""
 		

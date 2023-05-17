@@ -184,7 +184,9 @@ def titulare_reg(arg):
 	for i in range(2,10):
 		list_titulare.append(catch_owner(arg,i))
 	return(list_titulare)
+
 def catch_owner(arg,number):
+	personas = {}
 	global_data_titu = {}
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
@@ -199,6 +201,9 @@ def catch_owner(arg,number):
 						join perfiles_agentes pa on pa.usuario_id = u.id         
 						where t.id = {};""".format(int(arg)))
 		row=cursor.fetchall()
+		global_data_titu['indService'] = "true"
+		global_data_titu['orderNbr'] = ""
+		global_data_titu['ownershipNotes'] = ""
 		for i in row[0][8]:
 			if(i['campo'] == f"titular{number}_calle{number}"):
 				global_data_titu['addressStreet'] = i['valor']
@@ -207,14 +212,41 @@ def catch_owner(arg,number):
 			if(i['campo'] == f"titular{number}_nombreapellido{number}"):
 				global_data_titu['personName'] = i['valor']
 			if(i['campo'] == f"titular{number}_pais{number}"):
-				global_data_titu['residenceCountryCode'] = i['valor']				
-		return(global_data_titu)
+				global_data_titu['residenceCountryCode'] = i['valor']
+			if(i['campo'] == f"titular{number}_departamento{number}"):
+				global_data_titu['departamento'] = i['valor']
+#			if(i['campo'] == f"titular{number}_datoscontacto{number}"):
+#				global_data_titu['datoscontacto'] = i['valor']
+			if(i['campo'] == f"titular{number}_actividad{number}"):
+				global_data_titu['actividad'] = i['valor']
+			if(i['campo'] == f"titular{number}_razonsocial{number}"):
+				global_data_titu['razonsocial'] = i['valor']
+			if(i['campo'] == f"titular{number}_ciudad{number}"):
+				global_data_titu['ciudad'] = i['valor']
+			if(i['campo'] == f"titular{number}_nrodocumento{number}"):
+				global_data_titu['nrodocumento'] = i['valor']                                    
+			if(i['campo'] == f"titular{number}_ruc{number}"):
+				global_data_titu['ruc'] = i['valor']
+			if(i['campo'] == f"titular{number}_tipo{number}"):
+				global_data_titu['tipo'] = i['valor']
+			if(i['campo'] == f"titular{number}_sexo{number}"):
+				global_data_titu['sexo'] = i['valor']
+			if(i['campo'] == f"titular{number}_correoelectronico{number}"):
+				global_data_titu['correoelectronico'] = i['valor']
+			if(i['campo'] == f"titular{number}_codigopostal{number}"):
+				global_data_titu['codigopostal'] = i['valor']
+			if(i['campo'] == f"titular{number}_telefono{number}"):
+				global_data_titu['telefono'] = i['valor']
+			
+			personas["person"] = global_data_titu
+
+		return(personas)
 	except Exception as e:
 		print(e)
 	finally:
 		conn.close()	
 
-print(titulare_reg('1586'))#Paquete de titulares
+print(titulare_reg('1588'))#Paquete de titulares
 
 def renovacion_sfe(arg):
 	try:
