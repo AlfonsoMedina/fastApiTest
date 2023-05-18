@@ -67,7 +67,13 @@ class insertRegModel(object):
 	def setData(self,doc_Id):
 		
 		self.data = registro_sfe(doc_Id) #pendiente_sfe(doc_Id)
-		self.multitu = titulare_reg(doc_Id)
+		self.multitu = titulare_reg(doc_Id)# TITULARES
+		if self.multitu[0]['person']['personName'] == '':
+			self.multitu = []
+
+
+		
+
 
 		try:
 			ag_data = personAgente(code_ag(self.data[0]['usuario_id']))[0]
@@ -216,7 +222,7 @@ class insertRegModel(object):
 
 
 		self.ownerList = self.multitu
-		
+
 
 		self.file_rowVersion = "1.0"
 		self.agentCode = self.data['code_agente']
