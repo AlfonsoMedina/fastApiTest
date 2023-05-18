@@ -1,6 +1,6 @@
 
 from asyncio.windows_events import NULL
-from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe
+from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe, titulare_reg
 from getFileDoc import getFile
 from wipo.function_for_reception_in import user_doc_getList_escrito
 from wipo.ipas import mark_getlist, personAgente
@@ -56,6 +56,8 @@ class insertRegModel(object):
 	LogData:str = ''
 	LogTyp:str = ''
 	dir_variant:str = ''
+	ownerList:str = ''
+	multitu:str = ''
 	def __init__(self):
 		self.signType = ""
 		self.tipo_clase = ""
@@ -65,7 +67,8 @@ class insertRegModel(object):
 	def setData(self,doc_Id):
 		
 		self.data = registro_sfe(doc_Id) #pendiente_sfe(doc_Id)
-		
+		self.multitu = titulare_reg(doc_Id)
+
 		try:
 			ag_data = personAgente(code_ag(self.data[0]['usuario_id']))[0]
 		except Exception as e:
@@ -201,7 +204,7 @@ class insertRegModel(object):
 			pass
 
 
-		self.file_ownershipData_ownerList_person_addressStreet = self.dir_variant
+		self.file_ownershipData_ownerList_person_addressStreet = self.data['direccion_dir']
 
 
 
@@ -210,6 +213,10 @@ class insertRegModel(object):
 		
 		self.file_ownershipData_ownerList_person_personName = self.data['razon_social'] + self.data['nombre_soli']
 		self.file_ownershipData_ownerList_person_residenceCountryCode = self.data['pais']
+
+
+		self.ownerList = self.multitu
+		
 
 		self.file_rowVersion = "1.0"
 		self.agentCode = self.data['code_agente']

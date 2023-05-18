@@ -613,7 +613,8 @@ def mark_insert_reg(
 					logoData,
 					logoType,
 					signData_markName,
-					signData_signType):
+					signData_signType,
+					ownerList):
 	try:
 		logo = logoData
 		markinsertreg = { 
@@ -636,10 +637,10 @@ def mark_insert_reg(
 						'doubleValue': file_filingData_captureUserId
 						},
 						'filingDate': {
-						'dateValue': file_filingData_filingDate
+						'dateValue': "2023-05-17T21:02:46" #file_filingData_filingDate    ########################################
 						},
 						'captureDate': {
-							'dateValue': file_filingData_captureDate
+							'dateValue': "2023-05-17T21:02:46" #file_filingData_captureDate  ################### problemas con fecha futura
 						},
 						'lawCode': {
 						'doubleValue': file_filingData_lawCode
@@ -665,8 +666,12 @@ def mark_insert_reg(
 								'nationalityCountryCode': file_ownershipData_ownerList_person_nationalityCountryCode,
 								'personName': file_ownershipData_ownerList_person_personName,
 								'residenceCountryCode': file_ownershipData_ownerList_person_residenceCountryCode
-							}
-						}
+							},
+							
+							
+						},
+						"ownerList": ownerList
+   
 					},
 					'representationData': {
 						'representativeList': {

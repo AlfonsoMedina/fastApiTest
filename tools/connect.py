@@ -2,7 +2,6 @@ from tools.service_system import config_parametro
 
 ########################MEA########################################
 MEA_TIEMPO_ACTUALIZACION = config_parametro('62')['valor2']
-MEA_DB_ORIGEN_host = config_parametro('58')['valor2']
 MEA_SFE_FORMULARIOS_ID_tipo = config_parametro('60')['valor3']
 MEA_SFE_FORMULARIOS_ID_estado = config_parametro('60')['valor4']
 MEA_SFE_FORMULARIOS_ID_Origin = config_parametro('64')['valor2']

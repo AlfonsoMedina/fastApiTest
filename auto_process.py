@@ -712,7 +712,8 @@ def insertReg(form_Id):
 			insert_mark.logoData,
 			insert_mark.logoType,
 			insert_mark.signData_markName,
-			insert_mark.signData_signType
+			insert_mark.signData_signType,
+			insert_mark.ownerList
 		))
 		process_day_commit_Nbr()
 		cambio_estado(form_Id,insert_mark.file_fileId_fileNbr)
@@ -720,6 +721,7 @@ def insertReg(form_Id):
 		enviar_back_notFile('jose.ramirez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Se ha recibido una solicitud de Registro de Marcas. N° '+ str(insert_mark.file_fileId_fileNbr))
 		enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Se ha recibido una solicitud de Registro de Marcas. N° '+ str(insert_mark.file_fileId_fileNbr))
 	except Exception as e:
+		print(e)
 		data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true',form_Id)
 		cambio_estado_soporte(form_Id)
 		enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Error en solicitud, tabla tramites ID:'+ str(form_Id))		

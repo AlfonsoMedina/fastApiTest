@@ -2104,6 +2104,7 @@ def TEST_MEA_reg(id_tramite):
 	create_userdoc['logoType']= catch_data.logoType
 	create_userdoc['signData_markName'] = catch_data.signData_markName
 	create_userdoc['signData_signType'] = catch_data.signData_signType
+	create_userdoc['ownerList'] = catch_data.ownerList
 	return(create_userdoc)
 
 @app.post('/sis/test_ren', summary="MEA", tags=["test insert renovacion"])
@@ -2272,7 +2273,9 @@ def working_Day_AndTime():
 	return(WORKING_DAY_AND_TIME)
 
 
-
+@app.post('/sup/insert_mark', summary="sis", tags=["Insert directo para soporte"])
+def insert_mark_sup():
+	pass
 
 
 
