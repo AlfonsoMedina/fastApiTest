@@ -676,7 +676,6 @@ def insertReg(form_Id):
 	insert_mark = insertRegModel()
 	insert_mark.setData(form_Id)
 	try:
-		#PROBANDO CONDICIONAL 
 		insertRegState = mark_insert_reg(
 			insert_mark.file_fileId_fileNbr,
 			insert_mark.file_fileId_fileSeq,
@@ -736,7 +735,7 @@ def insertRen(form_Id):
 	insert_mark_ren = insertRenModel()
 	insert_mark_ren.setData(form_Id)
 	try:
-		print(mark_insert_ren(
+		insertRenState = mark_insert_ren(
 					insert_mark_ren.file_fileId_fileNbr,
 					insert_mark_ren.file_fileId_fileSeq,
 					insert_mark_ren.file_fileId_fileSeries,
@@ -778,12 +777,17 @@ def insertRen(form_Id):
 					insert_mark_ren.logoData,
 					insert_mark_ren.logoType,
 					insert_mark_ren.signData_markName,
-					insert_mark_ren.signData_signType))
-		process_day_commit_Nbr()
-		cambio_estado(form_Id,insert_mark_ren.file_fileId_fileNbr)
-		rule_notification('REN','')# Correo al funcionario
-		enviar_back_notFile("jose.ramirez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
-		enviar_back_notFile("carlos.benitez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
+					insert_mark_ren.signData_signType)
+		if insertRenState == 'true':
+			process_day_commit_Nbr()
+			cambio_estado(form_Id,insert_mark_ren.file_fileId_fileNbr)
+			rule_notification('REN','')# Correo al funcionario
+			enviar_back_notFile("jose.ramirez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
+			enviar_back_notFile("carlos.benitez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
+		else:
+			data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true',form_Id)
+			cambio_estado_soporte(form_Id)
+			enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Error en solicitud, tabla tramites ID:'+ str(form_Id))			
 	except Exception as e:
 		data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true',form_Id)
 		cambio_estado_soporte(form_Id)

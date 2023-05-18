@@ -210,19 +210,17 @@ class insertRegModel(object):
 			pass
 
 
-		self.file_ownershipData_ownerList_person_addressStreet = self.data['direccion_dir']
-
-
-
+		self.file_ownershipData_ownerList_person_addressStreet = self.dir_variant
 
 		self.file_ownershipData_ownerList_person_nationalityCountryCode = self.data['pais']
 		
 		self.file_ownershipData_ownerList_person_personName = self.data['razon_social'] + self.data['nombre_soli']
 		self.file_ownershipData_ownerList_person_residenceCountryCode = self.data['pais']
 
-
-		self.ownerList = self.multitu
-
+		if self.multitu != []:
+			self.ownerList = self.multitu
+		else:
+			pass
 
 		self.file_rowVersion = "1.0"
 		self.agentCode = self.data['code_agente']

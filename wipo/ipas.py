@@ -617,7 +617,131 @@ def mark_insert_reg(
 					ownerList):
 	try:
 		logo = logoData
-		markinsertreg = { 
+		if ownerList == "":
+			markinsertreg = { 
+			'arg0': {
+				'file': {
+					'fileId': {
+						'fileNbr': {
+						'doubleValue': fileId_fileId_fileNbr
+						},
+						'fileSeq': file_fileId_fileSeq,
+						'fileSeries': {
+						'doubleValue': file_fileId_fileSeries,
+						},
+						'fileType': file_fileId_fileType
+					},
+					'filingData': {
+						'applicationSubtype': file_filingData_applicationSubtype,
+						'applicationType': file_filingData_applicationType,
+						'captureUserId': {
+						'doubleValue': file_filingData_captureUserId
+						},
+						'filingDate': {
+						'dateValue': "2023-05-18T06:02:46" #file_filingData_filingDate    ########################################
+						},
+						'captureDate': {
+							'dateValue': "2023-05-18T06:02:46" #file_filingData_captureDate  ################### problemas con fecha futura
+						},
+						'lawCode': {
+						'doubleValue': file_filingData_lawCode
+						},
+						'paymentList': {
+						'currencyType': file_filingData_paymentList_currencyType,
+						'receiptAmount': file_filingData_paymentList_receiptAmount,
+						'receiptDate': {
+							'dateValue': file_filingData_paymentList_receiptDate
+						},
+						'receiptNbr': file_filingData_paymentList_receiptNbr,
+						'receiptNotes': file_filingData_paymentList_receiptNotes,
+						'receiptType': file_filingData_paymentList_receiptType
+						},
+						'receptionUserId': {
+						'doubleValue': file_filingData_receptionUserId
+						}
+					},
+					'ownershipData': {
+						'ownerList': {
+							'person': {
+								'addressStreet': file_ownershipData_ownerList_person_addressStreet,
+								'nationalityCountryCode': file_ownershipData_ownerList_person_nationalityCountryCode,
+								'personName': file_ownershipData_ownerList_person_personName,
+								'residenceCountryCode': file_ownershipData_ownerList_person_residenceCountryCode
+							},
+							
+							
+						},
+	   
+					},
+					'representationData': {
+						'representativeList': {
+						'indService': "",
+								'person': {
+										'addressStreet': str(personAgente(agentCode)[0].addressStreet).replace("None",""),
+										'addressStreetInOtherLang': str(personAgente(agentCode)[0].addressStreetInOtherLang).replace("None",""),
+										'addressZone': str(personAgente(agentCode)[0].addressZone).replace("None",""),
+										'agentCode': {
+										'doubleValue':str(personAgente(agentCode)[0].agentCode.doubleValue).replace("None","")
+										},
+										'cityCode': str(personAgente(agentCode)[0].cityCode).replace("None",""),
+										'cityName': str(personAgente(agentCode)[0].cityName).replace("None",""),
+										'companyRegisterRegistrationDate': str(personAgente(agentCode)[0].companyRegisterRegistrationDate).replace("None",""),
+										'companyRegisterRegistrationNbr': str(personAgente(agentCode)[0].companyRegisterRegistrationNbr).replace("None",""),
+										'email': str(personAgente(agentCode)[0].email).replace("None",""),
+										'indCompany': str(personAgente(str(agentCode))[0].indCompany),
+										'individualIdNbr': str(personAgente(agentCode)[0].individualIdNbr).replace("None",""),
+										'individualIdType': str(personAgente(agentCode)[0].individualIdType).replace("None",""),
+										'legalIdNbr': str(personAgente(agentCode)[0].legalIdNbr).replace("None",""),
+										'legalIdType': str(personAgente(agentCode)[0].legalIdType).replace("None",""),
+										'legalNature': str(personAgente(agentCode)[0].legalNature).replace("None",""),
+										'legalNatureInOtherLang': str(personAgente(agentCode)[0].legalNatureInOtherLang).replace("None",""),
+										'nationalityCountryCode': str(personAgente(agentCode)[0].nationalityCountryCode).replace("None",""),
+										'personGroupCode': "",
+										'personGroupName': str(personAgente(agentCode)[0].personGroupName).replace("None",""),
+										'personName': str(personAgente(agentCode)[0].personName).replace("None",""),
+										'personNameInOtherLang': str(personAgente(agentCode)[0].personNameInOtherLang).replace("None",""),
+										'residenceCountryCode': str(personAgente(agentCode)[0].residenceCountryCode).replace("None",""),
+										'stateCode': str(personAgente(agentCode)[0].stateCode).replace("None",""),
+										'stateName': str(personAgente(agentCode)[0].stateName).replace("None",""),
+										'telephone': str(personAgente(agentCode)[0].telephone).replace("None",""),
+										'zipCode': str(personAgente(agentCode)[0].zipCode).replace("None","")
+										},
+						'representativeType': file_representationData_representativeList_representativeType
+						}
+					},
+					'rowVersion': {
+						'doubleValue': file_rowVersion
+					}
+				},
+				'protectionData': {
+					'dummy': protectionData_dummy,
+					'niceClassList': {
+						'niceClassDescription': protectionData_niceClassList_niceClassDescription,
+						'niceClassDetailedStatus': protectionData_niceClassList_niceClassDetailedStatus,
+						'niceClassEdition': {
+						'doubleValue': protectionData_niceClassList_niceClassEdition
+						},
+						'niceClassGlobalStatus': protectionData_niceClassList_niceClassGlobalStatus,
+						'niceClassNbr': {
+						'doubleValue': protectionData_niceClassList_niceClassNbr
+						},
+						'niceClassVersion': protectionData_niceClassList_niceClassVersion
+					}
+				},
+				'rowVersion': {
+					'doubleValue': rowVersion
+				},
+				'signData': {
+					'logo': {
+						'logoData':base64.b64decode(logo),  #Convertir cadena en bytes
+						'logoType': logoType
+					},
+					'markName': signData_markName,
+					'signType': signData_signType
+				}
+			} }
+		else:
+			markinsertreg = { 
 			'arg0': {
 				'file': {
 					'fileId': {
@@ -740,6 +864,7 @@ def mark_insert_reg(
 					'signType': signData_signType
 				}
 			} }
+
 		clientMark.service.MarkInsert(**markinsertreg)
 		return "true"
 	except zeep.exceptions.Fault as e:
