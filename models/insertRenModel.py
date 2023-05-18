@@ -66,6 +66,7 @@ class insertRenModel(object):
 	LogTyp:str = ''
 	relacion:str = ''
 	dir_owner:str = ''
+	thisName:str = ''
 	def __init__(self):
 		self.signType = ""
 		self.tipo_clase = ""
@@ -253,7 +254,10 @@ class insertRenModel(object):
 
 		self.file_ownershipData_ownerList_person_ownernationalityCountryCode = "PY"#self.data['act_pais']
 
-		self.file_ownershipData_ownerList_person_ownerpersonName = self.data['nombre_soli']
+		try:
+			self.file_ownershipData_ownerList_person_ownerpersonName = str(self.data['nombre_soli']) + str(self.data['razon_social'])
+		except Exception as e:
+			self.file_ownershipData_ownerList_person_ownerpersonName = ""
 
 		self.file_ownershipData_ownerList_person_ownerresidenceCountryCode = "PY"#self.data['act_pais']
 

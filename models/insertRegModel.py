@@ -67,12 +67,15 @@ class insertRegModel(object):
 	def setData(self,doc_Id):
 		
 		self.data = registro_sfe(doc_Id) #pendiente_sfe(doc_Id)
-		self.multitu = titulare_reg(doc_Id)# TITULARES
-		if self.multitu[0]['person']['personName'] == '':
-			self.multitu = []
-
-
 		
+		try:
+			self.multitu = titulare_reg(doc_Id)
+			print(len(self.multitu))
+			if self.multitu != []:
+				if self.multitu[0]['person']['personName'] == '':
+					self.multitu = []
+		except Exception as e:
+			self.multitu = []		
 
 
 		try:
@@ -191,9 +194,14 @@ class insertRegModel(object):
 		self.file_filingData_captureDate = captureDate.capture_full()
 		self.file_filingData_lawCode = "1.0"
 		self.file_filingData_paymentList_currencyType = "GS"
-		self.file_filingData_paymentList_receiptAmount = str(pago_data(doc_Id)[1])
-		self.file_filingData_paymentList_receiptDate = str(pago_data(doc_Id)[2])[0:10]
-		self.file_filingData_paymentList_receiptNbr = str(pago_data(doc_Id)[0])
+		try:
+			self.file_filingData_paymentList_receiptAmount = str(pago_data(doc_Id)[1])
+			self.file_filingData_paymentList_receiptDate = str(pago_data(doc_Id)[2])[0:10]
+			self.file_filingData_paymentList_receiptNbr = str(pago_data(doc_Id)[0])
+		except Exception as e:
+			self.file_filingData_paymentList_receiptAmount = ""
+			self.file_filingData_paymentList_receiptDate = ""
+			self.file_filingData_paymentList_receiptNbr = ""
 		self.file_filingData_paymentList_receiptNotes = " Caja MEA"
 		self.file_filingData_paymentList_receiptType = "1"
 		self.file_filingData_receptionUserId = "4"

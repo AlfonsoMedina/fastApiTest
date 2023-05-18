@@ -7,7 +7,7 @@ import time
 from time import sleep
 from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exp_relation, format_userdoc, log_info, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, rule_notification, tasa_id
+from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, rule_notification, tasa_id
 from getFileDoc import getFile
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
@@ -997,6 +997,11 @@ def catch_toError(form_Id):
 			cambio_estado_soporte(form_Id)
 			return("E99")
 
+#rule_notification('UG','2002251')
+
+#print(exist_notifi('UG'))
+
+#print(exist_main_mark('UG'))
 
 """
 

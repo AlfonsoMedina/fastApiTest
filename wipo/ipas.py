@@ -864,7 +864,6 @@ def mark_insert_reg(
 					'signType': signData_signType
 				}
 			} }
-
 		clientMark.service.MarkInsert(**markinsertreg)
 		return "true"
 	except zeep.exceptions.Fault as e:

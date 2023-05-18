@@ -12,6 +12,8 @@ MEA_ADJUNTOS_DESTINO_location = config_parametro('61')['valor3']
 MEA_IPAS_DESTINO = config_parametro('59')['valor2']
 WORKING_DAY_AND_TIME = config_parametro('63')['valor3']
 
+
+
 ###################################################################
 
 #Base de datos PUBLICACIONES posgresSql v14 
