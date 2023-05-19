@@ -271,7 +271,6 @@ def renovacion_sfe(arg):
 								join perfiles_agentes pa on pa.usuario_id = u.id         
 								where t.id = {};""".format(int(arg)))
 		row=cursor.fetchall()
-		print(global_data)
 		global_data['fecha_envio'] = str(row[0][17])
 		global_data['expediente'] = str(row[0][15])
 		global_data['fecha_solicitud'] = str(row[0][18])
@@ -283,22 +282,16 @@ def renovacion_sfe(arg):
 		global_data['TEL_agente'] = str(row[0][28])
 		global_data['email_agente'] = str(row[0][27])
 		global_data['nombre_formulario'] = str(row[0][3])
+		
 		for i in row[0][8]:
-
-			if(i['campo'] == 'marcarenov_clase'):
-				print(i['valor'])
-				clase_tipo = i['valor']
-				if(int(clase_tipo.replace(".0","")) <= 34):
-					global_data['clasificacion']= 'PRODUCTOS'
-				if(int(clase_tipo.replace(".0","")) >= 35):
-					global_data['clasificacion']= 'SERVICIOS'
 
 			if(i['campo'] == 'marcarenov_clase'):
 				clase_tipo = i['valor']
 				if(int(clase_tipo.replace(".0","")) <= 34):
 					global_data['clasificacion']= 'PRODUCTO'
 				if(int(clase_tipo.replace(".0","")) >= 35):
-					global_data['clasificacion']= 'SERVICIO'
+					global_data['clasificacion']= 'SERVICIO'			
+
 
 			try:					
 				if(i['campo'] == "marcarenov_distintivo"):
@@ -311,7 +304,7 @@ def renovacion_sfe(arg):
 					global_data['distintivoAct'] = i['valor']['archivo']['url']
 			except Exception as e:
 					global_data['distintivoAct'] = "No definido"					
-
+			
 			try:	
 				if(i['campo'] == "actualizacion_refdistitivo"):
 					global_data['distintivo2'] = i['valor']['archivo']['url']
@@ -450,6 +443,7 @@ def renovacion_sfe(arg):
 					global_data['solic_pais']=i['valor']
 			except Exception as e:
 				global_data['solic_pais'] = "No definido"
+	
 			try:	
 				if(i['campo'] == 'datospersonalesrenov_calle'):
 					global_data['solic_dir'] = str(i['valor']).replace(" – "," | ")
@@ -477,14 +471,12 @@ def renovacion_sfe(arg):
 					global_data['actc_num']=i['valor']
 			except Exception as e:
 				global_data['actc_num'] = "No definido"
-		
+
 		return(global_data)
 	except Exception as e:
 		print(e)
 	finally:
 		conn.close()
-
-#print(renovacion_sfe('642'))
 
 def oposicion_sfe(arg):
 			try:

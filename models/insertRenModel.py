@@ -67,6 +67,10 @@ class insertRenModel(object):
 	relacion:str = ''
 	dir_owner:str = ''
 	thisName:str = ''
+	fileNbr:str = ''
+	fileSeq:str = ''
+	fileSeries:str = ''
+	fileId:str = ''
 	def __init__(self):
 		self.signType = ""
 		self.tipo_clase = ""
@@ -98,15 +102,15 @@ class insertRenModel(object):
 
 		try:
 			self.relacion = mark_getlistReg(self.data['registro_nbr'])
-			fileNbr = str(self.relacion[0]['fileId']['fileNbr']['doubleValue'])
-			fileSeq = self.relacion[0]['fileId']['fileSeq']
-			fileSeries = str(self.relacion[0]['fileId']['fileSeries']['doubleValue'])
-			fileId = self.relacion[0]['fileId']['fileType']	
+			self.fileNbr = str(self.relacion[0]['fileId']['fileNbr']['doubleValue'])
+			self.fileSeq = self.relacion[0]['fileId']['fileSeq']
+			self.fileSeries = str(self.relacion[0]['fileId']['fileSeries']['doubleValue'])
+			self.fileId = self.relacion[0]['fileId']['fileType']	
 		except Exception as e:
-			fileNbr = ""
-			fileSeq = ""
-			fileSeries = ""
-			fileId = ""
+			self.fileNbr = ""
+			self.fileSeq = ""
+			self.fileSeries = ""
+			self.fileId = ""
 
 		try:
 			if self.data['tipo_guion'] == "Denominativa": 
@@ -266,10 +270,10 @@ class insertRenModel(object):
 		self.agentCode = self.data['code_agente']
 
 
-		self.file_relationshipList_fileId_fileNbr:str = fileNbr 
-		self.file_relationshipList_fileId_fileSeq:str = fileSeq 
-		self.file_relationshipList_fileId_fileSeries:str = fileSeries 
-		self.file_relationshipList_fileId_fileType:str = fileId 
+		self.file_relationshipList_fileId_fileNbr:str = self.fileNbr 
+		self.file_relationshipList_fileId_fileSeq:str = self.fileSeq 
+		self.file_relationshipList_fileId_fileSeries:str = self.fileSeries 
+		self.file_relationshipList_fileId_fileType:str = self.fileId 
 		self.file_relationshipList_relationshipRole:str = "2"
 		self.file_relationshipList_relationshipType:str = "REN"
 

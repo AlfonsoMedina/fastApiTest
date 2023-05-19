@@ -7,7 +7,7 @@ import time
 from time import sleep
 from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, rule_notification, tasa_id
+from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, renovacion_sfe, rule_notification, tasa_id
 from getFileDoc import getFile
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
@@ -15,7 +15,7 @@ from tools.send_mail import delete_file, enviar, enviar_back, enviar_back_notFil
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito, user_doc_read_min
-from wipo.ipas import mark_insert_reg, mark_insert_ren, user_doc_afectado, user_doc_receive, user_doc_update
+from wipo.ipas import mark_getlistReg, mark_insert_reg, mark_insert_ren, user_doc_afectado, user_doc_receive, user_doc_update
 import zeep
 import asyncio
 import threading
@@ -777,7 +777,7 @@ def insertRen(form_Id):
 					insert_mark_ren.logoData,
 					insert_mark_ren.logoType,
 					insert_mark_ren.signData_markName,
-					insert_mark_ren.signData_signType)
+					insert_mark_ren.signData_signType)			
 		if insertRenState == 'true':
 			process_day_commit_Nbr()
 			cambio_estado(form_Id,insert_mark_ren.file_fileId_fileNbr)
@@ -785,11 +785,11 @@ def insertRen(form_Id):
 			enviar_back_notFile("jose.ramirez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
 			enviar_back_notFile("carlos.benitez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
 		else:
-			data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true',form_Id)
+			data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id}','true',form_Id)
 			cambio_estado_soporte(form_Id)
 			enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Error en solicitud, tabla tramites ID:'+ str(form_Id))			
 	except Exception as e:
-		data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true',form_Id)
+		data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id}','true',form_Id)
 		cambio_estado_soporte(form_Id)
 		enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Error en solicitud, tabla tramites ID:'+ str(form_Id))		
 
@@ -1003,6 +1003,10 @@ def catch_toError(form_Id):
 
 #print(exist_main_mark('UG'))
 
+#print(renovacion_sfe('1430'))
+
+#print(mark_getlistReg("371107.0")[0]['fileId']['fileNbr']['doubleValue'])
+
 """
 
 	lunes(07:00,14:15);
@@ -1018,7 +1022,6 @@ def catch_toError(form_Id):
 	msg:  columna (notas)
 
 	Claudia: correo para soporte 
-
 
 """
 

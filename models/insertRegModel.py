@@ -70,7 +70,7 @@ class insertRegModel(object):
 		
 		try:
 			self.multitu = titulare_reg(doc_Id)
-			print(len(self.multitu))
+			#print(len(self.multitu))
 			if self.multitu != []:
 				if self.multitu[0]['person']['personName'] == '':
 					self.multitu = []
