@@ -7,7 +7,7 @@ from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
 from tools.send_mail import enviar
 from tools.connect import MEA_TIEMPO_ACTUALIZACION, WORKING_DAY_AND_TIME
-from dinapi.sfe import count_pendiente, format_userdoc, log_info, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc
+from dinapi.sfe import count_pendiente, format_userdoc, getSigla_tipoDoc, log_info, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc
 from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
@@ -2273,9 +2273,9 @@ def working_Day_AndTime():
 	return(WORKING_DAY_AND_TIME)
 
 
-@app.post('/sup/insert_mark', summary="sis", tags=["Insert directo para soporte"])
-def insert_mark_sup():
-	pass
+@app.post('/sup/direct_insert_mark', summary="sfe", tags=["Insert directo para soporte"])
+def insert_mark_sup(doc_id):
+	return(insert_list(doc_id,str(getSigla_tipoDoc(doc_id))))
 
 
 

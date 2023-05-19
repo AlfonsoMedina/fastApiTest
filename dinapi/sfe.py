@@ -1694,7 +1694,7 @@ def rule_notification(sig,exp):
 		except Exception as e:
 			pass			
 	else:
-		if exist_notifi('UG') != 'null':
+		if exist_notifi(sig) != 'null':
 			rule = email_receiver(str(sig))
 			try:	
 				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])}")
@@ -1725,7 +1725,8 @@ def log_info():
 	conn.close()	
 	return(log_data)	
 
-
+def getSigla_tipoDoc(arg):
+	return(pendiente_sfe(arg)[0]['tipo_documento_id'])
 
 """def afected_relation_auth(arg):"""
 

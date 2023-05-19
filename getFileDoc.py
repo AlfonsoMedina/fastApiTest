@@ -13,7 +13,7 @@ def getFile(doc_id,fileNbr):
 			for x in range(0,len(i[6])):
 				if i[6][x]['campo'] == 'observacion_documentos':
 					remote_url = i[6][x]['valor']['archivo']['url']
-					local_file = str(MEA_ADJUNTOS_DESTINO_location)+fileNbr+'.pdf' 
+					local_file = str(MEA_ADJUNTOS_DESTINO_location)+'PY-M-2023-'+fileNbr+'.pdf' 
 					request.urlretrieve(remote_url, local_file)
 	except Exception as e:
 		conn.close()

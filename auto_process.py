@@ -7,7 +7,7 @@ import time
 from time import sleep
 from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, renovacion_sfe, rule_notification, tasa_id
+from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, getSigla_tipoDoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, tasa_id, tip_doc
 from getFileDoc import getFile
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
@@ -146,7 +146,6 @@ def insert_list(arg0:string,arg1:string):
 
 def compileAndInsert(form_Id,typ):
 		catch_toError(form_Id)
-
 		insert_doc = userDocModel()
 		insert_doc.setData(form_Id)
 		try:
@@ -1004,6 +1003,10 @@ def catch_toError(form_Id):
 #print(exist_main_mark('UG'))
 
 #print(renovacion_sfe('1430'))
+
+#print(status_typ('2')[2])
+
+#print(getSigla_tipoDoc('1571'))
 
 #print(mark_getlistReg("371107.0")[0]['fileId']['fileNbr']['doubleValue'])
 
