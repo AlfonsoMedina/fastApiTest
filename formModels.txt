@@ -1,0 +1,536 @@
+
+
+
+-----------------------------1547 - IO - form 69------------------------ 
+
+expedienteoescrito_escrito
+expedienteoescrito_pais
+expedienteoescrito_direccion
+expedienteoescrito_telefono
+expedienteoescrito_correo
+expedienteoescrito_fecha
+expedienteoescrito_tipo
+expedienteoescrito_expediente
+expedienteoescrito_clase
+expedienteoescrito_denominacion
+expedienteoescrito_registro
+expedienteoescrito_nombrerazon
+
+observacion_descobservacion
+observacion_tipo
+observacion_documentos
+
+datospersonales_codigopostal
+datospersonales_nrodocumento
+datospersonales_pais
+datospersonales_tipo
+datospersonales_telefono
+datospersonales_datospersonales
+datospersonales_departamento
+datospersonales_actividad
+datospersonales_ruc
+datospersonales_razonsocial
+datospersonales_correoelectronico
+datospersonales_direccion
+datospersonales_nombreapellido
+datospersonales_ciudad
+datospersonales_sexo
+
+
+
+
+Nro de Escrito
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Pais
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Direccion
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Telefono
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Correo Electrónico
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Fecha
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Tipo de Signo / Tipo Documento
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Nro de Expediente
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Clase de Niza
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Denominación
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Nro de Registro
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Nombres y Apellidos / Razón Social
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Descripción
+
+Prueba de  Informe Oficial
+----------------------------------------------------------------
+Tipo de escrito a presentar
+
+IO - Informe Oficial
+----------------------------------------------------------------
+Agregar documento adjunto
+
+{'id': '706', 'campo': 'observacion_documentos', 'archivo': {'id': 'eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcklDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--af55298da773126c27b5cd2046f6b2f43280e7eb', 'url': 'https://sfe-beta.dinapi.gov.py/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcklDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--af55298da773126c27b5cd2046f6b2f43280e7eb/tramite%20(3).pdf', 'name': 'tramite (3).pdf', 'type': 'application/pdf'}}
+----------------------------------------------------------------
+Código Postal
+
+
+----------------------------------------------------------------
+N° de Documento
+
+80005554-0
+----------------------------------------------------------------
+País
+
+PY
+----------------------------------------------------------------
+Tipo
+
+Persona Juridica
+----------------------------------------------------------------
+Teléfono
+
+0965000444
+----------------------------------------------------------------
+Datos de Contacto
+
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Departamento
+
+Central
+----------------------------------------------------------------
+Actividad Económica
+
+Actividad 2
+----------------------------------------------------------------
+RUC
+
+80005554-0
+----------------------------------------------------------------
+Razón Social
+
+DINAPI S.R.L.
+----------------------------------------------------------------
+Correo Electrónico
+
+prueba@gmail.com
+----------------------------------------------------------------
+Dirección
+
+Roa Bastos 1561
+----------------------------------------------------------------
+Nombres y Apellidos
+
+
+----------------------------------------------------------------
+Ciudad
+
+Lambare
+----------------------------------------------------------------
+Sexo
+
+
+----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------1549 - ABM - form 68------------------------ 
+
+observacion_descobservacion
+observacion_tipo
+observacion_documentos
+
+datospersonales_codigopostal
+datospersonales_nrodocumento
+datospersonales_pais
+datospersonales_tipo
+datospersonales_telefono
+datospersonales_datospersonales
+datospersonales_departamento
+datospersonales_actividad
+datospersonales_ruc
+datospersonales_razonsocial
+datospersonales_correoelectronico
+datospersonales_direccion
+datospersonales_nombreapellido
+datospersonales_ciudad
+datospersonales_sexo
+
+expedienteoescrito_escrito
+expedienteoescrito_pais
+expedienteoescrito_direccion
+expedienteoescrito_telefono
+expedienteoescrito_correo
+expedienteoescrito_fecha
+expedienteoescrito_tipo
+expedienteoescrito_expediente
+expedienteoescrito_clase
+expedienteoescrito_denominacion
+expedienteoescrito_registro
+expedienteoescrito_nombrerazon
+
+
+-----------------------------1543 - SUS - form 70------------------------ 
+
+
+observacion_descobservacion
+observacion_tipo
+observacion_documentos
+
+datospersonales_codigopostal
+datospersonales_nrodocumento
+datospersonales_pais
+datospersonales_tipo
+datospersonales_telefono
+datospersonales_datospersonales
+datospersonales_departamento
+datospersonales_actividad
+datospersonales_ruc
+datospersonales_razonsocial
+datospersonales_correoelectronico
+datospersonales_direccion
+datospersonales_nombreapellido
+datospersonales_ciudad
+datospersonales_sexo
+
+expedienteoescrito_escrito
+expedienteoescrito_pais
+expedienteoescrito_direccion
+expedienteoescrito_telefono
+expedienteoescrito_correo
+expedienteoescrito_fecha
+expedienteoescrito_tipo
+expedienteoescrito_expediente
+expedienteoescrito_clase
+expedienteoescrito_denominacion
+expedienteoescrito_registro
+expedienteoescrito_nombrerazon
+
+
+
+
+
+
+Datos tramite 1551
+
+Descripción
+Prueba de Caducidad de Instancia OPO
+----------------------------------------------------------------
+Tipo de escrito a presentar
+CEX - Contesta Expresión de Agravios
+----------------------------------------------------------------
+Agregar documento adjunto
+{'id': '710', 'campo': 'observacion_documentos', 'archivo': {'id': 'eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcllDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--03e1f80997d04f5df6ea7b630b04443f5174dc59', 
+'url': 'https://sfe-beta.dinapi.gov.py/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcllDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--03e1f80997d04f5df6ea7b630b04443f5174dc59/tramite%20(4).pdf', 'name': 'tramite (4).pdf', 'type': 'application/pdf'}}
+----------------------------------------------------------------
+Código Postal
+
+----------------------------------------------------------------
+N° de Documento
+
+----------------------------------------------------------------
+País
+
+----------------------------------------------------------------
+Tipo
+
+----------------------------------------------------------------
+Teléfono
+
+----------------------------------------------------------------
+Datos de Contacto
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Departamento
+
+----------------------------------------------------------------
+Actividad Económica
+
+----------------------------------------------------------------
+RUC
+
+----------------------------------------------------------------
+Razón Social
+
+----------------------------------------------------------------
+Correo Electrónico
+
+----------------------------------------------------------------
+Dirección
+
+----------------------------------------------------------------
+Nombres y Apellidos
+
+----------------------------------------------------------------
+Ciudad
+
+----------------------------------------------------------------
+Sexo
+
+----------------------------------------------------------------
+Nro de Escrito
+no existe etiqueta (valor) en el bloque
+----------------------------------------------------------------
+Pais
+XX
+----------------------------------------------------------------
+Direccion
+Sin Direccion Definida
+----------------------------------------------------------------
+Telefono
+None
+----------------------------------------------------------------
+Correo Electrónico
+None
+----------------------------------------------------------------
+Fecha
+1980-07-11T00:00:00.000-04:00
+----------------------------------------------------------------
+Tipo de Signo / Tipo Documento
+Denominativa
+----------------------------------------------------------------
+Nro de Expediente
+8200386
+----------------------------------------------------------------
+Clase de Niza
+39.0
+----------------------------------------------------------------
+Denominación
+NUESTRA SENORA DE LAASUNCION
+----------------------------------------------------------------
+Nro de Registro
+101010
+----------------------------------------------------------------
+Nombres y Apellidos / Razón Social
+Emp. Ntra. Sra. De La Asuncion C.i.s.a.
+----------------------------------------------------------------
+
+
+
+
+
+
+1 DSA true        2023-05-02      4 SFE test - Aplicante M.E.A E 2299441.0 1 2022.0      E 23005467 1 2023 DSA
+
+
+
+
+
+
+def userdata(nombre):
+  con = sqlite3.connect('db.sqlite3')
+  cur = con.cursor()
+  cur.execute("""SELECT is_staff FROM auth_user WHERE username = '{}'""".format(str(nombre)))
+  print(cur.fetchone())
+
+userdata('innovatica')
+
+
+
+
+
+
+import sqlite3
+
+conexion=sqlite3.connect("bd1.sqlite3")
+try:
+    conexion.execute("""create table articulos (
+                              codigo integer primary key autoincrement,
+                              descripcion text,
+                              precio real
+                        )""")
+    print("se creo la tabla articulos")                        
+except sqlite3.OperationalError:
+    print("La tabla articulos ya existe")                    
+conexion.close()
+
+conexion=sqlite3.connect("bd1.sqlite3")
+conexion.execute("insert into articulos(descripcion,precio) values (?,?)", ("naranjas", 23.50))
+conexion.execute("insert into articulos(descripcion,precio) values (?,?)", ("peras", 34))
+conexion.execute("insert into articulos(descripcion,precio) values (?,?)", ("bananas", 25))
+conexion.commit()
+conexion.close()
+
+conexion=sqlite3.connect("bd1.sqlite3")
+cursor=conexion.execute("select codigo,descripcion,precio from articulos where descripcion = 'bananas' ")
+for fila in cursor:
+    print(fila)
+conexion.close()
+
+
+
+ = catch_data.file_fileId_fileNbr
+ = catch_data.file_fileId_fileSeq
+ = catch_data.file_fileId_fileSeries
+ = catch_data.file_fileId_fileType
+ = catch_data.file_filingData_applicationSubtype
+ = catch_data.file_filingData_applicationType
+ = catch_data.file_filingData_captureUserId
+ = catch_data.file_filingData_filingDate
+ = catch_data.file_filingData_captureDate
+ = catch_data.file_filingData_lawCode
+ = catch_data.file_filingData_paymentList_currencyType
+ = catch_data.file_filingData_paymentList_receiptAmount
+ = catch_data.file_filingData_paymentList_receiptDate
+ = catch_data.file_filingData_paymentList_receiptNbr
+ = catch_data.file_filingData_paymentList_receiptNotes
+ = catch_data.file_filingData_paymentList_receiptType
+ = catch_data.file_filingData_receptionUserId
+ = catch_data.file_ownershipData_ownerList_person_addressStreet
+ = catch_data.file_ownershipData_ownerList_person_nationalityCountryCode
+ = catch_data.file_ownershipData_ownerList_person_personName
+ = catch_data.file_ownershipData_ownerList_person_residenceCountryCode
+ = catch_data.file_rowVersion
+ = catch_data.agentCode
+ = catch_data.file_representationData_representativeList_representativeType
+ = catch_data.rowVersion
+ = catch_data.protectionData_dummy
+ = catch_data.protectionData_niceClassList_niceClassDescription
+ = catch_data.protectionData_niceClassList_niceClassDetailedStatus
+ = catch_data.protectionData_niceClassList_niceClassEdition
+ = catch_data.protectionData_niceClassList_niceClassGlobalStatus
+ = catch_data.protectionData_niceClassList_niceClassNbr
+ = catch_data.protectionData_niceClassList_niceClassVersion
+ = catch_data.logoData
+ = catch_data.logoType
+ = catch_data.signData_markName
+ = catch_data.signData_signType
+
+
+
+file_fileId_fileNbr,
+file_fileId_fileSeq,
+file_fileId_fileSeries,
+file_fileId_fileType,
+file_filingData_applicationSubtype,
+file_filingData_applicationType,
+file_filingData_captureUserId,
+file_filingData_captureDate,
+file_filingData_filingDate,
+file_filingData_lawCode,
+file_filingData_paymentList_currencyType,
+file_filingData_paymentList_receiptAmount,
+file_filingData_paymentList_receiptDate,
+file_filingData_paymentList_receiptNbr,
+file_filingData_paymentList_receiptNotes,
+file_filingData_paymentList_receiptType,
+file_filingData_receptionUserId,
+
+
+file_ownershipData_ownerList_person_owneraddressStreet:str = ""
+file_ownershipData_ownerList_person_ownernationalityCountryCode:str = ""
+file_ownershipData_ownerList_person_ownerpersonName:str = ""
+file_ownershipData_ownerList_person_ownerresidenceCountryCode:str = ""
+
+
+file_representationData_representativeList_representativeType,
+agentCode,
+
+
+file_relationshipList_fileId_fileNbr:str = ""
+file_relationshipList_fileId_fileSeq:str = ""
+file_relationshipList_fileId_fileSeries:str = ""
+file_relationshipList_fileId_fileType:str = ""
+file_relationshipList_relationshipRole:str = ""
+file_relationshipList_relationshipType:str = ""
+
+
+file_rowVersion,
+protectionData_dummy,
+protectionData_niceClassList_niceClassDescription,
+protectionData_niceClassList_niceClassDetailedStatus,
+protectionData_niceClassList_niceClassEdition,
+protectionData_niceClassList_niceClassGlobalStatus,
+protectionData_niceClassList_niceClassNbr,
+protectionData_niceClassList_niceClassVersion,
+rowVersion,
+logoData,
+logoType,
+signData_markName,
+signData_signType
+
+
+
+
+
+
+file_fileId_fileNbr:str = ""
+file_fileId_fileSeq:str = ""
+file_fileId_fileSeries:str = ""
+file_fileId_fileType:str = ""
+file_filingData_applicationSubtype:str = ""
+file_filingData_applicationType:str = ""
+file_filingData_captureUserId:str = ""
+file_filingData_filingDate:str = ""
+file_filingData_captureDate:str = ""
+file_filingData_lawCode:str = ""
+file_filingData_paymentList_currencyType:str = ""
+file_filingData_paymentList_receiptAmount:str = ""
+file_filingData_paymentList_receiptDate:str = ""
+file_filingData_paymentList_receiptNbr:str = ""
+file_filingData_paymentList_receiptNotes:str = ""
+file_filingData_paymentList_receiptType:str = ""
+file_filingData_receptionUserId:str = ""
+file_ownershipData_ownerList_person_addressStreet:str = ""
+file_ownershipData_ownerList_person_nationalityCountryCode:str = ""
+file_ownershipData_ownerList_person_personName:str = ""
+file_ownershipData_ownerList_person_residenceCountryCode:str = ""
+file_rowVersion:str = ""
+agentCode:str = ""
+file_representationData_representativeList_representativeType:str = ""
+rowVersion:str = ""
+protectionData_dummy:str = ""
+protectionData_niceClassList_niceClassDescription:str = ""
+protectionData_niceClassList_niceClassDetailedStatus:str = ""
+protectionData_niceClassList_niceClassEdition:str = ""
+protectionData_niceClassList_niceClassGlobalStatus:str = ""
+protectionData_niceClassList_niceClassNbr:str = ""
+protectionData_niceClassList_niceClassVersion:str = ""
+logoData:str = ""
+logoType:str = ""
+signData_markName:str = ""
+signData_signType:str = ""

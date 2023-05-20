@@ -8,7 +8,6 @@ Instalar Uvicorn
 correr uvicorn
 - uvicorn main:app --host 0.0.0.0 --port 3600
 
-
 Generar el archivo con todos los paquetes
 - pip freeze > requirements.txt
 - pip3 freeze > requirements.txt
@@ -81,6 +80,13 @@ ProcessReadAction - METODO  = actionType
       <processType>1</processType>
    </processId>
 </arg0>
+
+
+
+
+- netstat -aon | findstr :443
+
+- taskkill /pid 10720 /F
 
 
 

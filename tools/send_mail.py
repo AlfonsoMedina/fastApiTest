@@ -48,8 +48,8 @@ def enviar(fileName,mail_ag,asunto,msg_body):
 
 #send all params 
 def enviar_back(mail, asunto, mensaje, fileName):
-    email = "alfonso.medina@dinapi.gov.py"#noreply@dinapi.gov.py
-    password = "4lfon501977"#N0reply.com
+    email = ""#noreply@dinapi.gov.py
+    password = ""#N0reply.com
     send_to_email = mail
     subject = asunto
     message = mensaje
@@ -82,6 +82,34 @@ def enviar_back(mail, asunto, mensaje, fileName):
     server.quit()
     return('Ok!!')
 
+#DEFAULT envio (GENE) 
+#escrito a escrito envio por estado de exp principal
+#escrito normal envio por sigla
+
+#send all params 
+def enviar_back_notFile(mail, asunto, mensaje):
+    email = "noreply@dinapi.gov.py"#noreply@dinapi.gov.py
+    password = "N0reply.com"#N0reply.com
+    send_to_email = mail
+    subject = asunto
+    message = mensaje
+
+    msg = MIMEMultipart()
+    msg['From'] = email
+    msg['To'] = send_to_email
+    msg['Subject'] = subject
+
+    # Attach the message to the MIMEMultipart object
+    msg.attach(MIMEText(message, 'plain'))
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(email, password)
+    text = msg.as_string() # You now need to convert the MIMEMultipart object to a string to send
+    server.sendmail(email, send_to_email, text)
+    server.quit()
+    return('Ok!!')
+
 
 def delete_file(req):
     if(req == 'true'):
@@ -91,6 +119,7 @@ def delete_file(req):
         else:
             return('true')
     
+
 
 
 

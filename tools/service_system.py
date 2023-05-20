@@ -11,7 +11,7 @@ def config_parametro(id):
     params = []
     try:
         conn = psycopg2.connect(
-            host = "192.168.50.216",
+            host = "192.168.50.215",
             user = "user_app_recepcion",
             password="user_app_recepcion-202201!",
             database="db_sfe_presencial"
