@@ -2279,9 +2279,5 @@ def insert_mark_sup(doc_id):
 
 
 
-
-
-
-
 app.openapi = custom_openapi
 
