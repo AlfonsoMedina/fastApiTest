@@ -58,6 +58,7 @@ class insertRegModel(object):
 	dir_variant:str = ''
 	ownerList:str = ''
 	multitu:str = ''
+	titular_uno:str = ''
 	def __init__(self):
 		self.signType = ""
 		self.tipo_clase = ""
@@ -221,8 +222,21 @@ class insertRegModel(object):
 		self.file_ownershipData_ownerList_person_addressStreet = self.dir_variant
 
 		self.file_ownershipData_ownerList_person_nationalityCountryCode = self.data['pais']
-		
-		self.file_ownershipData_ownerList_person_personName = self.data['razon_social'] + self.data['nombre_soli']
+
+		try:
+			if self.data['nombre_soli'] == "No definido":
+				self.titular_uno = self.data['razon_social']
+		except Exception as e:
+			self.titular_uno = ''
+
+		try:
+			if self.data['razon_social'] == "No definido":
+				self.titular_uno = self.data['nombre_soli']
+		except Exception as e:
+			self.titular_uno = ''
+
+		self.file_ownershipData_ownerList_person_personName = self.titular_uno
+
 		self.file_ownershipData_ownerList_person_residenceCountryCode = self.data['pais']
 
 		if self.multitu != []:

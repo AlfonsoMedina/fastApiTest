@@ -8,7 +8,7 @@ from time import sleep
 from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
 from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, getSigla_tipoDoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, tasa_id, tip_doc
-from getFileDoc import getFile
+from getFileDoc import compilePDF, getFile, getFile_reg_and_ren
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
 from tools.send_mail import delete_file, enviar, enviar_back, enviar_back_notFile
@@ -674,6 +674,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 def insertReg(form_Id):
 	insert_mark = insertRegModel()
 	insert_mark.setData(form_Id)
+	getFile_reg_and_ren(form_Id,insert_mark.file_fileId_fileNbr)
 	try:
 		insertRegState = mark_insert_reg(
 			insert_mark.file_fileId_fileNbr,
@@ -1009,6 +1010,10 @@ def catch_toError(form_Id):
 #print(getSigla_tipoDoc('1571'))
 
 #print(mark_getlistReg("371107.0")[0]['fileId']['fileNbr']['doubleValue'])
+
+
+#print(getFile_reg_and_ren('1439','2177877'))
+
 
 """
 

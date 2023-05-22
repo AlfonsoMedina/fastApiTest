@@ -92,12 +92,12 @@ def registro_sfe(arg):
 			except Exception as e:
 				global_data['especificar'] = "No definido"	
 			try:
-				if(i['descripcion'] == "Nombres y Apellidos" and i['campo'] == 'datospersonales_nombreapellido'): 
+				if(i['campo'] == 'datospersonales_nombreapellido'): 
 					global_data['nombre_soli'] = i['valor']
 			except Exception as e:
 				global_data['nombre_soli'] = "No definido"											
 			try:
-				if(i['descripcion'] == "Razón Social" and i['campo'] == 'datospersonales_razonsocial'):
+				if(i['campo'] == 'datospersonales_razonsocial'):
 					global_data['razon_social']=i['valor']
 			except Exception as e:
 				global_data['razon_social'] = "No definido"	
