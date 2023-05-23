@@ -251,10 +251,12 @@ class insertRenModel(object):
 				self.dir_owner = self.data['solic_dir']
 		except Exception as e:
 			pass
+		
 			
-			
-		self.file_ownershipData_ownerList_person_owneraddressStreet = dir_titu(doc_Id)[0] #self.dir_owner	
-
+		try:	
+			self.file_ownershipData_ownerList_person_owneraddressStreet = dir_titu(doc_Id)[0] #self.dir_owner	
+		except Exception as e:
+			self.file_ownershipData_ownerList_person_owneraddressStreet = ""
 
 
 		self.file_ownershipData_ownerList_person_ownernationalityCountryCode = "PY"#self.data['act_pais']

@@ -209,13 +209,18 @@ class insertRegModel(object):
 		self.file_filingData_receptionUserId = "4"
 
 
-
-		self.file_ownershipData_ownerList_person_addressStreet = dir_titu(doc_Id)[0] #self.dir_variant
-
+		try:
+			self.file_ownershipData_ownerList_person_addressStreet = dir_titu(doc_Id)[0] #self.dir_variant
+		except Exception as e:
+			self.file_ownershipData_ownerList_person_addressStreet = ""
+			
 		self.file_ownershipData_ownerList_person_nationalityCountryCode = self.data['pais']
+		
 
-
-		self.file_ownershipData_ownerList_person_personName = nom_titu(doc_Id)[0] #self.titular_uno
+		try:
+			self.file_ownershipData_ownerList_person_personName = nom_titu(doc_Id)[0] #self.titular_uno
+		except Exception as e:
+			self.file_ownershipData_ownerList_person_personName = ""
 
 		self.file_ownershipData_ownerList_person_residenceCountryCode = self.data['pais']
 

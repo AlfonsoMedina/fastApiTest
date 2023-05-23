@@ -183,8 +183,27 @@ def registro_sfe(arg):
  
 def titulare_reg(arg):
 	list_titulare = []
+
 	for i in range(2,10):
 		list_titulare.append(catch_owner(arg,i))
+
+	if list_titulare[0]['person']['personName'] == '':	
+		list_titulare.pop(0)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+						
 	return(list_titulare)
 
 def catch_owner(arg,number):
@@ -435,7 +454,7 @@ def renovacion_sfe(arg):
 			except Exception as e:
 				global_data['clase_on'] = "No definido"
 			try:	
-				if(i['descripcion'] == "Buscar Registro N°" and i['campo'] == 'marcarenov_registrono'):
+				if(i['campo'] == 'marcarenov_registrono'): 
 					global_data['registro_nbr']=i['valor']
 			except Exception as e:
 				global_data['registro_nbr'] = "No definido"
@@ -1699,21 +1718,21 @@ def rule_notification(sig,exp):
 		if exist_notifi(sig) != 'null':
 			rule = email_receiver(str(sig))
 			try:	
-				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])}")
+				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - N° {exp}")
 			except Exception as e:
 				pass		
 			try:	
-				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])}")
+				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} - N° {exp}")
 			except Exception as e:
 				pass
 		else:
 			rule = email_receiver('GEN')
 			try:	
-				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])}")
+				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - N° {exp}")
 			except Exception as e:
 				pass		
 			try:	
-				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])}")
+				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} - N° {exp}")
 			except Exception as e:
 				pass				
 
@@ -1725,13 +1744,36 @@ def log_info():
 	row=cursor.fetchall()
 	log_data = row
 	conn.close()	
-	return(log_data)	
+	return(log_data)
+
+def log_info_delete(t_id):
+	log_data = {}
+	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+	cursor = conn.cursor()
+	cursor.execute("""DELETE FROM public.log_error WHERE id_tramite = {};""".format(t_id))
+	conn.commit()
+	conn.close()	
+	return(log_data)		
 
 def getSigla_tipoDoc(arg):
 	try:
 		return(pendiente_sfe(arg)[0]['tipo_documento_id'])
 	except Exception as e:
-		return("")	
+		return("")
+
+def what_it_this(arg):
+	try:
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select formulario_id from tramites t where id = {}""".format(int(arg)))
+		row=cursor.fetchall()
+		return(row[0][0])
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+#print(what_it_this('1430'))
 
 """def afected_relation_auth(arg):"""
 

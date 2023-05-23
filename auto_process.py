@@ -7,7 +7,7 @@ import time
 from time import sleep
 from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, getSigla_tipoDoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, tasa_id, tip_doc
+from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, getSigla_tipoDoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, tasa_id, tip_doc
 from getFileDoc import compilePDF, getFile, getFile_reg_and_ren
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
@@ -340,6 +340,7 @@ def compileAndInsert(form_Id,typ):
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}','false',{form_Id})
 			cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)
 		
 		try:
 			exists = str(user_doc_read_min('E',insert_doc.documentId_docNbr,insert_doc.documentId_docOrigin,insert_doc.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
@@ -352,7 +353,8 @@ def compileAndInsert(form_Id,typ):
 				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Agente				
 		except Exception as e:
 			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',{form_Id})
-			cambio_estado_soporte(form_Id)			
+			cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)			
 
 def compileAndInsertUserDocUserDoc(form_Id,typ):	
 		catch_toError(form_Id)
@@ -397,6 +399,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',{form_Id})
 			cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)
 
 		time.sleep(1)
 	
@@ -472,6 +475,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)
 
 		time.sleep(1)
 		
@@ -508,6 +512,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 		else:
 			data_validator(f'Error al cambiar estado de esc. N° {escrito_relacionado.documentId_docNbr}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)
 
 		time.sleep(0.5)
 		
@@ -554,6 +559,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)
 
 		time.sleep(1)
 		
@@ -627,7 +633,8 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 						escrito_escrito_pago.representationData_representativeList_person_email))
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
-			cambio_estado_soporte(form_Id)		
+			cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)		
 		
 		time.sleep(1)
 		
@@ -670,6 +677,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 			except Exception as e:
 				data_validator(f'El escrito afectado no existe, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
+				rule_notification('SOP',form_Id)
 
 def insertReg(form_Id):
 	insert_mark = insertRegModel()
@@ -714,22 +722,21 @@ def insertReg(form_Id):
 			insert_mark.signData_signType,
 			insert_mark.ownerList
 		)
+		print(insertRegState)
 		if insertRegState == 'true':
 			process_day_commit_Nbr()
 			getFile_reg_and_ren(form_Id,insert_mark.file_fileId_fileNbr)
 			cambio_estado(form_Id,insert_mark.file_fileId_fileNbr)
-			rule_notification('REG','')# Correo al funcionario
-			enviar_back_notFile('jose.ramirez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Se ha recibido una solicitud de Registro de Marcas. N° '+ str(insert_mark.file_fileId_fileNbr))
-			enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Se ha recibido una solicitud de Registro de Marcas. N° '+ str(insert_mark.file_fileId_fileNbr))
+			rule_notification('REG',str(insert_mark.file_fileId_fileNbr))# Correo al funcionario
 		else:
-			data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true',form_Id)
+			data_validator(f'Error en solicitud, tabla tramites ID: {form_Id} - {insertRegState}','true',form_Id)
 			cambio_estado_soporte(form_Id)
-			enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Error en solicitud, tabla tramites ID:'+ str(form_Id))			
+			rule_notification('SOP',form_Id)		
 	except Exception as e:
 		print(e)
 		data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true',form_Id)
 		cambio_estado_soporte(form_Id)
-		enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Error en solicitud, tabla tramites ID:'+ str(form_Id))		
+		rule_notification('SOP',form_Id)	
 
 def insertRen(form_Id):
 	insert_mark_ren = insertRenModel()
@@ -781,17 +788,15 @@ def insertRen(form_Id):
 		if insertRenState == 'true':
 			process_day_commit_Nbr()
 			cambio_estado(form_Id,insert_mark_ren.file_fileId_fileNbr)
-			rule_notification('REN','')# Correo al funcionario
-			enviar_back_notFile("jose.ramirez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
-			enviar_back_notFile("carlos.benitez@dinapi.gov.py",'Solicitud de Renovación de marcas','Se ha recibido una Renovación de marcas. N° '+ str(insert_mark_ren.file_fileId_fileNbr))
+			rule_notification('REN',str(insert_mark_ren.file_fileId_fileNbr))# Correo al funcionario
 		else:
-			data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id}','true',form_Id)
+			data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id} - {insertRenState}','true',form_Id)
 			cambio_estado_soporte(form_Id)
-			enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Error en solicitud, tabla tramites ID:'+ str(form_Id))			
+			rule_notification('SOP',form_Id)	
 	except Exception as e:
 		data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id}','true',form_Id)
 		cambio_estado_soporte(form_Id)
-		enviar_back_notFile('carlos.benitez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Error en solicitud, tabla tramites ID:'+ str(form_Id))		
+		rule_notification('SOP',form_Id)
 
 def catch_toError(form_Id):
 	getExcept = userDocModel()
@@ -997,23 +1002,20 @@ def catch_toError(form_Id):
 			cambio_estado_soporte(form_Id)
 			return("E99")
 
-#rule_notification('UG','2002251')
+#rule_notification('SOP','')
 
 #print(exist_notifi('UG'))
 
 #print(exist_main_mark('UG'))
 
-#print(renovacion_sfe('1430'))
-
 #print(status_typ('2')[2])
-
-#print(getSigla_tipoDoc('23808'))
 
 #print(mark_getlistReg("371107.0")[0]['fileId']['fileNbr']['doubleValue'])
 
 #print(insertReg('23808'))
 
 #print(getFile_reg_and_ren('1439','2177877'))
+
 
 
 """

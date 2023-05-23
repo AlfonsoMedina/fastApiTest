@@ -7,10 +7,11 @@ from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
 from tools.send_mail import enviar
 from tools.connect import MEA_TIEMPO_ACTUALIZACION, WORKING_DAY_AND_TIME
-from dinapi.sfe import count_pendiente, format_userdoc, getSigla_tipoDoc, log_info, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc
+from dinapi.sfe import count_pendiente, format_userdoc, getSigla_tipoDoc, log_info, log_info_delete, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc, what_it_this
 from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
+from wipo.insertGroupProcessMEA import ProcessGroupAddProcess
 from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, mark_insert_ren, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update, user_doc_update_sin_recibo #pip install "fastapi[all]"
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_read, user_doc_read_disenio, user_doc_read_patent
 import zeep
@@ -2273,9 +2274,21 @@ def working_Day_AndTime():
 	return(WORKING_DAY_AND_TIME)
 
 
-@app.post('/sup/direct_insert_mark', summary="sfe", tags=["Insert directo para soporte"])
+@app.post('/sup/direct_insert_mark', summary="sfe", tags=["Insert directo de escrito para soporte"])
 def insert_mark_sup(doc_id):
-	return(insert_list(doc_id,str(getSigla_tipoDoc(doc_id))))
+	log_info_delete(doc_id)
+	if what_it_this(doc_id) == 27 or what_it_this(doc_id) == 4:
+		return(insertRen(doc_id))
+	elif what_it_this(doc_id) == 3:	
+		return(insertReg(doc_id))
+	else:
+		return(insert_list(doc_id,str(getSigla_tipoDoc(doc_id))))
+
+
+
+@app.post('/sfe/Process_Group_Add_Process', summary="sis", tags=["Inserta un nuevo proceso a un grupo de procesos (grupo de trabajo)"])
+def Process_Group_Add_Process(processGroupCode,userNbr,processNbr,processType):
+	return(ProcessGroupAddProcess(processGroupCode,userNbr,processNbr,processType))
 
 
 

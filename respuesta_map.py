@@ -9,9 +9,6 @@ import tools.connect as connex
 
 ################################# start reg ##################################
 
-
-
-
 def nom_titu(arg):
 	global_data = []
 	try:
@@ -95,12 +92,7 @@ def dir_titu(arg):
 	finally:
 		conn.close()
 
-
 #print(dir_titu('1584')[0])
-
-
-
-
 
 
 ################################# End reg ##################################
