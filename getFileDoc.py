@@ -4,7 +4,7 @@ import os, shutil
 from tools.filing_date import capture_year
 from tools.connect import  PENDING, MEA_ADJUNTOS_DESTINO_location, host_SFE_conn,user_SFE_conn,password_SFE_conn, database_SFE_conn ,MEA_SFE_FORMULARIOS_ID_estado,MEA_SFE_FORMULARIOS_ID_tipo
 from urllib import request	
-from PyPDF2 import PdfMerger, PdfReader # pip install PyPDF2
+from PyPDF2 import PdfMerger, PdfReader # pip install PyPDF2 - pip install PyPDF
 
 
 def getFile(doc_id,fileNbr):	

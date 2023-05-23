@@ -11,23 +11,17 @@ from urllib import request
 import qrcode
 
 
-global_data = {}
+
 create_userdoc = {}
 default_val = lambda arg: arg if arg == "null" else "" 
 list_titulare = []
+
 def registro_sfe(arg):
+	global_data = {}
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
-						to_char(t.created_at,'yyyy-mm-dd hh24:mi:ss')created_at,to_char(t.updated_at,'yyyy-mm-dd hh24:mi:ss')updated_at,t.respuestas,t.costo,t.usuario_id, t.deleted_at,
-						t.codigo,t.firmado_at,to_char(t.pagado_at,'yyyy-mm-dd hh24:mi:ss') as pagado_at,t.expediente_id,t.pdf_url,to_char(t.enviado_at,'yyyy-mm-dd hh24:mi:ss') as enviado_at,
-						to_char(t.recepcionado_at,'yyyy-mm-dd hh24:mi:ss') as recepcionado_at,t.nom_funcionario,t.pdf,t.expediente_afectado,t.notificacion_id,t.expedientes_autor,t.autorizado_por_id,u.nombre as nombre_agente,pa.numero_agente,
-						u.email as email_agente,pa.celular as telefonoAgente,pa.domicilio_agpi,t.nom_funcionario as funcionario_autorizado 
-						from tramites t join formularios f on t.formulario_id  = f.id  
-						join usuarios u on u.id = t.usuario_id  
-						join perfiles_agentes pa on pa.usuario_id = u.id         
-						where t.id = {};""".format(int(arg)))
+		cursor.execute(connex.TRAMITE_REG.format(int(arg)))
 		row=cursor.fetchall()
 		global_data['fecha_envio'] = str(row[0][17])
 		global_data['expediente'] = str(row[0][15])
@@ -90,17 +84,22 @@ def registro_sfe(arg):
 				if(i['descripcion'] == "Especificar"):
 					global_data['especificar'] = i['valor']
 			except Exception as e:
-				global_data['especificar'] = "No definido"	
+				global_data['especificar'] = "No definido"
+
+
 			try:
 				if(i['campo'] == 'datospersonales_nombreapellido'): 
 					global_data['nombre_soli'] = i['valor']
 			except Exception as e:
-				global_data['nombre_soli'] = "No definido"											
+				global_data['nombre_soli'] = "No definido"
+
 			try:
 				if(i['campo'] == 'datospersonales_razonsocial'):
 					global_data['razon_social']=i['valor']
 			except Exception as e:
 				global_data['razon_social'] = "No definido"	
+
+
 			try:
 				if(i['campo'] == 'datospersonales_calle'):
 					global_data['direccion']=i['valor']
@@ -180,7 +179,8 @@ def registro_sfe(arg):
 		print(e)
 	finally:
 		conn.close()
-	
+
+ 
 def titulare_reg(arg):
 	list_titulare = []
 	for i in range(2,10):
@@ -253,6 +253,7 @@ def catch_owner(arg,number):
 #print(titulare_reg('1586'))#Paquete de titulares
 
 def renovacion_sfe(arg):
+	global_data = {}
 	try:
 		conn = psycopg2.connect(
 					host = '192.168.50.219',
@@ -479,6 +480,7 @@ def renovacion_sfe(arg):
 		conn.close()
 
 def oposicion_sfe(arg):
+			global_data = {}
 			try:
 				conn = psycopg2.connect(
 					host = 'pgsql-sprint.dinapi.gov.py',
@@ -1726,7 +1728,10 @@ def log_info():
 	return(log_data)	
 
 def getSigla_tipoDoc(arg):
-	return(pendiente_sfe(arg)[0]['tipo_documento_id'])
+	try:
+		return(pendiente_sfe(arg)[0]['tipo_documento_id'])
+	except Exception as e:
+		return("")	
 
 """def afected_relation_auth(arg):"""
 

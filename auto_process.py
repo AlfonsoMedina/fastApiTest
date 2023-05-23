@@ -52,7 +52,7 @@ def insert_list(arg0:string,arg1:string):
 	try:
 		pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
 	except Exception as e:
-		data_validator(f'Regla inactiva , tabla tramites ID: {arg0}','false',{arg0})
+		data_validator(f'Regla inactiva , tabla tramites ID: {arg0}','false',int(arg0))
 		cambio_estado_soporte(arg0)	
 		return()	
 	pago_auth:str = str(pago_id(arg0)).replace("None","sin dato en bancar")
@@ -674,7 +674,6 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 def insertReg(form_Id):
 	insert_mark = insertRegModel()
 	insert_mark.setData(form_Id)
-	getFile_reg_and_ren(form_Id,insert_mark.file_fileId_fileNbr)
 	try:
 		insertRegState = mark_insert_reg(
 			insert_mark.file_fileId_fileNbr,
@@ -717,6 +716,7 @@ def insertReg(form_Id):
 		)
 		if insertRegState == 'true':
 			process_day_commit_Nbr()
+			getFile_reg_and_ren(form_Id,insert_mark.file_fileId_fileNbr)
 			cambio_estado(form_Id,insert_mark.file_fileId_fileNbr)
 			rule_notification('REG','')# Correo al funcionario
 			enviar_back_notFile('jose.ramirez@dinapi.gov.py','Solicitud de Registro de Marcas nuevo','Se ha recibido una solicitud de Registro de Marcas. N° '+ str(insert_mark.file_fileId_fileNbr))
@@ -1007,10 +1007,11 @@ def catch_toError(form_Id):
 
 #print(status_typ('2')[2])
 
-#print(getSigla_tipoDoc('1571'))
+#print(getSigla_tipoDoc('23808'))
 
 #print(mark_getlistReg("371107.0")[0]['fileId']['fileNbr']['doubleValue'])
 
+#print(insertReg('23808'))
 
 #print(getFile_reg_and_ren('1439','2177877'))
 

@@ -2,6 +2,7 @@
 from asyncio.windows_events import NULL
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe, titulare_reg
 from getFileDoc import getFile
+from respuesta_map import dir_titu, nom_titu
 from wipo.function_for_reception_in import user_doc_getList_escrito
 from wipo.ipas import mark_getlist, personAgente
 import tools.connect as connex
@@ -207,35 +208,14 @@ class insertRegModel(object):
 		self.file_filingData_paymentList_receiptType = "1"
 		self.file_filingData_receptionUserId = "4"
 
-		try:
-			if self.data['direccion'] == "No definido":
-				self.dir_variant = self.data['direccion_dir']
-		except Exception as e:
-			pass
-		try:
-			if self.data['direccion_dir'] == "No definido":
-				self.dir_variant = self.data['direccion']
-		except Exception as e:
-			pass
 
 
-		self.file_ownershipData_ownerList_person_addressStreet = self.dir_variant
+		self.file_ownershipData_ownerList_person_addressStreet = dir_titu(doc_Id)[0] #self.dir_variant
 
 		self.file_ownershipData_ownerList_person_nationalityCountryCode = self.data['pais']
 
-		try:
-			if self.data['nombre_soli'] == "No definido":
-				self.titular_uno = self.data['razon_social']
-		except Exception as e:
-			self.titular_uno = ''
 
-		try:
-			if self.data['razon_social'] == "No definido":
-				self.titular_uno = self.data['nombre_soli']
-		except Exception as e:
-			self.titular_uno = ''
-
-		self.file_ownershipData_ownerList_person_personName = self.titular_uno
+		self.file_ownershipData_ownerList_person_personName = nom_titu(doc_Id)[0] #self.titular_uno
 
 		self.file_ownershipData_ownerList_person_residenceCountryCode = self.data['pais']
 

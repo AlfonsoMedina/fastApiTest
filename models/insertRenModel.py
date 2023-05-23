@@ -2,6 +2,7 @@
 from asyncio.windows_events import NULL
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe, renovacion_sfe
 from getFileDoc import getFile
+from respuesta_map import dir_titu, nom_titu
 from wipo.function_for_reception_in import user_doc_getList_escrito
 from wipo.ipas import mark_getlist, mark_getlistReg, personAgente
 import tools.connect as connex
@@ -252,14 +253,14 @@ class insertRenModel(object):
 			pass
 			
 			
-		self.file_ownershipData_ownerList_person_owneraddressStreet = self.dir_owner	
+		self.file_ownershipData_ownerList_person_owneraddressStreet = dir_titu(doc_Id)[0] #self.dir_owner	
 
 
 
 		self.file_ownershipData_ownerList_person_ownernationalityCountryCode = "PY"#self.data['act_pais']
 
 		try:
-			self.file_ownershipData_ownerList_person_ownerpersonName = str(self.data['nombre_soli']) + str(self.data['razon_social'])
+			self.file_ownershipData_ownerList_person_ownerpersonName = nom_titu(doc_Id)[0]
 		except Exception as e:
 			self.file_ownershipData_ownerList_person_ownerpersonName = ""
 
