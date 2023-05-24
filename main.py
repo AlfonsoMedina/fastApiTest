@@ -2273,7 +2273,6 @@ def error_log():
 def working_Day_AndTime():
 	return(WORKING_DAY_AND_TIME)
 
-
 @app.post('/sup/direct_insert_mark', summary="sfe", tags=["Insert directo de escrito para soporte"])
 def insert_mark_sup(doc_id):
 	log_info_delete(doc_id)
@@ -2283,8 +2282,6 @@ def insert_mark_sup(doc_id):
 		return(insertReg(doc_id))
 	else:
 		return(insert_list(doc_id,str(getSigla_tipoDoc(doc_id))))
-
-
 
 @app.post('/sfe/Process_Group_Add_Process', summary="sis", tags=["Inserta un nuevo proceso a un grupo de procesos (grupo de trabajo)"])
 def Process_Group_Add_Process(processGroupCode,userNbr,processNbr,processType):

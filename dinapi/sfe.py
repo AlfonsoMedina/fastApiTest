@@ -672,7 +672,7 @@ select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usua
 codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
 to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,
 notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id, enviado_at as bruto from tramites where estado in ({}) and formulario_id in ({}) 
-and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by enviado_at asc LIMIT {} offset {}
+and enviado_at >= '{} 00:59:59' and expediente_electronico = true and enviado_at <= '{} 23:59:59' order by enviado_at asc LIMIT {} offset {}
 		""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha,ver,pag))
 		row=cursor.fetchall()
 		for i in row:
@@ -724,7 +724,7 @@ select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usua
 codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
 to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,
 notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id, enviado_at as bruto from tramites where estado in ({}) and formulario_id in ({}) 
-and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by enviado_at asc 
+and enviado_at >= '{} 00:59:59' and expediente_electronico = true and enviado_at <= '{} 23:59:59' order by enviado_at asc 
 		""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha))
 		row=cursor.fetchall()
 		for i in row:
@@ -776,7 +776,7 @@ select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usua
 codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
 to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,
 notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id from tramites where estado in ({}) and formulario_id in ({}) 
-and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59'; 
+and enviado_at >= '{} 00:59:59' and expediente_electronico = true and enviado_at <= '{} 23:59:59'; 
 		""".format('99',connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha))
 		row=cursor.fetchall()
 		for i in row:
@@ -822,7 +822,7 @@ def pendiente_sfe(arg):
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
 		cursor.execute("""select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
-			from tramites where id = {}
+			from tramites where expediente_electronico = true and id = {}
 		""".format(arg))
 		row=cursor.fetchall()
 		for i in row:
@@ -974,7 +974,7 @@ def count_pendiente(fecha:string):
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
 		cursor.execute("""select count(*) from tramites where estado in ({}) and formulario_id in ({}) and enviado_at >= '{} 00:59:59' 
-		and enviado_at <= '{} 23:59:59'""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha))
+		and expediente_electronico = true and enviado_at <= '{} 23:59:59'""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha))
 		row=cursor.fetchall()
 		for i in row:
 			reg=i[0]
@@ -1750,7 +1750,7 @@ def log_info_delete(t_id):
 	log_data = {}
 	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 	cursor = conn.cursor()
-	cursor.execute("""DELETE FROM public.log_error WHERE id_tramite = {};""".format(t_id))
+	cursor.execute("""UPDATE public.log_error SET evento='E00' , break='false' WHERE id_tramite= {};""".format(t_id))
 	conn.commit()
 	conn.close()	
 	return(log_data)		

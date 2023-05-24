@@ -7,7 +7,7 @@ import time
 from time import sleep
 from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, getSigla_tipoDoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, tasa_id, tip_doc
+from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, getSigla_tipoDoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
 from getFileDoc import compilePDF, getFile, getFile_reg_and_ren
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
@@ -680,122 +680,130 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 				rule_notification('SOP',form_Id)
 
 def insertReg(form_Id):
-	insert_mark = insertRegModel()
-	insert_mark.setData(form_Id)
-	try:
-		insertRegState = mark_insert_reg(
-			insert_mark.file_fileId_fileNbr,
-			insert_mark.file_fileId_fileSeq,
-			insert_mark.file_fileId_fileSeries,
-			insert_mark.file_fileId_fileType,
-			insert_mark.file_filingData_applicationSubtype,
-			insert_mark.file_filingData_applicationType,
-			insert_mark.file_filingData_captureUserId,
-			insert_mark.file_filingData_filingDate,
-			insert_mark.file_filingData_captureDate,
-			insert_mark.file_filingData_lawCode,
-			insert_mark.file_filingData_paymentList_currencyType,
-			insert_mark.file_filingData_paymentList_receiptAmount,
-			insert_mark.file_filingData_paymentList_receiptDate,
-			insert_mark.file_filingData_paymentList_receiptNbr,
-			insert_mark.file_filingData_paymentList_receiptNotes,
-			insert_mark.file_filingData_paymentList_receiptType,
-			insert_mark.file_filingData_receptionUserId,
-			insert_mark.file_ownershipData_ownerList_person_addressStreet,
-			insert_mark.file_ownershipData_ownerList_person_nationalityCountryCode,
-			insert_mark.file_ownershipData_ownerList_person_personName,
-			insert_mark.file_ownershipData_ownerList_person_residenceCountryCode,
-			insert_mark.file_rowVersion,
-			insert_mark.agentCode,
-			insert_mark.file_representationData_representativeList_representativeType,
-			insert_mark.rowVersion,
-			insert_mark.protectionData_dummy,
-			insert_mark.protectionData_niceClassList_niceClassDescription,
-			insert_mark.protectionData_niceClassList_niceClassDetailedStatus,
-			insert_mark.protectionData_niceClassList_niceClassEdition,
-			insert_mark.protectionData_niceClassList_niceClassGlobalStatus,
-			insert_mark.protectionData_niceClassList_niceClassNbr,
-			insert_mark.protectionData_niceClassList_niceClassVersion,
-			insert_mark.logoData,
-			insert_mark.logoType,
-			insert_mark.signData_markName,
-			insert_mark.signData_signType,
-			insert_mark.ownerList
-		)
-		print(insertRegState)
-		if insertRegState == 'true':
-			process_day_commit_Nbr()
-			getFile_reg_and_ren(form_Id,insert_mark.file_fileId_fileNbr)
-			cambio_estado(form_Id,insert_mark.file_fileId_fileNbr)
-			rule_notification('REG',str(insert_mark.file_fileId_fileNbr))# Correo al funcionario
-		else:
-			data_validator(f'Error en solicitud, tabla tramites ID: {form_Id} - {insertRegState}','true',form_Id)
+	flow_request = stop_request()
+	if flow_request == 0:
+		insert_mark = insertRegModel()
+		insert_mark.setData(form_Id)
+		try:
+			insertRegState = mark_insert_reg(
+				insert_mark.file_fileId_fileNbr,
+				insert_mark.file_fileId_fileSeq,
+				insert_mark.file_fileId_fileSeries,
+				insert_mark.file_fileId_fileType,
+				insert_mark.file_filingData_applicationSubtype,
+				insert_mark.file_filingData_applicationType,
+				insert_mark.file_filingData_captureUserId,
+				insert_mark.file_filingData_filingDate,
+				insert_mark.file_filingData_captureDate,
+				insert_mark.file_filingData_lawCode,
+				insert_mark.file_filingData_paymentList_currencyType,
+				insert_mark.file_filingData_paymentList_receiptAmount,
+				insert_mark.file_filingData_paymentList_receiptDate,
+				insert_mark.file_filingData_paymentList_receiptNbr,
+				insert_mark.file_filingData_paymentList_receiptNotes,
+				insert_mark.file_filingData_paymentList_receiptType,
+				insert_mark.file_filingData_receptionUserId,
+				insert_mark.file_ownershipData_ownerList_person_addressStreet,
+				insert_mark.file_ownershipData_ownerList_person_nationalityCountryCode,
+				insert_mark.file_ownershipData_ownerList_person_personName,
+				insert_mark.file_ownershipData_ownerList_person_residenceCountryCode,
+				insert_mark.file_rowVersion,
+				insert_mark.agentCode,
+				insert_mark.file_representationData_representativeList_representativeType,
+				insert_mark.rowVersion,
+				insert_mark.protectionData_dummy,
+				insert_mark.protectionData_niceClassList_niceClassDescription,
+				insert_mark.protectionData_niceClassList_niceClassDetailedStatus,
+				insert_mark.protectionData_niceClassList_niceClassEdition,
+				insert_mark.protectionData_niceClassList_niceClassGlobalStatus,
+				insert_mark.protectionData_niceClassList_niceClassNbr,
+				insert_mark.protectionData_niceClassList_niceClassVersion,
+				insert_mark.logoData,
+				insert_mark.logoType,
+				insert_mark.signData_markName,
+				insert_mark.signData_signType,
+				insert_mark.ownerList
+			)
+			print(insertRegState)
+			if insertRegState == 'true':
+				process_day_commit_Nbr()
+				getFile_reg_and_ren(form_Id,insert_mark.file_fileId_fileNbr)
+				cambio_estado(form_Id,insert_mark.file_fileId_fileNbr)
+				rule_notification('REG',str(insert_mark.file_fileId_fileNbr))# Correo al funcionario
+			else:
+				data_validator(f'Error en solicitud, tabla tramites ID: {form_Id} - {insertRegState}','true',form_Id)
+				cambio_estado_soporte(form_Id)
+				rule_notification('SOP',form_Id)		
+		except Exception as e:
+			print(e)
+			data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true',form_Id)
 			cambio_estado_soporte(form_Id)
-			rule_notification('SOP',form_Id)		
-	except Exception as e:
-		print(e)
-		data_validator(f'Error en solicitud, tabla tramites ID: {form_Id}','true',form_Id)
-		cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)
+	else:
 		rule_notification('SOP',form_Id)	
 
 def insertRen(form_Id):
-	insert_mark_ren = insertRenModel()
-	insert_mark_ren.setData(form_Id)
-	try:
-		insertRenState = mark_insert_ren(
-					insert_mark_ren.file_fileId_fileNbr,
-					insert_mark_ren.file_fileId_fileSeq,
-					insert_mark_ren.file_fileId_fileSeries,
-					insert_mark_ren.file_fileId_fileType,
-					insert_mark_ren.file_filingData_applicationSubtype,
-					insert_mark_ren.file_filingData_applicationType,
-					insert_mark_ren.file_filingData_captureUserId,
-					insert_mark_ren.file_filingData_captureDate,
-					insert_mark_ren.file_filingData_filingDate,
-					insert_mark_ren.file_filingData_lawCode,
-					insert_mark_ren.file_filingData_paymentList_currencyType,
-					insert_mark_ren.file_filingData_paymentList_receiptAmount,
-					insert_mark_ren.file_filingData_paymentList_receiptDate,
-					insert_mark_ren.file_filingData_paymentList_receiptNbr,
-					insert_mark_ren.file_filingData_paymentList_receiptNotes,
-					insert_mark_ren.file_filingData_paymentList_receiptType,
-					insert_mark_ren.file_filingData_receptionUserId,
-					insert_mark_ren.file_ownershipData_ownerList_person_owneraddressStreet,
-					insert_mark_ren.file_ownershipData_ownerList_person_ownernationalityCountryCode,
-					insert_mark_ren.file_ownershipData_ownerList_person_ownerpersonName,
-					insert_mark_ren.file_ownershipData_ownerList_person_ownerresidenceCountryCode,
-					insert_mark_ren.file_representationData_representativeList_representativeType,
-					insert_mark_ren.agentCode,
-					insert_mark_ren.file_relationshipList_fileId_fileNbr,
-					insert_mark_ren.file_relationshipList_fileId_fileSeq,
-					insert_mark_ren.file_relationshipList_fileId_fileSeries,
-					insert_mark_ren.file_relationshipList_fileId_fileType,
-					insert_mark_ren.file_relationshipList_relationshipRole,
-					insert_mark_ren.file_relationshipList_relationshipType,
-					insert_mark_ren.file_rowVersion,
-					insert_mark_ren.protectionData_dummy,
-					insert_mark_ren.protectionData_niceClassList_niceClassDescription,
-					insert_mark_ren.protectionData_niceClassList_niceClassDetailedStatus,
-					insert_mark_ren.protectionData_niceClassList_niceClassEdition,
-					insert_mark_ren.protectionData_niceClassList_niceClassGlobalStatus,
-					insert_mark_ren.protectionData_niceClassList_niceClassNbr,
-					insert_mark_ren.protectionData_niceClassList_niceClassVersion,
-					insert_mark_ren.rowVersion,
-					insert_mark_ren.logoData,
-					insert_mark_ren.logoType,
-					insert_mark_ren.signData_markName,
-					insert_mark_ren.signData_signType)			
-		if insertRenState == 'true':
-			process_day_commit_Nbr()
-			cambio_estado(form_Id,insert_mark_ren.file_fileId_fileNbr)
-			rule_notification('REN',str(insert_mark_ren.file_fileId_fileNbr))# Correo al funcionario
-		else:
-			data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id} - {insertRenState}','true',form_Id)
+	flow_request = stop_request()
+	if flow_request == 0:
+		insert_mark_ren = insertRenModel()
+		insert_mark_ren.setData(form_Id)
+		try:
+			insertRenState = mark_insert_ren(
+						insert_mark_ren.file_fileId_fileNbr,
+						insert_mark_ren.file_fileId_fileSeq,
+						insert_mark_ren.file_fileId_fileSeries,
+						insert_mark_ren.file_fileId_fileType,
+						insert_mark_ren.file_filingData_applicationSubtype,
+						insert_mark_ren.file_filingData_applicationType,
+						insert_mark_ren.file_filingData_captureUserId,
+						insert_mark_ren.file_filingData_captureDate,
+						insert_mark_ren.file_filingData_filingDate,
+						insert_mark_ren.file_filingData_lawCode,
+						insert_mark_ren.file_filingData_paymentList_currencyType,
+						insert_mark_ren.file_filingData_paymentList_receiptAmount,
+						insert_mark_ren.file_filingData_paymentList_receiptDate,
+						insert_mark_ren.file_filingData_paymentList_receiptNbr,
+						insert_mark_ren.file_filingData_paymentList_receiptNotes,
+						insert_mark_ren.file_filingData_paymentList_receiptType,
+						insert_mark_ren.file_filingData_receptionUserId,
+						insert_mark_ren.file_ownershipData_ownerList_person_owneraddressStreet,
+						insert_mark_ren.file_ownershipData_ownerList_person_ownernationalityCountryCode,
+						insert_mark_ren.file_ownershipData_ownerList_person_ownerpersonName,
+						insert_mark_ren.file_ownershipData_ownerList_person_ownerresidenceCountryCode,
+						insert_mark_ren.file_representationData_representativeList_representativeType,
+						insert_mark_ren.agentCode,
+						insert_mark_ren.file_relationshipList_fileId_fileNbr,
+						insert_mark_ren.file_relationshipList_fileId_fileSeq,
+						insert_mark_ren.file_relationshipList_fileId_fileSeries,
+						insert_mark_ren.file_relationshipList_fileId_fileType,
+						insert_mark_ren.file_relationshipList_relationshipRole,
+						insert_mark_ren.file_relationshipList_relationshipType,
+						insert_mark_ren.file_rowVersion,
+						insert_mark_ren.protectionData_dummy,
+						insert_mark_ren.protectionData_niceClassList_niceClassDescription,
+						insert_mark_ren.protectionData_niceClassList_niceClassDetailedStatus,
+						insert_mark_ren.protectionData_niceClassList_niceClassEdition,
+						insert_mark_ren.protectionData_niceClassList_niceClassGlobalStatus,
+						insert_mark_ren.protectionData_niceClassList_niceClassNbr,
+						insert_mark_ren.protectionData_niceClassList_niceClassVersion,
+						insert_mark_ren.rowVersion,
+						insert_mark_ren.logoData,
+						insert_mark_ren.logoType,
+						insert_mark_ren.signData_markName,
+						insert_mark_ren.signData_signType)			
+			if insertRenState == 'true':
+				process_day_commit_Nbr()
+				cambio_estado(form_Id,insert_mark_ren.file_fileId_fileNbr)
+				rule_notification('REN',str(insert_mark_ren.file_fileId_fileNbr))# Correo al funcionario
+			else:
+				data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id} - {insertRenState}','true',form_Id)
+				cambio_estado_soporte(form_Id)
+				rule_notification('SOP',form_Id)	
+		except Exception as e:
+			data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id}','true',form_Id)
 			cambio_estado_soporte(form_Id)
-			rule_notification('SOP',form_Id)	
-	except Exception as e:
-		data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id}','true',form_Id)
-		cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)
+	else:
 		rule_notification('SOP',form_Id)
 
 def catch_toError(form_Id):
@@ -1001,20 +1009,6 @@ def catch_toError(form_Id):
 			data_validator(f'dato requerido: {E99_code[i]}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 			return("E99")
-
-#rule_notification('SOP','')
-
-#print(exist_notifi('UG'))
-
-#print(exist_main_mark('UG'))
-
-#print(status_typ('2')[2])
-
-#print(mark_getlistReg("371107.0")[0]['fileId']['fileNbr']['doubleValue'])
-
-#print(insertReg('23808'))
-
-#print(getFile_reg_and_ren('1439','2177877'))
 
 
 
