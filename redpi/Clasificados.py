@@ -942,21 +942,29 @@ def insert_form_orden_publicacion(exp):
         if(item[position].sqlColumnList[13].sqlColumnValue == '560'):
             tip_sol = "SOP"
 
-    #insert registro en form_o_p
-    
-        connG = psycopg2.connect(
-                                host = db_host,
-                                user = db_user,
-                                password = db_password,
-                                database = db_database
-                    )
+        #insert registro en form_o_p
+        connG = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
         cursorG = connG.cursor()
-        cursorG.execute("INSERT INTO public.form_orden_publicacion (num_acta, tip_movimiento, tip_signo, fec_movimiento, tip_solicitud, cod_usuario, estado, tipo, num_agente, des_movimiento, nom_denominacion, nom_agente, fecha_pago, fecha_inicio, fecha_fin, pdf, fecha_reg, proceso_id)VALUES("+str(item[position].sqlColumnList[0].sqlColumnValue)+", '"+str(item[position].sqlColumnList[13].sqlColumnValue)+"', '"+str(item[position].sqlColumnList[4].sqlColumnValue)+"','"+str(item[position].sqlColumnList[12].sqlColumnValue)+"', '"+str(tip_sol)+"', '"+str(item[position].sqlColumnList[17].sqlColumnValue)+"', 'A', 'FOP', "+str(item[position].sqlColumnList[9].sqlColumnValue)+", '"+str(des_mov)+"', '"+str(item[position].sqlColumnList[6].sqlColumnValue).replace("'","\'")+"', '"+str(item[position].sqlColumnList[10].sqlColumnValue)+"', NULL,  NULL, NULL, NULL, '"+str(todaypub)+"', NULL);")    
+        cursorG.execute("INSERT INTO public.form_orden_publicacion (num_acta, tip_movimiento, tip_signo, fec_movimiento, tip_solicitud, cod_usuario, estado, tipo, num_agente, des_movimiento, nom_denominacion, id, nom_agente, fecha_pago, fecha_inicio, fecha_fin, pdf, fecha_reg, proceso_id)VALUES("+str(item[position].sqlColumnList[0].sqlColumnValue)+", '"+str(item[position].sqlColumnList[13].sqlColumnValue)+"', '"+str(item[position].sqlColumnList[4].sqlColumnValue)+"','"+str(item[position].sqlColumnList[12].sqlColumnValue)+"', '"+str(tip_sol)+"', '"+str(item[position].sqlColumnList[17].sqlColumnValue)+"', 'A', 'FOP', "+str(item[position].sqlColumnList[9].sqlColumnValue)+", '"+str(des_mov)+"', '"+str(item[position].sqlColumnList[6].sqlColumnValue).replace("'","\'")+"',"+str((check_late_id()+1))+", '"+str(item[position].sqlColumnList[10].sqlColumnValue)+"', NULL,  NULL, NULL, NULL, '"+str(todaypub)+"', NULL);")    
         cursorG.rowcount
         connG.commit()
         connG.close()
     except Exception as e:
         print(e)
+
+def check_late_id():
+    try:
+        connCheck = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
+        cursorCheck = connCheck.cursor()
+        cursorCheck.execute("""SELECT setval('form_orden_publicacion_id_seq', (SELECT max(id) FROM form_orden_publicacion));""")
+        row=cursorCheck.fetchall()
+        return(row[0][0])
+    except Exception as e:
+        print(e)
+    finally:
+        connCheck.close()
+
+
 
 def existexp(exp):
     try:    

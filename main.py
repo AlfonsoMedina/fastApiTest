@@ -238,7 +238,7 @@ def insert_redpi(item:insert_ipas):
 @app.post('/api/cargar_nuevo_form_op', tags=["Isert en form_orden_publicacion"], summary="#", description="")
 def nuevo_en_form(item:por_expediente):
 	if str(existexp(item.expediente)) == 'None':
-		insert_form_orden_publicacion(item.expediente)
+		print(insert_form_orden_publicacion(item.expediente))
 		return('true')
 	else:	
 		return('false')
