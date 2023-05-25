@@ -80,10 +80,9 @@ systemctl stop {appName}.service && kill -9 $(sudo lsof -t -i:{appPort})
     os.system(f"chmod u+r+x {DIR_BASE}/.SprintV2System -R")
 
     os.system(f"cp {DIR_BASE}/.SprintV2System/{appName}.service /etc/systemd/system")
+    
     os.system(f"systemctl daemon-reload")
 
-    #os.system(f"systemctl enable {appName}")
-    #os.system(f"systemctl start {appName}")
     
 else:
     print("Ejecute el file_state con SUDO")

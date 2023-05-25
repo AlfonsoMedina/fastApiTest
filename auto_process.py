@@ -740,8 +740,8 @@ def insertReg(form_Id):
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
 	else:
-		rule_notification('SOP',form_Id)	
-
+		pass
+	
 def insertRen(form_Id):
 	flow_request = stop_request()
 	if flow_request == 0:
@@ -800,11 +800,12 @@ def insertRen(form_Id):
 				cambio_estado_soporte(form_Id)
 				rule_notification('SOP',form_Id)	
 		except Exception as e:
+			print(e)
 			data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id}','true',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
 	else:
-		rule_notification('SOP',form_Id)
+		pass
 
 def catch_toError(form_Id):
 	getExcept = userDocModel()
