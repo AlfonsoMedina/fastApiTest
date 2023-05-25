@@ -5323,8 +5323,9 @@ def user_doc_update(affectedDocumentId_docLog,
 					representationData_zipCode,
 					representationData_representativeType,
 					representationData_email):
-	if paymentList_receiptNbr != "":
-		udud = {
+	try:				
+		if paymentList_receiptNbr != "":
+			udud = {
 			"arg0": {
 				"affectedDocumentId": {
 				"docLog": affectedDocumentId_docLog,
@@ -5569,8 +5570,8 @@ def user_doc_update(affectedDocumentId_docLog,
 				}
 			}
 			} 
-	else:
-		udud = {
+		else:
+			udud = {
 			"arg0": {
 				"affectedDocumentId": {
 				"docLog": affectedDocumentId_docLog,
@@ -5804,8 +5805,9 @@ def user_doc_update(affectedDocumentId_docLog,
 				}
 			}
 			}
-	return clientMark.service.UserdocUpdate(**udud)
-
+		return clientMark.service.UserdocUpdate(**udud)
+	except zeep.exceptions.Fault as e:
+		return(str(e))
 
 #User_Doc_UpDate sin recibo
 def user_doc_update_sin_recibo(
@@ -10779,7 +10781,7 @@ def daily_log_open(fecha):
 						"dateValue": str(fecha)+"T00:00:00-04:00"
 					},
 					"docLog": "E",
-					"docOrigin": "1"
+					"docOrigin": "3"
 					},
 					"digitalizationReadyDate": "",
 					"fileCaptureReadyDate": "",
@@ -10807,7 +10809,7 @@ def daily_log_close(fecha):
 						"dateValue": str(fecha)+"T00:00:00-04:00"
 					},
 					"docLog": "E",
-					"docOrigin": "1"
+					"docOrigin": "3"
 					},
 					"digitalizationReadyDate": "",
 					"fileCaptureReadyDate": "",
