@@ -964,8 +964,6 @@ def check_late_id():
     finally:
         connCheck.close()
 
-
-
 def existexp(exp):
     try:    
         connA = psycopg2.connect(
@@ -984,6 +982,19 @@ def existexp(exp):
         print(e)
 
 def checking_payment_suport(exp):
+    today_paym = payment_today(exp)
+    print(today_paym)
+    history_paym = payment_history(exp)
+    print(history_paym)
+    if today_paym != False:
+        return(True)
+    elif history_paym != False:
+        return(True)
+    else:
+        return(False)
+    
+
+def payment_today(exp):
     try:
         #________________________________________________________
         conn = psycopg2.connect(host =  hostCJ,user =  userCJ,password =  passwordCJ,database =  databaseCJ)
@@ -1005,6 +1016,31 @@ def checking_payment_suport(exp):
         print('Error de conexion DINAPI')
     finally:
         conn.close() 
+
+def payment_history(exp):
+    try:
+        #________________________________________________________
+        conn = psycopg2.connect(host =  hostCJ,user =  userCJ,password =  passwordCJ,database =  databaseCJ)
+        cursor = conn.cursor()
+        #                                                RECIBO,                TASA,                EXPEDIENTE,                                        FECHA_RECIBO
+        cursor.execute(f"""select distinct re.num_recibo as RECIBO, rm.tip_tasa as TASA, rm.num_acta as EXPEDIENTE, to_char(re.fec_recibo,'DD/MM/YYYY') as FECHA_RECIBO
+from recibo_historico_oracle re, recibo_tasa_marca_historico_oracle rm, recibo_tipo_tasa_historico_oracle tt
+where rm.serie = re.serie and rm.num_recibo = re.num_recibo
+and tt.tip_tasa = rm.tip_tasa
+and rm.tip_tasa = 80 
+--and to_char(re.fec_recibo,'DD/MM/YYYY') like '01/12/2021';--25/11/2022 ultima fecha
+and rm.num_acta = {exp}""")
+        row = cursor.fetchall()
+        #________________________________________________________  
+        if row != []:  
+            return(True)
+        else:
+            return(False)   
+    except Exception as e:
+        print('Error de conexion DINAPI')
+    finally:
+        conn.close() 
+
 
 #print(consulta_sfe_prueba('10/01/2023'))
 
