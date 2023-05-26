@@ -1743,9 +1743,26 @@ def log_info():
 	cursor = conn.cursor()
 	cursor.execute("""SELECT * FROM public.log_error where evento = 'E99'""")
 	row=cursor.fetchall()
-	log_data = row
-	conn.close()	
+	for it in range(len(row)):
+		compl = log_info_id_tramites(row[it][6])
+		log_data[0]=row[it]
+		log_data[1]=compl
+	conn.close()
+
 	return(log_data)
+
+def log_info_id_tramites(arg):
+	try:
+		list_info = []
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select formulario_id,enviado_at,estado from tramites t where id = {}""".format(int(arg)))
+		row=cursor.fetchall()
+		return(row[0])
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
 
 def log_info_serch(fecha,estado):
 	log_data = {}
@@ -1753,8 +1770,13 @@ def log_info_serch(fecha,estado):
 	cursor = conn.cursor()
 	cursor.execute(f"""SELECT * FROM public.log_error where  evento = '{estado}' and  fecha_evento >= '{fecha} 00:59' and fecha_evento <= '{fecha} 21:59'""")
 	row=cursor.fetchall()
-	log_data = row
-	conn.close()	
+	print(len(row))
+	for it in range(len(row)):
+		compl = log_info_id_tramites(row[it][6])
+		log_data[0]=row[it]
+		log_data[1]=compl
+	conn.close()
+	print(log_data)
 	return(log_data)
 
 def log_info_delete(t_id):
@@ -1783,8 +1805,6 @@ def what_it_this(arg):
 		print(e)
 	finally:
 		conn.close()
-
-#print(what_it_this('1430'))
 
 def Insert_Group_Process(grupo,fileNbr,user): 
     expediente = mark_getlist(fileNbr)

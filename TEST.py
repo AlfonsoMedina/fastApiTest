@@ -4,15 +4,18 @@ import tools.connect as connex
 
 
 
-def log_info_serch(fecha,estado):
-	log_data = {}
-	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
-	cursor = conn.cursor()
-	cursor.execute(f"""SELECT * FROM public.log_error where  evento = '{estado}' and  fecha_evento >= '{fecha} 00:59' and fecha_evento <= '{fecha} 21:59'""")
-	row=cursor.fetchall()
-	log_data = row
-	conn.close()	
-	return(log_data)
+def log_info_id_tramites(arg):
+	try:
+		list_info = []
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select formulario_id,enviado_at,estado from tramites t where id = {}""".format(int(arg)))
+		row=cursor.fetchall()
+		return(row[0])
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
 
 
-#print(log_info_serch('2023-05-24','E00'))
+print(log_info_id_tramites('1546')[1])
