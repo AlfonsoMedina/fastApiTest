@@ -3,11 +3,11 @@ from math import ceil
 import string
 import time
 import psycopg2
-from main import Process_Group_Add_Process
 from tools.send_mail import enviar_back_notFile
 import tools.filing_date as captureDate
 import tools.connect as connex
-from wipo.ipas import Process_Read, fetch_all_user_mark, mark_getlist, mark_read, personAgente
+from wipo.insertGroupProcessMEA import ProcessGroupAddProcess
+from wipo.ipas import Process_Read, fetch_all_user_mark,  mark_getlist, mark_read, personAgente
 from urllib import request
 import qrcode
 
@@ -1737,20 +1737,6 @@ def rule_notification(sig,exp):
 			except Exception as e:
 				pass				
 
-def Insert_Group_Process(grupo,fileNbr,user): 
-    expediente = mark_getlist(fileNbr)
-    userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
-    data = mark_read(
-        expediente[0]['fileId']['fileNbr']['doubleValue'], 
-        expediente[0]['fileId']['fileSeq'], 
-        expediente[0]['fileId']['fileSeries']['doubleValue'], 
-        expediente[0]['fileId']['fileType'])
-    return(Process_Group_Add_Process(
-        grupo,
-        userId,
-        data['file']['processId']['processNbr']['doubleValue'],
-        data['file']['processId']['processType']))
-
 def log_info():
 	log_data = {}
 	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
@@ -1789,6 +1775,22 @@ def what_it_this(arg):
 		conn.close()
 
 #print(what_it_this('1430'))
+
+def Insert_Group_Process(grupo,fileNbr,user): 
+    expediente = mark_getlist(fileNbr)
+    userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+    data = mark_read(
+        expediente[0]['fileId']['fileNbr']['doubleValue'], 
+        expediente[0]['fileId']['fileSeq'], 
+        expediente[0]['fileId']['fileSeries']['doubleValue'], 
+        expediente[0]['fileId']['fileType'])
+    return(ProcessGroupAddProcess(
+        grupo,
+        userId,
+        data['file']['processId']['processNbr']['doubleValue'],
+        data['file']['processId']['processType']))
+
+
 
 """def afected_relation_auth(arg):"""
 
