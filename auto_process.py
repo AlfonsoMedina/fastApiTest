@@ -6,7 +6,7 @@ import time
 from time import sleep
 from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, getSigla_tipoDoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
+from dinapi.sfe import Insert_Group_Process, cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, getSigla_tipoDoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
 from getFileDoc import compilePDF, getFile, getFile_reg_and_ren
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
@@ -731,6 +731,7 @@ def insertReg(form_Id):
 				getFile_reg_and_ren(form_Id,insert_mark.file_fileId_fileNbr)
 				cambio_estado(form_Id,insert_mark.file_fileId_fileNbr)
 				rule_notification('REG',str(insert_mark.file_fileId_fileNbr))# Correo al funcionario
+				Insert_Group_Process('1',str(insert_mark.file_fileId_fileNbr),'AMEDINA')
 			else:
 				data_validator(f'Error en solicitud, tabla tramites ID: {form_Id} - {insertRegState}','true',form_Id)
 				cambio_estado_soporte(form_Id)
@@ -796,6 +797,7 @@ def insertRen(form_Id):
 				process_day_commit_Nbr()
 				cambio_estado(form_Id,insert_mark_ren.file_fileId_fileNbr)
 				rule_notification('REN',str(insert_mark_ren.file_fileId_fileNbr))# Correo al funcionario
+				Insert_Group_Process('1',str(insert_mark_ren.file_fileId_fileNbr),'AMEDINA')
 			else:
 				data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id} - {insertRenState}','true',form_Id)
 				cambio_estado_soporte(form_Id)

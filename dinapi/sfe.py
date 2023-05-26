@@ -3,10 +3,11 @@ from math import ceil
 import string
 import time
 import psycopg2
+from main import Process_Group_Add_Process
 from tools.send_mail import enviar_back_notFile
 import tools.filing_date as captureDate
 import tools.connect as connex
-from wipo.ipas import Process_Read, mark_getlist, mark_read, personAgente
+from wipo.ipas import Process_Read, fetch_all_user_mark, mark_getlist, mark_read, personAgente
 from urllib import request
 import qrcode
 
@@ -1711,30 +1712,44 @@ def rule_notification(sig,exp):
 		rule = email_receiver(str(status_exp))
 		#print(rule)
 		try:	
-			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - N° {exp} status {str(status_exp)}")
+			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp} status {str(status_exp)}")
 		except Exception as e:
 			pass			
 	else:
 		if exist_notifi(sig) != 'null':
 			rule = email_receiver(str(sig))
 			try:	
-				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - N° {exp}")
+				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
 			except Exception as e:
 				pass		
 			try:	
-				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} - N° {exp}")
+				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
 			except Exception as e:
 				pass
 		else:
 			rule = email_receiver('GEN')
 			try:	
-				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - N° {exp}")
+				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
 			except Exception as e:
 				pass		
 			try:	
-				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} - N° {exp}")
+				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
 			except Exception as e:
 				pass				
+
+def Insert_Group_Process(grupo,fileNbr,user): 
+    expediente = mark_getlist(fileNbr)
+    userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+    data = mark_read(
+        expediente[0]['fileId']['fileNbr']['doubleValue'], 
+        expediente[0]['fileId']['fileSeq'], 
+        expediente[0]['fileId']['fileSeries']['doubleValue'], 
+        expediente[0]['fileId']['fileType'])
+    return(Process_Group_Add_Process(
+        grupo,
+        userId,
+        data['file']['processId']['processNbr']['doubleValue'],
+        data['file']['processId']['processType']))
 
 def log_info():
 	log_data = {}
