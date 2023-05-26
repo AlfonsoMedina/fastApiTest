@@ -1747,6 +1747,16 @@ def log_info():
 	conn.close()	
 	return(log_data)
 
+def log_info_serch(fecha,estado):
+	log_data = {}
+	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+	cursor = conn.cursor()
+	cursor.execute(f"""SELECT * FROM public.log_error where  evento = '{estado}' and  fecha_evento >= '{fecha} 00:59' and fecha_evento <= '{fecha} 21:59'""")
+	row=cursor.fetchall()
+	log_data = row
+	conn.close()	
+	return(log_data)
+
 def log_info_delete(t_id):
 	log_data = {}
 	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)

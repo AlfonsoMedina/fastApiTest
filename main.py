@@ -7,7 +7,7 @@ from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
 from tools.send_mail import enviar
 from tools.connect import MEA_TIEMPO_ACTUALIZACION, WORKING_DAY_AND_TIME
-from dinapi.sfe import count_pendiente, format_userdoc, getSigla_tipoDoc, log_info, log_info_delete, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc, what_it_this
+from dinapi.sfe import count_pendiente, format_userdoc, getSigla_tipoDoc, log_info, log_info_delete, log_info_serch, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc, what_it_this
 from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
@@ -2287,6 +2287,10 @@ def insert_mark_sup(doc_id):
 def Process_Group_Add_Process(processGroupCode,userNbr,processNbr,processType):
 	return(ProcessGroupAddProcess(processGroupCode,userNbr,processNbr,processType))
 
+
+@app.post('/sis/loginfoserch', summary="sis", tags=["Buscador soporte"])
+def log_info_serch_fun(fecha,estado):
+	return(log_info_serch(fecha,estado))
 
 
 app.openapi = custom_openapi
