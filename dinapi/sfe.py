@@ -3,6 +3,7 @@ from math import ceil
 import string
 import time
 import psycopg2
+from tools.data_format import fecha_barra,hora
 from tools.send_mail import enviar_back_notFile
 import tools.filing_date as captureDate
 import tools.connect as connex
@@ -1738,19 +1739,29 @@ def rule_notification(sig,exp):
 				pass				
 
 def log_info():
-	log_data = {}
+	pack_data = []
 	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 	cursor = conn.cursor()
 	cursor.execute("""SELECT * FROM public.log_error where evento = 'E99'""")
 	row=cursor.fetchall()
 	for it in range(len(row)):
 		compl = log_info_id_tramites(row[it][6])
-		log_data[0]=row[it]
-		log_data[1]=compl
+		pack_data.append({
+							'err_id':row[it][0],
+							'fecha':fecha_barra(str(row[it][1]))+" "+hora(str(row[it][1])),
+							'err_code':row[it][2],
+							'descrip':row[it][3],
+							'origin':row[it][4],
+							'run':row[it][5],
+							'tramite':row[it][6],
+							'typ':compl[0],
+							'enviado_at':fecha_barra(captureDate.time_difference(str(compl[1]),3))+" "+hora(captureDate.time_difference(str(compl[1]),3)),
+							'form_typ':compl[2]
+						})
 	conn.close()
 
-	return(log_data)
-
+	return(pack_data)
+ 
 def log_info_id_tramites(arg):
 	try:
 		list_info = []
@@ -1765,7 +1776,7 @@ def log_info_id_tramites(arg):
 		conn.close()
 
 def log_info_serch(fecha,estado):
-	log_data = {}
+	pack_data = []
 	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 	cursor = conn.cursor()
 	cursor.execute(f"""SELECT * FROM public.log_error where  evento = '{estado}' and  fecha_evento >= '{fecha} 00:59' and fecha_evento <= '{fecha} 21:59'""")
@@ -1773,11 +1784,20 @@ def log_info_serch(fecha,estado):
 	print(len(row))
 	for it in range(len(row)):
 		compl = log_info_id_tramites(row[it][6])
-		log_data[0]=row[it]
-		log_data[1]=compl
+		pack_data.append({
+							'err_id':row[it][0],
+							'fecha':fecha_barra(str(row[it][1]))+" "+hora(str(row[it][1])),
+							'err_code':row[it][2],
+							'descrip':row[it][3],
+							'origin':row[it][4],
+							'run':row[it][5],
+							'tramite':row[it][6],
+							'typ':compl[0],
+							'enviado_at':fecha_barra(captureDate.time_difference(str(compl[1]),3))+" "+hora(captureDate.time_difference(str(compl[1]),3)),
+							'form_typ':compl[2]
+						})
 	conn.close()
-	print(log_data)
-	return(log_data)
+	return(pack_data)
 
 def log_info_delete(t_id):
 	log_data = {}
