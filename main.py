@@ -11,7 +11,7 @@ from dinapi.sfe import count_pendiente, format_userdoc, getSigla_tipoDoc, log_in
 from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
-from wipo.insertGroupProcessMEA import ProcessGroupAddProcess
+from wipo.insertGroupProcessMEA import ProcessGroupAddProcess, ProcessGroupInsert, ProcessGroupRead, valid_group
 from wipo.ipas import  Insert_user_doc, Insert_user_doc_con_recibo_poder, Insert_user_doc_sin_recibo_con_relacion, Insert_user_doc_sin_recibo_relacion, disenio_getlist, disenio_getlist_fecha, disenio_user_doc_getlist_fecha, get_agente, mark_getlist, mark_getlistFecha, mark_getlistReg, mark_insert_reg, mark_insert_ren, patent_getlist_fecha, patent_user_doc_getlist_fecha, personAgente, personAgenteDisenio, personAgentePatent, personTitular, personTitularDisenio, personTitularPatent, user_doc_getlist_fecha, user_doc_receive, user_doc_update, user_doc_update_sin_recibo #pip install "fastapi[all]"
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_read, user_doc_read_disenio, user_doc_read_patent
 import zeep
@@ -2283,9 +2283,45 @@ def insert_mark_sup(doc_id):
 	else:
 		return(insert_list(doc_id,str(getSigla_tipoDoc(doc_id))))
 
+@app.post('/sfe/Process_Group_Insert', summary="sis", tags=["Inserta un nuevo grupo de trabajo al usuario"])
+def Process_Group_Insert(processGroupCode,userNbr,processGroupName,description,relatedToWorkcode,processType):
+	"""
+	* Origen del trámite (processType): 
+	
+					1	[Expediente]
+
+					10	[Escrito+expediente]
+					 
+					11	[escritos [Escrito]
+					 
+					OFI	[Doc oficial]
+
+	* processGroupCode: 
+					
+					Código Grupo
+
+	* processGroupName: 
+					
+					Nombre Grupo
+
+	* userNbr:
+
+					Usuario_Id 				
+	"""
+	return(ProcessGroupInsert(processGroupCode,userNbr,processGroupName,description,relatedToWorkcode,processType))
+
 @app.post('/sfe/Process_Group_Add_Process', summary="sis", tags=["Inserta un nuevo proceso a un grupo de procesos (grupo de trabajo)"])
 def Process_Group_Add_Process(processGroupCode,userNbr,processNbr,processType):
 	return(ProcessGroupAddProcess(processGroupCode,userNbr,processNbr,processType))
+
+@app.post('/sfe/Process_Group_Read', summary="sis", tags=["buscar un grupo"])
+def Process_Group_Read(processGroupCode,userNbr):
+	return(ProcessGroupRead(processGroupCode,userNbr))
+
+
+@app.post('/sfe/valid_group', summary="sis", tags=["verifica si existe un grupo "])
+def valid_group_vg(userNbr,groupName,typ):
+	return(valid_group(userNbr,groupName,typ))
 
 
 @app.post('/sis/loginfoserch', summary="sis", tags=["Buscador soporte"])

@@ -1623,14 +1623,14 @@ def data_validator(msg,status,t_id):
 		conn.close()
 
 def qr_code(text): # convierte el texto en codigo QR y crea fichero .png
-    img = qrcode.make(text)
-    f = open("pdf/output.png", "wb")
-    img.save(f)
-    f.close()
+	img = qrcode.make(text)
+	f = open("pdf/output.png", "wb")
+	img.save(f)
+	f.close()
 
-    with open("pdf/output.png", "rb") as image2string: 
-        converted_string = base64.b64encode(image2string.read()) 
-    return(str(converted_string).replace("b'",'').replace("'","")) 
+	with open("pdf/output.png", "rb") as image2string: 
+		converted_string = base64.b64encode(image2string.read()) 
+	return(str(converted_string).replace("b'",'').replace("'","")) 
 
 def sendToUser(arg):
 	try:
@@ -1827,18 +1827,38 @@ def what_it_this(arg):
 		conn.close()
 
 def Insert_Group_Process(grupo,fileNbr,user): 
-    expediente = mark_getlist(fileNbr)
-    userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
-    data = mark_read(
-        expediente[0]['fileId']['fileNbr']['doubleValue'], 
-        expediente[0]['fileId']['fileSeq'], 
-        expediente[0]['fileId']['fileSeries']['doubleValue'], 
-        expediente[0]['fileId']['fileType'])
-    return(ProcessGroupAddProcess(
-        grupo,
-        userId,
-        data['file']['processId']['processNbr']['doubleValue'],
-        data['file']['processId']['processType']))
+	expediente = mark_getlist(fileNbr)
+	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+	data = mark_read(
+		expediente[0]['fileId']['fileNbr']['doubleValue'], 
+		expediente[0]['fileId']['fileSeq'], 
+		expediente[0]['fileId']['fileSeries']['doubleValue'], 
+		expediente[0]['fileId']['fileType'])
+	return(ProcessGroupAddProcess(
+		grupo,
+		userId,
+		data['file']['processId']['processNbr']['doubleValue'],
+		data['file']['processId']['processType']))
+
+
+
+'''
+EXISTE O NO EL GRUPO 
+valid_group(userNbr,groupName,typ)
+
+EXISTE 
+ProcessGroupAddProcess
+
+NO EXISTE
+ProcessGroupInsert
+ProcessGroupAddProcess
+
+
+'''
+
+
+
+
 
 
 

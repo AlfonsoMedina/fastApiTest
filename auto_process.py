@@ -731,7 +731,8 @@ def insertReg(form_Id):
 				getFile_reg_and_ren(form_Id,insert_mark.file_fileId_fileNbr)
 				cambio_estado(form_Id,insert_mark.file_fileId_fileNbr)
 				rule_notification('REG',str(insert_mark.file_fileId_fileNbr))# Correo al funcionario
-				Insert_Group_Process('1',str(insert_mark.file_fileId_fileNbr),'AMEDINA')
+				#Insert_Group_Process('1',str(insert_mark.file_fileId_fileNbr),'AMEDINA')
+				Insert_Group_Process('1',str(insert_mark.file_fileId_fileNbr),'AMEDINA','1')
 			else:
 				data_validator(f'Error en solicitud, tabla tramites ID: {form_Id} - {insertRegState}','true',form_Id)
 				cambio_estado_soporte(form_Id)
@@ -797,7 +798,8 @@ def insertRen(form_Id):
 				process_day_commit_Nbr()
 				cambio_estado(form_Id,insert_mark_ren.file_fileId_fileNbr)
 				rule_notification('REN',str(insert_mark_ren.file_fileId_fileNbr))# Correo al funcionario
-				Insert_Group_Process('1',str(insert_mark_ren.file_fileId_fileNbr),'AMEDINA')
+				#Insert_Group_Process('1',str(insert_mark_ren.file_fileId_fileNbr),'AMEDINA')
+				Insert_Group_Process('1',str(insert_mark_ren.file_fileId_fileNbr),'AMEDINA','1')
 			else:
 				data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id} - {insertRenState}','true',form_Id)
 				cambio_estado_soporte(form_Id)
