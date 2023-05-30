@@ -661,9 +661,9 @@ def mark_insert_reg(
 						},
 							"receptionDocument": {
 								"documentId": {
-								"docLog": "M",
+								"docLog": "E",
 								"docNbr": {
-									"doubleValue": fileId_fileId_fileNbr
+									"doubleValue": ""
 								},
 								"docOrigin": "3",
 								"docSeries": {
@@ -674,7 +674,7 @@ def mark_insert_reg(
 								"documentSeqId": {
 								"docSeqName": "",
 								"docSeqNbr": {
-									"doubleValue": fileId_fileId_fileNbr
+									"doubleValue": ""
 								},
 								"docSeqSeries": {
 									"doubleValue": file_fileId_fileSeries
@@ -807,9 +807,9 @@ def mark_insert_reg(
 						},							
 						"receptionDocument": {
 								"documentId": {
-								"docLog": "M",
+								"docLog": "E",
 								"docNbr": {
-									"doubleValue": fileId_fileId_fileNbr
+									"doubleValue": ""
 								},
 								"docOrigin": "3",
 								"docSeries": {
@@ -820,7 +820,7 @@ def mark_insert_reg(
 								"documentSeqId": {
 								"docSeqName": "",
 								"docSeqNbr": {
-									"doubleValue": fileId_fileId_fileNbr
+									"doubleValue": ""
 								},
 								"docSeqSeries": {
 									"doubleValue": file_fileId_fileSeries

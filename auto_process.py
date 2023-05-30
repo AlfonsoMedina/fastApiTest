@@ -14,7 +14,7 @@ from tools.send_mail import delete_file, enviar, enviar_back, enviar_back_notFil
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito, user_doc_read_min
-from wipo.insertGroupProcessMEA import Insert_Group_Process
+from wipo.insertGroupProcessMEA import Insert_Group_Process_reg_ren
 from wipo.ipas import mark_getlistReg, mark_insert_reg, mark_insert_ren, user_doc_afectado, user_doc_receive, user_doc_update
 import zeep
 
@@ -733,7 +733,7 @@ def insertReg(form_Id):
 				cambio_estado(form_Id,insert_mark.file_fileId_fileNbr)
 				rule_notification('REG',str(insert_mark.file_fileId_fileNbr))# Correo al funcionario
 				#Insert_Group_Process('1',str(insert_mark.file_fileId_fileNbr),'AMEDINA')
-				Insert_Group_Process('1',str(insert_mark.file_fileId_fileNbr),'AMEDINA','1')
+				Insert_Group_Process_reg_ren(str(insert_mark.file_fileId_fileNbr),'CABENITEZ','1')
 			else:
 				data_validator(f'Error en solicitud, tabla tramites ID: {form_Id} - {insertRegState}','true',form_Id)
 				cambio_estado_soporte(form_Id)
@@ -800,7 +800,7 @@ def insertRen(form_Id):
 				cambio_estado(form_Id,insert_mark_ren.file_fileId_fileNbr)
 				rule_notification('REN',str(insert_mark_ren.file_fileId_fileNbr))# Correo al funcionario
 				#Insert_Group_Process('1',str(insert_mark_ren.file_fileId_fileNbr),'AMEDINA')
-				Insert_Group_Process('1',str(insert_mark_ren.file_fileId_fileNbr),'AMEDINA','1')
+				Insert_Group_Process_reg_ren(str(insert_mark_ren.file_fileId_fileNbr),'CABENITEZ','1')
 			else:
 				data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id} - {insertRenState}','true',form_Id)
 				cambio_estado_soporte(form_Id)
