@@ -638,10 +638,10 @@ def mark_insert_reg(
 						'doubleValue': file_filingData_captureUserId
 						},
 						'filingDate': {
-						'dateValue': "2023-05-18T06:02:46" #file_filingData_filingDate    ########################################
+						'dateValue': file_filingData_filingDate    ########################################
 						},
 						'captureDate': {
-							'dateValue': "2023-05-18T06:02:46" #file_filingData_captureDate  ################### problemas con fecha futura
+							'dateValue': file_filingData_captureDate  ################### problemas con fecha futura
 						},
 						'lawCode': {
 						'doubleValue': file_filingData_lawCode
@@ -658,8 +658,31 @@ def mark_insert_reg(
 						},
 						'receptionUserId': {
 						'doubleValue': file_filingData_receptionUserId
+						},
+							"receptionDocument": {
+								"documentId": {
+								"docLog": "M",
+								"docNbr": {
+									"doubleValue": fileId_fileId_fileNbr
+								},
+								"docOrigin": "3",
+								"docSeries": {
+									"doubleValue": file_fileId_fileSeries
+								},
+								"selected": ""
+								},
+								"documentSeqId": {
+								"docSeqName": "",
+								"docSeqNbr": {
+									"doubleValue": fileId_fileId_fileNbr
+								},
+								"docSeqSeries": {
+									"doubleValue": file_fileId_fileSeries
+								},
+							"docSeqType": ""
 						}
-					},
+					}
+				},
 					'ownershipData': {
 						'ownerList': {
 							'person': {
@@ -781,7 +804,30 @@ def mark_insert_reg(
 						},
 						'receptionUserId': {
 						'doubleValue': file_filingData_receptionUserId
+						},							
+						"receptionDocument": {
+								"documentId": {
+								"docLog": "M",
+								"docNbr": {
+									"doubleValue": fileId_fileId_fileNbr
+								},
+								"docOrigin": "3",
+								"docSeries": {
+									"doubleValue": file_fileId_fileSeries
+								},
+								"selected": ""
+								},
+								"documentSeqId": {
+								"docSeqName": "",
+								"docSeqNbr": {
+									"doubleValue": fileId_fileId_fileNbr
+								},
+								"docSeqSeries": {
+									"doubleValue": file_fileId_fileSeries
+								},
+							"docSeqType": ""
 						}
+					}
 					},
 					'ownershipData': {
 						'ownerList': {

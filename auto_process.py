@@ -6,7 +6,7 @@ import time
 from time import sleep
 from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import Insert_Group_Process, cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, getSigla_tipoDoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
+from dinapi.sfe import  cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, getSigla_tipoDoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
 from getFileDoc import compilePDF, getFile, getFile_reg_and_ren
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
@@ -14,6 +14,7 @@ from tools.send_mail import delete_file, enviar, enviar_back, enviar_back_notFil
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito, user_doc_read_min
+from wipo.insertGroupProcessMEA import Insert_Group_Process
 from wipo.ipas import mark_getlistReg, mark_insert_reg, mark_insert_ren, user_doc_afectado, user_doc_receive, user_doc_update
 import zeep
 

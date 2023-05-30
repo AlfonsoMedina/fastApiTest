@@ -145,3 +145,14 @@ def Insert_Group_Process(grupo,fileNbr,user,typ):
 		return(res)
 	except Exception as e:
 		return('false')
+
+def last_group(userNbr):
+	list = []
+	list_int = []
+	for i in range(0,len(ProcessGroupGetList(userNbr))):
+		list.append(ProcessGroupGetList(userNbr)[i].processGroupId.processGroupCode)
+	for i in list:
+		list_int.append(int(i))
+	list_int.sort()
+	ultimo = int(len(list_int))-1
+	return(list_int[ultimo])
