@@ -1529,6 +1529,25 @@ def process_day_Nbr():
 	finally:
 		conn.close()			
 
+def COMMIT_NBR():
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select num_acta_ultima from dia_proceso where fec_proceso = '{}' and ind_atencion_comp = 'N' order by num_acta_ultima desc""".format(str(captureDate.capture_day())))
+		row=cursor.fetchall()
+		for i in row:
+			conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+			cursor = conn.cursor()
+			cursor.execute("""UPDATE public.dia_proceso SET  num_acta_ultima={}, fec_recepcion_comp=null WHERE fec_proceso='{}';""".format((int(i[0])+1),str(captureDate.capture_day())))
+			cursor.rowcount
+			conn.commit()
+			#conn.close()
+			return(int(i[0])+1)				
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()	
+
 def pago_data(pago):
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
@@ -1840,7 +1859,18 @@ def Insert_Group_Process(grupo,fileNbr,user):
 		data['file']['processId']['processNbr']['doubleValue'],
 		data['file']['processId']['processType']))
 
-
+def USER_GROUP(sig):
+	data_user = {}
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select usuario FROM public.reglas_notificacion WHERE status_cod='{}'""".format(str(sig)))
+		row=cursor.fetchall()
+		return(row[0][0])	
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
 
 '''
 EXISTE O NO EL GRUPO 

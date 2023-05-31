@@ -18,6 +18,7 @@ from tools.service_system import config_parametro
 import pymssql
 import datetime
 import sys
+import tools.connect as connex
 
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 try:
@@ -665,7 +666,7 @@ def mark_insert_reg(
 								"docNbr": {
 									"doubleValue": ""
 								},
-								"docOrigin": "3",
+								"docOrigin": str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 								"docSeries": {
 									"doubleValue": file_fileId_fileSeries
 								},
@@ -811,7 +812,7 @@ def mark_insert_reg(
 								"docNbr": {
 									"doubleValue": ""
 								},
-								"docOrigin": "3",
+								"docOrigin": str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 								"docSeries": {
 									"doubleValue": file_fileId_fileSeries
 								},
@@ -1007,7 +1008,7 @@ def mark_insert_ren(
 								"docNbr": {
 									"doubleValue": ""
 								},
-								"docOrigin": "3",
+								"docOrigin": str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 								"docSeries": {
 									"doubleValue": file_fileId_fileSeries
 								},

@@ -4,11 +4,15 @@ import os, shutil
 from tools.filing_date import capture_year
 from tools.connect import  PENDING, MEA_ADJUNTOS_DESTINO_location, host_SFE_conn,user_SFE_conn,password_SFE_conn, database_SFE_conn ,MEA_SFE_FORMULARIOS_ID_estado,MEA_SFE_FORMULARIOS_ID_tipo
 from urllib import request	
-from PyPDF2 import PdfMerger, PdfReader # pip install PyPDF2 - pip install PyPDF
+from PyPDF2 import PdfMerger, PdfReader
+
+from wipo.function_for_reception_in import user_doc_getList_escrito # pip install PyPDF2 - pip install PyPDF
 
 
 def getFile(doc_id,fileNbr):	
 	try:
+		#consulta getUserDocRead docOrigin,docLog,,docSerie,docNbr -  para nombre de archivo ej: (1-E-2023-2002251.pdf)
+		data_doc = user_doc_getList_escrito(fileNbr)
 		conn = psycopg2.connect(host = host_SFE_conn,user= user_SFE_conn,password = password_SFE_conn,database = database_SFE_conn)
 		cursor = conn.cursor()
 		cursor.execute(PENDING.format(doc_id))
@@ -17,7 +21,7 @@ def getFile(doc_id,fileNbr):
 			for x in range(0,len(i[6])):
 				if i[6][x]['campo'] == 'observacion_documentos':
 					remote_url = i[6][x]['valor']['archivo']['url']
-					local_file = str(MEA_ADJUNTOS_DESTINO_location)+'PY-E-'+capture_year()+'-'+fileNbr+'.pdf' 
+					local_file = str(MEA_ADJUNTOS_DESTINO_location)+str(data_doc['documentId']['docOrigin'])+'-'+str(data_doc['documentId']['docLog'])+'-'+str(data_doc['documentId']['docSeries']['doubleValue']).replace(".0","")+'-'+str(data_doc['documentId']['docNbr']['doubleValue']).replace(".0","")+'.pdf' 
 					request.urlretrieve(remote_url, local_file)
 	except Exception as e:
 		conn.close()

@@ -109,12 +109,12 @@ def ProcessGroupGetList(userNbr):
 def valid_group(userNbr,groupName,typ):
 	try:
 		for i in range(len(ProcessGroupGetList(userNbr))):
-			processGroupName:str = ''
+			processGroupname:bool = False
 			data = ProcessGroupGetList(userNbr)[i]
-			processGroupName = str(groupName in data.processGroupName) # existe el nombre de grupo
-			if str(processGroupName) == 'None':
+			processGroupname = groupName in data.processGroupName # existe el nombre de grupo
+			if str(processGroupname) == 'None':
 				resp = False
-			if str(processGroupName) == 'True':
+			if str(processGroupname) == 'True':
 				if str(data.processType) == str(typ):
 					resp = True
 			else:
@@ -170,8 +170,8 @@ def Insert_Group_Process_docs(fileNbr,user,typ):
 		return('false')
 
 def group_typ(num):
-	list = {'1':' [Expediente]','10':' [Escrito+expediente]','11':' [Escrito]'}
-	group_name = str(fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" ))+list[str(num)])
+	list = {'1':'[Expediente]','10':'[Escrito+expediente]','11':'[Escrito]'}
+	group_name = str(fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00"))+" "+list[str(num)])
 	return(group_name)
 
 def group_today(userNbr,groupName,typ):

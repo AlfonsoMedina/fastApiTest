@@ -2,6 +2,7 @@
 import time
 import zeep
 from zeep import Client
+from dinapi.sfe import COMMIT_NBR, USER_GROUP
 from tools.data_format import fecha_barra
 import tools.connect as conn_serv
 from wipo.function_for_reception_in import user_doc_getList_escrito, user_doc_read
@@ -36,8 +37,8 @@ def group_today(userNbr,groupName,typ):
 		return(False)
 
 def group_typ(num):
-	list = {'1':' [Expediente]','10':' [Escrito+expediente]','11':' [Escrito]'}
-	group_name = str(fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" ))+list[str(num)])
+	list = {'1':'[Expediente]','10':'[Escrito+expediente]','11':'[Escrito]'}
+	group_name = str(fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00"))+" "+list[str(num)])
 	return(group_name)
 
 def Insert_Group_Process_reg_ren(fileNbr,user,typ):
@@ -66,13 +67,14 @@ def Insert_Group_Process_reg_ren(fileNbr,user,typ):
 
 def valid_group(userNbr,groupName,typ):
 	try:
+		print(ProcessGroupGetList(userNbr)[0].processGroupName)
 		for i in range(len(ProcessGroupGetList(userNbr))):
-			processGroupName:str = ''
+			processGroupname:bool = False
 			data = ProcessGroupGetList(userNbr)[i]
-			processGroupName = str(groupName in data.processGroupName) # existe el nombre de grupo
-			if str(processGroupName) == 'None':
+			processGroupname = groupName in data.processGroupName # existe el nombre de grupo
+			if str(processGroupname) == 'None':
 				resp = False
-			if str(processGroupName) == 'True':
+			if str(processGroupname) == 'True':
 				if str(data.processType) == str(typ):
 					resp = True
 			else:
@@ -180,23 +182,29 @@ def Insert_Group_Process_docs(fileNbr,user,typ):
 	except Exception as e:
 		return('false')
 
+#crear grupo
+#print(ProcessGroupInsert('1','298','31/05/2023','','1','10'))
 
+#print(COMMIT_NBR())
 
-#print(Insert_Group_Process_docs('23006441','AMEDINA','11'))
+#print(Insert_Group_Process_docs('2340722','AMEDINA','11'))
 
 #'23006441'
 
 #EXISTE O NO EL GRUPO USUARIO DE LA FECHA
-#print(group_today('297', '30/05/2023', '1'))
+#print(group_today('298', '31/05/2023', '11'))
 
 #print(group_typ('10'))
 
 #print(Insert_Group_Process_reg_ren('23006295','CABENITEZ','1'))
 
-#print(valid_group('298',group_typ('1'),'1'))
+#print(valid_group('298',group_typ('10'),'10'))
 
 #print(fileResave('3'))
 
-#print(last_group('297'))
+#print(last_group('298'))
 
 #print(Insert_Group_Process('1','2177877','AMEDINA','1'))
+
+
+print(USER_GROUP('REN'))

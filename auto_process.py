@@ -6,8 +6,8 @@ import time
 from time import sleep
 from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import  cambio_estado, cambio_estado_soporte, data_validator, esc_relation,  exp_relation,  pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
-from getFileDoc import compilePDF, getFile, getFile_reg_and_ren
+from dinapi.sfe import  COMMIT_NBR, USER_GROUP, cambio_estado, cambio_estado_soporte, data_validator, esc_relation,  exp_relation,  pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
+from getFileDoc import  getFile, getFile_reg_and_ren
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
 from tools.send_mail import delete_file, enviar
@@ -70,7 +70,8 @@ def insert_list(arg0:string,arg1:string):
 		#listar()
 		return("E99")
 
-	getFile(arg0,str(int(process_day_Nbr())+1))
+	#new_Nbr = str(COMMIT_NBR())
+	#getFile(arg0,str(int(process_day_Nbr())+1))
 		
 	#CONSULTA SI HAY RELACION DE EXPEDIENTE__________________________________________________________________________________________ 
 	if exp_relation(arg1)[0] == 'S': 
@@ -144,227 +145,235 @@ def insert_list(arg0:string,arg1:string):
 	return("Ok")		
 
 def compileAndInsert(form_Id,typ):
-		cheking = catch_toError(form_Id)
-		if cheking != 'E99':
-			insert_doc = userDocModel()
-			insert_doc.setData(form_Id)
-			try:
-				insert_user_doc_escritos(
-							insert_doc.affectedFileIdList_fileNbr,
-							insert_doc.affectedFileIdList_fileSeq,
-							insert_doc.affectedFileIdList_fileSeries,
-							insert_doc.affectedFileIdList_fileType,
-							insert_doc.affectedFileSummaryList_disclaimer,
-							insert_doc.affectedFileSummaryList_disclaimerInOtherLang,
-							insert_doc.affectedFileSummaryList_fileNbr,
-							insert_doc.affectedFileSummaryList_fileSeq,
-							insert_doc.affectedFileSummaryList_fileSeries,
-							insert_doc.affectedFileSummaryList_fileType,
-							insert_doc.affectedFileSummaryList_fileIdAsString,
-							insert_doc.affectedFileSummaryList_fileSummaryClasses,
-							insert_doc.affectedFileSummaryList_fileSummaryCountry,
-							insert_doc.affectedFileSummaryList_fileSummaryDescription,
-							insert_doc.affectedFileSummaryList_fileSummaryDescriptionInOtherLang,
-							insert_doc.affectedFileSummaryList_fileSummaryOwner,
-							insert_doc.affectedFileSummaryList_fileSummaryOwnerInOtherLang,
-							insert_doc.affectedFileSummaryList_fileSummaryRepresentative,
-							insert_doc.affectedFileSummaryList_fileSummaryRepresentativeInOtherLang,
-							insert_doc.affectedFileSummaryList_fileSummaryResponsibleName,
-							insert_doc.affectedFileSummaryList_fileSummaryStatus,
-							insert_doc.applicant_applicantNotes,
-							insert_doc.applicant_person_addressStreet,
-							insert_doc.applicant_person_addressStreetInOtherLang,
-							insert_doc.applicant_person_addressZone,
-							insert_doc.applicant_person_agentCode,
-							insert_doc.applicant_person_cityCode,
-							insert_doc.applicant_person_cityName,
-							insert_doc.applicant_person_companyRegisterRegistrationDate,
-							insert_doc.applicant_person_companyRegisterRegistrationNbr,
-							insert_doc.applicant_person_email,
-							insert_doc.applicant_person_individualIdNbr,
-							insert_doc.applicant_person_individualIdType,
-							insert_doc.applicant_person_legalIdNbr,
-							insert_doc.applicant_person_legalIdType,
-							insert_doc.applicant_person_legalNature,
-							insert_doc.applicant_person_legalNatureInOtherLang,
-							insert_doc.applicant_person_nationalityCountryCode,
-							insert_doc.applicant_person_personGroupCode,
-							insert_doc.applicant_person_personGroupName,
-							insert_doc.applicant_person_personName,
-							insert_doc.applicant_person_personNameInOtherLang,
-							insert_doc.applicant_person_residenceCountryCode,
-							insert_doc.applicant_person_stateCode,
-							insert_doc.applicant_person_stateName,
-							insert_doc.applicant_person_telephone,
-							insert_doc.applicant_person_zipCode,
-							insert_doc.documentId_docLog,
-							insert_doc.documentId_docNbr,
-							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
-							insert_doc.documentId_docSeries,
-							insert_doc.documentId_selected,
-							insert_doc.documentSeqId_docSeqName,
-							insert_doc.documentSeqId_docSeqNbr,
-							insert_doc.documentSeqId_docSeqSeries,
-							insert_doc.documentSeqId_docSeqType,
-							insert_doc.filingData_applicationSubtype,
-							insert_doc.filingData_applicationType,
-							insert_doc.filingData_captureDate,
-							connex.MEA_PERIODO_RECEPCION_userId, #insert_doc.filingData_captureUserId
-							insert_doc.filingData_filingDate,
-							insert_doc.filingData_lawCode,
-							insert_doc.filingData_novelty1Date,
-							insert_doc.filingData_novelty2Date,
-							insert_doc.filingData_paymentList_currencyName,
-							insert_doc.filingData_paymentList_currencyType,
-							insert_doc.filingData_paymentList_receiptAmount,
-							insert_doc.filingData_paymentList_receiptDate,
-							insert_doc.filingData_paymentList_receiptNbr,
-							insert_doc.filingData_paymentList_receiptNotes,
-							insert_doc.filingData_paymentList_receiptType,
-							insert_doc.filingData_paymentList_receiptTypeName,
-							insert_doc.filingData_receptionDate,
-							insert_doc.filingData_documentId_receptionDocument_docLog,
-							insert_doc.filingData_documentId_receptionDocument_docNbr,
-							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
-							insert_doc.filingData_documentId_receptionDocument_docSeries,
-							insert_doc.filingData_documentId_receptionDocument_selected,
-							insert_doc.filingData_userdocTypeList_userdocName,
-							insert_doc.filingData_userdocTypeList_userdocType,
-							insert_doc.newOwnershipData_ownerList_orderNbr,
-							insert_doc.newOwnershipData_ownerList_ownershipNotes,
-							insert_doc.newOwnershipData_ownerList_person_addressStreet,
-							insert_doc.newOwnershipData_ownerList_person_addressStreetInOtherLang,
-							insert_doc.newOwnershipData_ownerList_person_addressZone,
-							insert_doc.newOwnershipData_ownerList_person_agentCode,
-							insert_doc.newOwnershipData_ownerList_person_cityCode,
-							insert_doc.newOwnershipData_ownerList_person_cityName,
-							insert_doc.newOwnershipData_ownerList_person_companyRegisterRegistrationDate,
-							insert_doc.newOwnershipData_ownerList_person_companyRegisterRegistrationNbr,
-							insert_doc.newOwnershipData_ownerList_person_email,
-							insert_doc.newOwnershipData_ownerList_person_individualIdNbr,
-							insert_doc.newOwnershipData_ownerList_person_individualIdType,
-							insert_doc.newOwnershipData_ownerList_person_legalIdNbr,
-							insert_doc.newOwnershipData_ownerList_person_legalIdType,
-							insert_doc.newOwnershipData_ownerList_person_legalNature,
-							insert_doc.newOwnershipData_ownerList_person_legalNatureInOtherLang,
-							insert_doc.newOwnershipData_ownerList_person_nationalityCountryCode,
-							insert_doc.newOwnershipData_ownerList_person_personGroupCode,
-							insert_doc.newOwnershipData_ownerList_person_personGroupName,
-							insert_doc.newOwnershipData_ownerList_person_personName,
-							insert_doc.newOwnershipData_ownerList_person_personNameInOtherLang,
-							insert_doc.newOwnershipData_ownerList_person_residenceCountryCode,
-							insert_doc.newOwnershipData_ownerList_person_stateCode,
-							insert_doc.newOwnershipData_ownerList_person_stateName,
-							insert_doc.newOwnershipData_ownerList_person_telephone,
-							insert_doc.newOwnershipData_ownerList_person_zipCode,
-							insert_doc.notes,
-							insert_doc.poaData_poaGranteeList_person_addressStreet,
-							insert_doc.poaData_poaGranteeList_person_addressStreetInOtherLang,
-							insert_doc.poaData_poaGranteeList_person_addressZone,
-							insert_doc.poaData_poaGranteeList_person_agentCode,
-							insert_doc.poaData_poaGranteeList_person_cityCode,
-							insert_doc.poaData_poaGranteeList_person_cityName,
-							insert_doc.poaData_poaGranteeList_person_companyRegisterRegistrationDate,
-							insert_doc.poaData_poaGranteeList_person_companyRegisterRegistrationNbr,
-							insert_doc.poaData_poaGranteeList_person_email,
-							insert_doc.poaData_poaGranteeList_person_individualIdNbr,
-							insert_doc.poaData_poaGranteeList_person_individualIdType,
-							insert_doc.poaData_poaGranteeList_person_legalIdNbr,
-							insert_doc.poaData_poaGranteeList_person_legalIdType,
-							insert_doc.poaData_poaGranteeList_person_legalNature,
-							insert_doc.poaData_poaGranteeList_person_legalNatureInOtherLang,
-							insert_doc.poaData_poaGranteeList_person_nationalityCountryCode,
-							insert_doc.poaData_poaGranteeList_person_personGroupCode,
-							insert_doc.poaData_poaGranteeList_person_personGroupName,
-							insert_doc.poaData_poaGranteeList_person_personName,
-							insert_doc.poaData_poaGranteeList_person_personNameInOtherLang,
-							insert_doc.poaData_poaGranteeList_person_residenceCountryCode,
-							insert_doc.poaData_poaGranteeList_person_stateCode,
-							insert_doc.poaData_poaGranteeList_person_stateName,
-							insert_doc.poaData_poaGranteeList_person_telephone,
-							insert_doc.poaData_poaGranteeList_person_zipCode,
-							insert_doc.poaData_poaGrantor_person_addressStreet,
-							insert_doc.poaData_poaGrantor_person_addressStreetInOtherLang,
-							insert_doc.poaData_poaGrantor_person_addressZone,
-							insert_doc.poaData_poaGrantor_person_agentCode,
-							insert_doc.poaData_poaGrantor_person_cityCode,
-							insert_doc.poaData_poaGrantor_person_cityName,
-							insert_doc.poaData_poaGrantor_person_companyRegisterRegistrationDate,
-							insert_doc.poaData_poaGrantor_person_companyRegisterRegistrationNbr,
-							insert_doc.poaData_poaGrantor_person_email,
-							insert_doc.poaData_poaGrantor_person_individualIdNbr,
-							insert_doc.poaData_poaGrantor_person_individualIdType,
-							insert_doc.poaData_poaGrantor_person_legalIdNbr,
-							insert_doc.poaData_poaGrantor_person_legalIdType,
-							insert_doc.poaData_poaGrantor_person_legalNature,
-							insert_doc.poaData_poaGrantor_person_legalNatureInOtherLang,
-							insert_doc.poaData_poaGrantor_person_nationalityCountryCode,
-							insert_doc.poaData_poaGrantor_person_personGroupCode,
-							insert_doc.poaData_poaGrantor_person_personGroupName,
-							insert_doc.poaData_poaGrantor_person_personName,
-							insert_doc.poaData_poaGrantor_person_personNameInOtherLang,
-							insert_doc.poaData_poaGrantor_person_residenceCountryCode,
-							insert_doc.poaData_poaGrantor_person_stateCode,
-							insert_doc.poaData_poaGrantor_person_stateName,
-							insert_doc.poaData_poaGrantor_person_telephone,
-							insert_doc.poaData_poaGrantor_person_zipCode,
-							insert_doc.poaData_poaRegNumber,
-							insert_doc.poaData_scope,
-							insert_doc.representationData_representativeList_person_addressStreet,
-							insert_doc.representationData_representativeList_person_addressStreetInOtherLang,
-							insert_doc.representationData_representativeList_person_addressZone,
-							insert_doc.representationData_representativeList_person_agentCode,
-							insert_doc.representationData_representativeList_person_cityCode,
-							insert_doc.representationData_representativeList_person_cityName,
-							insert_doc.representationData_representativeList_person_companyRegisterRegistrationDate,
-							insert_doc.representationData_representativeList_person_companyRegisterRegistrationNbr,
-							insert_doc.representationData_representativeList_person_email,
-							insert_doc.representationData_representativeList_person_individualIdNbr,
-							insert_doc.representationData_representativeList_person_individualIdType,
-							insert_doc.representationData_representativeList_person_legalIdNbr,
-							insert_doc.representationData_representativeList_person_legalIdType,
-							insert_doc.representationData_representativeList_person_legalNature,
-							insert_doc.representationData_representativeList_person_legalNatureInOtherLang,
-							insert_doc.representationData_representativeList_person_nationalityCountryCode,
-							insert_doc.representationData_representativeList_person_personGroupCode,
-							insert_doc.representationData_representativeList_person_personGroupName,
-							insert_doc.representationData_representativeList_person_personName,
-							insert_doc.representationData_representativeList_person_personNameInOtherLang,
-							insert_doc.representationData_representativeList_person_residenceCountryCode,
-							insert_doc.representationData_representativeList_person_stateCode,
-							insert_doc.representationData_representativeList_person_stateName,
-							insert_doc.representationData_representativeList_person_telephone,
-							insert_doc.representationData_representativeList_person_zipCode,
-							insert_doc.representationData_representativeList_representativeType)
-				process_day_commit_Nbr()
-			except zeep.exceptions.Fault as e:
-				data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}','false',{form_Id})
-				cambio_estado_soporte(form_Id)
-				rule_notification('SOP',form_Id)
-			
-			try:
-				exists = str(user_doc_read_min('E',insert_doc.documentId_docNbr,str(connex.MEA_SFE_FORMULARIOS_ID_Origin),insert_doc.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
-				if exists == insert_doc.documentId_docNbr:
-					cambio_estado(form_Id,insert_doc.documentId_docNbr) # Cambio de estado
-					time.sleep(1)
-					envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)	#Crear PDF
-					time.sleep(1)
-					rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr))# Correo al funcionario
-					Insert_Group_Process_docs(insert_doc.affectedFileIdList_fileNbr,'AMEDINA','11')
-					delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Agente				
-			except Exception as e:
-				data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',{form_Id})
-				cambio_estado_soporte(form_Id)
-				rule_notification('SOP',form_Id)			
+	print('F1')
+	cheking = catch_toError(form_Id)
+	if cheking != 'E99':
+		insert_doc = userDocModel()
+		insert_doc.setData(form_Id)
+		try:
+			new_Nbr = str(COMMIT_NBR())
+			insert_user_doc_escritos(
+						insert_doc.affectedFileIdList_fileNbr,
+						insert_doc.affectedFileIdList_fileSeq,
+						insert_doc.affectedFileIdList_fileSeries,
+						insert_doc.affectedFileIdList_fileType,
+						insert_doc.affectedFileSummaryList_disclaimer,
+						insert_doc.affectedFileSummaryList_disclaimerInOtherLang,
+						insert_doc.affectedFileSummaryList_fileNbr,
+						insert_doc.affectedFileSummaryList_fileSeq,
+						insert_doc.affectedFileSummaryList_fileSeries,
+						insert_doc.affectedFileSummaryList_fileType,
+						insert_doc.affectedFileSummaryList_fileIdAsString,
+						insert_doc.affectedFileSummaryList_fileSummaryClasses,
+						insert_doc.affectedFileSummaryList_fileSummaryCountry,
+						insert_doc.affectedFileSummaryList_fileSummaryDescription,
+						insert_doc.affectedFileSummaryList_fileSummaryDescriptionInOtherLang,
+						insert_doc.affectedFileSummaryList_fileSummaryOwner,
+						insert_doc.affectedFileSummaryList_fileSummaryOwnerInOtherLang,
+						insert_doc.affectedFileSummaryList_fileSummaryRepresentative,
+						insert_doc.affectedFileSummaryList_fileSummaryRepresentativeInOtherLang,
+						insert_doc.affectedFileSummaryList_fileSummaryResponsibleName,
+						insert_doc.affectedFileSummaryList_fileSummaryStatus,
+						insert_doc.applicant_applicantNotes,
+						insert_doc.applicant_person_addressStreet,
+						insert_doc.applicant_person_addressStreetInOtherLang,
+						insert_doc.applicant_person_addressZone,
+						insert_doc.applicant_person_agentCode,
+						insert_doc.applicant_person_cityCode,
+						insert_doc.applicant_person_cityName,
+						insert_doc.applicant_person_companyRegisterRegistrationDate,
+						insert_doc.applicant_person_companyRegisterRegistrationNbr,
+						insert_doc.applicant_person_email,
+						insert_doc.applicant_person_individualIdNbr,
+						insert_doc.applicant_person_individualIdType,
+						insert_doc.applicant_person_legalIdNbr,
+						insert_doc.applicant_person_legalIdType,
+						insert_doc.applicant_person_legalNature,
+						insert_doc.applicant_person_legalNatureInOtherLang,
+						insert_doc.applicant_person_nationalityCountryCode,
+						insert_doc.applicant_person_personGroupCode,
+						insert_doc.applicant_person_personGroupName,
+						insert_doc.applicant_person_personName,
+						insert_doc.applicant_person_personNameInOtherLang,
+						insert_doc.applicant_person_residenceCountryCode,
+						insert_doc.applicant_person_stateCode,
+						insert_doc.applicant_person_stateName,
+						insert_doc.applicant_person_telephone,
+						insert_doc.applicant_person_zipCode,
+						insert_doc.documentId_docLog,
+						new_Nbr,#insert_doc.documentId_docNbr,
+						str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
+						insert_doc.documentId_docSeries,
+						insert_doc.documentId_selected,
+						insert_doc.documentSeqId_docSeqName,
+						new_Nbr,#insert_doc.documentSeqId_docSeqNbr,
+						insert_doc.documentSeqId_docSeqSeries,
+						insert_doc.documentSeqId_docSeqType,
+						insert_doc.filingData_applicationSubtype,
+						insert_doc.filingData_applicationType,
+						insert_doc.filingData_captureDate,
+						connex.MEA_PERIODO_RECEPCION_userId, #insert_doc.filingData_captureUserId
+						insert_doc.filingData_filingDate,
+						insert_doc.filingData_lawCode,
+						insert_doc.filingData_novelty1Date,
+						insert_doc.filingData_novelty2Date,
+						insert_doc.filingData_paymentList_currencyName,
+						insert_doc.filingData_paymentList_currencyType,
+						insert_doc.filingData_paymentList_receiptAmount,
+						insert_doc.filingData_paymentList_receiptDate,
+						insert_doc.filingData_paymentList_receiptNbr,
+						insert_doc.filingData_paymentList_receiptNotes,
+						insert_doc.filingData_paymentList_receiptType,
+						insert_doc.filingData_paymentList_receiptTypeName,
+						insert_doc.filingData_receptionDate,
+						insert_doc.filingData_documentId_receptionDocument_docLog,
+						insert_doc.filingData_documentId_receptionDocument_docNbr,
+						str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
+						insert_doc.filingData_documentId_receptionDocument_docSeries,
+						insert_doc.filingData_documentId_receptionDocument_selected,
+						insert_doc.filingData_userdocTypeList_userdocName,
+						insert_doc.filingData_userdocTypeList_userdocType,
+						insert_doc.newOwnershipData_ownerList_orderNbr,
+						insert_doc.newOwnershipData_ownerList_ownershipNotes,
+						insert_doc.newOwnershipData_ownerList_person_addressStreet,
+						insert_doc.newOwnershipData_ownerList_person_addressStreetInOtherLang,
+						insert_doc.newOwnershipData_ownerList_person_addressZone,
+						insert_doc.newOwnershipData_ownerList_person_agentCode,
+						insert_doc.newOwnershipData_ownerList_person_cityCode,
+						insert_doc.newOwnershipData_ownerList_person_cityName,
+						insert_doc.newOwnershipData_ownerList_person_companyRegisterRegistrationDate,
+						insert_doc.newOwnershipData_ownerList_person_companyRegisterRegistrationNbr,
+						insert_doc.newOwnershipData_ownerList_person_email,
+						insert_doc.newOwnershipData_ownerList_person_individualIdNbr,
+						insert_doc.newOwnershipData_ownerList_person_individualIdType,
+						insert_doc.newOwnershipData_ownerList_person_legalIdNbr,
+						insert_doc.newOwnershipData_ownerList_person_legalIdType,
+						insert_doc.newOwnershipData_ownerList_person_legalNature,
+						insert_doc.newOwnershipData_ownerList_person_legalNatureInOtherLang,
+						insert_doc.newOwnershipData_ownerList_person_nationalityCountryCode,
+						insert_doc.newOwnershipData_ownerList_person_personGroupCode,
+						insert_doc.newOwnershipData_ownerList_person_personGroupName,
+						insert_doc.newOwnershipData_ownerList_person_personName,
+						insert_doc.newOwnershipData_ownerList_person_personNameInOtherLang,
+						insert_doc.newOwnershipData_ownerList_person_residenceCountryCode,
+						insert_doc.newOwnershipData_ownerList_person_stateCode,
+						insert_doc.newOwnershipData_ownerList_person_stateName,
+						insert_doc.newOwnershipData_ownerList_person_telephone,
+						insert_doc.newOwnershipData_ownerList_person_zipCode,
+						insert_doc.notes,
+						insert_doc.poaData_poaGranteeList_person_addressStreet,
+						insert_doc.poaData_poaGranteeList_person_addressStreetInOtherLang,
+						insert_doc.poaData_poaGranteeList_person_addressZone,
+						insert_doc.poaData_poaGranteeList_person_agentCode,
+						insert_doc.poaData_poaGranteeList_person_cityCode,
+						insert_doc.poaData_poaGranteeList_person_cityName,
+						insert_doc.poaData_poaGranteeList_person_companyRegisterRegistrationDate,
+						insert_doc.poaData_poaGranteeList_person_companyRegisterRegistrationNbr,
+						insert_doc.poaData_poaGranteeList_person_email,
+						insert_doc.poaData_poaGranteeList_person_individualIdNbr,
+						insert_doc.poaData_poaGranteeList_person_individualIdType,
+						insert_doc.poaData_poaGranteeList_person_legalIdNbr,
+						insert_doc.poaData_poaGranteeList_person_legalIdType,
+						insert_doc.poaData_poaGranteeList_person_legalNature,
+						insert_doc.poaData_poaGranteeList_person_legalNatureInOtherLang,
+						insert_doc.poaData_poaGranteeList_person_nationalityCountryCode,
+						insert_doc.poaData_poaGranteeList_person_personGroupCode,
+						insert_doc.poaData_poaGranteeList_person_personGroupName,
+						insert_doc.poaData_poaGranteeList_person_personName,
+						insert_doc.poaData_poaGranteeList_person_personNameInOtherLang,
+						insert_doc.poaData_poaGranteeList_person_residenceCountryCode,
+						insert_doc.poaData_poaGranteeList_person_stateCode,
+						insert_doc.poaData_poaGranteeList_person_stateName,
+						insert_doc.poaData_poaGranteeList_person_telephone,
+						insert_doc.poaData_poaGranteeList_person_zipCode,
+						insert_doc.poaData_poaGrantor_person_addressStreet,
+						insert_doc.poaData_poaGrantor_person_addressStreetInOtherLang,
+						insert_doc.poaData_poaGrantor_person_addressZone,
+						insert_doc.poaData_poaGrantor_person_agentCode,
+						insert_doc.poaData_poaGrantor_person_cityCode,
+						insert_doc.poaData_poaGrantor_person_cityName,
+						insert_doc.poaData_poaGrantor_person_companyRegisterRegistrationDate,
+						insert_doc.poaData_poaGrantor_person_companyRegisterRegistrationNbr,
+						insert_doc.poaData_poaGrantor_person_email,
+						insert_doc.poaData_poaGrantor_person_individualIdNbr,
+						insert_doc.poaData_poaGrantor_person_individualIdType,
+						insert_doc.poaData_poaGrantor_person_legalIdNbr,
+						insert_doc.poaData_poaGrantor_person_legalIdType,
+						insert_doc.poaData_poaGrantor_person_legalNature,
+						insert_doc.poaData_poaGrantor_person_legalNatureInOtherLang,
+						insert_doc.poaData_poaGrantor_person_nationalityCountryCode,
+						insert_doc.poaData_poaGrantor_person_personGroupCode,
+						insert_doc.poaData_poaGrantor_person_personGroupName,
+						insert_doc.poaData_poaGrantor_person_personName,
+						insert_doc.poaData_poaGrantor_person_personNameInOtherLang,
+						insert_doc.poaData_poaGrantor_person_residenceCountryCode,
+						insert_doc.poaData_poaGrantor_person_stateCode,
+						insert_doc.poaData_poaGrantor_person_stateName,
+						insert_doc.poaData_poaGrantor_person_telephone,
+						insert_doc.poaData_poaGrantor_person_zipCode,
+						insert_doc.poaData_poaRegNumber,
+						insert_doc.poaData_scope,
+						insert_doc.representationData_representativeList_person_addressStreet,
+						insert_doc.representationData_representativeList_person_addressStreetInOtherLang,
+						insert_doc.representationData_representativeList_person_addressZone,
+						insert_doc.representationData_representativeList_person_agentCode,
+						insert_doc.representationData_representativeList_person_cityCode,
+						insert_doc.representationData_representativeList_person_cityName,
+						insert_doc.representationData_representativeList_person_companyRegisterRegistrationDate,
+						insert_doc.representationData_representativeList_person_companyRegisterRegistrationNbr,
+						insert_doc.representationData_representativeList_person_email,
+						insert_doc.representationData_representativeList_person_individualIdNbr,
+						insert_doc.representationData_representativeList_person_individualIdType,
+						insert_doc.representationData_representativeList_person_legalIdNbr,
+						insert_doc.representationData_representativeList_person_legalIdType,
+						insert_doc.representationData_representativeList_person_legalNature,
+						insert_doc.representationData_representativeList_person_legalNatureInOtherLang,
+						insert_doc.representationData_representativeList_person_nationalityCountryCode,
+						insert_doc.representationData_representativeList_person_personGroupCode,
+						insert_doc.representationData_representativeList_person_personGroupName,
+						insert_doc.representationData_representativeList_person_personName,
+						insert_doc.representationData_representativeList_person_personNameInOtherLang,
+						insert_doc.representationData_representativeList_person_residenceCountryCode,
+						insert_doc.representationData_representativeList_person_stateCode,
+						insert_doc.representationData_representativeList_person_stateName,
+						insert_doc.representationData_representativeList_person_telephone,
+						insert_doc.representationData_representativeList_person_zipCode,
+						insert_doc.representationData_representativeList_representativeType)
+			getFile(form_Id,str(new_Nbr))
+			#process_day_commit_Nbr()
+		except zeep.exceptions.Fault as e:
+			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}','false',{form_Id})
+			cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)
+		
+		try:
+			exists = str(user_doc_read_min('E',insert_doc.documentId_docNbr,str(connex.MEA_SFE_FORMULARIOS_ID_Origin),insert_doc.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
+			if exists == insert_doc.documentId_docNbr:
+				cambio_estado(form_Id,insert_doc.documentId_docNbr) # Cambio de estado
+				time.sleep(1)
+				try:
+					Insert_Group_Process_docs(new_Nbr,'AMEDINA','10')
+				except Exception as e:
+					print('error insert grupo')	
+				time.sleep(1)
+				envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)	#Crear PDF
+				time.sleep(1)
+				rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr))# Correo al funcionario				
+				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Agente				
+		except Exception as e:
+			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',{form_Id})
+			cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)			
 
-def compileAndInsertUserDocUserDoc(form_Id,typ):	
-		cheking = catch_toError(form_Id)
-		if cheking != 'E99':
-			escrito_relacionado = userDocModel()
-			escrito_relacionado.setData(form_Id)
-
-			try:
-				print(user_doc_receive(
+def compileAndInsertUserDocUserDoc(form_Id,typ):
+	print('F2')	
+	cheking = catch_toError(form_Id)
+	if cheking != 'E99':
+		escrito_relacionado = userDocModel()
+		escrito_relacionado.setData(form_Id)
+		new_Nbr = str(COMMIT_NBR())
+		try:
+			print(user_doc_receive(
 							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 							escrito_relacionado.filingData_userdocTypeList_userdocType,
 							"true",
@@ -393,22 +402,21 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 							"",
 							"",
 							escrito_relacionado.documentId_docLog,
-							escrito_relacionado.documentId_docNbr,
+							new_Nbr,#escrito_relacionado.documentId_docNbr,
 							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 							escrito_relacionado.documentId_docSeries,
 							escrito_relacionado.filingData_userdocTypeList_userdocType))
-				process_day_commit_Nbr()
-			except zeep.exceptions.Fault as e:
-				data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',{form_Id})
-				cambio_estado_soporte(form_Id)
-				rule_notification('SOP',form_Id)
-
-			time.sleep(1)
-		
-			sigla_desc = str(escrito_relacionado.filingData_userdocTypeList_userdocName).split("- ")
-
-			try:
-				print(user_doc_update(
+			#process_day_commit_Nbr()
+			getFile(form_Id,str(new_Nbr))
+		except zeep.exceptions.Fault as e:
+			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',{form_Id})
+			cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)
+		time.sleep(1)
+	
+		sigla_desc = str(escrito_relacionado.filingData_userdocTypeList_userdocName).split("- ")
+		try:
+			print(user_doc_update(
 							escrito_relacionado.affected_doc_Log,
 							escrito_relacionado.affected_doc_docNbr,
 							escrito_relacionado.affected_doc_docOrigin, 
@@ -423,10 +431,10 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 							escrito_relacionado.applicant_person_telephone,
 							escrito_relacionado.applicant_person_zipCode,
 							escrito_relacionado.documentId_docLog,
-							escrito_relacionado.documentId_docNbr,
+							new_Nbr,#escrito_relacionado.documentId_docNbr,
 							escrito_relacionado.documentId_docOrigin,
 							escrito_relacionado.documentId_docSeries,
-							escrito_relacionado.documentSeqId_docSeqNbr,
+							new_Nbr,#escrito_relacionado.documentSeqId_docSeqNbr,
 							escrito_relacionado.documentSeqId_docSeqSeries,
 							escrito_relacionado.documentSeqId_docSeqType,
 							escrito_relacionado.filingData_captureDate,
@@ -474,20 +482,19 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 							escrito_relacionado.representationData_representativeList_person_zipCode,
 							escrito_relacionado.representationData_representativeList_representativeType,
 							escrito_relacionado.representationData_representativeList_person_email))
-			except zeep.exceptions.Fault as e:
+		except zeep.exceptions.Fault as e:
 				data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
 				rule_notification('SOP',form_Id)
-
-			time.sleep(1)
-			
-			afferc = user_doc_read_min(escrito_relacionado.affected_doc_Log,escrito_relacionado.affected_doc_docNbr,escrito_relacionado.affected_doc_docOrigin,escrito_relacionado.affected_doc_docSeries)
-			#print(afferc)
-			try:
+		time.sleep(1)
+		
+		afferc = user_doc_read_min(escrito_relacionado.affected_doc_Log,new_Nbr,escrito_relacionado.affected_doc_docOrigin,escrito_relacionado.affected_doc_docSeries)
+		#print(afferc)
+		try:
 				if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
 					user_doc_afectado(
 										escrito_relacionado.documentId_docLog,
-										escrito_relacionado.documentId_docNbr,
+										new_Nbr,#escrito_relacionado.documentId_docNbr,
 										str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 										escrito_relacionado.documentId_docSeries,
 										afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
@@ -496,34 +503,37 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 										afferc['affectedFileIdList'][0]['fileType'])
 				else:
 					pass
-			except Exception as e:
+		except Exception as e:
 					pass
-					#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false')
-					#cambio_estado_soporte(form_Id)
-
-			time.sleep(1)
-			
-			newDoc = str(user_doc_read_min('E',escrito_relacionado.documentId_docNbr,escrito_relacionado.documentId_docOrigin,escrito_relacionado.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
-			if newDoc == escrito_relacionado.documentId_docNbr:
-				cambio_estado(form_Id,escrito_relacionado.documentId_docNbr)
-				time.sleep(1)
-				envio_agente_recibido(form_Id,escrito_relacionado.documentId_docNbr)		#Crear PDF
-				rule_notification(typ,'')# Correo al funcionario
-				Insert_Group_Process_docs(escrito_relacionado.documentId_docNbr,'AMEDINA','10')
-				time.sleep(1)
-				delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico
-			else:
-				data_validator(f'Error al cambiar estado de esc. N° {escrito_relacionado.documentId_docNbr}, tabla tramites ID: {form_Id}','false',form_Id)
-				cambio_estado_soporte(form_Id)
-				rule_notification('SOP',form_Id)
-
-			time.sleep(0.5)
+				#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false')
+				#cambio_estado_soporte(form_Id)
+		time.sleep(1)
 		
-def compileAndInsertUserDocUserDocPago(form_Id,typ):	
+		newDoc = str(user_doc_read_min('E',escrito_relacionado.affected_doc_docNbr,escrito_relacionado.documentId_docOrigin,escrito_relacionado.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
+		if newDoc == new_Nbr:
+			cambio_estado(form_Id,new_Nbr)
+			time.sleep(1)
+			envio_agente_recibido(form_Id,new_Nbr)		#Crear PDF
+			rule_notification(typ,'')# Correo al funcionario
+			try:
+				Insert_Group_Process_docs(new_Nbr,'AMEDINA','11')
+			except Exception as e:
+				print('error insert grupo')				
+			time.sleep(1)
+			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico
+		else:
+			data_validator(f'Error al cambiar estado de esc. N° {new_Nbr}, tabla tramites ID: {form_Id}','false',form_Id)
+			cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)
+		time.sleep(0.5)
+		
+def compileAndInsertUserDocUserDocPago(form_Id,typ):
+		print('F3')		
 		cheking = catch_toError(form_Id)
 		if cheking != 'E99':
 			escrito_escrito_pago = userDocModel()
 			escrito_escrito_pago.setData(form_Id)
+			new_Nbr = str(COMMIT_NBR())
 			try:
 				print(user_doc_receive(
 							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
@@ -554,11 +564,12 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 							"",
 							"",
 							escrito_escrito_pago.documentId_docLog,
-							escrito_escrito_pago.documentId_docNbr,
+							new_Nbr,
 							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 							escrito_escrito_pago.documentId_docSeries,
 							escrito_escrito_pago.filingData_userdocTypeList_userdocType))
-				process_day_commit_Nbr()
+				#process_day_commit_Nbr()
+				getFile(form_Id,str(new_Nbr))
 			except zeep.exceptions.Fault as e:
 				data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
@@ -584,10 +595,10 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 							escrito_escrito_pago.applicant_person_telephone,
 							escrito_escrito_pago.applicant_person_zipCode,
 							escrito_escrito_pago.documentId_docLog,
-							escrito_escrito_pago.documentId_docNbr,
+							new_Nbr,
 							escrito_escrito_pago.documentId_docOrigin,
 							escrito_escrito_pago.documentId_docSeries,
-							escrito_escrito_pago.documentSeqId_docSeqNbr,
+							new_Nbr,
 							escrito_escrito_pago.documentSeqId_docSeqSeries,
 							escrito_escrito_pago.documentSeqId_docSeqType,
 							escrito_escrito_pago.filingData_captureDate,
@@ -647,7 +658,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 			try:
 				if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
 					user_doc_afectado(escrito_escrito_pago.documentId_docLog,
-										escrito_escrito_pago.documentId_docNbr,
+										new_Nbr,
 										str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 										escrito_escrito_pago.documentId_docSeries,
 										afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
@@ -663,12 +674,15 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 			
 			time.sleep(1)
 			
-			newDoc = str(user_doc_read_min('E',escrito_escrito_pago.documentId_docNbr,str(connex.MEA_SFE_FORMULARIOS_ID_Origin),escrito_escrito_pago.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
-			if newDoc == escrito_escrito_pago.documentId_docNbr:
-				cambio_estado(form_Id,escrito_escrito_pago.documentId_docNbr)
+			newDoc = str(user_doc_read_min('E',new_Nbr,str(connex.MEA_SFE_FORMULARIOS_ID_Origin),escrito_escrito_pago.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
+			if newDoc == new_Nbr:
+				cambio_estado(form_Id,new_Nbr)
 				time.sleep(1)
-				envio_agente_recibido(form_Id,escrito_escrito_pago.documentId_docNbr)#Crear PDF
-				Insert_Group_Process_docs(escrito_escrito_pago.documentId_docNbr,'AMEDINA','10')
+				envio_agente_recibido(form_Id,new_Nbr)#Crear PDF
+				try:
+					Insert_Group_Process_docs(new_Nbr,'AMEDINA','11')
+				except Exception as e:
+					print('error insert grupo')
 				try:
 					rule_notification(typ,'')# Correo al funcionario
 				except Exception as e:
@@ -677,7 +691,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 				delete_file(enviar('notificacion-DINAPI.pdf',escrito_escrito_pago.representationData_representativeList_person_email,'M.E.A',''))#Enviar Correo Electronico			
 			else:
 				try:
-					data_validator(f'Error al cambiar estado de esc. N° {escrito_escrito_pago.documentId_docNbr}, tabla tramites ID: {form_Id}','false',form_Id)
+					data_validator(f'Error al cambiar estado de esc. N° {new_Nbr}, tabla tramites ID: {form_Id}','false',form_Id)
 					cambio_estado_soporte(form_Id)
 				except Exception as e:
 					data_validator(f'El escrito afectado no existe, tabla tramites ID: {form_Id}','false',form_Id)
@@ -690,8 +704,9 @@ def insertReg(form_Id):
 		insert_mark = insertRegModel()
 		insert_mark.setData(form_Id)
 		try:
+			new_Nbr = str(COMMIT_NBR())
 			insertRegState = mark_insert_reg(
-				insert_mark.file_fileId_fileNbr,
+				new_Nbr,#insert_mark.file_fileId_fileNbr,
 				insert_mark.file_fileId_fileSeq,
 				insert_mark.file_fileId_fileSeries,
 				insert_mark.file_fileId_fileType,
@@ -731,12 +746,11 @@ def insertReg(form_Id):
 			)
 			print(insertRegState)
 			if insertRegState == 'true':
-				process_day_commit_Nbr()
-				getFile_reg_and_ren(form_Id,insert_mark.file_fileId_fileNbr)
-				cambio_estado(form_Id,insert_mark.file_fileId_fileNbr)
-				rule_notification('REG',str(insert_mark.file_fileId_fileNbr))# Correo al funcionario
-				#Insert_Group_Process('1',str(insert_mark.file_fileId_fileNbr),'AMEDINA')
-				Insert_Group_Process_reg_ren(str(insert_mark.file_fileId_fileNbr),'CABENITEZ','1')
+				#process_day_commit_Nbr()
+				getFile_reg_and_ren(form_Id,new_Nbr)
+				cambio_estado(form_Id,new_Nbr)
+				rule_notification('REG',str(new_Nbr))# Correo al funcionario
+				Insert_Group_Process_reg_ren(str(new_Nbr),str(USER_GROUP('REG')),'1')
 			else:
 				data_validator(f'Error en solicitud, tabla tramites ID: {form_Id} - {insertRegState}','true',form_Id)
 				cambio_estado_soporte(form_Id)
@@ -755,8 +769,9 @@ def insertRen(form_Id):
 		insert_mark_ren = insertRenModel()
 		insert_mark_ren.setData(form_Id)
 		try:
+			new_Nbr = str(COMMIT_NBR())
 			insertRenState = mark_insert_ren(
-						insert_mark_ren.file_fileId_fileNbr,
+						new_Nbr,
 						insert_mark_ren.file_fileId_fileSeq,
 						insert_mark_ren.file_fileId_fileSeries,
 						insert_mark_ren.file_fileId_fileType,
@@ -799,11 +814,10 @@ def insertRen(form_Id):
 						insert_mark_ren.signData_markName,
 						insert_mark_ren.signData_signType)			
 			if insertRenState == 'true':
-				process_day_commit_Nbr()
-				cambio_estado(form_Id,insert_mark_ren.file_fileId_fileNbr)
-				rule_notification('REN',str(insert_mark_ren.file_fileId_fileNbr))# Correo al funcionario
-				#Insert_Group_Process('1',str(insert_mark_ren.file_fileId_fileNbr),'AMEDINA')
-				Insert_Group_Process_reg_ren(str(insert_mark_ren.file_fileId_fileNbr),'CABENITEZ','1')
+				#process_day_commit_Nbr()
+				cambio_estado(form_Id,new_Nbr)
+				rule_notification('REN',str(new_Nbr))# Correo al funcionario
+				Insert_Group_Process_reg_ren(str(new_Nbr),str(USER_GROUP('REN')),'1')
 			else:
 				data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id} - {insertRenState}','true',form_Id)
 				cambio_estado_soporte(form_Id)
