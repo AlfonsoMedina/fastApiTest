@@ -6,16 +6,16 @@ import time
 from time import sleep
 from email_pdf_AG import  envio_agente_recibido
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import  cambio_estado, cambio_estado_soporte, count_pendiente, data_validator, esc_relation, exist_main_mark, exist_notifi, exp_relation, format_userdoc, getSigla_tipoDoc, log_info, main_State, pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
+from dinapi.sfe import  cambio_estado, cambio_estado_soporte, data_validator, esc_relation,  exp_relation,  pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
 from getFileDoc import compilePDF, getFile, getFile_reg_and_ren
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
-from tools.send_mail import delete_file, enviar, enviar_back, enviar_back_notFile
+from tools.send_mail import delete_file, enviar
 import tools.filing_date as captureDate
 import tools.connect as connex
-from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_getList_escrito, user_doc_read_min
-from wipo.insertGroupProcessMEA import Insert_Group_Process_reg_ren
-from wipo.ipas import mark_getlistReg, mark_insert_reg, mark_insert_ren, user_doc_afectado, user_doc_receive, user_doc_update
+from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_read_min
+from wipo.insertGroupProcessMEA import Insert_Group_Process_docs, Insert_Group_Process_reg_ren
+from wipo.ipas import  mark_insert_reg, mark_insert_ren, user_doc_afectado, user_doc_receive, user_doc_update
 import zeep
 
 
@@ -350,6 +350,7 @@ def compileAndInsert(form_Id,typ):
 					envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)	#Crear PDF
 					time.sleep(1)
 					rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr))# Correo al funcionario
+					Insert_Group_Process_docs(insert_doc.affectedFileIdList_fileNbr,'AMEDINA','11')
 					delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Agente				
 			except Exception as e:
 				data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',{form_Id})
@@ -508,6 +509,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 				time.sleep(1)
 				envio_agente_recibido(form_Id,escrito_relacionado.documentId_docNbr)		#Crear PDF
 				rule_notification(typ,'')# Correo al funcionario
+				Insert_Group_Process_docs(escrito_relacionado.documentId_docNbr,'AMEDINA','10')
 				time.sleep(1)
 				delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico
 			else:
@@ -666,6 +668,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 				cambio_estado(form_Id,escrito_escrito_pago.documentId_docNbr)
 				time.sleep(1)
 				envio_agente_recibido(form_Id,escrito_escrito_pago.documentId_docNbr)#Crear PDF
+				Insert_Group_Process_docs(escrito_escrito_pago.documentId_docNbr,'AMEDINA','10')
 				try:
 					rule_notification(typ,'')# Correo al funcionario
 				except Exception as e:

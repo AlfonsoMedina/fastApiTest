@@ -3,6 +3,7 @@ from zeep import Client
 from tools.data_format import fecha_barra
 import tools.connect as conn_serv
 import zeep
+from wipo.function_for_reception_in import user_doc_getList_escrito, user_doc_read
 
 from wipo.ipas import fetch_all_user_mark, mark_getlist, mark_read
 
@@ -141,6 +142,28 @@ def Insert_Group_Process_reg_ren(fileNbr,user,typ):
 			res = 'true'
 		else: # existe el grupo
 			ProcessGroupAddProcess(group_today(userId,group_typ(str(typ)),typ),userId,data['file']['processId']['processNbr']['doubleValue'],data['file']['processId']['processType'])
+			res = 'true'
+		return(res)
+	except Exception as e:
+		return('false')
+
+def Insert_Group_Process_docs(fileNbr,user,typ):
+	try:
+		data_doc = user_doc_getList_escrito(fileNbr)
+		fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
+		userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+		process = user_doc_read(data_doc['documentId']['docLog'],data_doc['documentId']['docNbr']['doubleValue'],data_doc['documentId']['docOrigin'],data_doc['documentId']['docSeries']['doubleValue'])
+		print(process['userdocProcessId']['processNbr'])
+		print(process['userdocProcessId']['processType'])
+		group_count = last_group(userId) # cantidad de grupos que tiene el usuario
+		if valid_group(userId,group_typ(str(typ)),typ) == False: # no existe el grupo
+			print((group_count + 1),userId,group_typ(str(typ)),'descripcion','1',typ)
+			ProcessGroupInsert((group_count + 1),userId,fecha,'descripcion','1',typ)
+			time.sleep(1) 
+			ProcessGroupAddProcess((group_count + 1),userId,process['userdocProcessId']['processNbr'],process['userdocProcessId']['processType'])
+			res = 'true'
+		else: # existe el grupo
+			ProcessGroupAddProcess(group_today(userId,group_typ(str(typ)),typ),userId,process['userdocProcessId']['processNbr'],process['userdocProcessId']['processType'])
 			res = 'true'
 		return(res)
 	except Exception as e:

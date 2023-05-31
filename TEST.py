@@ -4,6 +4,7 @@ import zeep
 from zeep import Client
 from tools.data_format import fecha_barra
 import tools.connect as conn_serv
+from wipo.function_for_reception_in import user_doc_getList_escrito, user_doc_read
 from wipo.insertGroupProcessMEA import ProcessGroupAddProcess, ProcessGroupGetList, ProcessGroupInsert
 from wipo.ipas import daily_log_close, daily_log_open, fetch_all_user_mark, mark_getlist, mark_read
 import tools.filing_date as captureDate
@@ -34,15 +35,10 @@ def group_today(userNbr,groupName,typ):
 	except Exception as e:
 		return(False)
 
-#EXISTE O NO EL GRUPO USUARIO DE LA FECHA
-#print(group_today('297', '30/05/2023', '1'))
-
 def group_typ(num):
 	list = {'1':' [Expediente]','10':' [Escrito+expediente]','11':' [Escrito]'}
 	group_name = str(fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" ))+list[str(num)])
 	return(group_name)
-
-#print(group_typ('10'))
 
 def Insert_Group_Process_reg_ren(fileNbr,user,typ):
 	try:
@@ -98,7 +94,6 @@ def ProcessGroupGetList(userNbr):
 	except zeep.exceptions.Fault as e:
 		return(e)
 
-
 def last_group(userNbr):
 	list = []
 	list_int = []
@@ -111,7 +106,6 @@ def last_group(userNbr):
 	ultimo = int(len(list_int))-1
 	#print(list_int)
 	return(list_int[ultimo])
-
 
 def fileResave(ORIGIN):
 	try:
@@ -164,8 +158,40 @@ def fileResave(ORIGIN):
 		return(e)			
 
 
-print(Insert_Group_Process_reg_ren('23006295','CABENITEZ','1'))
+def Insert_Group_Process_docs(fileNbr,user,typ):
+	try:
+		data_doc = user_doc_getList_escrito(fileNbr)
+		fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
+		userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+		process = user_doc_read(data_doc['documentId']['docLog'],data_doc['documentId']['docNbr']['doubleValue'],data_doc['documentId']['docOrigin'],data_doc['documentId']['docSeries']['doubleValue'])
+		print(process['userdocProcessId']['processNbr'])
+		print(process['userdocProcessId']['processType'])
+		group_count = last_group(userId) # cantidad de grupos que tiene el usuario
+		if valid_group(userId,group_typ(str(typ)),typ) == False: # no existe el grupo
+			print((group_count + 1),userId,group_typ(str(typ)),'descripcion','1',typ)
+			ProcessGroupInsert((group_count + 1),userId,fecha,'descripcion','1',typ)
+			time.sleep(1) 
+			ProcessGroupAddProcess((group_count + 1),userId,process['userdocProcessId']['processNbr'],process['userdocProcessId']['processType'])
+			res = 'true'
+		else: # existe el grupo
+			ProcessGroupAddProcess(group_today(userId,group_typ(str(typ)),typ),userId,process['userdocProcessId']['processNbr'],process['userdocProcessId']['processType'])
+			res = 'true'
+		return(res)
+	except Exception as e:
+		return('false')
 
+
+
+#print(Insert_Group_Process_docs('23006441','AMEDINA','11'))
+
+#'23006441'
+
+#EXISTE O NO EL GRUPO USUARIO DE LA FECHA
+#print(group_today('297', '30/05/2023', '1'))
+
+#print(group_typ('10'))
+
+#print(Insert_Group_Process_reg_ren('23006295','CABENITEZ','1'))
 
 #print(valid_group('298',group_typ('1'),'1'))
 

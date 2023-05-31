@@ -1000,7 +1000,30 @@ def mark_insert_ren(
 						},
 						'receptionUserId': {
 							'doubleValue': file_filingData_receptionUserId
+						},
+						"receptionDocument": {
+								"documentId": {
+								"docLog": "E",
+								"docNbr": {
+									"doubleValue": ""
+								},
+								"docOrigin": "3",
+								"docSeries": {
+									"doubleValue": file_fileId_fileSeries
+								},
+								"selected": ""
+								},
+								"documentSeqId": {
+								"docSeqName": "",
+								"docSeqNbr": {
+									"doubleValue": ""
+								},
+								"docSeqSeries": {
+									"doubleValue": file_fileId_fileSeries
+								},
+							"docSeqType": ""
 						}
+					}
 					},
 					'ownershipData': {
 						'ownerList': {
