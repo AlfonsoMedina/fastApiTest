@@ -338,20 +338,26 @@ def renovacion_sfe(arg):
 								join perfiles_agentes pa on pa.usuario_id = u.id         
 								where t.id = {};""".format(int(arg)))
 		row=cursor.fetchall()
-		print(row[0])
 		global_data['fecha_envio'] = str(row[0][17])
 		global_data['expediente'] = str(row[0][15])
 		global_data['fecha_solicitud'] = str(row[0][18])
 		global_data['codigo_barr'] = str(row[0][12])
-		global_data['usuario'] = str(row[0][19])
+		global_data['usuario'] = str(row[0][10])
 		global_data['code_agente'] = str(row[0][26])
 		global_data['nombre_agente'] = str(row[0][25])
 		global_data['dir_agente'] = str(row[0][29])
 		global_data['TEL_agente'] = str(row[0][28])
 		global_data['email_agente'] = str(row[0][27])
 		global_data['nombre_formulario'] = str(row[0][3])
-		
+		print(global_data)
 		for i in row[0][8]:
+			try:	
+				if(i['campo'] == 'marcarenov_registrono'): 
+					global_data['registro_nbr']=i['valor']
+			except Exception as e:
+				global_data['registro_nbr'] = "No definido"
+
+			"""
 
 			if(i['campo'] == 'marcarenov_clase'):
 				clase_tipo = i['valor']
@@ -501,11 +507,7 @@ def renovacion_sfe(arg):
 					global_data['clase_on']=i['valor']
 			except Exception as e:
 				global_data['clase_on'] = "No definido"
-			try:	
-				if(i['campo'] == 'marcarenov_registrono'): 
-					global_data['registro_nbr']=i['valor']
-			except Exception as e:
-				global_data['registro_nbr'] = "No definido"
+
 			try:	
 				if(i['descripcion'] == "País " and i['campo'] == 'datospersonalesrenov_pais'):
 					global_data['solic_pais']=i['valor']
@@ -539,6 +541,7 @@ def renovacion_sfe(arg):
 					global_data['actc_num']=i['valor']
 			except Exception as e:
 				global_data['actc_num'] = "No definido"
+			"""
 
 		return(global_data)
 	except Exception as e:

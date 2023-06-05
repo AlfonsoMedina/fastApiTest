@@ -4,6 +4,7 @@ from turtle import back
 import zeep
 from zeep import Client
 import psycopg2
+from models.insertRenModel import insertRenModel
 from models.InsertUserDocModel_backUp import userDocModel_test
 from dinapi.sfe import COMMIT_NBR, USER_GROUP, cambio_estado_soporte, data_validator, pago_id, pendiente_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, tasa_id, tipo_form
 from models.InsertUserDocModel import userDocModel
@@ -452,7 +453,7 @@ def respuesta_sfe_campo(arg):
 model_test = userDocModel_test()
 
 model_test.setData('1613')
-
+"""
 print(model_test.affectedFileIdList_fileNbr)
 print(model_test.affectedFileIdList_fileSeq)
 print(model_test.affectedFileIdList_fileSeries)
@@ -643,6 +644,127 @@ print(model_test.representationData_representativeList_person_stateName)
 print(model_test.representationData_representativeList_person_telephone)
 print(model_test.representationData_representativeList_person_zipCode)
 print(model_test.representationData_representativeList_representativeType)
+"""
+
+def test_renov(arg):
+	global_data = {}
+	try:
+		conn = psycopg2.connect(
+					host = '192.168.50.219',
+					user= 'user-developer',
+					password = 'user-developer--201901',
+					database = 'db_sfe_production'
+				)
+		cursor = conn.cursor()
+		cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
+								to_char(t.created_at,'yyyy-mm-dd hh24:mi:ss')created_at,to_char(t.updated_at,'yyyy-mm-dd hh24:mi:ss')updated_at,t.respuestas,t.costo,t.usuario_id, t.deleted_at,
+								t.codigo,t.firmado_at,to_char(t.pagado_at,'yyyy-mm-dd hh24:mi:ss') as pagado_at,t.expediente_id,t.pdf_url,to_char(t.enviado_at,'yyyy-mm-dd hh24:mi:ss') as enviado_at,
+								to_char(t.recepcionado_at,'yyyy-mm-dd hh24:mi:ss') as recepcionado_at,t.nom_funcionario,t.pdf,t.expediente_afectado,t.notificacion_id,t.expedientes_autor,t.autorizado_por_id,u.nombre as nombre_agente,pa.numero_agente,
+								u.email as email_agente,pa.celular as telefonoAgente,pa.domicilio_agpi,t.nom_funcionario as funcionario_autorizado 
+								from tramites t join formularios f on t.formulario_id  = f.id  
+								join usuarios u on u.id = t.usuario_id  
+								join perfiles_agentes pa on pa.usuario_id = u.id         
+								where t.id = {};""".format(int(arg)))
+		row=cursor.fetchall()
+		#print(row[0][10])
+		global_data['fecha_envio'] = str(row[0][17])
+		global_data['expediente'] = str(row[0][15])
+		global_data['fecha_solicitud'] = str(row[0][18])
+		global_data['codigo_barr'] = str(row[0][12])
+		global_data['usuario'] = str(row[0][10])
+		global_data['code_agente'] = str(row[0][26])
+		global_data['nombre_agente'] = str(row[0][25])
+		global_data['dir_agente'] = str(row[0][29])
+		global_data['TEL_agente'] = str(row[0][28])
+		global_data['email_agente'] = str(row[0][27])
+		global_data['nombre_formulario'] = str(row[0][3])
+		
+
+		for i in row[0][8]:
+			try:
+				print(i['campo'])
+			except Exception as e:
+				print("")			
+			try:
+				print(i['valor'])
+			except Exception as e:
+				print("")
+		return(global_data)
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()	
+
+#print(test_renov('1815'))
+
+
+
+ren = insertRenModel()
+
+ren.setData('1815')
+
+print(ren.file_fileId_fileNbr)
+print(ren.file_fileId_fileSeq)
+print(ren.file_fileId_fileSeries)
+print(ren.file_fileId_fileType)
+print(ren.file_filingData_applicationSubtype)
+print(ren.file_filingData_applicationType)
+print(ren.file_filingData_captureUserId)
+print(ren.file_filingData_filingDate)
+print(ren.file_filingData_captureDate)
+print(ren.file_filingData_lawCode)
+print(ren.file_filingData_paymentList_currencyType)
+print(ren.file_filingData_paymentList_receiptAmount)
+print(ren.file_filingData_paymentList_receiptDate)
+print(ren.file_filingData_paymentList_receiptNbr)
+print(ren.file_filingData_paymentList_receiptNotes)
+print(ren.file_filingData_paymentList_receiptType)
+print(ren.file_filingData_receptionUserId)
+print(ren.file_ownershipData_ownerList_person_addressStreet)
+print(ren.file_ownershipData_ownerList_person_nationalityCountryCode)
+print(ren.file_ownershipData_ownerList_person_personName)
+print(ren.file_ownershipData_ownerList_person_residenceCountryCode)
+print(ren.file_rowVersion)
+print(ren.agentCode)
+print(ren.file_relationshipList_fileId_fileNbr)
+print(ren.file_relationshipList_fileId_fileSeq)
+print(ren.file_relationshipList_fileId_fileSeries)
+print(ren.file_relationshipList_fileId_fileType)
+print(ren.file_relationshipList_relationshipRole)
+print(ren.file_relationshipList_relationshipType)
+print(ren.file_representationData_representativeList_representativeType)
+print(ren.rowVersion)
+print(ren.protectionData_dummy)
+print(ren.protectionData_niceClassList_niceClassDescription)
+print(ren.protectionData_niceClassList_niceClassDetailedStatus)
+print(ren.protectionData_niceClassList_niceClassEdition)
+print(ren.protectionData_niceClassList_niceClassGlobalStatus)
+print(ren.protectionData_niceClassList_niceClassNbr)
+print(ren.protectionData_niceClassList_niceClassVersion)
+print(ren.logoData)
+print(ren.logoType)
+print(ren.signData_markName)
+print(ren.signData_signType)
+print(ren.signType)
+print(ren.tipo_clase)
+print(ren.data)
+print(ren.LogData)
+print(ren.LogDataUri)
+print(ren.LogTyp)
+print(ren.relacion)
+print(ren.dir_owner)
+print(ren.thisName)
+print(ren.fileNbr)
+print(ren.fileSeq)
+print(ren.fileSeries)
+print(ren.fileId)
+
+
+
+
+
+
+
 
 #print(respuesta_sfe_campo('1547')['datospersonales_direccion'])
 

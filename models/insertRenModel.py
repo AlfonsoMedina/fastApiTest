@@ -4,7 +4,7 @@ from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, regist
 from getFileDoc import getFile
 from respuesta_map import dir_titu, nom_titu
 from wipo.function_for_reception_in import user_doc_getList_escrito
-from wipo.ipas import mark_getlist, mark_getlistReg, personAgente
+from wipo.ipas import mark_getlist, mark_getlistReg, mark_read, personAgente
 import tools.connect as connex
 import tools.filing_date as captureDate
 import tools.connect as connex
@@ -32,10 +32,10 @@ class insertRenModel(object):
 	file_filingData_paymentList_receiptNotes:str = ""
 	file_filingData_paymentList_receiptType:str = ""
 	file_filingData_receptionUserId:str = ""
-	file_ownershipData_ownerList_person_addressStreet:str = ""
-	file_ownershipData_ownerList_person_nationalityCountryCode:str = ""
-	file_ownershipData_ownerList_person_personName:str = ""
-	file_ownershipData_ownerList_person_residenceCountryCode:str = ""
+	file_ownershipData_ownerList_person_owneraddressStreet:str = ""
+	file_ownershipData_ownerList_person_ownernationalityCountryCode:str = ""
+	file_ownershipData_ownerList_person_ownerpersonName:str = ""
+	file_ownershipData_ownerList_person_ownerresidenceCountryCode:str = ""
 	file_rowVersion:str = ""
 	agentCode:str = ""
 
@@ -83,6 +83,7 @@ class insertRenModel(object):
 		self.data = renovacion_sfe(doc_Id) 
 	
 		print(self.data)
+		print('----------------------------------------------')
 
 		try:
 			if self.data['distintivo'] == "No definido":
@@ -96,209 +97,82 @@ class insertRenModel(object):
 
 		#print(self.LogDataUri)
 
-		try:
-			ag_data = personAgente(code_ag(self.data[0]['usuario_id']))[0]
-		except Exception as e:
-			print("")
-
-		try:
-			self.relacion = mark_getlistReg(self.data['registro_nbr'])
-			self.fileNbr = str(self.relacion[0]['fileId']['fileNbr']['doubleValue'])
-			self.fileSeq = self.relacion[0]['fileId']['fileSeq']
-			self.fileSeries = str(self.relacion[0]['fileId']['fileSeries']['doubleValue'])
-			self.fileId = self.relacion[0]['fileId']['fileType']	
-		except Exception as e:
-			self.fileNbr = ""
-			self.fileSeq = ""
-			self.fileSeries = ""
-			self.fileId = ""
-
-		try:
-			if self.data['tipo_guion'] == "Denominativa": 
-				self.signType="N"
-				self.LogData = ""
-				self.LogTyp = ""			
-		except Exception as e:
-			pass
+		get_List = mark_getlistReg(self.data['registro_nbr'])
 		
-		try:
-			if self.data['tipo_guion'] == "N": 
-				self.signType="N"
-				self.LogData = ""
-				self.LogTyp = ""						
-		except Exception as e:
-			pass
-		
-		try:
-			if self.data['tipo_guion'] == "Figurativa": 
-				self.signType="L"
-				self.LogData = image_url_to_b64(self.LogDataUri)
-				self.LogTyp = "JPG"			
-		except Exception as e:
-			pass
-
-		try:
-			if self.data['tipo_guion'] == "L": 
-				self.signType="L"
-				self.LogData = image_url_to_b64(self.LogDataUri)
-				self.LogTyp = "JPG"							
-		except Exception as e:
-			pass
-
-		try:
-			if self.data['tipo_guion'] == "Mixta": 
-				self.signType="B"
-				self.LogData = image_url_to_b64(self.LogDataUri)
-				self.LogTyp = "JPG"				
-		except Exception as e:
-			pass
-		
-		try:
-			if self.data['tipo_guion'] == "B": 
-				self.signType="B"
-				self.LogData = image_url_to_b64(self.LogDataUri)
-				self.LogTyp = "JPG"				
-		except Exception as e:
-			pass
-		
-		try:
-			if self.data['tipo_guion'] == "Tridimensional": 
-				self.signType="T"
-				self.LogData = image_url_to_b64(self.LogDataUri)
-				self.LogTyp = "JPG"				
-		except Exception as e:
-			pass
-		
-		try:
-			if self.data['tipo_guion'] == "T": 
-				self.signType="T"
-				self.LogData = image_url_to_b64(self.LogDataUri)
-				self.LogTyp = "JPG"										
-		except Exception as e:
-			pass
-					
-		try:	
-			if self.data['tipo_guion'] == "Sonora": 
-				self.signType="S"
-				self.LogData = ""
-				self.LogTyp = ""			
-		except Exception as e:
-			pass
-		
-		try:
-			if self.data['tipo_guion'] == "S": 
-				self.signType="S"
-				self.LogData = ""
-				self.LogTyp = ""			
-		except Exception as e:
-			pass
-		
-		try:
-			if self.data['tipo_guion'] == "Olfativa": 
-				self.signType="O"
-				self.LogData = ""
-				self.LogTyp = ""				
-		except Exception as e:
-			pass
-								
-		try:
-			if self.data['clasificacion'] == 'PRODUCTO':
-				self.tipo_clase = "MP"
-		except Exception as e:
-			pass
-								
-		try:
-			if self.data['clasificacion'] == 'SERVICIO':
-				self.tipo_clase = 'MS'
-		except Exception as e:
-			pass
-								
-		try:
-			if self.data['clasificacion'] == 'PRODUCTOS':
-				self.tipo_clase = "MP"
-		except Exception as e:
-			pass
-								
-		try:				
-			if self.data['clasificacion'] == 'SERVICIOS':
-				self.tipo_clase = 'MS'
-		except Exception as e:
-			pass
-								
-
-		self.file_fileId_fileNbr = str(int(process_day_Nbr())+1)
-		self.file_fileId_fileSeq = "PY"
-		self.file_fileId_fileSeries = captureDate.capture_year()
-		self.file_fileId_fileType = "M"
-		self.file_filingData_applicationSubtype = self.tipo_clase
-		self.file_filingData_applicationType = "REN"
-		self.file_filingData_captureUserId = "4"
-		self.file_filingData_filingDate = captureDate.capture_full()
-		self.file_filingData_captureDate = captureDate.capture_full()
-		self.file_filingData_lawCode = "1.0"
-		self.file_filingData_paymentList_currencyType = "GS"
-		self.file_filingData_paymentList_receiptAmount = str(pago_data(doc_Id)[1])
-		self.file_filingData_paymentList_receiptDate = str(pago_data(doc_Id)[2])[0:10]
-		self.file_filingData_paymentList_receiptNbr = str(pago_data(doc_Id)[0])
-		self.file_filingData_paymentList_receiptNotes = " Caja MEA"
-		self.file_filingData_paymentList_receiptType = "1"
-		self.file_filingData_receptionUserId = "4"
-
-		try:
-			if self.data['solic_dir'] == "No definido":
-				self.dir_owner = self.data['solic_dir2']
-			elif self.data['solic_dir'] == "No definido":
-				self.dir_owner = self.data['solic_dir']
-		except Exception as e:
-			pass
-		
-			
-		try:	
-			self.file_ownershipData_ownerList_person_owneraddressStreet = dir_titu(doc_Id)[0] #self.dir_owner	
-		except Exception as e:
-			self.file_ownershipData_ownerList_person_owneraddressStreet = ""
+		get_data_mark = mark_read(
+			get_List[0].fileId.fileNbr.doubleValue, 
+			get_List[0].fileId.fileSeq, 
+			get_List[0].fileId.fileSeries.doubleValue, 
+			get_List[0].fileId.fileType
+			)
 
 
-		self.file_ownershipData_ownerList_person_ownernationalityCountryCode = "PY"#self.data['act_pais']
-
+		self.file_fileId_fileNbr = get_data_mark.file.fileId.fileNbr.doubleValue
+		self.file_fileId_fileSeq = get_data_mark.file.fileId.fileSeq
+		self.file_fileId_fileSeries = get_data_mark.file.fileId.fileSeries.doubleValue
+		self.file_fileId_fileType = get_data_mark.file.fileId.fileType
+		self.file_filingData_applicationSubtype = get_data_mark.file.filingData.applicationSubtype
+		self.file_filingData_applicationType = get_data_mark.file.filingData.applicationType
+		self.file_filingData_captureUserId = get_data_mark.file.filingData.captureUserId.doubleValue
+		self.file_filingData_filingDate = str(get_data_mark.file.filingData.filingDate.dateValue)
+		self.file_filingData_captureDate = str(get_data_mark.file.filingData.captureDate.dateValue)
+		self.file_filingData_lawCode = get_data_mark.file.filingData.lawCode.doubleValue
 		try:
-			self.file_ownershipData_ownerList_person_ownerpersonName = nom_titu(doc_Id)[0]
+			self.file_filingData_paymentList_currencyType = "GS"
+			self.file_filingData_paymentList_receiptAmount = str(pago_data(doc_Id)[1])
+			self.file_filingData_paymentList_receiptDate = str(pago_data(doc_Id)[2])[0:10]
+			self.file_filingData_paymentList_receiptNbr = str(pago_data(doc_Id)[0])
+			self.file_filingData_paymentList_receiptNotes = "Caja MEA"
+			self.file_filingData_paymentList_receiptType = "1"
 		except Exception as e:
-			self.file_ownershipData_ownerList_person_ownerpersonName = ""
-
-		self.file_ownershipData_ownerList_person_ownerresidenceCountryCode = "PY"#self.data['act_pais']
-
-
+			self.file_filingData_paymentList_currencyType = ""
+			self.file_filingData_paymentList_receiptAmount = ""
+			self.file_filingData_paymentList_receiptDate = ""
+			self.file_filingData_paymentList_receiptNbr = ""
+			self.file_filingData_paymentList_receiptNotes = ""
+			self.file_filingData_paymentList_receiptType = ""			
+		self.file_filingData_receptionUserId = get_data_mark.file.filingData.receptionUserId
+		self.file_ownershipData_ownerList_person_owneraddressStreet = get_data_mark.file.ownershipData.ownerList[0].person.addressStreet
+		self.file_ownershipData_ownerList_person_ownernationalityCountryCode = get_data_mark.file.ownershipData.ownerList[0].person.nationalityCountryCode
+		self.file_ownershipData_ownerList_person_ownerpersonName = get_data_mark.file.ownershipData.ownerList[0].person.personName
+		self.file_ownershipData_ownerList_person_ownerresidenceCountryCode = get_data_mark.file.ownershipData.ownerList[0].person.residenceCountryCode
 		self.file_rowVersion = "1.0"
 		self.agentCode = self.data['code_agente']
+		for i in range(0,len(get_data_mark.file.relationshipList)):
+			self.file_relationshipList_fileId_fileNbr = get_data_mark.file.relationshipList[i].fileId.fileNbr.doubleValue
+			self.file_relationshipList_fileId_fileSeq = get_data_mark.file.relationshipList[i].fileId.fileSeq
+			self.file_relationshipList_fileId_fileSeries = get_data_mark.file.relationshipList[i].fileId.fileSeries.doubleValue
+			self.file_relationshipList_fileId_fileType = get_data_mark.file.relationshipList[i].fileId.fileType
+			self.file_relationshipList_relationshipRole = get_data_mark.file.relationshipList[i].relationshipRole
+			self.file_relationshipList_relationshipType = get_data_mark.file.relationshipList[i].relationshipType
+		self.file_representationData_representativeList_representativeType = get_data_mark.file.representationData.representativeList[0].representativeType
+		self.rowVersion = ""
+		self.protectionData_dummy = get_data_mark.protectionData.dummy
+		self.protectionData_niceClassList_niceClassDescription = get_data_mark.protectionData.niceClassList[0].niceClassDescription
+		self.protectionData_niceClassList_niceClassDetailedStatus = get_data_mark.protectionData.niceClassList[0].niceClassGlobalStatus
+		self.protectionData_niceClassList_niceClassEdition = get_data_mark.protectionData.niceClassList[0].niceClassNbr.doubleValue
+		self.protectionData_niceClassList_niceClassGlobalStatus = "-"
+		self.protectionData_niceClassList_niceClassNbr = "-"
+		self.protectionData_niceClassList_niceClassVersion = get_data_mark.protectionData.niceClassList[0].niceClassVersion
+		self.logoData = get_data_mark.signData.logo.logoData
+		self.logoType = get_data_mark.signData.logo.logoType
+		self.signData_markName = get_data_mark.signData.markName
+		self.signData_signType = get_data_mark.signData.signType
+		self.signType = "-"
+		self.tipo_clase = "-"
+		self.data = "-"
+		self.LogData = "-"
+		self.LogDataUri = "-"
+		self.LogTyp = "-"
+		self.relacion = "-"
+		self.dir_owner = "-"
+		self.thisName = "-"
+		self.fileNbr = "-"
+		self.fileSeq = "-"
+		self.fileSeries = "-"
+		self.fileId = "-"
 
 
-		self.file_relationshipList_fileId_fileNbr:str = self.fileNbr 
-		self.file_relationshipList_fileId_fileSeq:str = self.fileSeq 
-		self.file_relationshipList_fileId_fileSeries:str = self.fileSeries 
-		self.file_relationshipList_fileId_fileType:str = self.fileId 
-		self.file_relationshipList_relationshipRole:str = "2"
-		self.file_relationshipList_relationshipType:str = "REN"
-
-
-		self.file_representationData_representativeList_representativeType = "AG"
-		self.rowVersion = "1.0"
-		self.protectionData_dummy = "false"
-		
-		self.protectionData_niceClassList_niceClassDescription = self.data['distingue']
-		
-		self.protectionData_niceClassList_niceClassDetailedStatus = "P"
-		self.protectionData_niceClassList_niceClassEdition = "12.0"
-		self.protectionData_niceClassList_niceClassGlobalStatus = "P"
-
-		self.protectionData_niceClassList_niceClassNbr = self.data['clase_on']
-		
-		self.protectionData_niceClassList_niceClassVersion = "2023.01"
-		self.logoData = self.LogData
-		self.logoType = self.LogTyp
-		self.signData_markName = self.data['denominacion_on']
-		
-		self.signData_signType = self.signType						
-		
+		#print(get_data_mark)
 
 
