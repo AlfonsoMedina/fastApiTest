@@ -352,7 +352,7 @@ def compileAndInsert(form_Id,typ):
 				cambio_estado(form_Id,insert_doc.documentId_docNbr) # Cambio de estado
 				time.sleep(1)
 				try:
-					Insert_Group_Process_docs(new_Nbr,'AMEDINA','10')
+					Insert_Group_Process_docs(new_Nbr,'AMEDINA','11')
 				except Exception as e:
 					print('error insert grupo')	
 				time.sleep(1)

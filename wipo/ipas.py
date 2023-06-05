@@ -10839,7 +10839,6 @@ def check_serv_disenio():
 	except Exception as e:
 		return('error')
 
-
 def daily_log_open(fecha):
 	try:
 		mDailyLog = {

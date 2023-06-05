@@ -82,7 +82,7 @@ class insertRenModel(object):
 		
 		self.data = renovacion_sfe(doc_Id) 
 	
-		#print(self.data)
+		print(self.data)
 
 		try:
 			if self.data['distintivo'] == "No definido":

@@ -13,10 +13,58 @@ from urllib import request
 import qrcode
 
 
-
 create_userdoc = {}
 default_val = lambda arg: arg if arg == "null" else "" 
 list_titulare = []
+
+
+def respuesta_sfe_campo(arg):
+	try:
+		list_campos = []
+		list_valores = {}
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
+			from tramites where expediente_electronico = true and id = {}
+		""".format(arg))
+		row=cursor.fetchall()
+		list_valores['id'] = row[0][0]
+		list_valores['fecha'] = row[0][1]
+		list_valores['formulario_id'] = row[0][2]
+		list_valores['estado'] = row[0][3]
+		list_valores['created_at'] = str(row[0][4])
+		list_valores['updated_at'] = str(row[0][5])
+		list_valores['costo'] = str(row[0][7])
+		list_valores['usuario_id'] = str(row[0][8])
+		list_valores['codigo'] = str(row[0][10])
+		list_valores['firmado_at'] = str(row[0][11])
+		list_valores['pagado_at'] = str(row[0][12])
+		list_valores['enviado_at'] = str(row[0][15])
+		list_valores['expediente_afectado'] = str(row[0][19])
+		list_valores['tipo_documento_id'] = str(row[0][25])
+		for i in range(0,len(row[0][6])):
+			list_campos.append(row[0][6][i]['campo'])
+		
+		#print(" ")
+		#print('[[[[[[[Lista de campos]]]]]]]]]')
+		#print(list_campos)
+
+		#print(" ")
+		#print('(((((((((]Lista de valores[)))))))))')
+
+		for item in range(0,len(list_campos)):
+			for x in list_campos:
+				if row[0][6][item]['campo'] == x:
+					try:
+						list_valores[x] = row[0][6][item]['valor']
+					except Exception as e:
+						list_valores[x] = 'sin valor'
+
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+	return(list_valores)
 
 def registro_sfe(arg):
 	global_data = {}
@@ -182,7 +230,6 @@ def registro_sfe(arg):
 	finally:
 		conn.close()
 
- 
 def titulare_reg(arg):
 	list_titulare = []
 
@@ -271,8 +318,6 @@ def catch_owner(arg,number):
 	finally:
 		conn.close()	
 
-#print(titulare_reg('1586'))#Paquete de titulares
-
 def renovacion_sfe(arg):
 	global_data = {}
 	try:
@@ -293,6 +338,7 @@ def renovacion_sfe(arg):
 								join perfiles_agentes pa on pa.usuario_id = u.id         
 								where t.id = {};""".format(int(arg)))
 		row=cursor.fetchall()
+		print(row[0])
 		global_data['fecha_envio'] = str(row[0][17])
 		global_data['expediente'] = str(row[0][15])
 		global_data['fecha_solicitud'] = str(row[0][18])

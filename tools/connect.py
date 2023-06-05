@@ -165,8 +165,6 @@ TRAMITE_REG = """select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formular
 						where t.id = {};"""
 
 
-
-
 """
 http://192.168.50.194:8050/Stat/stat?type=loggedUser
 

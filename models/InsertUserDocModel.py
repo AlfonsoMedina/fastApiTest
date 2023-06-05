@@ -215,7 +215,6 @@ class userDocModel(object):
 		exists = arg1 in list_splits.values()	
 		return(exists)
 
-
 	#Adjunto requerido 
 	
 	#actualizacion de front durante proceso
