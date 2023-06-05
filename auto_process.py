@@ -352,7 +352,7 @@ def compileAndInsert(form_Id,typ):
 				cambio_estado(form_Id,insert_doc.documentId_docNbr) # Cambio de estado
 				time.sleep(1)
 				try:
-					Insert_Group_Process_docs(new_Nbr,'AMEDINA','11')
+					Insert_Group_Process_docs(new_Nbr,'AMEDINA','10')
 				except Exception as e:
 					print('error insert grupo')	
 				time.sleep(1)
@@ -516,7 +516,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 			envio_agente_recibido(form_Id,new_Nbr)		#Crear PDF
 			rule_notification(typ,'')# Correo al funcionario
 			try:
-				Insert_Group_Process_docs(new_Nbr,'AMEDINA','11')
+				Insert_Group_Process_docs(new_Nbr,'AMEDINA','10')
 			except Exception as e:
 				print('error insert grupo')				
 			time.sleep(1)
@@ -766,8 +766,13 @@ def insertReg(form_Id):
 def insertRen(form_Id):
 	flow_request = stop_request()
 	if flow_request == 0:
-		insert_mark_ren = insertRenModel()
-		insert_mark_ren.setData(form_Id)
+		try:
+			insert_mark_ren = insertRenModel()
+			insert_mark_ren.setData(form_Id)
+		except Exception as e:
+			data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id}','true',form_Id)
+			cambio_estado_soporte(form_Id)
+			rule_notification('SOP',form_Id)
 		try:
 			new_Nbr = str(COMMIT_NBR())
 			insertRenState = mark_insert_ren(

@@ -357,16 +357,22 @@ def renovacion_sfe(arg):
 			except Exception as e:
 				global_data['registro_nbr'] = "No definido"
 
-			"""
+			
 
 			if(i['campo'] == 'marcarenov_clase'):
 				clase_tipo = i['valor']
 				if(int(clase_tipo.replace(".0","")) <= 34):
 					global_data['clasificacion']= 'PRODUCTO'
 				if(int(clase_tipo.replace(".0","")) >= 35):
-					global_data['clasificacion']= 'SERVICIO'			
+					global_data['clasificacion']= 'SERVICIO'
 
+			try:	
+				if(i['campo'] == 'marcarenov_tipomarca'):
+					global_data["tipo_guion"] = i['valor']
+			except Exception as e:
+				global_data['tipo_guion'] = "No definido"			
 
+			
 			try:					
 				if(i['campo'] == "marcarenov_distintivo"):
 					global_data['distintivo'] = i['valor']['archivo']['url']
@@ -379,6 +385,7 @@ def renovacion_sfe(arg):
 			except Exception as e:
 					global_data['distintivoAct'] = "No definido"					
 			
+			"""
 			try:	
 				if(i['campo'] == "actualizacion_refdistitivo"):
 					global_data['distintivo2'] = i['valor']['archivo']['url']
@@ -408,11 +415,7 @@ def renovacion_sfe(arg):
 					global_data['reivindicaciones'] = i['valor']
 			except Exception as e:
 				global_data['reivindicaciones'] = "No definido"							
-			try:	
-				if(i['campo'] == 'marcarenov_tipomarca'):
-					global_data["tipo_guion"] = i['valor']
-			except Exception as e:
-				global_data['tipo_guion'] = "No definido"
+
 			try:	
 				if(i['descripcion'] == "Denominación"):
 					global_data['denominacion_on'] = i['valor']

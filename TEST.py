@@ -4,6 +4,7 @@ from turtle import back
 import zeep
 from zeep import Client
 import psycopg2
+from tools.base64Decode import decode_img
 from models.insertRenModel import insertRenModel
 from models.InsertUserDocModel_backUp import userDocModel_test
 from dinapi.sfe import COMMIT_NBR, USER_GROUP, cambio_estado_soporte, data_validator, pago_id, pendiente_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, tasa_id, tipo_form
@@ -701,7 +702,7 @@ def test_renov(arg):
 
 ren = insertRenModel()
 
-ren.setData('1815')
+ren.setData('1795')
 
 print(ren.file_fileId_fileNbr)
 print(ren.file_fileId_fileSeq)
@@ -720,10 +721,10 @@ print(ren.file_filingData_paymentList_receiptNbr)
 print(ren.file_filingData_paymentList_receiptNotes)
 print(ren.file_filingData_paymentList_receiptType)
 print(ren.file_filingData_receptionUserId)
-print(ren.file_ownershipData_ownerList_person_addressStreet)
-print(ren.file_ownershipData_ownerList_person_nationalityCountryCode)
-print(ren.file_ownershipData_ownerList_person_personName)
-print(ren.file_ownershipData_ownerList_person_residenceCountryCode)
+print(ren.file_ownershipData_ownerList_person_owneraddressStreet)
+print(ren.file_ownershipData_ownerList_person_ownernationalityCountryCode)
+print(ren.file_ownershipData_ownerList_person_ownerpersonName)
+print(ren.file_ownershipData_ownerList_person_ownerresidenceCountryCode)
 print(ren.file_rowVersion)
 print(ren.agentCode)
 print(ren.file_relationshipList_fileId_fileNbr)
@@ -741,23 +742,11 @@ print(ren.protectionData_niceClassList_niceClassEdition)
 print(ren.protectionData_niceClassList_niceClassGlobalStatus)
 print(ren.protectionData_niceClassList_niceClassNbr)
 print(ren.protectionData_niceClassList_niceClassVersion)
-print(ren.logoData)
+print(decode_img(ren.logoData))
 print(ren.logoType)
 print(ren.signData_markName)
 print(ren.signData_signType)
-print(ren.signType)
-print(ren.tipo_clase)
-print(ren.data)
-print(ren.LogData)
-print(ren.LogDataUri)
-print(ren.LogTyp)
-print(ren.relacion)
-print(ren.dir_owner)
-print(ren.thisName)
-print(ren.fileNbr)
-print(ren.fileSeq)
-print(ren.fileSeries)
-print(ren.fileId)
+
 
 
 

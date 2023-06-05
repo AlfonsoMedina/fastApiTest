@@ -4,11 +4,11 @@ from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, regist
 from getFileDoc import getFile
 from respuesta_map import dir_titu, nom_titu
 from wipo.function_for_reception_in import user_doc_getList_escrito
-from wipo.ipas import mark_getlist, mark_getlistReg, mark_read, personAgente
+from wipo.ipas import mark_getlist, mark_getlistReg, mark_read, mark_readlogo, personAgente
 import tools.connect as connex
 import tools.filing_date as captureDate
 import tools.connect as connex
-from tools.base64Decode import image_url_to_b64
+from tools.base64Decode import decode_img, image_url_to_b64
 
 
 default_val = lambda arg: arg if arg == "null" else "" 
@@ -107,16 +107,67 @@ class insertRenModel(object):
 			)
 
 
-		self.file_fileId_fileNbr = get_data_mark.file.fileId.fileNbr.doubleValue
+
+		try:	
+			if self.data['tipo_guion'] == "Sonora": 
+				self.signType="S"
+				self.LogData = ""
+				self.LogTyp = ""			
+		except Exception as e:
+			pass
+		
+		try:
+			if self.data['tipo_guion'] == "S": 
+				self.signType="S"
+				self.LogData = ""
+				self.LogTyp = ""			
+		except Exception as e:
+			pass
+		
+		try:
+			if self.data['tipo_guion'] == "Olfativa": 
+				self.signType="O"
+				self.LogData = ""
+				self.LogTyp = ""				
+		except Exception as e:
+			pass
+								
+		try:
+			if self.data['clasificacion'] == 'PRODUCTO':
+				self.tipo_clase = "MP"
+		except Exception as e:
+			pass
+								
+		try:
+			if self.data['clasificacion'] == 'SERVICIO':
+				self.tipo_clase = 'MS'
+		except Exception as e:
+			pass
+								
+		try:
+			if self.data['clasificacion'] == 'PRODUCTOS':
+				self.tipo_clase = "MP"
+		except Exception as e:
+			pass
+								
+		try:				
+			if self.data['clasificacion'] == 'SERVICIOS':
+				self.tipo_clase = 'MS'
+		except Exception as e:
+			pass
+
+
+
+		self.file_fileId_fileNbr = str(get_data_mark.file.fileId.fileNbr.doubleValue)
 		self.file_fileId_fileSeq = get_data_mark.file.fileId.fileSeq
-		self.file_fileId_fileSeries = get_data_mark.file.fileId.fileSeries.doubleValue
+		self.file_fileId_fileSeries = str(captureDate.capture_year())
 		self.file_fileId_fileType = get_data_mark.file.fileId.fileType
-		self.file_filingData_applicationSubtype = get_data_mark.file.filingData.applicationSubtype
+		self.file_filingData_applicationSubtype = self.tipo_clase
 		self.file_filingData_applicationType = get_data_mark.file.filingData.applicationType
-		self.file_filingData_captureUserId = get_data_mark.file.filingData.captureUserId.doubleValue
-		self.file_filingData_filingDate = str(get_data_mark.file.filingData.filingDate.dateValue)
-		self.file_filingData_captureDate = str(get_data_mark.file.filingData.captureDate.dateValue)
-		self.file_filingData_lawCode = get_data_mark.file.filingData.lawCode.doubleValue
+		self.file_filingData_captureUserId = str(get_data_mark.file.filingData.captureUserId.doubleValue)
+		self.file_filingData_filingDate = str(captureDate.capture_full())
+		self.file_filingData_captureDate = str(captureDate.capture_full())
+		self.file_filingData_lawCode = str(get_data_mark.file.filingData.lawCode.doubleValue)
 		try:
 			self.file_filingData_paymentList_currencyType = "GS"
 			self.file_filingData_paymentList_receiptAmount = str(pago_data(doc_Id)[1])
@@ -131,7 +182,7 @@ class insertRenModel(object):
 			self.file_filingData_paymentList_receiptNbr = ""
 			self.file_filingData_paymentList_receiptNotes = ""
 			self.file_filingData_paymentList_receiptType = ""			
-		self.file_filingData_receptionUserId = get_data_mark.file.filingData.receptionUserId
+		self.file_filingData_receptionUserId = str("4")
 		self.file_ownershipData_ownerList_person_owneraddressStreet = get_data_mark.file.ownershipData.ownerList[0].person.addressStreet
 		self.file_ownershipData_ownerList_person_ownernationalityCountryCode = get_data_mark.file.ownershipData.ownerList[0].person.nationalityCountryCode
 		self.file_ownershipData_ownerList_person_ownerpersonName = get_data_mark.file.ownershipData.ownerList[0].person.personName
@@ -139,31 +190,30 @@ class insertRenModel(object):
 		self.file_rowVersion = "1.0"
 		self.agentCode = self.data['code_agente']
 		for i in range(0,len(get_data_mark.file.relationshipList)):
-			self.file_relationshipList_fileId_fileNbr = get_data_mark.file.relationshipList[i].fileId.fileNbr.doubleValue
+			self.file_relationshipList_fileId_fileNbr = str(get_data_mark.file.relationshipList[i].fileId.fileNbr.doubleValue)
 			self.file_relationshipList_fileId_fileSeq = get_data_mark.file.relationshipList[i].fileId.fileSeq
-			self.file_relationshipList_fileId_fileSeries = get_data_mark.file.relationshipList[i].fileId.fileSeries.doubleValue
+			self.file_relationshipList_fileId_fileSeries = str(get_data_mark.file.relationshipList[i].fileId.fileSeries.doubleValue)
 			self.file_relationshipList_fileId_fileType = get_data_mark.file.relationshipList[i].fileId.fileType
 			self.file_relationshipList_relationshipRole = get_data_mark.file.relationshipList[i].relationshipRole
 			self.file_relationshipList_relationshipType = get_data_mark.file.relationshipList[i].relationshipType
 		self.file_representationData_representativeList_representativeType = get_data_mark.file.representationData.representativeList[0].representativeType
-		self.rowVersion = ""
-		self.protectionData_dummy = get_data_mark.protectionData.dummy
+		self.rowVersion = "1.0"
+		self.protectionData_dummy = str(get_data_mark.protectionData.dummy)
 		self.protectionData_niceClassList_niceClassDescription = get_data_mark.protectionData.niceClassList[0].niceClassDescription
-		self.protectionData_niceClassList_niceClassDetailedStatus = get_data_mark.protectionData.niceClassList[0].niceClassGlobalStatus
-		self.protectionData_niceClassList_niceClassEdition = get_data_mark.protectionData.niceClassList[0].niceClassNbr.doubleValue
-		self.protectionData_niceClassList_niceClassGlobalStatus = "-"
-		self.protectionData_niceClassList_niceClassNbr = "-"
-		self.protectionData_niceClassList_niceClassVersion = get_data_mark.protectionData.niceClassList[0].niceClassVersion
-		self.logoData = get_data_mark.signData.logo.logoData
-		self.logoType = get_data_mark.signData.logo.logoType
+		self.protectionData_niceClassList_niceClassDetailedStatus = "P"
+		self.protectionData_niceClassList_niceClassEdition = "12.0"
+		self.protectionData_niceClassList_niceClassGlobalStatus = "P"
+		self.protectionData_niceClassList_niceClassNbr = str(get_data_mark.protectionData.niceClassList[0].niceClassNbr.doubleValue)
+		self.protectionData_niceClassList_niceClassVersion = "2023.01"
+		self.logoData = decode_img(str(get_data_mark.signData.logo.logoData).replace("\n", ""))
+		self.logoType = str(get_data_mark.signData.logo.logoType)
 		self.signData_markName = get_data_mark.signData.markName
-		self.signData_signType = get_data_mark.signData.signType
+		self.signData_signType = str(get_data_mark.signData.signType)
 		self.signType = "-"
 		self.tipo_clase = "-"
 		self.data = "-"
-		self.LogData = "-"
-		self.LogDataUri = "-"
-		self.LogTyp = "-"
+		self.LogData = ""
+		self.LogTyp = ""
 		self.relacion = "-"
 		self.dir_owner = "-"
 		self.thisName = "-"
@@ -173,6 +223,5 @@ class insertRenModel(object):
 		self.fileId = "-"
 
 
-		#print(get_data_mark)
 
 
