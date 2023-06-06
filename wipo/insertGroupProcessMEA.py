@@ -134,6 +134,7 @@ def Insert_Group_Process_reg_ren(fileNbr,user,typ):
 			expediente[0]['fileId']['fileSeries']['doubleValue'], 
 			expediente[0]['fileId']['fileType'])
 		group_count = last_group(userId) # cantidad de grupos que tiene el usuario
+		
 		if valid_group(userId,group_typ(str(typ)),typ) == False: # no existe el grupo
 			print((group_count + 1),userId,fecha,'descripcion','1',typ)
 			ProcessGroupInsert((group_count + 1),userId,fecha,'descripcion','1',typ)

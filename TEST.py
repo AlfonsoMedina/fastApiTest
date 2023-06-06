@@ -27,29 +27,144 @@ try:
 except Exception as e:
 	print('Error de coneccion IPAS Marcas!!')
 
-# el numero de grupo de la fecha y usuario
-def group_today(userNbr,groupName,typ):
-	try:
-		for i in range(len(ProcessGroupGetList(userNbr))):
-			processGroupName:str = ''
-			data = ProcessGroupGetList(userNbr)[i]
-			#print(data)
-			processGroupName = str(groupName in data.processGroupName) # existe el nombre de grupo
-			if str(processGroupName) == 'None':
-				resp = False
-			if str(processGroupName) == 'True':
-				if str(data.processType) == str(typ):
-					resp = data.processGroupId.processGroupCode
-			else:
-				resp = False
-		return(resp)
-	except Exception as e:
-		return(False)
 
+def group_today(userNbr,groupName):	
+	data = ProcessGroupGetList(userNbr)
+	list_data = []
+	respuesta = False
+	for i in range(1,len(data)):
+		if str(groupName) == str(data[i].processGroupName):
+			list_data.append(data[i].processGroupName)
+			list_data.append(data[i].processGroupId.processGroupCode)
+		respuesta = list_data
+
+		if str(groupName) != str(data[i].processGroupName):
+			respuesta = False
+	return(respuesta)
+		
 def group_typ(num):
 	list = {'1':'[Expediente]','10':'[Escrito+expediente]','11':'[Escrito]'}
 	group_name = str(fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00"))+" "+list[str(num)])
 	return(group_name)
+
+def insertar_o_crear_grupo_expediente(user,exp):
+	expediente = mark_getlist(exp)
+	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
+	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+	data = mark_read(
+		expediente[0]['fileId']['fileNbr']['doubleValue'], 
+		expediente[0]['fileId']['fileSeq'], 
+		expediente[0]['fileId']['fileSeries']['doubleValue'], 
+		expediente[0]['fileId']['fileType'])
+	#####################################################################################################
+	group_name = f'{fecha} [Expediente]'
+	if group_today(userId, group_name) != False:
+
+		ProcessGroupAddProcess(
+			str(group_today(userId, group_name)[1]), 
+			userId, 
+			data['file']['processId']['processNbr']['doubleValue'],
+			data['file']['processId']['processType']
+			)
+	else:
+		pass
+	#####################################################################################################
+	if group_today(userId, group_name) == False:
+		ProcessGroupInsert(
+							last_group(userId)+1,
+							userId,
+							fecha,
+							'Creado por M.E.A.',
+							'1',
+							'1')
+
+		ProcessGroupAddProcess(
+							str(group_today(userId, group_name)[1]), 
+							userId, 
+							data['file']['processId']['processNbr']['doubleValue'],
+							data['file']['processId']['processType']
+							)
+	
+	else:
+		pass
+
+def insertar_o_crear_grupo_escrito(user,esc):
+	data_doc = user_doc_getList_escrito(esc)
+	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
+	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+	process = user_doc_read(data_doc['documentId']['docLog'],data_doc['documentId']['docNbr']['doubleValue'],data_doc['documentId']['docOrigin'],data_doc['documentId']['docSeries']['doubleValue'])
+	print(process['userdocProcessId']['processNbr']+" "+process['userdocProcessId']['processType'])
+	#####################################################################################################
+	group_name = f'{fecha} [Escrito]'
+	if group_today(userId, group_name) != False:
+
+		ProcessGroupAddProcess(
+								str(group_today(userId, group_name)[1]), 
+								userId, 
+								process['userdocProcessId']['processNbr'],
+								process['userdocProcessId']['processType']
+								)
+	else:
+		pass
+	#####################################################################################################
+	if group_today(userId, group_name) == False:
+		ProcessGroupInsert(
+							last_group(userId)+1,
+							userId,
+							fecha,
+							'Creado por M.E.A.',
+							'1',
+							'11')
+
+		ProcessGroupAddProcess(
+								str(group_today(userId, group_name)[1]), 
+								userId, 
+								process['userdocProcessId']['processNbr'],
+								process['userdocProcessId']['processType']
+								)
+	
+	else:
+		pass
+
+def insertar_o_crear_grupo_escritoMasExpediente(user,esc):
+	data_doc = user_doc_getList_escrito(esc)
+	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
+	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+	process = user_doc_read(data_doc['documentId']['docLog'],data_doc['documentId']['docNbr']['doubleValue'],data_doc['documentId']['docOrigin'],data_doc['documentId']['docSeries']['doubleValue'])
+	print(process['userdocProcessId']['processNbr']+" "+process['userdocProcessId']['processType'])
+	#####################################################################################################
+	group_name = f'{fecha} [Escrito+expediente]'
+	if group_today(userId, group_name) != False:
+
+		ProcessGroupAddProcess(
+								str(group_today(userId, group_name)[1]), 
+								userId, 
+								process['userdocProcessId']['processNbr'],
+								process['userdocProcessId']['processType']
+								)
+	else:
+		pass
+	#####################################################################################################
+	if group_today(userId, group_name) == False:
+		ProcessGroupInsert(
+							last_group(userId)+1,
+							userId,
+							fecha,
+							'Creado por M.E.A.',
+							'1',
+							'10')
+
+		ProcessGroupAddProcess(
+								str(group_today(userId, group_name)[1]), 
+								userId, 
+								process['userdocProcessId']['processNbr'],
+								process['userdocProcessId']['processType']
+								)
+	
+	else:
+		pass
+
+
 
 def Insert_Group_Process_reg_ren(fileNbr,user,typ):
 	try:
@@ -169,27 +284,43 @@ def fileResave(ORIGIN):
 		daily_log_close("2023-05-30")
 		return(e)			
 
-def Insert_Group_Process_docs(fileNbr,user,typ):
+def Insert_Group_Process_docs_test(fileNbr,user,typ):
 	try:
 		data_doc = user_doc_getList_escrito(fileNbr)
+		
 		fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
+
 		userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+		
 		process = user_doc_read(data_doc['documentId']['docLog'],data_doc['documentId']['docNbr']['doubleValue'],data_doc['documentId']['docOrigin'],data_doc['documentId']['docSeries']['doubleValue'])
-		print(process['userdocProcessId']['processNbr'])
-		print(process['userdocProcessId']['processType'])
+		
+		print(process['userdocProcessId']['processNbr']+" "+process['userdocProcessId']['processType'])
+
 		group_count = last_group(userId) # cantidad de grupos que tiene el usuario
-		if valid_group(userId,group_typ(str(typ)),typ) == False: # no existe el grupo
-			print((group_count + 1),userId,group_typ(str(typ)),'descripcion','1',typ)
-			ProcessGroupInsert((group_count + 1),userId,fecha,'descripcion','1',typ)
-			time.sleep(1) 
-			ProcessGroupAddProcess((group_count + 1),userId,process['userdocProcessId']['processNbr'],process['userdocProcessId']['processType'])
+
+		print(group_count)
+
+		print(group_typ(typ))
+
+		if valid_group(userId,group_typ(str(typ)),typ) != group_typ(typ): # no existe el grupo
+
+			print('Crear grupo')		
+			ProcessGroupInsert((group_count + 1),userId,fecha,'descripcion','1',typ) 
+			
+			#ProcessGroupAddProcess((group_count + 1),userId,process['userdocProcessId']['processNbr'],process['userdocProcessId']['processType'])
+			
 			res = 'true'
+		
 		else: # existe el grupo
-			ProcessGroupAddProcess(group_today(userId,group_typ(str(typ)),typ),userId,process['userdocProcessId']['processNbr'],process['userdocProcessId']['processType'])
+			
+			ProcessGroupAddProcess(group_today(userId,group_typ(str(typ)),typ), userId, process['userdocProcessId']['processNbr'],process['userdocProcessId']['processType'])
+			
 			res = 'true'
+
 		return(res)
 	except Exception as e:
-		return('false')
+		return(e)
+
 
 #captura de error
 default_val_e99 = lambda arg: arg if arg != "" else ""
@@ -698,8 +829,7 @@ def test_renov(arg):
 
 #print(test_renov('1815'))
 
-
-
+"""
 ren = insertRenModel()
 
 ren.setData('1795')
@@ -745,12 +875,35 @@ print(ren.protectionData_niceClassList_niceClassVersion)
 print(decode_img(ren.logoData))
 print(ren.logoType)
 print(ren.signData_markName)
-print(ren.signData_signType)
+print(ren.signData_signType)"""
 
 
 
+#buscar el nombre de grupo para hoy para [expediente]
+#print(group_today('298', '06/06/2023 [Expediente]')) #=> (user, fecha, typ) respuesta: nombre de grupo o  False 
+
+#buscar el nombre de grupo para hoy para [Escrito+expediente]
+#print(group_today('298', '06/06/2023', '10')) #=> (user, fecha, typ) respuesta: nombre de grupo o  False 
+
+#buscar el nombre de grupo para hoy para [escrito]
+#print(group_today('298', '06/06/2023', '11')) #=> (user, fecha, typ) respuesta: nombre de grupo o  False 
 
 
+#si existe el nombre => insertar el documento
+#ProcessGroupAddProcess(group_today('298', '06/06/2023', '1'), '298', 'processNbr', 'processType')
+
+#si no existe => buscar el ultimo numero de grupo, sumar uno y crear el grupo de hoy => insertar el documento
+#buscar el ultimo numero de grupo
+#print(last_group('298'))
+
+
+
+#CREA GRUPO PARA EXPEDIENTE DE TIPO REN Y REG - (REQUIERE USUSARIO Y EXPEDIENTE)
+insertar_o_crear_grupo_escritoMasExpediente('AMEDINA','2332001')
+
+
+
+#Insert_Group_Process_docs_test('2300605','CABENITEZ','11')
 
 
 
@@ -766,22 +919,23 @@ print(ren.signData_signType)
 
 #print(COMMIT_NBR())
 
-#print(Insert_Group_Process_docs('2340722','AMEDINA','11'))
+
 
 #'23006441'
 
 #EXISTE O NO EL GRUPO USUARIO DE LA FECHA
-#print(group_today('298', '31/05/2023', '11'))
+#print(group_today('298', '06/06/2023', '1'))
+
 
 #print(group_typ('10'))
 
 #print(Insert_Group_Process_reg_ren('23006295','CABENITEZ','1'))
 
-#print(valid_group('298',group_typ('10'),'10'))
+#print(valid_group('297',group_typ('10'),'10'))
 
 #print(fileResave('3'))
 
-#print(last_group('298'))
+#print(last_group('297'))
 
 #print(Insert_Group_Process('1','2177877','AMEDINA','1'))
 
