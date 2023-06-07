@@ -4,6 +4,8 @@ from turtle import back
 import zeep
 from zeep import Client
 import psycopg2
+from email_reg_sfe import envio_agente_reg
+from sfe_no_presencial_reg_local import registro_pdf_sfe_local
 from tools.base64Decode import decode_img
 from models.insertRenModel import insertRenModel
 from models.InsertUserDocModel_backUp import userDocModel_test
@@ -46,6 +48,7 @@ def group_typ(num):
 	list = {'1':'[Expediente]','10':'[Escrito+expediente]','11':'[Escrito]'}
 	group_name = str(fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00"))+" "+list[str(num)])
 	return(group_name)
+
 
 def insertar_o_crear_grupo_expediente(user,exp):
 	expediente = mark_getlist(exp)
@@ -127,11 +130,13 @@ def insertar_o_crear_grupo_escrito(user,esc):
 		pass
 
 def insertar_o_crear_grupo_escritoMasExpediente(user,esc):
+
 	data_doc = user_doc_getList_escrito(esc)
 	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
 	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
 	process = user_doc_read(data_doc['documentId']['docLog'],data_doc['documentId']['docNbr']['doubleValue'],data_doc['documentId']['docOrigin'],data_doc['documentId']['docSeries']['doubleValue'])
 	print(process['userdocProcessId']['processNbr']+" "+process['userdocProcessId']['processType'])
+
 	#####################################################################################################
 	group_name = f'{fecha} [Escrito+expediente]'
 	if group_today(userId, group_name) != False:
@@ -163,7 +168,6 @@ def insertar_o_crear_grupo_escritoMasExpediente(user,esc):
 	
 	else:
 		pass
-
 
 
 def Insert_Group_Process_reg_ren(fileNbr,user,typ):
@@ -899,8 +903,12 @@ print(ren.signData_signType)"""
 
 
 #CREA GRUPO PARA EXPEDIENTE DE TIPO REN Y REG - (REQUIERE USUSARIO Y EXPEDIENTE)
-insertar_o_crear_grupo_escritoMasExpediente('AMEDINA','2332001')
+#insertar_o_crear_grupo_escritoMasExpediente('AMEDINA','2332001')
 
+
+#envio_agente_reg('23808')
+
+registro_pdf_sfe_local('23808')
 
 
 #Insert_Group_Process_docs_test('2300605','CABENITEZ','11')
