@@ -4,17 +4,19 @@ from sqlite3 import Time
 import string
 import time
 from time import sleep
-from email_pdf_AG import  envio_agente_recibido
+from email_pdf_AG import  envio_agente_recibido, envio_agente_recibido_reg, envio_agente_recibido_ren
 from models.InsertUserDocModel import userDocModel
 from dinapi.sfe import  COMMIT_NBR, USER_GROUP, cambio_estado, cambio_estado_soporte, data_validator, esc_relation,  exp_relation,  pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
-from getFileDoc import  getFile, getFile_reg_and_ren
+from getFileDoc import  compilePDF, getFile, getFile_reg_and_ren
+from sfe_no_presencial_reg_local import registro_pdf_sfe_local
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
+from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.send_mail import delete_file, enviar
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_read_min
-from wipo.insertGroupProcessMEA import Insert_Group_Process_docs, Insert_Group_Process_reg_ren
+from wipo.insertGroupProcessMEA import Insert_Group_Process_docs, Insert_Group_Process_reg_ren, insertar_o_crear_grupo_escrito, insertar_o_crear_grupo_expediente
 from wipo.ipas import  mark_insert_reg, mark_insert_ren, user_doc_afectado, user_doc_receive, user_doc_update
 import zeep
 
@@ -350,16 +352,13 @@ def compileAndInsert(form_Id,typ):
 			exists = str(user_doc_read_min('E',insert_doc.documentId_docNbr,str(connex.MEA_SFE_FORMULARIOS_ID_Origin),insert_doc.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 			if exists == insert_doc.documentId_docNbr:
 				cambio_estado(form_Id,insert_doc.documentId_docNbr) # Cambio de estado
-				time.sleep(1)
 				try:
 					Insert_Group_Process_docs(new_Nbr,'AMEDINA','10')
 				except Exception as e:
 					print('error insert grupo')	
-				time.sleep(1)
 				envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)	#Crear PDF
-				time.sleep(1)
-				rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr))# Correo al funcionario				
-				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Agente				
+				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Agente
+				rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr))# Correo al funcionario								
 		except Exception as e:
 			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',{form_Id})
 			cambio_estado_soporte(form_Id)
@@ -412,7 +411,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',{form_Id})
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
-		time.sleep(1)
+
 	
 		sigla_desc = str(escrito_relacionado.filingData_userdocTypeList_userdocName).split("- ")
 		try:
@@ -486,7 +485,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 				data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
 				rule_notification('SOP',form_Id)
-		time.sleep(1)
+
 		
 		afferc = user_doc_read_min(escrito_relacionado.affected_doc_Log,new_Nbr,escrito_relacionado.affected_doc_docOrigin,escrito_relacionado.affected_doc_docSeries)
 		#print(afferc)
@@ -507,25 +506,26 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 					pass
 				#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false')
 				#cambio_estado_soporte(form_Id)
-		time.sleep(1)
 		
-		newDoc = str(user_doc_read_min('E',escrito_relacionado.affected_doc_docNbr,escrito_relacionado.documentId_docOrigin,escrito_relacionado.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
+		newDoc = str(user_doc_read_min(
+										'E',
+										escrito_relacionado.affected_doc_docNbr,
+										escrito_relacionado.documentId_docOrigin,
+										escrito_relacionado.documentId_docSeries
+										)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 		if newDoc == new_Nbr:
 			cambio_estado(form_Id,new_Nbr)
-			time.sleep(1)
 			envio_agente_recibido(form_Id,new_Nbr)		#Crear PDF
+			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico
 			rule_notification(typ,'')# Correo al funcionario
 			try:
-				Insert_Group_Process_docs(new_Nbr,'AMEDINA','10')
+				insertar_o_crear_grupo_escrito(str(USER_GROUP('REG')),str(new_Nbr))
 			except Exception as e:
-				print('error insert grupo')				
-			time.sleep(1)
-			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico
+				print('error insert grupo')					
 		else:
 			data_validator(f'Error al cambiar estado de esc. N° {new_Nbr}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
-		time.sleep(0.5)
 		
 def compileAndInsertUserDocUserDocPago(form_Id,typ):
 		print('F3')		
@@ -568,14 +568,14 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 							escrito_escrito_pago.documentId_docSeries,
 							escrito_escrito_pago.filingData_userdocTypeList_userdocType))
-				#process_day_commit_Nbr()
+
 				getFile(form_Id,str(new_Nbr))
 			except zeep.exceptions.Fault as e:
 				data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
 				rule_notification('SOP',form_Id)
 
-			time.sleep(1)
+			#time.sleep(1)
 			
 			sigla_desc = str(escrito_escrito_pago.filingData_userdocTypeList_userdocName).split("- ")
 							
@@ -651,7 +651,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 				cambio_estado_soporte(form_Id)
 				rule_notification('SOP',form_Id)		
 			
-			time.sleep(1)
+			#time.sleep(1)
 			
 			afferc = user_doc_read_min('E',escrito_escrito_pago.affected_doc_docNbr,escrito_escrito_pago.affected_doc_docOrigin,escrito_escrito_pago.affected_doc_docSeries)
 			#print(afferc)
@@ -672,23 +672,23 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 					#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false')
 					#cambio_estado_soporte(form_Id)
 			
-			time.sleep(1)
+			#time.sleep(1)
 			
 			newDoc = str(user_doc_read_min('E',new_Nbr,str(connex.MEA_SFE_FORMULARIOS_ID_Origin),escrito_escrito_pago.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 			if newDoc == new_Nbr:
 				cambio_estado(form_Id,new_Nbr)
-				time.sleep(1)
 				envio_agente_recibido(form_Id,new_Nbr)#Crear PDF
+				delete_file(enviar('notificacion-DINAPI.pdf',escrito_escrito_pago.representationData_representativeList_person_email,'M.E.A',''))#Enviar Correo Electronico
 				try:
-					Insert_Group_Process_docs(new_Nbr,'AMEDINA','11')
+					insertar_o_crear_grupo_escrito(str(USER_GROUP('REG')),str(new_Nbr))
 				except Exception as e:
 					print('error insert grupo')
+
 				try:
 					rule_notification(typ,'')# Correo al funcionario
 				except Exception as e:
 					pass	
-				time.sleep(1)
-				delete_file(enviar('notificacion-DINAPI.pdf',escrito_escrito_pago.representationData_representativeList_person_email,'M.E.A',''))#Enviar Correo Electronico			
+							
 			else:
 				try:
 					data_validator(f'Error al cambiar estado de esc. N° {new_Nbr}, tabla tramites ID: {form_Id}','false',form_Id)
@@ -706,7 +706,7 @@ def insertReg(form_Id):
 		try:
 			new_Nbr = str(COMMIT_NBR())
 			insertRegState = mark_insert_reg(
-				new_Nbr,#insert_mark.file_fileId_fileNbr,
+				new_Nbr,
 				insert_mark.file_fileId_fileSeq,
 				insert_mark.file_fileId_fileSeries,
 				insert_mark.file_fileId_fileType,
@@ -746,11 +746,16 @@ def insertReg(form_Id):
 			)
 			print(insertRegState)
 			if insertRegState == 'true':
-				#process_day_commit_Nbr()
-				getFile_reg_and_ren(form_Id,new_Nbr)
 				cambio_estado(form_Id,new_Nbr)
+				envio_agente_recibido_reg(form_Id,new_Nbr)#Crear PDF
+				delete_file(enviar('notificacion-DINAPI.pdf',insert_mark.ag_email,'M.E.A',''))#Enviar Correo Electronico
+
+				getFile_reg_and_ren(form_Id,new_Nbr) 	#Descargar pdfs de respuesta 
+				registro_pdf_sfe_local(form_Id)			#Crear formulario completo
+				compilePDF(new_Nbr)						#Crear pdf compilado de todos los ficheros
+
 				rule_notification('REG',str(new_Nbr))# Correo al funcionario
-				Insert_Group_Process_reg_ren(str(new_Nbr),str(USER_GROUP('REG')),'1')
+				insertar_o_crear_grupo_expediente(str(USER_GROUP('REG')),str(new_Nbr))
 			else:
 				data_validator(f'Error en solicitud, tabla tramites ID: {form_Id} - {insertRegState}','true',form_Id)
 				cambio_estado_soporte(form_Id)
@@ -819,10 +824,17 @@ def insertRen(form_Id):
 						insert_mark_ren.signData_markName,
 						insert_mark_ren.signData_signType)			
 			if insertRenState == 'true':
-				#process_day_commit_Nbr()
 				cambio_estado(form_Id,new_Nbr)
+				envio_agente_recibido_ren(form_Id,new_Nbr)#Crear PDF
+				delete_file(enviar('notificacion-DINAPI.pdf',insert_mark_ren.ag_email,'M.E.A',''))#Enviar Correo Electronico
+
+				getFile_reg_and_ren(form_Id,new_Nbr) 	#Descargar pdfs de respuesta 
+				renovacion_pdf_sfe_local(form_Id)			#Crear formulario completo
+				compilePDF(new_Nbr)						#Crear pdf compilado de todos los ficheros				
+
+
 				rule_notification('REN',str(new_Nbr))# Correo al funcionario
-				Insert_Group_Process_reg_ren(str(new_Nbr),str(USER_GROUP('REN')),'1')
+				insertar_o_crear_grupo_expediente(str(USER_GROUP('REG')),str(new_Nbr))
 			else:
 				data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id} - {insertRenState}','true',form_Id)
 				cambio_estado_soporte(form_Id)

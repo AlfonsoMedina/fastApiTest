@@ -64,8 +64,6 @@ def getFile_reg_and_ren(doc_id,fileNbr):
 	finally:
 		conn.close()
 	
-	compilePDF(fileNbr)
-
 def compilePDF(exp):
 	listaPdfs = os.listdir('temp_pdf/'+exp)
 	merger = PdfMerger()

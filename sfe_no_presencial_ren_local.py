@@ -13,12 +13,12 @@ from tools.base64Decode import decode_pdf
 from tools.data_format import signo_format
 
 
-def renovacion_pdf_sfe_local(exp):
+def renovacion_pdf_sfe_local(arg):
 	try:
 		global_data = {}
 		clase_tipo = 0
 		try:
-			get_list = mark_getlist(exp)
+			get_list = mark_getlist(arg)
 			data = mark_read(str(int(get_list[0].fileId.fileNbr.doubleValue)),str(get_list[0].fileId.fileSeq),str(get_list[0].fileId.fileSeries.doubleValue),str(get_list[0].fileId.fileType))
 		except Exception as e:
 			data = ''
@@ -27,21 +27,21 @@ def renovacion_pdf_sfe_local(exp):
 		def recorrer_sfe(arg):
 			try:
 				conn = psycopg2.connect(
-					host = 'pgsql-sprint.dinapi.gov.py',
-					user= 'user-sprint',
-					password = 'user-sprint--201901',
-					database = 'db_sfe_production'
-				)
+							host = '192.168.50.219',
+							user= 'user-developer',
+							password = 'user-developer--201901',
+							database = 'db_sfe_production'
+						)
 				cursor = conn.cursor()
 				cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
-								to_char(t.created_at,'yyyy-mm-dd hh24:mi:ss')created_at,to_char(t.updated_at,'yyyy-mm-dd hh24:mi:ss')updated_at,t.respuestas,t.costo,t.usuario_id, t.deleted_at,
-								t.codigo,t.firmado_at,to_char(t.pagado_at,'yyyy-mm-dd hh24:mi:ss') as pagado_at,t.expediente_id,t.pdf_url,to_char(t.enviado_at,'yyyy-mm-dd hh24:mi:ss') as enviado_at,
-								to_char(t.recepcionado_at,'yyyy-mm-dd hh24:mi:ss') as recepcionado_at,t.nom_funcionario,t.pdf,t.expediente_afectado,t.notificacion_id,t.expedientes_autor,t.autorizado_por_id,u.nombre as nombre_agente,pa.numero_agente,
-								u.email as email_agente,pa.celular as telefonoAgente,pa.domicilio_agpi,t.nom_funcionario as funcionario_autorizado 
-								from tramites t join formularios f on t.formulario_id  = f.id  
-								join usuarios u on u.id = t.usuario_id  
-								join perfiles_agentes pa on pa.usuario_id = u.id         
-								where t.expediente_id = {};""".format(int(arg)))
+										to_char(t.created_at,'yyyy-mm-dd hh24:mi:ss')created_at,to_char(t.updated_at,'yyyy-mm-dd hh24:mi:ss')updated_at,t.respuestas,t.costo,t.usuario_id, t.deleted_at,
+										t.codigo,t.firmado_at,to_char(t.pagado_at,'yyyy-mm-dd hh24:mi:ss') as pagado_at,t.expediente_id,t.pdf_url,to_char(t.enviado_at,'yyyy-mm-dd hh24:mi:ss') as enviado_at,
+										to_char(t.recepcionado_at,'yyyy-mm-dd hh24:mi:ss') as recepcionado_at,t.nom_funcionario,t.pdf,t.expediente_afectado,t.notificacion_id,t.expedientes_autor,t.autorizado_por_id,u.nombre as nombre_agente,pa.numero_agente,
+										u.email as email_agente,pa.celular as telefonoAgente,pa.domicilio_agpi,t.nom_funcionario as funcionario_autorizado 
+										from tramites t join formularios f on t.formulario_id  = f.id  
+										join usuarios u on u.id = t.usuario_id  
+										join perfiles_agentes pa on pa.usuario_id = u.id         
+										where t.id = {};""".format(int(arg)))
 				row=cursor.fetchall()
 				global_data['fecha_envio'] = str(row[0][17])
 				global_data['expediente'] = str(row[0][15])
@@ -157,7 +157,7 @@ def renovacion_pdf_sfe_local(exp):
 
 							
 					try:	
-						if(i['descripcion'] == "N° de Documento / RUC" and i['campo'] == 'actualizacion_nodocumentoruc'):
+						if(i['campo'] == 'actualizacion_nodocumentoruc'):
 							global_data['act_numero']=i['valor']
 					except Exception as e:
 						global_data['act_numero'] = ""
@@ -202,7 +202,7 @@ def renovacion_pdf_sfe_local(exp):
 
 
 					try:	
-						if(i['descripcion'] == "Buscar Registro N°" and i['campo'] == 'marcarenov_registrono'):
+						if(i['campo'] == 'marcarenov_registrono'):
 							global_data['registro_nbr']=i['valor']
 					except Exception as e:
 						global_data['registro_nbr'] = ""
@@ -216,7 +216,7 @@ def renovacion_pdf_sfe_local(exp):
 
 
 					try:	
-						if(i['descripcion'] == "Dirección" and i['campo'] == 'datospersonalesrenov_calle'):
+						if(i['campo'] == 'datospersonalesrenov_calle'):
 							global_data['solic_dir'] = str(i['valor']).replace(" – "," | ")
 					except Exception as e:
 						global_data['solic_dir'] = ""
@@ -236,11 +236,11 @@ def renovacion_pdf_sfe_local(exp):
 						global_data['solic_email'] = ""
 
 
-					try:	
-						if(i['descripcion'] == "Número" and i['campo'] == 'actualizacion_numero'):
-							global_data['actc_num']=i['valor']
-					except Exception as e:
-						global_data['actc_num'] = ""
+					#try:	
+					#	if(i['campo'] == 'actualizacion_numero'):
+					#		global_data['actc_num']=i['valor']
+					#except Exception as e:
+					global_data['actc_num'] = ""
 
 
 
@@ -252,7 +252,7 @@ def renovacion_pdf_sfe_local(exp):
 			finally:
 				conn.close()
 
-		recorrer_sfe(exp)
+		recorrer_sfe(arg)
 
 		def codebarheard(arg):
 			#Define content of the barcode as a string
@@ -291,7 +291,7 @@ def renovacion_pdf_sfe_local(exp):
 			hora_guionE = hora_puntoE[0].split("-")
 			return(str(fecha_formatE+" "+str(hora_guionE[0])))
 
-		def traer_datos_pdf(exp):
+		def traer_datos_pdf(arg):
 
 			codebarheard("*"+str(global_data['expediente'])+"*")
 			codebarfoot("*"+str(global_data['codigo_barr'])+"*")
@@ -391,14 +391,27 @@ def renovacion_pdf_sfe_local(exp):
 			except Exception as e:
 				pdf.multi_cell(w=130, h=4, txt="", border=1, align='L',ln=1) 
 			
+			########################################################################################################################################
 
 
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
+			pdf.cell(w=70, h=28, txt='Referencia de Distintivo:', border=1 , align='c' )
+
+			pdf.multi_cell(w=120, h=28, txt="", border=1, align='L',ln=1) 
+			try:
+				pdf.image(str(global_data['distintivo2']),x=123,y=(pdf.get_y()-27),w=25,h=25)
+			except Exception as e:
+				pdf.image("static/sfe_default.PNG",x=123,y=(pdf.get_y()-27),w=25,h=25)
+
+			"""			
+			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
+			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=60, h=8, txt='Referencia de Distintivo:', border=1 , align='c' )
 			
-			
 			pdf.multi_cell(w=130, h=4, txt="El archivo correspondiente al distintivo se ha recibido correctamente y se encuentra alojado en nuestros servidores. Lo puede verificar en el buzón de trámites.", border=1, align='L',ln=1) 
+			"""
+			########################################################################################################################################
 
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
@@ -579,7 +592,7 @@ def renovacion_pdf_sfe_local(exp):
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
 			
-			pdf.output(getcwd()+"/pdf/SFE_RENOVACION_"+str(exp)+"_local.pdf")
+			pdf.output(getcwd()+f"/temp_pdf/{str(global_data['expediente'])}/{str(global_data['expediente'])}-0.pdf") #"/pdf/SFE_REGISTRO_"+str(arg)+"_local.pdf"
 
 		traer_datos_pdf(str(global_data['expediente']))
 

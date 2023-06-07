@@ -234,6 +234,138 @@ def envio_agente_recibido(arg0,arg1):
 	except Exception as e:
 		print(e)
 
+def envio_agente_recibido_reg(arg0,arg1):
+	try:
+		qr_code('https://sfe-beta.dinapi.gov.py/dashboard/expedientes/tramites/'+str(arg0))
+
+		def traer_datos_pdf():
+
+			#codebarheard(str(global_data['expediente']))
+			#codebarfoot(str(global_data['codigo_barr']))
+
+			pdf = FPDF()
+			pdf.add_page()
+			pdf.set_font("helvetica", "B", 12)
+
+
+			hora_envio = hora(str(form_id(arg0)[1])).split(".")
+			hora_recep = hora(str(form_id(arg0)[2])).split(".")
+
+			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=15)
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=76, y=20, txt='Formulario')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=20, txt=str(form_descrip(str(form_id(arg0)[0]))))			
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=74, y=25, txt='Fecha envio')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=25, txt=fecha_barra(str(form_id(arg0)[1]))+" "+hora_envio[0])			
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=66, y=30, txt='Fecha Recepcion')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=30, txt=fecha_barra(str(form_id(arg0)[2]))+" "+ hora_recep[0])			
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=75, y=35, txt='Expediente')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=35, txt= str(captureDate.capture_year())+'-'+str(arg1))
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=85, y=40, txt='Tipo')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=40, txt="REG - Registro de marca")
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=80, y=48, txt='Titulo de presentación:')			
+
+			pdf.multi_cell(w=190, h=40, txt='', border="LRT" , align='c' )
+			
+			pdf.cell(w=0, h=0, txt='', border=0,ln=1 )
+			pdf.set_font("helvetica", "", 8)
+			pdf.multi_cell(w=190, h=8, txt="                                                                                     Solicitud de registro de marca", border="LRB", align='L' )
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
+			pdf.image('pdf/output.png',x=170,y=20,w=18,h=18)			
+
+			
+			pdf.output('pdf/notificacion-DINAPI.pdf')
+
+		traer_datos_pdf()
+
+		#print(global_data)
+		return(True)
+	except Exception as e:
+		print(e)
+
+def envio_agente_recibido_ren(arg0,arg1):
+	try:
+		qr_code('https://sfe-beta.dinapi.gov.py/dashboard/expedientes/tramites/'+str(arg0))
+
+		def traer_datos_pdf():
+
+			#codebarheard(str(global_data['expediente']))
+			#codebarfoot(str(global_data['codigo_barr']))
+
+			pdf = FPDF()
+			pdf.add_page()
+			pdf.set_font("helvetica", "B", 12)
+
+
+			hora_envio = hora(str(form_id(arg0)[1])).split(".")
+			hora_recep = hora(str(form_id(arg0)[2])).split(".")
+
+			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=15)
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=76, y=20, txt='Formulario')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=20, txt=str(form_descrip(str(form_id(arg0)[0]))))			
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=74, y=25, txt='Fecha envio')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=25, txt=fecha_barra(str(form_id(arg0)[1]))+" "+hora_envio[0])			
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=66, y=30, txt='Fecha Recepcion')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=30, txt=fecha_barra(str(form_id(arg0)[2]))+" "+ hora_recep[0])			
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=75, y=35, txt='Expediente')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=35, txt= str(captureDate.capture_year())+'-'+str(arg1))
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=85, y=40, txt='Tipo')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=40, txt="REN - Renovación de marca")
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=80, y=48, txt='Titulo de presentación:')			
+
+			pdf.multi_cell(w=190, h=40, txt='', border="LRT" , align='c' )
+			
+			pdf.cell(w=0, h=0, txt='', border=0,ln=1 )
+			pdf.set_font("helvetica", "", 8)
+			pdf.multi_cell(w=190, h=8, txt="                                                                                     Solicitud de renovación de marca", border="LRB", align='L' )
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
+			pdf.image('pdf/output.png',x=170,y=20,w=18,h=18)			
+
+			
+			pdf.output('pdf/notificacion-DINAPI.pdf')
+
+		traer_datos_pdf()
+
+		#print(global_data)
+		return(True)
+	except Exception as e:
+		print(e)
+
 def form_descrip(arg):
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)

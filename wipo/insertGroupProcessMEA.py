@@ -148,6 +148,85 @@ def Insert_Group_Process_reg_ren(fileNbr,user,typ):
 	except Exception as e:
 		return('false')
 
+def insertar_o_crear_grupo_expediente(user,exp):
+	expediente = mark_getlist(exp)
+	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
+	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+	data = mark_read(
+		expediente[0]['fileId']['fileNbr']['doubleValue'], 
+		expediente[0]['fileId']['fileSeq'], 
+		expediente[0]['fileId']['fileSeries']['doubleValue'], 
+		expediente[0]['fileId']['fileType'])
+	#####################################################################################################
+	group_name = f'{fecha} [Expediente]'
+	if group_today(userId, group_name) != False:
+
+		ProcessGroupAddProcess(
+			str(group_today(userId, group_name)[1]), 
+			userId, 
+			data['file']['processId']['processNbr']['doubleValue'],
+			data['file']['processId']['processType']
+			)
+	else:
+		pass
+	#####################################################################################################
+	if group_today(userId, group_name) == False:
+		ProcessGroupInsert(
+							last_group(userId)+1,
+							userId,
+							fecha,
+							'Creado por M.E.A.',
+							'1',
+							'1')
+
+		ProcessGroupAddProcess(
+							str(group_today(userId, group_name)[1]), 
+							userId, 
+							data['file']['processId']['processNbr']['doubleValue'],
+							data['file']['processId']['processType']
+							)
+	
+	else:
+		pass
+
+def insertar_o_crear_grupo_escrito(user,esc):
+	data_doc = user_doc_getList_escrito(esc)
+	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
+	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+	process = user_doc_read(data_doc['documentId']['docLog'],data_doc['documentId']['docNbr']['doubleValue'],data_doc['documentId']['docOrigin'],data_doc['documentId']['docSeries']['doubleValue'])
+	print(process['userdocProcessId']['processNbr']+" "+process['userdocProcessId']['processType'])
+	#####################################################################################################
+	group_name = f'{fecha} [Escrito]'
+	if group_today(userId, group_name) != False:
+
+		ProcessGroupAddProcess(
+								str(group_today(userId, group_name)[1]), 
+								userId, 
+								process['userdocProcessId']['processNbr'],
+								process['userdocProcessId']['processType']
+								)
+	else:
+		pass
+	#####################################################################################################
+	if group_today(userId, group_name) == False:
+		ProcessGroupInsert(
+							last_group(userId)+1,
+							userId,
+							fecha,
+							'Creado por M.E.A.',
+							'1',
+							'11')
+
+		ProcessGroupAddProcess(
+								str(group_today(userId, group_name)[1]), 
+								userId, 
+								process['userdocProcessId']['processNbr'],
+								process['userdocProcessId']['processType']
+								)
+	
+	else:
+		pass
+
 def Insert_Group_Process_docs(fileNbr,user,typ):
 	try:
 		data_doc = user_doc_getList_escrito(fileNbr)

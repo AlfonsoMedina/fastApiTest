@@ -1,5 +1,6 @@
 
 from asyncio.windows_events import NULL
+import base64
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe, renovacion_sfe
 from getFileDoc import getFile
 from respuesta_map import dir_titu, nom_titu
@@ -72,6 +73,7 @@ class insertRenModel(object):
 	fileSeq:str = ''
 	fileSeries:str = ''
 	fileId:str = ''
+	ag_email:str = ''
 	def __init__(self):
 		self.signType = ""
 		self.tipo_clase = ""
@@ -81,6 +83,8 @@ class insertRenModel(object):
 	def setData(self,doc_Id):
 		
 		self.data = renovacion_sfe(doc_Id) 
+
+		self.ag_email = self.data['email_agente']
 	
 		print(self.data)
 		print('----------------------------------------------')
@@ -205,7 +209,7 @@ class insertRenModel(object):
 		self.protectionData_niceClassList_niceClassGlobalStatus = "P"
 		self.protectionData_niceClassList_niceClassNbr = str(get_data_mark.protectionData.niceClassList[0].niceClassNbr.doubleValue)
 		self.protectionData_niceClassList_niceClassVersion = "2023.01"
-		self.logoData = decode_img(str(get_data_mark.signData.logo.logoData).replace("\n", ""))
+		self.logoData = base64.b64encode(get_data_mark.signData.logo.logoData).decode("UTF-8")
 		self.logoType = str(get_data_mark.signData.logo.logoType)
 		self.signData_markName = get_data_mark.signData.markName
 		self.signData_signType = str(get_data_mark.signData.signType)

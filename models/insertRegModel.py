@@ -60,6 +60,7 @@ class insertRegModel(object):
 	ownerList:str = ''
 	multitu:str = ''
 	titular_uno:str = ''
+	ag_email:str = ''
 	def __init__(self):
 		self.signType = ""
 		self.tipo_clase = ""
@@ -69,6 +70,8 @@ class insertRegModel(object):
 	def setData(self,doc_Id):
 		
 		self.data = registro_sfe(doc_Id) #pendiente_sfe(doc_Id)
+
+		self.ag_email = self.data['email_agente']
 		
 		try:
 			self.multitu = titulare_reg(doc_Id)
@@ -100,6 +103,7 @@ class insertRegModel(object):
 				self.LogTyp = ""						
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "Figurativa": 
 				self.signType="L"
@@ -107,6 +111,7 @@ class insertRegModel(object):
 				self.LogTyp = "JPG"			
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "F": 
 				self.signType="L"
@@ -114,6 +119,7 @@ class insertRegModel(object):
 				self.LogTyp = "JPG"							
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "Mixta": 
 				self.signType="B"
@@ -121,6 +127,7 @@ class insertRegModel(object):
 				self.LogTyp = "JPG"				
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "M": 
 				self.signType="B"
@@ -128,6 +135,7 @@ class insertRegModel(object):
 				self.LogTyp = "JPG"				
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "Tridimensional": 
 				self.signType="T"
@@ -135,6 +143,7 @@ class insertRegModel(object):
 				self.LogTyp = "JPG"				
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "T": 
 				self.signType="T"
@@ -142,6 +151,7 @@ class insertRegModel(object):
 				self.LogTyp = "JPG"										
 		except Exception as e:
 			pass
+
 		try:			
 			if self.data['tipo_on'] == "Sonora": 
 				self.signType="S"
@@ -149,6 +159,7 @@ class insertRegModel(object):
 				self.LogTyp = ""			
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "S": 
 				self.signType="S"
@@ -156,6 +167,7 @@ class insertRegModel(object):
 				self.LogTyp = ""			
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "Olfativa": 
 				self.signType="O"
@@ -169,16 +181,19 @@ class insertRegModel(object):
 				self.tipo_clase = "MP"
 		except Exception as e:
 			pass
+
 		try:						
 			if self.data['clasificacion'] == 'SERVICIO':
 				self.tipo_clase = 'MS'
 		except Exception as e:
-			pass				
+			pass
+
 		try:
 			if self.data['clasificacion'] == 'PRODUCTOS':
 				self.tipo_clase = "MP"
 		except Exception as e:
-			pass				
+			pass
+
 		try:
 			if self.data['clasificacion'] == 'SERVICIOS':
 				self.tipo_clase = 'MS'

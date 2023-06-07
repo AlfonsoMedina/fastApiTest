@@ -4,8 +4,11 @@ from turtle import back
 import zeep
 from zeep import Client
 import psycopg2
+from email_pdf_AG import envio_agente_recibido, envio_agente_recibido_reg, envio_agente_recibido_ren, form_id, sigla_id
 from email_reg_sfe import envio_agente_reg
+from getFileDoc import getFile_reg_and_ren
 from sfe_no_presencial_reg_local import registro_pdf_sfe_local
+from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.base64Decode import decode_img
 from models.insertRenModel import insertRenModel
 from models.InsertUserDocModel_backUp import userDocModel_test
@@ -903,22 +906,22 @@ print(ren.signData_signType)"""
 
 
 #CREA GRUPO PARA EXPEDIENTE DE TIPO REN Y REG - (REQUIERE USUSARIO Y EXPEDIENTE)
-#insertar_o_crear_grupo_escritoMasExpediente('AMEDINA','2332001')
+insertar_o_crear_grupo_escritoMasExpediente('AMEDINA','2332001')
 
 
 #envio_agente_reg('23808')
 
-registro_pdf_sfe_local('23808')
+#renovacion_pdf_sfe_local('1815')
 
+#getFile_reg_and_ren('23808','2341236')
+
+#envio_agente_recibido_ren('1815','2341244')
+
+#envio_agente_recibido('1904','2341242')
 
 #Insert_Group_Process_docs_test('2300605','CABENITEZ','11')
 
-
-
-
 #print(respuesta_sfe_campo('1547')['datospersonales_direccion'])
-
-
 
 #print(catch_toError('1585'))
 
@@ -948,3 +951,8 @@ registro_pdf_sfe_local('23808')
 #print(Insert_Group_Process('1','2177877','AMEDINA','1'))
 
 #print(USER_GROUP('REN'))
+
+
+
+
+
