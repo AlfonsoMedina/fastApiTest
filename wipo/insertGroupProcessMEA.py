@@ -123,31 +123,6 @@ def valid_group(userNbr,groupName,typ):
 	except Exception as e:
 		return(False)
 
-def Insert_Group_Process_reg_ren(fileNbr,user,typ):
-	try:
-		expediente = mark_getlist(fileNbr)
-		fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
-		userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
-		data = mark_read(
-			expediente[0]['fileId']['fileNbr']['doubleValue'], 
-			expediente[0]['fileId']['fileSeq'], 
-			expediente[0]['fileId']['fileSeries']['doubleValue'], 
-			expediente[0]['fileId']['fileType'])
-		group_count = last_group(userId) # cantidad de grupos que tiene el usuario
-		
-		if valid_group(userId,group_typ(str(typ)),typ) == False: # no existe el grupo
-			print((group_count + 1),userId,fecha,'descripcion','1',typ)
-			ProcessGroupInsert((group_count + 1),userId,fecha,'descripcion','1',typ)
-			time.sleep(1) 
-			ProcessGroupAddProcess((group_count + 1),userId,data['file']['processId']['processNbr']['doubleValue'],data['file']['processId']['processType'])
-			res = 'true'
-		else: # existe el grupo
-			ProcessGroupAddProcess(group_today(userId,group_typ(str(typ)),typ),userId,data['file']['processId']['processNbr']['doubleValue'],data['file']['processId']['processType'])
-			res = 'true'
-		return(res)
-	except Exception as e:
-		return('false')
-
 def insertar_o_crear_grupo_expediente(user,exp):
 	expediente = mark_getlist(exp)
 	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
@@ -254,23 +229,19 @@ def group_typ(num):
 	group_name = str(fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00"))+" "+list[str(num)])
 	return(group_name)
 
-def group_today(userNbr,groupName,typ):
-	try:
-		for i in range(len(ProcessGroupGetList(userNbr))):
-			processGroupName:str = ''
-			data = ProcessGroupGetList(userNbr)[i]
-			#print(data)
-			processGroupName = str(groupName in data.processGroupName) # existe el nombre de grupo
-			if str(processGroupName) == 'None':
-				resp = False
-			if str(processGroupName) == 'True':
-				if str(data.processType) == str(typ):
-					resp = data.processGroupId.processGroupCode
-			else:
-				resp = False
-		return(resp)
-	except Exception as e:
-		return(False)
+def group_today(userNbr,groupName):	
+	data = ProcessGroupGetList(userNbr)
+	list_data = []
+	respuesta = False
+	for i in range(1,len(data)):
+		if str(groupName) == str(data[i].processGroupName):
+			list_data.append(data[i].processGroupName)
+			list_data.append(data[i].processGroupId.processGroupCode)
+		respuesta = list_data
+
+		if str(groupName) != str(data[i].processGroupName):
+			respuesta = False
+	return(respuesta)
 
 def last_group(userNbr):
 	list = []

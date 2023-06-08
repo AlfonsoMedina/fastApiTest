@@ -50,10 +50,10 @@ def registro_pdf_sfe_local(arg):
 					if(i['descripcion'] == "Clase" and i['campo'] == 'marca_clase'):
 						clase_tipo = i['valor']
 						if(int(clase_tipo.replace(".0","")) <= 34):
-							print('PRODUCTO')
+							#print('PRODUCTO')
 							global_data['clasificacion']= 'PRODUCTO'
 						if(int(clase_tipo.replace(".0","")) >= 35):
-							print('SERVICIOS')
+							#print('SERVICIOS')
 							global_data['clasificacion']= 'SERVICIOS'
 
 					try:
@@ -70,7 +70,7 @@ def registro_pdf_sfe_local(arg):
 
 					try:
 						if(i['descripcion'] == "RUC" and i['campo'] == 'datospersonales_ruc'):
-							print(i['valor'])				
+							#print(i['valor'])				
 							global_data['RUC']=i['valor']
 					except Exception as e:
 						global_data['RUC'] = ""	
@@ -225,7 +225,7 @@ def registro_pdf_sfe_local(arg):
 				#if (str(a[0]) <= '01'):
 					#fail_hour_sfe = (int(a[0]) + 3)
 				backhour = str(int(a[0])-3)+":"+a[1]+":"+a[2]
-				print(backhour)
+				#print(backhour)
 				return(str(fecha_formatE+" "+str(backhour)))
 		def convert_fecha_hora(data):
 				date_fullE = str(data).split(" ")

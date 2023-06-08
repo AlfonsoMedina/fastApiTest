@@ -156,11 +156,13 @@ def renovacion_pdf_sfe_local(arg):
 						global_data['distrito'] = ""
 
 							
+										
 					try:	
-						if(i['campo'] == 'actualizacion_nodocumentoruc'):
+						if(i['campo'] == 'actualizacion_nodocumentoruc' or i['campo'] == 'actualizacion_noodocumentoruc'):
 							global_data['act_numero']=i['valor']
 					except Exception as e:
 						global_data['act_numero'] = ""
+					
 
 					try:	
 						if(i['descripcion'] == "País " and i['campo'] == 'actualizacion_pais'):
@@ -281,7 +283,7 @@ def renovacion_pdf_sfe_local(arg):
 				hora_guionE = hora_puntoE[0].split("-")
 				a=hora_guionE[0].split(":")
 				backhour = str(int(a[0])-3)+":"+a[1]+":"+a[2]
-				print(backhour)
+				#print(backhour)
 				return(str(fecha_formatE+" "+str(backhour)))
 		def convert_fecha_hora(data):
 			date_fullE = str(data).split(" ")

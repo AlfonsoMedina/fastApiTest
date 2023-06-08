@@ -906,12 +906,12 @@ print(ren.signData_signType)"""
 
 
 #CREA GRUPO PARA EXPEDIENTE DE TIPO REN Y REG - (REQUIERE USUSARIO Y EXPEDIENTE)
-insertar_o_crear_grupo_escritoMasExpediente('AMEDINA','2332001')
+#insertar_o_crear_grupo_escritoMasExpediente('AMEDINA','2332001')
 
 
 #envio_agente_reg('23808')
 
-#renovacion_pdf_sfe_local('1815')
+renovacion_pdf_sfe_local('1814')
 
 #getFile_reg_and_ren('23808','2341236')
 

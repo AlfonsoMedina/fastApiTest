@@ -384,7 +384,14 @@ def renovacion_sfe(arg):
 					global_data['distintivoAct'] = i['valor']['archivo']['url']
 			except Exception as e:
 					global_data['distintivoAct'] = "No definido"					
-			
+			try:	
+				if(i['campo'] == 'actualizacion_nodocumentoruc'):
+					global_data['act_numero']=i['valor']
+				else:
+					global_data['act_numero']="No definido"
+			except Exception as e:
+				global_data['act_numero'] = "No definido"
+				
 			"""
 			try:	
 				if(i['campo'] == "actualizacion_refdistitivo"):
@@ -473,11 +480,7 @@ def renovacion_sfe(arg):
 					global_data['distrito']=i['valor']
 			except Exception as e:
 				global_data['distrito'] = "No definido"						
-			try:	
-				if(i['descripcion'] == "N° de Documento / RUC" and i['campo'] == 'actualizacion_nodocumentoruc'):
-					global_data['act_numero']=i['valor']
-			except Exception as e:
-				global_data['act_numero'] = "No definido"
+
 
 			try:	
 				if(i['campo'] == 'actualizacion_pais'):

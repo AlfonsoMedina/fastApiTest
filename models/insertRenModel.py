@@ -1,5 +1,3 @@
-
-from asyncio.windows_events import NULL
 import base64
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe, renovacion_sfe
 from getFileDoc import getFile
@@ -86,8 +84,9 @@ class insertRenModel(object):
 
 		self.ag_email = self.data['email_agente']
 	
-		print(self.data)
-		print('----------------------------------------------')
+		#print(self.data)
+
+		#print('----------------------------------------------')
 
 		try:
 			if self.data['distintivo'] == "No definido":
@@ -109,8 +108,6 @@ class insertRenModel(object):
 			get_List[0].fileId.fileSeries.doubleValue, 
 			get_List[0].fileId.fileType
 			)
-
-
 
 		try:	
 			if self.data['tipo_guion'] == "Sonora": 
