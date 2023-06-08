@@ -12,12 +12,12 @@ from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.base64Decode import decode_img
 from models.insertRenModel import insertRenModel
 from models.InsertUserDocModel_backUp import userDocModel_test
-from dinapi.sfe import COMMIT_NBR, USER_GROUP, cambio_estado_soporte, data_validator, pago_id, pendiente_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, tasa_id, tipo_form
+from dinapi.sfe import COMMIT_NBR, USER_GROUP, cambio_estado_soporte, data_validator, email_receiver, exist_main_mark, exist_notifi, main_State, pago_id, pendiente_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, tasa_id, tipo_form
 from models.InsertUserDocModel import userDocModel
 from tools.data_format import fecha_barra
 import tools.connect as conn_serv
 import tools.connect as connex
-from wipo.function_for_reception_in import user_doc_getList_escrito, user_doc_read
+from wipo.function_for_reception_in import user_doc_getList_escrito, user_doc_read, user_doc_read_min
 from wipo.insertGroupProcessMEA import ProcessGroupAddProcess, ProcessGroupGetList, ProcessGroupInsert
 from wipo.ipas import daily_log_close, daily_log_open, fetch_all_user_mark, mark_getlist, mark_read
 import tools.filing_date as captureDate
@@ -52,7 +52,7 @@ def group_typ(num):
 	group_name = str(fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00"))+" "+list[str(num)])
 	return(group_name)
 
-
+#EXPEDIENTES DE TIPO REG y REN
 def insertar_o_crear_grupo_expediente(user,exp):
 	expediente = mark_getlist(exp)
 	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
@@ -94,6 +94,7 @@ def insertar_o_crear_grupo_expediente(user,exp):
 	else:
 		pass
 
+#ESCRITO RELACINADO CON ESCRITO
 def insertar_o_crear_grupo_escrito(user,esc):
 	data_doc = user_doc_getList_escrito(esc)
 	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
@@ -132,6 +133,7 @@ def insertar_o_crear_grupo_escrito(user,esc):
 	else:
 		pass
 
+#ESCRITO RELACINADO CON EXPEDIENTE
 def insertar_o_crear_grupo_escritoMasExpediente(user,esc):
 
 	data_doc = user_doc_getList_escrito(esc)
@@ -884,7 +886,7 @@ print(ren.logoType)
 print(ren.signData_markName)
 print(ren.signData_signType)"""
 
-
+#exists = str(user_doc_read_min('E','2341453','3','2023')['documentId']['docNbr']['doubleValue']).replace(".0","")
 
 #buscar el nombre de grupo para hoy para [expediente]
 #print(group_today('298', '06/06/2023 [Expediente]')) #=> (user, fecha, typ) respuesta: nombre de grupo o  False 
@@ -911,7 +913,7 @@ print(ren.signData_signType)"""
 
 #envio_agente_reg('23808')
 
-renovacion_pdf_sfe_local('1814')
+#renovacion_pdf_sfe_local('1814')
 
 #getFile_reg_and_ren('23808','2341236')
 
@@ -931,6 +933,19 @@ renovacion_pdf_sfe_local('1814')
 #print(COMMIT_NBR())
 
 
+def filter_user(sig,exp):
+	try:
+		if exist_main_mark(sig) == 'S':
+			status_exp = main_State(exp)
+			return(status_exp)
+		else:
+			return(sig)
+	except Exception as e:
+		return(sig)
+
+#print(filter_user('CEM','2341306'))
+
+print(USER_GROUP('DAJ1'))
 
 #'23006441'
 

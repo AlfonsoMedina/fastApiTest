@@ -1780,7 +1780,7 @@ def exist_main_mark(sig):
 		conn.close()
 
 def rule_notification(sig,exp):
-	print(sig)
+	#print(sig)
 	if exist_main_mark(sig) == 'S':
 		status_exp = main_State(exp)
 		#print(status_exp)
@@ -1923,7 +1923,11 @@ def USER_GROUP(sig):
 		row=cursor.fetchall()
 		return(row[0][0])	
 	except Exception as e:
-		print(e)
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select usuario FROM public.reglas_notificacion WHERE status_cod='{}'""".format('GEN'))
+		row=cursor.fetchall()
+		return(row[0][0])
 	finally:
 		conn.close()
 

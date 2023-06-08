@@ -1,4 +1,4 @@
-from ast import Break, Pass
+from ast import Break, Pass, Return
 from dataclasses import replace
 from sqlite3 import Time
 import string
@@ -16,7 +16,7 @@ from tools.send_mail import delete_file, enviar
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_read_min
-from wipo.insertGroupProcessMEA import Insert_Group_Process_docs, insertar_o_crear_grupo_escrito, insertar_o_crear_grupo_expediente
+from wipo.insertGroupProcessMEA import  insertar_o_crear_grupo_escrito, insertar_o_crear_grupo_expediente
 from wipo.ipas import  mark_insert_reg, mark_insert_ren, user_doc_afectado, user_doc_receive, user_doc_update
 import zeep
 
@@ -67,7 +67,7 @@ def insert_list(arg0:string,arg1:string):
 	#////////////////////////////////////////||||||||||||||||||||||||||||||||||||||||///////////////////////////////////////#
 	exceptions = userDocModel()
 	if exceptions.exist_split(arg0,'observacion_documentos') == False:
-		data_validator(f'No existe documento adjunto, tabla tramites ID: {arg0}','false',{arg0})
+		data_validator(f'No existe documento adjunto, tabla tramites ID: {arg0}','false',arg0)
 		cambio_estado_soporte(arg0)
 		#listar()
 		return("E99")
@@ -80,7 +80,7 @@ def insert_list(arg0:string,arg1:string):
 		if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
 			valid_rules.append('Ok')
 		else:
-			data_validator(f'El expediente relacionado es requerido, tabla tramites ID: {arg0}','false',{arg0})
+			data_validator(f'El expediente relacionado es requerido, tabla tramites ID: {arg0}','false',arg0)
 			valid_rules.append('Error')
 			cambio_estado_soporte(arg0)
 	else:
@@ -92,7 +92,7 @@ def insert_list(arg0:string,arg1:string):
 		if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
 			valid_rules.append('Ok')
 		else:
-			data_validator(f'El escrito relacionado es requerido, tabla tramites ID: {arg0}','false',{arg0})
+			data_validator(f'El escrito relacionado es requerido, tabla tramites ID: {arg0}','false',arg0)
 			valid_rules.append('Error')
 			cambio_estado_soporte(arg0)
 	else:
@@ -104,7 +104,7 @@ def insert_list(arg0:string,arg1:string):
 			if pago_auth != 'sin dato en bancar':
 				valid_rules.append('Ok')
 			else:
-				data_validator(f'Confirmar relacion con pago (bancard transactions), tabla tramites ID: {arg0}','false',{arg0})
+				data_validator(f'Confirmar relacion con pago (bancard transactions), tabla tramites ID: {arg0}','false',arg0)
 				valid_rules.append('Error')
 				cambio_estado_soporte(arg0)
 	else:
@@ -116,46 +116,36 @@ def insert_list(arg0:string,arg1:string):
 	####################################################################################################################################
 	####################################################################################################################################
 	####################################################################################################################################
-
-	if valid_rules == ['Ok', 'Not', 'Not']: 
-		#print('ESCRITO CON RELACION')		
-		compileAndInsert(arg0,arg1)
-		time.sleep(1)
-	elif valid_rules == ['Ok', 'Not', 'Ok']:
-		#print('ESCRITO CON RELACION')		
-		compileAndInsert(arg0,arg1)
-		time.sleep(1)	
+	
+	if valid_rules == ['Ok', 'Not', 'Not']: 	
+		state_in = compileAndInsert(arg0,arg1,'esc-exp')
+	elif valid_rules == ['Ok', 'Not', 'Ok']:		
+		state_in = compileAndInsert(arg0,arg1,'esc-exp')
 	elif valid_rules == ['Not', 'Ok', 'Not']:
-		#print('ESCRTO A ESCRITO')
-		compileAndInsertUserDocUserDoc(arg0,arg1)
-		time.sleep(1)
+		state_in = compileAndInsertUserDocUserDoc(arg0,arg1,'esc-esc')
 	elif valid_rules == ['Not', 'Ok', 'Ok']:
-		#print('ESCRTO A ESCRITO')
-		compileAndInsertUserDocUserDocPago(arg0,arg1)
-		time.sleep(1)
-	elif valid_rules == ['Not', 'Not', 'Ok']:
-		#print('ESCRITO SIN RELACION')		
-		compileAndInsert(arg0,arg1)
-		time.sleep(1)
-	elif valid_rules == ['Not', 'Not', 'Not']:
-		#print('ESCRITO SIN RELACION')		
-		compileAndInsert(arg0,arg1)
-		time.sleep(1)
+		state_in = compileAndInsertUserDocUserDocPago(arg0,arg1,'esc-esc')
+	elif valid_rules == ['Not', 'Not', 'Ok']:		
+		state_in = compileAndInsert(arg0,arg1,'esc')
+	elif valid_rules == ['Not', 'Not', 'Not']:		
+		state_in = compileAndInsert(arg0,arg1,'esc')
 	else:
 		pass
 
 	return("Ok")		
 
 
-def compileAndInsert(form_Id,typ):
+def compileAndInsert(form_Id,typ,in_group):
 	print('F1')
 	cheking = catch_toError(form_Id)
 	if cheking != 'E99':
 		insert_doc = userDocModel()
 		insert_doc.setData(form_Id)
+		# start INSERT USERDOC ####################################################################################
 		try:
 			new_Nbr = str(COMMIT_NBR())
-			insert_user_doc_escritos(
+			getFile(form_Id,str(new_Nbr))
+			estado_ins = insert_user_doc_escritos(
 						insert_doc.affectedFileIdList_fileNbr,
 						insert_doc.affectedFileIdList_fileSeq,
 						insert_doc.affectedFileIdList_fileSeries,
@@ -342,39 +332,46 @@ def compileAndInsert(form_Id,typ):
 						insert_doc.representationData_representativeList_person_telephone,
 						insert_doc.representationData_representativeList_person_zipCode,
 						insert_doc.representationData_representativeList_representativeType)
-			getFile(form_Id,str(new_Nbr))
-			#process_day_commit_Nbr()
+			print(estado_ins)
 		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}','false',{form_Id})
+			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
-		
+		# end INSERT USERDOC ####################################################################################
+
+		# start CHECK USERDOC ####################################################################################		
 		try:
-			exists = str(user_doc_read_min('E',insert_doc.documentId_docNbr,str(connex.MEA_SFE_FORMULARIOS_ID_Origin),insert_doc.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
-			if exists == insert_doc.documentId_docNbr:
-				cambio_estado(form_Id,insert_doc.documentId_docNbr) # Cambio de estado
-				try:
-					Insert_Group_Process_docs(new_Nbr,'AMEDINA','10')
-				except Exception as e:
-					print('error insert grupo')	
-				envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)	#Crear PDF
+			print('check')
+			exists = str(user_doc_read_min('E',str(new_Nbr),str(connex.MEA_SFE_FORMULARIOS_ID_Origin),str(insert_doc.documentId_docSeries))['documentId']['docNbr']['doubleValue']).replace(".0","")
+			#exists = str(user_doc_read_min('E','2341453','3','2023')['documentId']['docNbr']['doubleValue']).replace(".0","")								
+			if exists == new_Nbr:
+				cambio_estado(form_Id,insert_doc.documentId_docNbr) 
+				print('CAMBIO DE ESTADO')																	# Cambio de estado
+				envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)																#Crear PDF
+				print('CREA PDF')
 				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Agente
-				rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr))# Correo al funcionario								
+				print('ENVIA PDF')
+				rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr))														# Correo al funcionario
+				print('CORREO FUNCIONARIO')
+				send_to_group(in_group,new_Nbr,typ)																	# Envia al grupo de tramites
+				print('INSERTA GRUPO')				
 		except Exception as e:
-			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',{form_Id})
+			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
-			rule_notification('SOP',form_Id)			
+			rule_notification('SOP',form_Id)
+		# start CHECK USERDOC ####################################################################################			
 
 
-def compileAndInsertUserDocUserDoc(form_Id,typ):
+def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 	print('F2')	
 	cheking = catch_toError(form_Id)
 	if cheking != 'E99':
 		escrito_relacionado = userDocModel()
 		escrito_relacionado.setData(form_Id)
 		new_Nbr = str(COMMIT_NBR())
+		# start USERDOCRECEIVE ###################################################################################
 		try:
-			print(user_doc_receive(
+			udr=user_doc_receive(
 							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 							escrito_relacionado.filingData_userdocTypeList_userdocType,
 							"true",
@@ -406,18 +403,19 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 							new_Nbr,#escrito_relacionado.documentId_docNbr,
 							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 							escrito_relacionado.documentId_docSeries,
-							escrito_relacionado.filingData_userdocTypeList_userdocType))
-			#process_day_commit_Nbr()
+							escrito_relacionado.filingData_userdocTypeList_userdocType)
 			getFile(form_Id,str(new_Nbr))
 		except zeep.exceptions.Fault as e:
-			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',{form_Id})
+			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
+		# end USERDOCRECEIVE ####################################################################################
 
-	
 		sigla_desc = str(escrito_relacionado.filingData_userdocTypeList_userdocName).split("- ")
+
+		# start USERDOCUPDATE ###################################################################################		
 		try:
-			print(user_doc_update(
+			updt=user_doc_update(
 							escrito_relacionado.affected_doc_Log,
 							escrito_relacionado.affected_doc_docNbr,
 							escrito_relacionado.affected_doc_docOrigin, 
@@ -482,15 +480,15 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 							escrito_relacionado.representationData_representativeList_person_telephone,
 							escrito_relacionado.representationData_representativeList_person_zipCode,
 							escrito_relacionado.representationData_representativeList_representativeType,
-							escrito_relacionado.representationData_representativeList_person_email))
+							escrito_relacionado.representationData_representativeList_person_email)
 		except zeep.exceptions.Fault as e:
 				data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
 				rule_notification('SOP',form_Id)
-
+		# end USERDOCUPDATE ###################################################################################
 		
+		# start USERDOCADDAFFECTEDFILE ###################################################################################		
 		afferc = user_doc_read_min(escrito_relacionado.affected_doc_Log,new_Nbr,escrito_relacionado.affected_doc_docOrigin,escrito_relacionado.affected_doc_docSeries)
-		#print(afferc)
 		try:
 				if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
 					user_doc_afectado(
@@ -505,40 +503,39 @@ def compileAndInsertUserDocUserDoc(form_Id,typ):
 				else:
 					pass
 		except Exception as e:
-					pass
-				#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false')
-				#cambio_estado_soporte(form_Id)
-		
+				data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
+				cambio_estado_soporte(form_Id)
+		# end USERDOCADDAFFECTEDFILE ###################################################################################
+
+		# start CHECK USERDOC ###################################################################################		
 		newDoc = str(user_doc_read_min(
 										'E',
 										escrito_relacionado.affected_doc_docNbr,
 										escrito_relacionado.documentId_docOrigin,
 										escrito_relacionado.documentId_docSeries
 										)['documentId']['docNbr']['doubleValue']).replace(".0","") 
-		if newDoc == new_Nbr:
+		if newDoc == new_Nbr and updt == 'true' and udr == 'true':
 			cambio_estado(form_Id,new_Nbr)
 			envio_agente_recibido(form_Id,new_Nbr)		#Crear PDF
 			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico
 			rule_notification(typ,'')# Correo al funcionario
-			try:
-				insertar_o_crear_grupo_escrito(str(USER_GROUP('REG')),str(new_Nbr))
-			except Exception as e:
-				print('error insert grupo')					
+			send_to_group(in_group,new_Nbr)			
 		else:
-			data_validator(f'Error al cambiar estado de esc. N° {new_Nbr}, tabla tramites ID: {form_Id}','false',form_Id)
+			data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
+		# end CHECK USERDOC ###################################################################################
 
-
-def compileAndInsertUserDocUserDocPago(form_Id,typ):
+def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 		print('F3')		
 		cheking = catch_toError(form_Id)
 		if cheking != 'E99':
 			escrito_escrito_pago = userDocModel()
 			escrito_escrito_pago.setData(form_Id)
+			# start USERDOCRECEIVE ###################################################################################			
 			new_Nbr = str(COMMIT_NBR())
 			try:
-				print(user_doc_receive(
+				udr=user_doc_receive(
 							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 							escrito_escrito_pago.filingData_userdocTypeList_userdocType,
 							"true",
@@ -570,20 +567,18 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 							new_Nbr,
 							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 							escrito_escrito_pago.documentId_docSeries,
-							escrito_escrito_pago.filingData_userdocTypeList_userdocType))
-
+							escrito_escrito_pago.filingData_userdocTypeList_userdocType)
 				getFile(form_Id,str(new_Nbr))
 			except zeep.exceptions.Fault as e:
 				data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
 				rule_notification('SOP',form_Id)
+			# end USERDOCRECEIVE ####################################################################################
 
-			#time.sleep(1)
-			
 			sigla_desc = str(escrito_escrito_pago.filingData_userdocTypeList_userdocName).split("- ")
-							
+			# start USERDOCUPDATE ###################################################################################							
 			try:
-				print(user_doc_update(
+				updt=user_doc_update(
 							escrito_escrito_pago.affected_doc_Log,
 							escrito_escrito_pago.affected_doc_docNbr,
 							escrito_escrito_pago.affected_doc_docOrigin, 
@@ -648,16 +643,15 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 							escrito_escrito_pago.representationData_representativeList_person_telephone,
 							escrito_escrito_pago.representationData_representativeList_person_zipCode,
 							escrito_escrito_pago.representationData_representativeList_representativeType,
-							escrito_escrito_pago.representationData_representativeList_person_email))
+							escrito_escrito_pago.representationData_representativeList_person_email)
 			except zeep.exceptions.Fault as e:
 				data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
 				rule_notification('SOP',form_Id)		
-			
-			#time.sleep(1)
-			
+			# end USERDOCUPDATE ###################################################################################
+
+			# start USERDOCADDAFFECTEDFILE ###################################################################################	
 			afferc = user_doc_read_min('E',escrito_escrito_pago.affected_doc_docNbr,escrito_escrito_pago.affected_doc_docOrigin,escrito_escrito_pago.affected_doc_docSeries)
-			#print(afferc)
 			try:
 				if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
 					user_doc_afectado(escrito_escrito_pago.documentId_docLog,
@@ -671,35 +665,27 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ):
 				else:
 					pass
 			except Exception as e:
-					pass
-					#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false')
-					#cambio_estado_soporte(form_Id)
-			
-			#time.sleep(1)
-			
-			newDoc = str(user_doc_read_min('E',new_Nbr,str(connex.MEA_SFE_FORMULARIOS_ID_Origin),escrito_escrito_pago.documentId_docSeries)['documentId']['docNbr']['doubleValue']).replace(".0","") 
-			if newDoc == new_Nbr:
+					data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
+					cambio_estado_soporte(form_Id)
+			# end USERDOCADDAFFECTEDFILE ###################################################################################
+
+			# start CHECK USERDOC ###################################################################################
+			newDoc = str(user_doc_read_min('E',
+											new_Nbr,
+											str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
+											escrito_escrito_pago.documentId_docSeries
+											)['documentId']['docNbr']['doubleValue']).replace(".0","") 
+			if newDoc == new_Nbr and updt == 'true' and udr == 'true':
 				cambio_estado(form_Id,new_Nbr)
 				envio_agente_recibido(form_Id,new_Nbr)#Crear PDF
 				delete_file(enviar('notificacion-DINAPI.pdf',escrito_escrito_pago.representationData_representativeList_person_email,'M.E.A',''))#Enviar Correo Electronico
-				try:
-					insertar_o_crear_grupo_escrito(str(USER_GROUP('REG')),str(new_Nbr))
-				except Exception as e:
-					print('error insert grupo')
-
-				try:
-					rule_notification(typ,'')# Correo al funcionario
-				except Exception as e:
-					pass	
-							
+				send_to_group(in_group,new_Nbr)	
+				rule_notification(typ,'')# Correo al funcionario				
 			else:
-				try:
-					data_validator(f'Error al cambiar estado de esc. N° {new_Nbr}, tabla tramites ID: {form_Id}','false',form_Id)
-					cambio_estado_soporte(form_Id)
-				except Exception as e:
-					data_validator(f'El escrito afectado no existe, tabla tramites ID: {form_Id}','false',form_Id)
-					cambio_estado_soporte(form_Id)
-					rule_notification('SOP',form_Id)
+				data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
+				cambio_estado_soporte(form_Id)
+				rule_notification('SOP',form_Id)
+				# end CHECK USERDOC ###################################################################################
 
 
 def insertReg(form_Id):
@@ -825,6 +811,9 @@ def insertRen(form_Id):
 			error_process(form_Id,'Error en solicitud o falta número de registro, tabla tramites ID','true')
 	else:
 		pass
+
+
+
 
 
 def catch_toError(form_Id):
@@ -1060,6 +1049,13 @@ def error_process(form_Id,error_msg,bool_estado):
 	data_validator(f'{error_msg}: {form_Id}',bool_estado,form_Id)
 	cambio_estado_soporte(form_Id)
 	rule_notification('SOP',form_Id)	
+
+def send_to_group(in_group,fileNbr,sigla):
+	if in_group == 'esc-exp':
+		insertar_o_crear_grupo_expediente(str(USER_GROUP(sigla)),fileNbr)
+	if in_group == 'esc':
+		insertar_o_crear_grupo_escrito(str(USER_GROUP(sigla)),fileNbr)	
+
 
 """
 
