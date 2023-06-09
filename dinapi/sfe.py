@@ -349,7 +349,7 @@ def renovacion_sfe(arg):
 		global_data['TEL_agente'] = str(row[0][28])
 		global_data['email_agente'] = str(row[0][27])
 		global_data['nombre_formulario'] = str(row[0][3])
-		print(global_data)
+		#print(global_data)
 		for i in row[0][8]:
 			try:	
 				if(i['campo'] == 'marcarenov_registrono'): 
@@ -1020,6 +1020,7 @@ def cambio_estado_soporte(Id):
 			cursor.rowcount
 			conn.commit()
 			conn.close()
+			print('E99')
 	except Exception as e:
 		print(e)
 	finally:
@@ -1780,7 +1781,7 @@ def exist_main_mark(sig):
 		conn.close()
 
 def rule_notification(sig,exp):
-	#print(sig)
+	print(sig)
 	if exist_main_mark(sig) == 'S':
 		status_exp = main_State(exp)
 		#print(status_exp)

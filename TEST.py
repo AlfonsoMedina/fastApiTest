@@ -837,6 +837,48 @@ def test_renov(arg):
 	finally:
 		conn.close()	
 
+def filter_user(sig,exp):
+	try:
+		if exist_main_mark(sig) == 'S':
+			status_exp = main_State(exp)
+			return(status_exp)
+		else:
+			return(sig)
+	except Exception as e:
+		return(sig)
+
+def Process_Get_List(userdocSeqNbrFrom,userdocSeqNbrTo,userdocSeqSeries,userdocType):
+	data_exp = {
+				"arg0": {
+					"criteriaProcessByUserdoc": {
+					"userdocSeqNbrFrom": {
+						"doubleValue": userdocSeqNbrFrom
+					},
+					"userdocSeqNbrTo": {
+						"doubleValue": userdocSeqNbrTo
+					},
+					"userdocSeqSeries": {
+						"doubleValue": userdocSeqSeries
+					},
+					"userdocSeqType": "PY",
+					"userdocType": userdocType
+					}
+				},
+				"arg1": {
+					"doubleValue": ""
+				}
+				}
+	data = clientMark.service.ProcessGetList(**data_exp)
+	return(data)
+
+
+print(Process_Get_List('2341298','2341298','2023','CV'))
+
+print(Process_Get_List('2341485','2341485','2022','CV')[0].upperProcessId.processNbr.doubleValue)
+print(Process_Get_List('2341485','2341485','2022','CV')[0].upperProcessId.processType)
+
+
+
 #print(test_renov('1815'))
 
 """
@@ -934,19 +976,11 @@ print(ren.signData_signType)"""
 #print(COMMIT_NBR())
 
 
-def filter_user(sig,exp):
-	try:
-		if exist_main_mark(sig) == 'S':
-			status_exp = main_State(exp)
-			return(status_exp)
-		else:
-			return(sig)
-	except Exception as e:
-		return(sig)
+
 
 #print(filter_user('CEM','2341306'))
 
-print(USER_GROUP('CON'))
+#print(USER_GROUP('CON'))
 
 #'23006441'
 
@@ -954,7 +988,7 @@ print(USER_GROUP('CON'))
 #print(group_today('298', '06/06/2023', '1'))
 
 
-send_to_group('esc','2341460','GEN')
+#send_to_group('esc','2341460','GEN')
 
 
 #print(group_typ('10'))

@@ -272,3 +272,27 @@ def last_group(userNbr):
 	ultimo = int(len(list_int))-1
 	#print(list_int)
 	return(list_int[ultimo])
+
+def Process_Get_List(userdocSeqNbrFrom,userdocSeqNbrTo,userdocSeqSeries,userdocType):
+	data_exp = {
+				"arg0": {
+					"criteriaProcessByUserdoc": {
+					"userdocSeqNbrFrom": {
+						"doubleValue": userdocSeqNbrFrom
+					},
+					"userdocSeqNbrTo": {
+						"doubleValue": userdocSeqNbrTo
+					},
+					"userdocSeqSeries": {
+						"doubleValue": userdocSeqSeries
+					},
+					"userdocSeqType": "PY",
+					"userdocType": userdocType
+					}
+				},
+				"arg1": {
+					"doubleValue": ""
+				}
+				}
+	data = clientMark.service.ProcessGetList(**data_exp)
+	return(data)

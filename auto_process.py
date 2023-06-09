@@ -361,7 +361,6 @@ def compileAndInsert(form_Id,typ,in_group):
 			rule_notification('SOP',form_Id)
 		# start CHECK USERDOC ####################################################################################			
 
-
 def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 	print('F2')	
 	cheking = catch_toError(form_Id)
@@ -371,6 +370,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 		new_Nbr = str(COMMIT_NBR())
 		# start USERDOCRECEIVE ###################################################################################
 		try:
+			print('USERDOCRECEIVE')
 			udr=user_doc_receive(
 							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 							escrito_relacionado.filingData_userdocTypeList_userdocType,
@@ -415,6 +415,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 
 		# start USERDOCUPDATE ###################################################################################		
 		try:
+			print('USERDOCUPDATE')
 			updt=user_doc_update(
 							escrito_relacionado.affected_doc_Log,
 							escrito_relacionado.affected_doc_docNbr,
@@ -488,33 +489,37 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 		# end USERDOCUPDATE ###################################################################################
 		
 		# start USERDOCADDAFFECTEDFILE ###################################################################################		
-		afferc = user_doc_read_min(escrito_relacionado.affected_doc_Log,new_Nbr,escrito_relacionado.affected_doc_docOrigin,escrito_relacionado.affected_doc_docSeries)
 		try:
-				if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
-					user_doc_afectado(
-										escrito_relacionado.documentId_docLog,
-										new_Nbr,
-										str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
-										escrito_relacionado.documentId_docSeries,
-										afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
-										afferc['affectedFileIdList'][0]['fileSeq'],
-										afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
-										afferc['affectedFileIdList'][0]['fileType'])
-				else:
-					pass
+			afferc = user_doc_read_min(escrito_relacionado.affected_doc_Log,new_Nbr,escrito_relacionado.affected_doc_docOrigin,escrito_relacionado.affected_doc_docSeries)
+			print('USERDOCADDAFFECTEDFILE')
+			if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
+				user_doc_afectado(
+									escrito_relacionado.documentId_docLog,
+									new_Nbr,
+									str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
+									escrito_relacionado.documentId_docSeries,
+									afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
+									afferc['affectedFileIdList'][0]['fileSeq'],
+									afferc['affectedFileIdList'][0]['fileSeries']['doubleValue'],
+									afferc['affectedFileIdList'][0]['fileType'])
+			else:
+				pass
 		except Exception as e:
-				data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
-				cambio_estado_soporte(form_Id)
+				pass
+				#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
+				#cambio_estado_soporte(form_Id)
 		# end USERDOCADDAFFECTEDFILE ###################################################################################
 
-		# start CHECK USERDOC ###################################################################################		
+		# start CHECK USERDOC ###################################################################################
+		print('USERDOCUPDATE')		
 		newDoc = str(user_doc_read_min(
 										'E',
 										escrito_relacionado.affected_doc_docNbr,
 										escrito_relacionado.documentId_docOrigin,
 										escrito_relacionado.documentId_docSeries
 										)['documentId']['docNbr']['doubleValue']).replace(".0","") 
-		if newDoc == new_Nbr and updt == 'true' and udr == 'true':
+		print(newDoc +" - "+ new_Nbr)								
+		if newDoc == new_Nbr:
 			cambio_estado(form_Id,new_Nbr)
 			print('CAMBIO DE ESTADO')
 			envio_agente_recibido(form_Id,new_Nbr)		#Crear PDF
@@ -523,7 +528,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 			print('ENVIA PDF')
 			rule_notification(typ,'')# Correo al funcionario
 			print('CORREO FUNCIONARIO')
-			send_to_group(in_group,new_Nbr)	
+			send_to_group(in_group,new_Nbr,typ)	
 			print('INSERTA GRUPO')		
 		else:
 			data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
@@ -540,6 +545,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 			# start USERDOCRECEIVE ###################################################################################			
 			new_Nbr = str(COMMIT_NBR())
 			try:
+				print('USERDOCRECEIVE')
 				udr=user_doc_receive(
 							str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 							escrito_escrito_pago.filingData_userdocTypeList_userdocType,
@@ -583,6 +589,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 			sigla_desc = str(escrito_escrito_pago.filingData_userdocTypeList_userdocName).split("- ")
 			# start USERDOCUPDATE ###################################################################################							
 			try:
+				print('USERDOCUPDATE')
 				updt=user_doc_update(
 							escrito_escrito_pago.affected_doc_Log,
 							escrito_escrito_pago.affected_doc_docNbr,
@@ -656,8 +663,10 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 			# end USERDOCUPDATE ###################################################################################
 
 			# start USERDOCADDAFFECTEDFILE ###################################################################################	
-			afferc = user_doc_read_min('E',escrito_escrito_pago.affected_doc_docNbr,escrito_escrito_pago.affected_doc_docOrigin,escrito_escrito_pago.affected_doc_docSeries)
+			
 			try:
+				afferc = user_doc_read_min('E',escrito_escrito_pago.affected_doc_docNbr,escrito_escrito_pago.affected_doc_docOrigin,escrito_escrito_pago.affected_doc_docSeries)
+				print('USERDOCADDAFFECTEDFILE')
 				if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
 					user_doc_afectado(escrito_escrito_pago.documentId_docLog,
 										new_Nbr,
@@ -670,17 +679,20 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 				else:
 					pass
 			except Exception as e:
-					data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
-					cambio_estado_soporte(form_Id)
+				pass
+				#data_validator(f'Error de IPAS affectedFileIdList => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
+				#cambio_estado_soporte(form_Id)
 			# end USERDOCADDAFFECTEDFILE ###################################################################################
 
 			# start CHECK USERDOC ###################################################################################
+			print('CHECK USERDOC')
 			newDoc = str(user_doc_read_min('E',
 											new_Nbr,
 											str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 											escrito_escrito_pago.documentId_docSeries
 											)['documentId']['docNbr']['doubleValue']).replace(".0","") 
-			if newDoc == new_Nbr and updt == 'true' and udr == 'true':
+			print(newDoc +" - "+ new_Nbr)
+			if newDoc == new_Nbr:
 				cambio_estado(form_Id,new_Nbr)
 				print('CAMBIO DE ESTADO')
 				envio_agente_recibido(form_Id,new_Nbr)#Crear PDF
@@ -689,14 +701,13 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 				print('ENVIA PDF')
 				rule_notification(typ,'')# Correo al funcionario
 				print('CORREO FUNCIONARIO')
-				send_to_group(in_group,new_Nbr)	
+				send_to_group(in_group,new_Nbr,typ)	
 				print('INSERTA GRUPO')				
 			else:
 				data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
 				rule_notification('SOP',form_Id)
 				# end CHECK USERDOC ###################################################################################
-
 
 def insertReg(form_Id):
 	flow_request = stop_request()
