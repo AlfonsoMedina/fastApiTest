@@ -493,7 +493,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 				if afferc['affectedFileIdList'][0]['fileSeq'] == 'PY':
 					user_doc_afectado(
 										escrito_relacionado.documentId_docLog,
-										new_Nbr,#escrito_relacionado.documentId_docNbr,
+										new_Nbr,
 										str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 										escrito_relacionado.documentId_docSeries,
 										afferc['affectedFileIdList'][0]['fileNbr']['doubleValue'],
@@ -516,10 +516,15 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 										)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 		if newDoc == new_Nbr and updt == 'true' and udr == 'true':
 			cambio_estado(form_Id,new_Nbr)
+			print('CAMBIO DE ESTADO')
 			envio_agente_recibido(form_Id,new_Nbr)		#Crear PDF
+			print('CREA PDF')
 			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico
+			print('ENVIA PDF')
 			rule_notification(typ,'')# Correo al funcionario
-			send_to_group(in_group,new_Nbr)			
+			print('CORREO FUNCIONARIO')
+			send_to_group(in_group,new_Nbr)	
+			print('INSERTA GRUPO')		
 		else:
 			data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
@@ -677,10 +682,15 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 											)['documentId']['docNbr']['doubleValue']).replace(".0","") 
 			if newDoc == new_Nbr and updt == 'true' and udr == 'true':
 				cambio_estado(form_Id,new_Nbr)
+				print('CAMBIO DE ESTADO')
 				envio_agente_recibido(form_Id,new_Nbr)#Crear PDF
+				print('CREA PDF')
 				delete_file(enviar('notificacion-DINAPI.pdf',escrito_escrito_pago.representationData_representativeList_person_email,'M.E.A',''))#Enviar Correo Electronico
+				print('ENVIA PDF')
+				rule_notification(typ,'')# Correo al funcionario
+				print('CORREO FUNCIONARIO')
 				send_to_group(in_group,new_Nbr)	
-				rule_notification(typ,'')# Correo al funcionario				
+				print('INSERTA GRUPO')				
 			else:
 				data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
@@ -1052,7 +1062,8 @@ def error_process(form_Id,error_msg,bool_estado):
 
 def send_to_group(in_group,fileNbr,sigla):
 	if in_group == 'esc-exp':
-		insertar_o_crear_grupo_expediente(str(USER_GROUP(sigla)),fileNbr)
+		print('Escrito + expediente')
+		#insertar_o_crear_grupo_expediente(str(USER_GROUP(sigla)),fileNbr)
 	if in_group == 'esc':
 		insertar_o_crear_grupo_escrito(str(USER_GROUP(sigla)),fileNbr)	
 

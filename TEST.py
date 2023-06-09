@@ -4,6 +4,7 @@ from turtle import back
 import zeep
 from zeep import Client
 import psycopg2
+from auto_process import send_to_group
 from email_pdf_AG import envio_agente_recibido, envio_agente_recibido_reg, envio_agente_recibido_ren, form_id, sigla_id
 from email_reg_sfe import envio_agente_reg
 from getFileDoc import getFile_reg_and_ren
@@ -945,12 +946,15 @@ def filter_user(sig,exp):
 
 #print(filter_user('CEM','2341306'))
 
-print(USER_GROUP('DAJ1'))
+print(USER_GROUP('CON'))
 
 #'23006441'
 
 #EXISTE O NO EL GRUPO USUARIO DE LA FECHA
 #print(group_today('298', '06/06/2023', '1'))
+
+
+send_to_group('esc','2341460','GEN')
 
 
 #print(group_typ('10'))

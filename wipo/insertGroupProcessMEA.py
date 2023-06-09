@@ -171,11 +171,12 @@ def insertar_o_crear_grupo_escrito(user,esc):
 	process = user_doc_read(data_doc['documentId']['docLog'],data_doc['documentId']['docNbr']['doubleValue'],data_doc['documentId']['docOrigin'],data_doc['documentId']['docSeries']['doubleValue'])
 	print(process['userdocProcessId']['processNbr']+" "+process['userdocProcessId']['processType'])
 	#####################################################################################################
+	
 	group_name = f'{fecha} [Escrito]'
+	group = group_today(userId, group_name)
 	if group_today(userId, group_name) != False:
-
 		ProcessGroupAddProcess(
-								str(group_today(userId, group_name)[1]), 
+								str(group[1]), 
 								userId, 
 								process['userdocProcessId']['processNbr'],
 								process['userdocProcessId']['processType']
@@ -191,14 +192,12 @@ def insertar_o_crear_grupo_escrito(user,esc):
 							'Creado por M.E.A.',
 							'1',
 							'11')
-
 		ProcessGroupAddProcess(
-								str(group_today(userId, group_name)[1]), 
+								str(group[1]), 
 								userId, 
 								process['userdocProcessId']['processNbr'],
 								process['userdocProcessId']['processType']
 								)
-	
 	else:
 		pass
 
