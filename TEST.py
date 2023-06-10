@@ -19,7 +19,7 @@ from tools.data_format import fecha_barra
 import tools.connect as conn_serv
 import tools.connect as connex
 from wipo.function_for_reception_in import user_doc_getList_escrito, user_doc_read, user_doc_read_min
-from wipo.insertGroupProcessMEA import ProcessGroupAddProcess, ProcessGroupGetList, ProcessGroupInsert
+from wipo.insertGroupProcessMEA import ProcessGroupAddProcess, ProcessGroupGetList, ProcessGroupInsert, insertar_o_crear_grupo_escritoMasExpediente
 from wipo.ipas import daily_log_close, daily_log_open, fetch_all_user_mark, mark_getlist, mark_read
 import tools.filing_date as captureDate
 
@@ -135,26 +135,21 @@ def insertar_o_crear_grupo_escrito(user,esc):
 		pass
 
 #ESCRITO RELACINADO CON EXPEDIENTE
-def insertar_o_crear_grupo_escritoMasExpediente(user,esc):
-
-	data_doc = user_doc_getList_escrito(esc)
+def insertar_o_crear_grupo_escritoMasExpediente_test(user,esc,sigla):
 	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
 	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
-	process = user_doc_read(data_doc['documentId']['docLog'],data_doc['documentId']['docNbr']['doubleValue'],data_doc['documentId']['docOrigin'],data_doc['documentId']['docSeries']['doubleValue'])
-	print(process['userdocProcessId']['processNbr']+" "+process['userdocProcessId']['processType'])
+		
+	data_process = Process_Get_List(esc,esc,captureDate.capture_year(),sigla)[0]
 
 	#####################################################################################################
 	group_name = f'{fecha} [Escrito+expediente]'
 	if group_today(userId, group_name) != False:
-
-		ProcessGroupAddProcess(
+		return(ProcessGroupAddProcess(
 								str(group_today(userId, group_name)[1]), 
 								userId, 
-								process['userdocProcessId']['processNbr'],
-								process['userdocProcessId']['processType']
-								)
-	else:
-		pass
+								data_process.processId.processNbr.doubleValue,
+								data_process.processId.processType
+								))
 	#####################################################################################################
 	if group_today(userId, group_name) == False:
 		ProcessGroupInsert(
@@ -165,15 +160,12 @@ def insertar_o_crear_grupo_escritoMasExpediente(user,esc):
 							'1',
 							'10')
 
-		ProcessGroupAddProcess(
+		return(ProcessGroupAddProcess(
 								str(group_today(userId, group_name)[1]), 
 								userId, 
-								process['userdocProcessId']['processNbr'],
-								process['userdocProcessId']['processType']
-								)
-	
-	else:
-		pass
+								data_process.processId.processNbr.doubleValue,
+								data_process.processId.processType
+								))
 
 
 def Insert_Group_Process_reg_ren(fileNbr,user,typ):
@@ -330,6 +322,47 @@ def Insert_Group_Process_docs_test(fileNbr,user,typ):
 		return(res)
 	except Exception as e:
 		return(e)
+
+
+
+################################################################################################
+
+def sigla_estado_exp(sig,fileNbr):
+	#print(sig)
+	if exist_main_mark(sig) == 'S':
+		try:
+			status_exp = main_State(fileNbr)
+		except Exception as e:
+			return('GEN')
+		#print(status_exp)
+		rule = email_receiver(str(status_exp))
+		return(status_exp)	
+	else:
+		pass	
+
+# requeridos sigla y fileNbr, affectNbr en caso de escrito que aecta expediente 
+def esc_exp_this(sig,affectNbr,fileNbr):
+	relation_typ = exist_main_mark(sig)	#devuelve si la regla es relacionada a esc o exp 
+	if relation_typ == 'S':
+		try:
+			# ultimo estado correspondiente al expediente
+			state = sigla_estado_exp(sig,affectNbr) 
+			# usuario segun estado del expediente - si no existe (GEN)	
+			user = USER_GROUP(state) 			
+
+			# Crea grupo o inserta file en grupo existente segun el estado del expediente afectado 
+			insertar_o_crear_grupo_escritoMasExpediente_test(user,fileNbr,sig)
+
+		except Exception as e:
+			print('sigla o expediente no validos')
+	elif relation_typ == 'N':
+		print('Relacion con escrito')
+	else:
+		print('sin Relacion')
+
+################################################################################################
+
+
 
 
 #captura de error
@@ -852,30 +885,28 @@ def Process_Get_List(userdocSeqNbrFrom,userdocSeqNbrTo,userdocSeqSeries,userdocT
 				"arg0": {
 					"criteriaProcessByUserdoc": {
 					"userdocSeqNbrFrom": {
-						"doubleValue": userdocSeqNbrFrom
+						"doubleValue": str(userdocSeqNbrFrom)
 					},
 					"userdocSeqNbrTo": {
-						"doubleValue": userdocSeqNbrTo
+						"doubleValue": str(userdocSeqNbrTo)
 					},
 					"userdocSeqSeries": {
-						"doubleValue": userdocSeqSeries
+						"doubleValue": str(userdocSeqSeries)
 					},
 					"userdocSeqType": "PY",
-					"userdocType": userdocType
+					"userdocType": str(userdocType)
 					}
 				},
-				"arg1": {
-					"doubleValue": ""
-				}
+				"arg1": {}
 				}
 	data = clientMark.service.ProcessGetList(**data_exp)
 	return(data)
 
 
-print(Process_Get_List('2341298','2341298','2023','CV'))
+#print(Process_Get_List('2341527','2341527','2023','ACL'))
 
-print(Process_Get_List('2341485','2341485','2022','CV')[0].upperProcessId.processNbr.doubleValue)
-print(Process_Get_List('2341485','2341485','2022','CV')[0].upperProcessId.processType)
+#print(Process_Get_List('2341527','2341527','2023','ACL')[0].processId.processNbr.doubleValue)
+#print(Process_Get_List('2341527','2341527','2023','ACL')[0].processId.processType)
 
 
 
@@ -951,7 +982,7 @@ print(ren.signData_signType)"""
 
 
 #CREA GRUPO PARA EXPEDIENTE DE TIPO REN Y REG - (REQUIERE USUSARIO Y EXPEDIENTE)
-#insertar_o_crear_grupo_escritoMasExpediente('AMEDINA','2332001')
+#print(insertar_o_crear_grupo_escritoMasExpediente('AMEDINA','2341578','CP'))
 
 
 #envio_agente_reg('23808')
@@ -975,17 +1006,16 @@ print(ren.signData_signType)"""
 
 #print(COMMIT_NBR())
 
-
-
-
 #print(filter_user('CEM','2341306'))
 
-#print(USER_GROUP('CON'))
+#print(USER_GROUP('IG'))
 
 #'23006441'
 
 #EXISTE O NO EL GRUPO USUARIO DE LA FECHA
-#print(group_today('298', '06/06/2023', '1'))
+#print(group_today('156', '09/06/2023 [Escrito+expediente]'))
+
+#print(ProcessGroupInsert(last_group('156')+1,'156','09/06/2023 [Escrito+expediente]','Creado por M.E.A.','1','10'))
 
 
 #send_to_group('esc','2341460','GEN')
@@ -1003,9 +1033,16 @@ print(ren.signData_signType)"""
 
 #print(Insert_Group_Process('1','2177877','AMEDINA','1'))
 
-#print(USER_GROUP('REN'))
+#print(USER_GROUP('CPP'))
 
 
 
+
+#print(SIGLA_DE_ESTADO('CPP','1341066'))
+
+
+
+# Listo el caso de escrito que afecta expediente, pendiente los otros casos ########################## 
+esc_exp_this('CPP','1341066','2341710')
 
 

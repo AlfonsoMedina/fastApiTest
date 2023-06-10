@@ -1,10 +1,11 @@
 import time
 from zeep import Client
+from dinapi.sfe import *
+import tools.filing_date as captureDate
 from tools.data_format import fecha_barra
 import tools.connect as conn_serv
 import zeep
 from wipo.function_for_reception_in import user_doc_getList_escrito, user_doc_read
-
 from wipo.ipas import fetch_all_user_mark, mark_getlist, mark_read
 
 
@@ -37,6 +38,7 @@ def ProcessGroupAddProcess(processGroupCode,userNbr,processNbr,processType):
 	except zeep.exceptions.Fault as e:
 		return(str(e))
 
+
 def ProcessGroupInsert(processGroupCode,userNbr,processGroupName,description,relatedToWorkcode,processType):
 	try:
 		data = {
@@ -63,6 +65,7 @@ def ProcessGroupInsert(processGroupCode,userNbr,processGroupName,description,rel
 		return clientMark.service.ProcessGroupInsert(**data)
 	except zeep.exceptions.Fault as e:
 		return([])
+
 
 def ProcessGroupRead(processGroupCode,userNbr):
 	try:
@@ -93,6 +96,7 @@ def ProcessGroupRead(processGroupCode,userNbr):
 		else:
 			return(False)
 
+
 def ProcessGroupGetList(userNbr):
 	try:
 		data = {
@@ -105,6 +109,7 @@ def ProcessGroupGetList(userNbr):
 		return(clientMark.service.ProcessGroupGetList(**data))
 	except zeep.exceptions.Fault as e:
 		return(e)
+
 
 def valid_group(userNbr,groupName,typ):
 	try:
@@ -122,6 +127,7 @@ def valid_group(userNbr,groupName,typ):
 		return(resp)
 	except Exception as e:
 		return(False)
+
 
 def insertar_o_crear_grupo_expediente(user,exp):
 	expediente = mark_getlist(exp)
@@ -164,6 +170,7 @@ def insertar_o_crear_grupo_expediente(user,exp):
 	else:
 		pass
 
+
 def insertar_o_crear_grupo_escrito(user,esc):
 	data_doc = user_doc_getList_escrito(esc)
 	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
@@ -201,26 +208,22 @@ def insertar_o_crear_grupo_escrito(user,esc):
 	else:
 		pass
 
-def insertar_o_crear_grupo_escritoMasExpediente(user,esc):
 
-	data_doc = user_doc_getList_escrito(esc)
+def insertar_o_crear_grupo_escritoMasExpediente(user,esc,sigla):
 	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
 	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
-	process = user_doc_read(data_doc['documentId']['docLog'],data_doc['documentId']['docNbr']['doubleValue'],data_doc['documentId']['docOrigin'],data_doc['documentId']['docSeries']['doubleValue'])
-	print(process['userdocProcessId']['processNbr']+" "+process['userdocProcessId']['processType'])
+		
+	data_process = Process_Get_List(esc,esc,captureDate.capture_year(),sigla)[0]
 
 	#####################################################################################################
 	group_name = f'{fecha} [Escrito+expediente]'
 	if group_today(userId, group_name) != False:
-
-		ProcessGroupAddProcess(
+		return(ProcessGroupAddProcess(
 								str(group_today(userId, group_name)[1]), 
 								userId, 
-								process['userdocProcessId']['processNbr'],
-								process['userdocProcessId']['processType']
-								)
-	else:
-		pass
+								data_process.processId.processNbr.doubleValue,
+								data_process.processId.processType
+								))
 	#####################################################################################################
 	if group_today(userId, group_name) == False:
 		ProcessGroupInsert(
@@ -231,20 +234,19 @@ def insertar_o_crear_grupo_escritoMasExpediente(user,esc):
 							'1',
 							'10')
 
-		ProcessGroupAddProcess(
+		return(ProcessGroupAddProcess(
 								str(group_today(userId, group_name)[1]), 
 								userId, 
-								process['userdocProcessId']['processNbr'],
-								process['userdocProcessId']['processType']
-								)
-	
-	else:
-		pass
+								data_process.processId.processNbr.doubleValue,
+								data_process.processId.processType
+								))
+
 
 def group_typ(num):
 	list = {'1':'[Expediente]','10':'[Escrito+expediente]','11':'[Escrito]'}
 	group_name = str(fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00"))+" "+list[str(num)])
 	return(group_name)
+
 
 def group_today(userNbr,groupName):	
 	data = ProcessGroupGetList(userNbr)
@@ -260,6 +262,7 @@ def group_today(userNbr,groupName):
 			respuesta = False
 	return(respuesta)
 
+
 def last_group(userNbr):
 	list = []
 	list_int = []
@@ -272,6 +275,7 @@ def last_group(userNbr):
 	ultimo = int(len(list_int))-1
 	#print(list_int)
 	return(list_int[ultimo])
+
 
 def Process_Get_List(userdocSeqNbrFrom,userdocSeqNbrTo,userdocSeqSeries,userdocType):
 	data_exp = {
@@ -296,3 +300,17 @@ def Process_Get_List(userdocSeqNbrFrom,userdocSeqNbrTo,userdocSeqSeries,userdocT
 				}
 	data = clientMark.service.ProcessGetList(**data_exp)
 	return(data)
+
+
+def SIGLA_DE_ESTADO(sig,exp):
+	#print(sig)
+	if exist_main_mark(sig) == 'S':
+		try:
+			status_exp = main_State(exp)
+		except Exception as e:
+			return('GEN')
+		#print(status_exp)
+		rule = email_receiver(str(status_exp))
+		return(status_exp)	
+	else:
+		pass

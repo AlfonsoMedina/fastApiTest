@@ -1,9 +1,6 @@
-from ast import Break, Pass, Return
-from dataclasses import replace
 from sqlite3 import Time
 import string
 import time
-from time import sleep
 from email_pdf_AG import  envio_agente_recibido, envio_agente_recibido_reg, envio_agente_recibido_ren
 from models.InsertUserDocModel import userDocModel
 from dinapi.sfe import  COMMIT_NBR, USER_GROUP, cambio_estado, cambio_estado_soporte, data_validator, esc_relation,  exp_relation,  pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
@@ -16,7 +13,7 @@ from tools.send_mail import delete_file, enviar
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_read_min
-from wipo.insertGroupProcessMEA import  insertar_o_crear_grupo_escrito, insertar_o_crear_grupo_expediente
+from wipo.insertGroupProcessMEA import  SIGLA_DE_ESTADO, Process_Get_List, insertar_o_crear_grupo_escrito, insertar_o_crear_grupo_escritoMasExpediente, insertar_o_crear_grupo_expediente
 from wipo.ipas import  mark_insert_reg, mark_insert_ren, user_doc_afectado, user_doc_receive, user_doc_update
 import zeep
 
@@ -118,9 +115,9 @@ def insert_list(arg0:string,arg1:string):
 	####################################################################################################################################
 	
 	if valid_rules == ['Ok', 'Not', 'Not']: 	
-		state_in = compileAndInsert(arg0,arg1,'esc-exp')
+		state_in = compileAndInsert(arg0,arg1,'esc_exp')
 	elif valid_rules == ['Ok', 'Not', 'Ok']:		
-		state_in = compileAndInsert(arg0,arg1,'esc-exp')
+		state_in = compileAndInsert(arg0,arg1,'esc_exp')
 	elif valid_rules == ['Not', 'Ok', 'Not']:
 		state_in = compileAndInsertUserDocUserDoc(arg0,arg1,'esc-esc')
 	elif valid_rules == ['Not', 'Ok', 'Ok']:
@@ -353,8 +350,11 @@ def compileAndInsert(form_Id,typ,in_group):
 				print('ENVIA PDF')
 				rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr))														# Correo al funcionario
 				print('CORREO FUNCIONARIO')
-				send_to_group(in_group,new_Nbr,typ)																	# Envia al grupo de tramites
-				print('INSERTA GRUPO')				
+				try:
+					send_to_group(in_group,new_Nbr,typ,str(insert_doc.affectedFileIdList_fileNbr))
+				except Exception as e:
+					print('ERROR DE INSERT GROUP')	
+				print('INSERTA GRUPO')																# Envia al grupo de tramites			
 		except Exception as e:
 			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
@@ -528,7 +528,10 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 			print('ENVIA PDF')
 			rule_notification(typ,'')# Correo al funcionario
 			print('CORREO FUNCIONARIO')
-			send_to_group(in_group,new_Nbr,typ)	
+			try:
+				send_to_group(in_group,new_Nbr,typ,'')
+			except Exception as e:
+				print('NOT INSERT GROUP')	
 			print('INSERTA GRUPO')		
 		else:
 			data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
@@ -701,7 +704,10 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 				print('ENVIA PDF')
 				rule_notification(typ,'')# Correo al funcionario
 				print('CORREO FUNCIONARIO')
-				send_to_group(in_group,new_Nbr,typ)	
+				try:
+					send_to_group(in_group,new_Nbr,typ,'')
+				except Exception as e:
+					print('NOT INSERT GROUP')	
 				print('INSERTA GRUPO')				
 			else:
 				data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
@@ -832,7 +838,6 @@ def insertRen(form_Id):
 			error_process(form_Id,'Error en solicitud o falta número de registro, tabla tramites ID','true')
 	else:
 		pass
-
 
 
 
@@ -1071,12 +1076,13 @@ def error_process(form_Id,error_msg,bool_estado):
 	cambio_estado_soporte(form_Id)
 	rule_notification('SOP',form_Id)	
 
-def send_to_group(in_group,fileNbr,sigla):
+def send_to_group(in_group, fileNbr, sigla, affectedFileIdList):
+	if in_group == 'esc_exp':
+		print(insertar_o_crear_grupo_escritoMasExpediente(str(SIGLA_DE_ESTADO(sigla,str(affectedFileIdList))),fileNbr,sigla))
 	if in_group == 'esc-exp':
-		print('Escrito + expediente')
-		#insertar_o_crear_grupo_expediente(str(USER_GROUP(sigla)),fileNbr)
+		print(insertar_o_crear_grupo_escritoMasExpediente(str(USER_GROUP(sigla)),fileNbr,sigla))
 	if in_group == 'esc':
-		insertar_o_crear_grupo_escrito(str(USER_GROUP(sigla)),fileNbr)	
+		print(insertar_o_crear_grupo_escrito(str(USER_GROUP(sigla)),fileNbr))	
 
 
 """
