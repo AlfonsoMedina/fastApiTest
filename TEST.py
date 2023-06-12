@@ -341,7 +341,7 @@ def sigla_estado_exp(sig,fileNbr):
 		pass	
 
 # requeridos sigla y fileNbr, affectNbr en caso de escrito que aecta expediente 
-def esc_exp_this(sig,affectNbr,fileNbr):
+def group_addressing(sig,affectNbr,fileNbr):
 	relation_typ = exist_main_mark(sig)	#devuelve si la regla es relacionada a esc o exp 
 	if relation_typ == 'S':
 		try:
@@ -1043,6 +1043,6 @@ print(ren.signData_signType)"""
 
 
 # Listo el caso de escrito que afecta expediente, pendiente los otros casos ########################## 
-esc_exp_this('CPP','1341066','2341710')
+group_addressing('PI','9825149','2341729')
 
 

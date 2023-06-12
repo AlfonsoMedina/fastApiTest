@@ -1,13 +1,12 @@
 import time
 from zeep import Client
-from dinapi.sfe import *
 import tools.filing_date as captureDate
 from tools.data_format import fecha_barra
 import tools.connect as conn_serv
 import zeep
 from wipo.function_for_reception_in import user_doc_getList_escrito, user_doc_read
 from wipo.ipas import fetch_all_user_mark, mark_getlist, mark_read
-
+from dinapi.sfe import USER_GROUP, email_receiver, exist_main_mark, main_State
 
 try:
 	mark_service = conn_serv.MEA_IPAS_DESTINO
@@ -233,7 +232,6 @@ def insertar_o_crear_grupo_escritoMasExpediente(user,esc,sigla):
 							'Creado por M.E.A.',
 							'1',
 							'10')
-
 		return(ProcessGroupAddProcess(
 								str(group_today(userId, group_name)[1]), 
 								userId, 
@@ -314,3 +312,38 @@ def SIGLA_DE_ESTADO(sig,exp):
 		return(status_exp)	
 	else:
 		pass
+
+
+def sigla_estado_exp(sig,fileNbr):
+	#print(sig)
+	if exist_main_mark(sig) == 'S':
+		try:
+			status_exp = main_State(fileNbr)
+		except Exception as e:
+			return('GEN')
+		#print(status_exp)
+		rule = email_receiver(str(status_exp))
+		return(status_exp)	
+	else:
+		pass	
+
+# requeridos sigla y fileNbr, affectNbr en caso de escrito que aecta expediente 
+def group_addressing(sig,affectNbr,fileNbr):
+	relation_typ = exist_main_mark(sig)	#devuelve si la regla es relacionada a esc o exp 
+	if relation_typ == 'S':
+		try:
+			# ultimo estado correspondiente al expediente
+			state = sigla_estado_exp(sig,affectNbr) 
+			# usuario segun estado del expediente - si no existe (GEN)	
+			user = USER_GROUP(state) 			
+
+			# Crea grupo o inserta file en grupo existente segun el estado del expediente afectado 
+			insertar_o_crear_grupo_escritoMasExpediente(user,fileNbr,sig)
+		except Exception as e:
+			print('sigla o expediente no validos')
+	elif relation_typ == 'N':
+		insertar_o_crear_grupo_escrito(USER_GROUP(sig),fileNbr)
+	else:
+		pass
+
+	

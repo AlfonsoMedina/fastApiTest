@@ -7,7 +7,7 @@ from tools.data_format import fecha_barra,hora
 from tools.send_mail import enviar_back_notFile
 import tools.filing_date as captureDate
 import tools.connect as connex
-from wipo.insertGroupProcessMEA import ProcessGroupAddProcess
+
 from wipo.ipas import Process_Read, fetch_all_user_mark,  mark_getlist, mark_read, personAgente
 from urllib import request
 import qrcode
