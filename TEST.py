@@ -1042,7 +1042,10 @@ print(ren.signData_signType)"""
 
 
 
+print(group_today('298', '13/06/2023 [Escrito]')[1])
+
+
 # Listo el caso de escrito que afecta expediente, pendiente los otros casos ########################## 
-group_addressing('PI','9825149','2341729')
+#group_addressing('PI','9825149','2341729')
 
 

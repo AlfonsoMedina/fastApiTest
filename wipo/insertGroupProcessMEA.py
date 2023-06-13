@@ -180,30 +180,17 @@ def insertar_o_crear_grupo_escrito(user,esc):
 	
 	group_name = f'{fecha} [Escrito]'
 	group = group_today(userId, group_name)
+	ultimo = last_group(userId) + 1
 	if group_today(userId, group_name) != False:
-		ProcessGroupAddProcess(
-								str(group[1]), 
-								userId, 
-								process['userdocProcessId']['processNbr'],
-								process['userdocProcessId']['processType']
-								)
+		return(ProcessGroupAddProcess(str(group[1]),str(userId),str(process['userdocProcessId']['processNbr']),str(process['userdocProcessId']['processType'])))
 	else:
 		pass
 	#####################################################################################################
+
 	if group_today(userId, group_name) == False:
-		ProcessGroupInsert(
-							last_group(userId)+1,
-							userId,
-							fecha,
-							'Creado por M.E.A.',
-							'1',
-							'11')
-		ProcessGroupAddProcess(
-								str(group[1]), 
-								userId, 
-								process['userdocProcessId']['processNbr'],
-								process['userdocProcessId']['processType']
-								)
+		ProcessGroupInsert(str(ultimo),str(userId),str(fecha),'Creado por M.E.A.','1','11')
+		time.sleep(1)
+		return(ProcessGroupAddProcess(str(ultimo),str(userId),str(process['userdocProcessId']['processNbr']),str(process['userdocProcessId']['processType'])))
 	else:
 		pass
 
@@ -336,13 +323,12 @@ def group_addressing(sig,affectNbr,fileNbr):
 			state = sigla_estado_exp(sig,affectNbr) 
 			# usuario segun estado del expediente - si no existe (GEN)	
 			user = USER_GROUP(state) 			
-
 			# Crea grupo o inserta file en grupo existente segun el estado del expediente afectado 
 			insertar_o_crear_grupo_escritoMasExpediente(user,fileNbr,sig)
 		except Exception as e:
 			print('sigla o expediente no validos')
 	elif relation_typ == 'N':
-		insertar_o_crear_grupo_escrito(USER_GROUP(sig),fileNbr)
+		insertar_o_crear_grupo_escrito(USER_GROUP(sig),str(fileNbr))
 	else:
 		pass
 
