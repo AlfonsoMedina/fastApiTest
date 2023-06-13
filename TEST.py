@@ -4,8 +4,10 @@ from turtle import back
 import zeep
 from zeep import Client
 import psycopg2
+from PyPDF2 import PdfMerger, PdfReader
+from fpdf import FPDF, HTMLMixin  #pip install fpdf2
 from auto_process import send_to_group
-from email_pdf_AG import envio_agente_recibido, envio_agente_recibido_reg, envio_agente_recibido_ren, form_id, sigla_id
+from email_pdf_AG import acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_reg, envio_agente_recibido_ren, form_descrip, form_id, registro_pdf_con_acuse, renovacion_pdf_con_acuse, sigla_id
 from email_reg_sfe import envio_agente_reg
 from getFileDoc import getFile_reg_and_ren
 from sfe_no_presencial_reg_local import registro_pdf_sfe_local
@@ -13,15 +15,19 @@ from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.base64Decode import decode_img
 from models.insertRenModel import insertRenModel
 from models.InsertUserDocModel_backUp import userDocModel_test
-from dinapi.sfe import COMMIT_NBR, USER_GROUP, cambio_estado_soporte, data_validator, email_receiver, exist_main_mark, exist_notifi, main_State, pago_id, pendiente_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, tasa_id, tipo_form
+from dinapi.sfe import COMMIT_NBR, USER_GROUP, cambio_estado_soporte, data_validator, email_receiver, exist_main_mark, exist_notifi, main_State, pago_id, pendiente_sfe, qr_code, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, tasa_id, tipo_form
 from models.InsertUserDocModel import userDocModel
-from tools.data_format import fecha_barra
+from tools.data_format import fecha_barra, hora, signo_format
 import tools.connect as conn_serv
 import tools.connect as connex
 from wipo.function_for_reception_in import user_doc_getList_escrito, user_doc_read, user_doc_read_min
 from wipo.insertGroupProcessMEA import ProcessGroupAddProcess, ProcessGroupGetList, ProcessGroupInsert, insertar_o_crear_grupo_escritoMasExpediente
 from wipo.ipas import daily_log_close, daily_log_open, fetch_all_user_mark, mark_getlist, mark_read
 import tools.filing_date as captureDate
+
+from os import getcwd
+import barcode
+from barcode.writer import ImageWriter
 
 
 
@@ -1035,15 +1041,12 @@ print(ren.signData_signType)"""
 
 #print(USER_GROUP('CPP'))
 
-
-
-
 #print(SIGLA_DE_ESTADO('CPP','1341066'))
 
 
+#acuse_from_AG_REG('N','1809','2342183')
 
-print(group_today('298', '13/06/2023 [Escrito]')[1])
-
+#acuse_from_AG_REN('N','1818','2342114')
 
 # Listo el caso de escrito que afecta expediente, pendiente los otros casos ########################## 
 #group_addressing('PI','9825149','2341729')

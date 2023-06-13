@@ -141,12 +141,12 @@ def insertar_o_crear_grupo_expediente(user,exp):
 	group_name = f'{fecha} [Expediente]'
 	if group_today(userId, group_name) != False:
 
-		ProcessGroupAddProcess(
+		return(ProcessGroupAddProcess(
 			str(group_today(userId, group_name)[1]), 
-			userId, 
-			data['file']['processId']['processNbr']['doubleValue'],
-			data['file']['processId']['processType']
-			)
+			str(userId), 
+			str(data['file']['processId']['processNbr']['doubleValue']),
+			str(data['file']['processId']['processType'])
+			))
 	else:
 		pass
 	#####################################################################################################
@@ -159,13 +159,12 @@ def insertar_o_crear_grupo_expediente(user,exp):
 							'1',
 							'1')
 
-		ProcessGroupAddProcess(
+		return(ProcessGroupAddProcess(
 							str(group_today(userId, group_name)[1]), 
 							userId, 
-							data['file']['processId']['processNbr']['doubleValue'],
-							data['file']['processId']['processType']
-							)
-	
+							str(data['file']['processId']['processNbr']['doubleValue']),
+							str(data['file']['processId']['processType'])
+							))
 	else:
 		pass
 

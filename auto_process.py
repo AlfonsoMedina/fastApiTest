@@ -1,7 +1,7 @@
 from sqlite3 import Time
 import string
 import time
-from email_pdf_AG import  envio_agente_recibido, envio_agente_recibido_reg, envio_agente_recibido_ren
+from email_pdf_AG import  acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_reg, envio_agente_recibido_ren
 from models.InsertUserDocModel import userDocModel
 from dinapi.sfe import  COMMIT_NBR, USER_GROUP, cambio_estado, cambio_estado_soporte, data_validator, esc_relation,  exp_relation,  pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
 from getFileDoc import  compilePDF, getFile, getFile_reg_and_ren
@@ -760,7 +760,7 @@ def insertReg(form_Id):
 			)
 			print('INSERTO EL REGISTRO => ' + insertRegState)
 			if insertRegState == 'true':
-				others_process(form_Id,new_Nbr,insert_mark.ag_email,'REG')
+				others_process_REG(form_Id,new_Nbr,insert_mark.ag_email,'REG')
 			else:
 				error_process(form_Id,'Error en solicitud, tabla tramites ID','true')	
 		except Exception as e:
@@ -768,7 +768,6 @@ def insertReg(form_Id):
 			error_process(form_Id,'Error en solicitud, tabla tramites ID','true')
 	else:
 		pass
-
 
 def insertRen(form_Id):
 	flow_request = stop_request()
@@ -827,7 +826,7 @@ def insertRen(form_Id):
 						insert_mark_ren.signData_signType)			
 			print('INSERTO EL RENOVACION => ' + insertRenState)
 			if insertRenState == 'true':
-				others_process(form_Id,new_Nbr,insert_mark_ren.ag_email,'REN')
+				others_process_REN(form_Id,new_Nbr,insert_mark_ren.ag_email,'REN')
 			else:
 				error_process(form_Id,'Error en solicitud o falta número de registro, tabla tramites ID','true')
 		except Exception as e:
@@ -835,9 +834,6 @@ def insertRen(form_Id):
 			error_process(form_Id,'Error en solicitud o falta número de registro, tabla tramites ID','true')
 	else:
 		pass
-
-
-
 
 def catch_toError(form_Id):
 	getExcept = userDocModel()
@@ -1047,10 +1043,31 @@ def catch_toError(form_Id):
 		else:
 			pass
 
-def others_process(tramite_Id,new_Nbr,ag_email,sigla):
-	cambio_estado(tramite_Id,new_Nbr)
-	print('CAMBIO DE ESTADO')											# Cambio de estado
-	envio_agente_recibido_reg(tramite_Id,new_Nbr)								# Crear PDF
+def others_process_REG(tramite_Id,new_Nbr,ag_email,sigla):
+	cambio_estado(tramite_Id,new_Nbr)											# Cambio de estado
+	print('CAMBIO DE ESTADO')													
+	acuse_from_AG_REG(str(connex.MEA_ACUSE_FORMULARIO),tramite_Id,new_Nbr)									# Crear PDF									
+	print('CREO PDF')
+	delete_file(enviar('notificacion-DINAPI.pdf',ag_email,'M.E.A',''))			# Enviar Correo Electronico
+	print('ENVIO AL AG')
+	getFile_reg_and_ren(tramite_Id,new_Nbr) 									# Descargar pdfs de respuesta 
+	print('CAPTURA PDF DE TRAMITES')
+	if sigla == 'REG':
+		registro_pdf_sfe_local(tramite_Id)										# Crear formulario completo REG
+	if sigla == 'REN':
+		renovacion_pdf_sfe_local(tramite_Id)									# Crear formulario completo	REN										
+	print('CREA PDF DE FORMULARIO')
+	compilePDF(new_Nbr)															# Crear pdf compilado de todos los ficheros
+	print('COMPILA PDFs')
+	rule_notification(sigla,str(new_Nbr))										# Correo al funcionario
+	print('NOTIFICA AL FUNCIONARIO')
+	insertar_o_crear_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))		# Crear grupo o inserta en grupo
+	print('INSERT EN EL GRUPO DEL FUNCIONARIO')
+
+def others_process_REN(tramite_Id,new_Nbr,ag_email,sigla):
+	cambio_estado(tramite_Id,new_Nbr)											# Cambio de estado
+	print('CAMBIO DE ESTADO')													
+	acuse_from_AG_REN(str(connex.MEA_ACUSE_FORMULARIO),tramite_Id,new_Nbr)									# Crear PDF									
 	print('CREO PDF')
 	delete_file(enviar('notificacion-DINAPI.pdf',ag_email,'M.E.A',''))			# Enviar Correo Electronico
 	print('ENVIO AL AG')
