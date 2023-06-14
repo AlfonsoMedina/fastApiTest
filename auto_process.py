@@ -131,7 +131,6 @@ def insert_list(arg0:string,arg1:string):
 
 	return("Ok")		
 
-
 def compileAndInsert(form_Id,typ,in_group):
 	print('F1')
 	cheking = catch_toError(form_Id)
@@ -350,18 +349,19 @@ def compileAndInsert(form_Id,typ,in_group):
 				print('ENVIA PDF')
 				rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr))														# Correo al funcionario
 				print('CORREO FUNCIONARIO')
+				"""				
 				try:
 					print(typ,str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""),str(new_Nbr))
 					group_addressing(typ,str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""),str(new_Nbr))	
 				except Exception as e:
 					print(e)
+				"""
 				print('INSERTA GRUPO')																# Envia al grupo de tramites			
 		except Exception as e:
 			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
 		# start CHECK USERDOC ####################################################################################			
-
 def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 	print('F2')	
 	cheking = catch_toError(form_Id)
@@ -526,18 +526,18 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 			print('ENVIA PDF')
 			rule_notification(typ,'')# Correo al funcionario
 			print('CORREO FUNCIONARIO')
+			"""			
 			try:
 				print(typ,'',str(new_Nbr))
 				group_addressing(str(typ),'',str(new_Nbr))	
 			except Exception as e:
-				print(e)		
+				print(e)"""		
 			print('INSERTA GRUPO')		
 		else:
 			data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
-		# end CHECK USERDOC ###################################################################################
-
+		# end CHECK USERDOC ######################################################################################
 def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 		print('F3')		
 		cheking = catch_toError(form_Id)
@@ -700,18 +700,18 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 				print('ENVIA PDF')
 				rule_notification(typ,'')# Correo al funcionario
 				print('CORREO FUNCIONARIO')
+				"""				
 				try:
 					print(typ,'',str(new_Nbr))
 					group_addressing(typ,'',str(new_Nbr))	
 				except Exception as e:
-					print(e)	
+					print(e)"""	
 				print('INSERTA GRUPO')				
 			else:
 				data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
 				rule_notification('SOP',form_Id)
-				# end CHECK USERDOC ###################################################################################
-
+		# end CHECK USERDOC ######################################################################################
 def insertReg(form_Id):
 	flow_request = stop_request()
 	if flow_request == 0:
@@ -1061,7 +1061,7 @@ def others_process_REG(tramite_Id,new_Nbr,ag_email,sigla):
 	print('COMPILA PDFs')
 	rule_notification(sigla,str(new_Nbr))										# Correo al funcionario
 	print('NOTIFICA AL FUNCIONARIO')
-	insertar_o_crear_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))		# Crear grupo o inserta en grupo
+	#insertar_o_crear_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))		# Crear grupo o inserta en grupo
 	print('INSERT EN EL GRUPO DEL FUNCIONARIO')
 
 def others_process_REN(tramite_Id,new_Nbr,ag_email,sigla):
@@ -1082,7 +1082,7 @@ def others_process_REN(tramite_Id,new_Nbr,ag_email,sigla):
 	print('COMPILA PDFs')
 	rule_notification(sigla,str(new_Nbr))										# Correo al funcionario
 	print('NOTIFICA AL FUNCIONARIO')
-	insertar_o_crear_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))		# Crear grupo o inserta en grupo
+	#insertar_o_crear_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))		# Crear grupo o inserta en grupo
 	print('INSERT EN EL GRUPO DEL FUNCIONARIO')
 
 def error_process(form_Id,error_msg,bool_estado):

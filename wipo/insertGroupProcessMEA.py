@@ -128,7 +128,7 @@ def valid_group(userNbr,groupName,typ):
 		return(False)
 
 
-def insertar_o_crear_grupo_expediente(user,exp):
+def crear_grupo_expediente(user,exp):
 	expediente = mark_getlist(exp)
 	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
 	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
@@ -139,34 +139,19 @@ def insertar_o_crear_grupo_expediente(user,exp):
 		expediente[0]['fileId']['fileType'])
 	#####################################################################################################
 	group_name = f'{fecha} [Expediente]'
-	if group_today(userId, group_name) != False:
-
-		return(ProcessGroupAddProcess(
-			str(group_today(userId, group_name)[1]), 
-			str(userId), 
-			str(data['file']['processId']['processNbr']['doubleValue']),
-			str(data['file']['processId']['processType'])
-			))
+	exist = group_today(userId, group_name)
+	if exist == False:
+		return(ProcessGroupInsert(last_group(userId)+1,str(userId),str(fecha),'Creado por M.E.A.','1','1'))
 	else:
 		pass
 	#####################################################################################################
-	if group_today(userId, group_name) == False:
-		ProcessGroupInsert(
-							last_group(userId)+1,
-							userId,
-							fecha,
-							'Creado por M.E.A.',
-							'1',
-							'1')
+"""
+insertar en grupo expediente
+return(ProcessGroupAddProcess(str(group_today(userId, group_name)[1]),str(userId),str(data['file']['processId']['processNbr']['doubleValue']),str(data['file']['processId']['processType'])))
 
-		return(ProcessGroupAddProcess(
-							str(group_today(userId, group_name)[1]), 
-							userId, 
-							str(data['file']['processId']['processNbr']['doubleValue']),
-							str(data['file']['processId']['processType'])
-							))
-	else:
-		pass
+"""
+
+
 
 
 def insertar_o_crear_grupo_escrito(user,esc):
@@ -188,7 +173,7 @@ def insertar_o_crear_grupo_escrito(user,esc):
 
 	if group_today(userId, group_name) == False:
 		ProcessGroupInsert(str(ultimo),str(userId),str(fecha),'Creado por M.E.A.','1','11')
-		time.sleep(1)
+		time.sleep(2)
 		return(ProcessGroupAddProcess(str(ultimo),str(userId),str(process['userdocProcessId']['processNbr']),str(process['userdocProcessId']['processType'])))
 	else:
 		pass
@@ -218,6 +203,7 @@ def insertar_o_crear_grupo_escritoMasExpediente(user,esc,sigla):
 							'Creado por M.E.A.',
 							'1',
 							'10')
+		time.sleep(2)
 		return(ProcessGroupAddProcess(
 								str(group_today(userId, group_name)[1]), 
 								userId, 
