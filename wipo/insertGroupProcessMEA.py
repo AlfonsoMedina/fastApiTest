@@ -128,7 +128,7 @@ def valid_group(userNbr,groupName,typ):
 		return(False)
 
 
-def crear_grupo_expediente(user,exp):
+def insertar_o_crear_grupo_expediente(user,exp):
 	expediente = mark_getlist(exp)
 	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
 	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
@@ -139,17 +139,21 @@ def crear_grupo_expediente(user,exp):
 		expediente[0]['fileId']['fileType'])
 	#####################################################################################################
 	group_name = f'{fecha} [Expediente]'
-	exist = group_today(userId, group_name)
-	if exist == False:
-		return(ProcessGroupInsert(last_group(userId)+1,str(userId),str(fecha),'Creado por M.E.A.','1','1'))
+	if group_today(userId, group_name) != False:
+
+		return(ProcessGroupAddProcess(
+			str(group_today(userId, group_name)[1]), 
+			str(userId), 
+			str(data['file']['processId']['processNbr']['doubleValue']),
+			str(data['file']['processId']['processType'])
+			))
 	else:
 		pass
 	#####################################################################################################
-"""
-insertar en grupo expediente
-return(ProcessGroupAddProcess(str(group_today(userId, group_name)[1]),str(userId),str(data['file']['processId']['processNbr']['doubleValue']),str(data['file']['processId']['processType'])))
-
-"""
+	if group_today(userId, group_name) == False:
+		return(ProcessGroupInsert(last_group(userId)+1,str(userId),str(fecha),'Creado por M.E.A.','1','1'))
+	else:
+		pass
 
 
 

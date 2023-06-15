@@ -43,16 +43,19 @@ except Exception as e:
 def group_today(userNbr,groupName):	
 	data = ProcessGroupGetList(userNbr)
 	list_data = []
-	respuesta = False
+	#respuesta = False
 	for i in range(1,len(data)):
+
 		if str(groupName) == str(data[i].processGroupName):
 			list_data.append(data[i].processGroupName)
 			list_data.append(data[i].processGroupId.processGroupCode)
-		respuesta = list_data
+			respuesta = list_data
+			return(respuesta)
+		
+	if str(groupName) != str(data[i].processGroupName):
+		respuesta = False
+		return(respuesta)
 
-		if str(groupName) != str(data[i].processGroupName):
-			respuesta = False
-	return(respuesta)
 		
 def group_typ(num):
 	list = {'1':'[Expediente]','10':'[Escrito+expediente]','11':'[Escrito]'}
@@ -1052,3 +1055,28 @@ print(ren.signData_signType)"""
 #group_addressing('PI','9825149','2341729')
 
 
+
+
+
+# Solo CREAR GRUPO
+def crear_grupo_expediente(user,exp):
+	expediente = mark_getlist(exp)
+	fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
+	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+	data = mark_read(
+		expediente[0]['fileId']['fileNbr']['doubleValue'], 
+		expediente[0]['fileId']['fileSeq'], 
+		expediente[0]['fileId']['fileSeries']['doubleValue'], 
+		expediente[0]['fileId']['fileType'])
+	#####################################################################################################
+	group_name = f'{fecha} [Expediente]'
+	#####################################################################################################
+	if group_today(userId, group_name) == False:
+		return(ProcessGroupInsert(last_group(userId)+1,userId,fecha,'Creado por M.E.A.','1','1'))
+	else:
+		return('El grupo ya existe')
+
+
+print(crear_grupo_expediente('AMEDINA','2342389'))
+
+#print(group_today('298', '14/06/2023 [Expediente]'))
