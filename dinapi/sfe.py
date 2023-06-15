@@ -7,6 +7,7 @@ from tools.data_format import fecha_barra,hora
 from tools.send_mail import enviar_back_notFile
 import tools.filing_date as captureDate
 import tools.connect as connex
+from wipo.insertGroupProcessMEA import crear_grupo
 
 from wipo.ipas import Process_Read, fetch_all_user_mark,  mark_getlist, mark_read, personAgente
 from urllib import request
@@ -1901,7 +1902,7 @@ def what_it_this(arg):
 	finally:
 		conn.close()
 
-def Insert_Group_Process(grupo,fileNbr,user): 
+"""def Insert_Group_Process(grupo,fileNbr,user): 
 	expediente = mark_getlist(fileNbr)
 	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
 	data = mark_read(
@@ -1914,6 +1915,7 @@ def Insert_Group_Process(grupo,fileNbr,user):
 		userId,
 		data['file']['processId']['processNbr']['doubleValue'],
 		data['file']['processId']['processType']))
+"""
 
 def USER_GROUP(sig):
 	data_user = {}
@@ -1931,6 +1933,18 @@ def USER_GROUP(sig):
 		return(row[0][0])
 	finally:
 		conn.close()
+
+
+def create_all_group():
+	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+	cursor = conn.cursor()
+	cursor.execute("""select usuario  from reglas_notificacion""")
+	row=cursor.fetchall()
+	for i in row:
+		crear_grupo(i[0])
+	conn.close()
+	return('listo')
+
 
 '''
 EXISTE O NO EL GRUPO 
