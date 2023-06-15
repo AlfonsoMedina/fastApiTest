@@ -2,6 +2,7 @@
 from asyncio.windows_events import NULL
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe, titulare_reg
 from getFileDoc import getFile
+from respuesta_map import dir_titu, nom_titu
 from wipo.function_for_reception_in import user_doc_getList_escrito
 from wipo.ipas import mark_getlist, personAgente
 import tools.connect as connex
@@ -58,6 +59,8 @@ class insertRegModel(object):
 	dir_variant:str = ''
 	ownerList:str = ''
 	multitu:str = ''
+	titular_uno:str = ''
+	ag_email:str = ''
 	def __init__(self):
 		self.signType = ""
 		self.tipo_clase = ""
@@ -67,6 +70,8 @@ class insertRegModel(object):
 	def setData(self,doc_Id):
 		
 		self.data = registro_sfe(doc_Id) #pendiente_sfe(doc_Id)
+
+		self.ag_email = self.data['email_agente']
 		
 		try:
 			self.multitu = titulare_reg(doc_Id)
@@ -98,6 +103,7 @@ class insertRegModel(object):
 				self.LogTyp = ""						
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "Figurativa": 
 				self.signType="L"
@@ -105,6 +111,7 @@ class insertRegModel(object):
 				self.LogTyp = "JPG"			
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "F": 
 				self.signType="L"
@@ -112,6 +119,7 @@ class insertRegModel(object):
 				self.LogTyp = "JPG"							
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "Mixta": 
 				self.signType="B"
@@ -119,6 +127,7 @@ class insertRegModel(object):
 				self.LogTyp = "JPG"				
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "M": 
 				self.signType="B"
@@ -126,6 +135,7 @@ class insertRegModel(object):
 				self.LogTyp = "JPG"				
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "Tridimensional": 
 				self.signType="T"
@@ -133,6 +143,7 @@ class insertRegModel(object):
 				self.LogTyp = "JPG"				
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "T": 
 				self.signType="T"
@@ -140,6 +151,7 @@ class insertRegModel(object):
 				self.LogTyp = "JPG"										
 		except Exception as e:
 			pass
+
 		try:			
 			if self.data['tipo_on'] == "Sonora": 
 				self.signType="S"
@@ -147,6 +159,7 @@ class insertRegModel(object):
 				self.LogTyp = ""			
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "S": 
 				self.signType="S"
@@ -154,6 +167,7 @@ class insertRegModel(object):
 				self.LogTyp = ""			
 		except Exception as e:
 			pass
+
 		try:
 			if self.data['tipo_on'] == "Olfativa": 
 				self.signType="O"
@@ -167,16 +181,19 @@ class insertRegModel(object):
 				self.tipo_clase = "MP"
 		except Exception as e:
 			pass
+
 		try:						
 			if self.data['clasificacion'] == 'SERVICIO':
 				self.tipo_clase = 'MS'
 		except Exception as e:
-			pass				
+			pass
+
 		try:
 			if self.data['clasificacion'] == 'PRODUCTOS':
 				self.tipo_clase = "MP"
 		except Exception as e:
-			pass				
+			pass
+
 		try:
 			if self.data['clasificacion'] == 'SERVICIOS':
 				self.tipo_clase = 'MS'
@@ -206,23 +223,20 @@ class insertRegModel(object):
 		self.file_filingData_paymentList_receiptType = "1"
 		self.file_filingData_receptionUserId = "4"
 
+
 		try:
-			if self.data['direccion'] == "No definido":
-				self.dir_variant = self.data['direccion_dir']
+			self.file_ownershipData_ownerList_person_addressStreet = dir_titu(doc_Id)[0] #self.dir_variant
 		except Exception as e:
-			pass
-		try:
-			if self.data['direccion_dir'] == "No definido":
-				self.dir_variant = self.data['direccion']
-		except Exception as e:
-			pass
-
-
-		self.file_ownershipData_ownerList_person_addressStreet = self.dir_variant
-
+			self.file_ownershipData_ownerList_person_addressStreet = ""
+			
 		self.file_ownershipData_ownerList_person_nationalityCountryCode = self.data['pais']
 		
-		self.file_ownershipData_ownerList_person_personName = self.data['razon_social'] + self.data['nombre_soli']
+
+		try:
+			self.file_ownershipData_ownerList_person_personName = nom_titu(doc_Id)[0] #self.titular_uno
+		except Exception as e:
+			self.file_ownershipData_ownerList_person_personName = ""
+
 		self.file_ownershipData_ownerList_person_residenceCountryCode = self.data['pais']
 
 		if self.multitu != []:

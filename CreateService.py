@@ -7,9 +7,9 @@ if os.geteuid() == 0:
 
     ##########################
     #### PARAMETROS A INGRESAR
-    appName    = input("Origin project folder name : ")
+    appName   = input("Origin project folder name : ")
 
-    ip           = input("IP/Domain (0.0.0.0 or this server IP): ")
+    ip        = input("IP/Domain (0.0.0.0 or this server IP): ")
     appPort   = input("Port: ")
 
     listen       = input("Port Nginx: ")

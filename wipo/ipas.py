@@ -18,6 +18,7 @@ from tools.service_system import config_parametro
 import pymssql
 import datetime
 import sys
+import tools.connect as connex
 
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 try:
@@ -638,10 +639,10 @@ def mark_insert_reg(
 						'doubleValue': file_filingData_captureUserId
 						},
 						'filingDate': {
-						'dateValue': "2023-05-18T06:02:46" #file_filingData_filingDate    ########################################
+						'dateValue': file_filingData_filingDate    ########################################
 						},
 						'captureDate': {
-							'dateValue': "2023-05-18T06:02:46" #file_filingData_captureDate  ################### problemas con fecha futura
+							'dateValue': file_filingData_captureDate  ################### problemas con fecha futura
 						},
 						'lawCode': {
 						'doubleValue': file_filingData_lawCode
@@ -658,8 +659,31 @@ def mark_insert_reg(
 						},
 						'receptionUserId': {
 						'doubleValue': file_filingData_receptionUserId
+						},
+							"receptionDocument": {
+								"documentId": {
+								"docLog": "E",
+								"docNbr": {
+									"doubleValue": ""
+								},
+								"docOrigin": str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
+								"docSeries": {
+									"doubleValue": file_fileId_fileSeries
+								},
+								"selected": ""
+								},
+								"documentSeqId": {
+								"docSeqName": "",
+								"docSeqNbr": {
+									"doubleValue": ""
+								},
+								"docSeqSeries": {
+									"doubleValue": file_fileId_fileSeries
+								},
+							"docSeqType": ""
 						}
-					},
+					}
+				},
 					'ownershipData': {
 						'ownerList': {
 							'person': {
@@ -781,7 +805,30 @@ def mark_insert_reg(
 						},
 						'receptionUserId': {
 						'doubleValue': file_filingData_receptionUserId
+						},							
+						"receptionDocument": {
+								"documentId": {
+								"docLog": "E",
+								"docNbr": {
+									"doubleValue": ""
+								},
+								"docOrigin": str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
+								"docSeries": {
+									"doubleValue": file_fileId_fileSeries
+								},
+								"selected": ""
+								},
+								"documentSeqId": {
+								"docSeqName": "",
+								"docSeqNbr": {
+									"doubleValue": ""
+								},
+								"docSeqSeries": {
+									"doubleValue": file_fileId_fileSeries
+								},
+							"docSeqType": ""
 						}
+					}
 					},
 					'ownershipData': {
 						'ownerList': {
@@ -954,7 +1001,30 @@ def mark_insert_ren(
 						},
 						'receptionUserId': {
 							'doubleValue': file_filingData_receptionUserId
+						},
+						"receptionDocument": {
+								"documentId": {
+								"docLog": "E",
+								"docNbr": {
+									"doubleValue": ""
+								},
+								"docOrigin": str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
+								"docSeries": {
+									"doubleValue": file_fileId_fileSeries
+								},
+								"selected": ""
+								},
+								"documentSeqId": {
+								"docSeqName": "",
+								"docSeqNbr": {
+									"doubleValue": ""
+								},
+								"docSeqSeries": {
+									"doubleValue": file_fileId_fileSeries
+								},
+							"docSeqType": ""
 						}
+					}
 					},
 					'ownershipData': {
 						'ownerList': {
@@ -5323,8 +5393,9 @@ def user_doc_update(affectedDocumentId_docLog,
 					representationData_zipCode,
 					representationData_representativeType,
 					representationData_email):
-	if paymentList_receiptNbr != "":
-		udud = {
+	try:				
+		if paymentList_receiptNbr != "":
+			udud = {
 			"arg0": {
 				"affectedDocumentId": {
 				"docLog": affectedDocumentId_docLog,
@@ -5569,8 +5640,8 @@ def user_doc_update(affectedDocumentId_docLog,
 				}
 			}
 			} 
-	else:
-		udud = {
+		else:
+			udud = {
 			"arg0": {
 				"affectedDocumentId": {
 				"docLog": affectedDocumentId_docLog,
@@ -5804,8 +5875,9 @@ def user_doc_update(affectedDocumentId_docLog,
 				}
 			}
 			}
-	return clientMark.service.UserdocUpdate(**udud)
-
+		return clientMark.service.UserdocUpdate(**udud)
+	except zeep.exceptions.Fault as e:
+		return(str(e))
 
 #User_Doc_UpDate sin recibo
 def user_doc_update_sin_recibo(
@@ -10767,7 +10839,6 @@ def check_serv_disenio():
 	except Exception as e:
 		return('error')
 
-
 def daily_log_open(fecha):
 	try:
 		mDailyLog = {
@@ -10779,7 +10850,7 @@ def daily_log_open(fecha):
 						"dateValue": str(fecha)+"T00:00:00-04:00"
 					},
 					"docLog": "E",
-					"docOrigin": "1"
+					"docOrigin": "3"
 					},
 					"digitalizationReadyDate": "",
 					"fileCaptureReadyDate": "",
@@ -10807,7 +10878,7 @@ def daily_log_close(fecha):
 						"dateValue": str(fecha)+"T00:00:00-04:00"
 					},
 					"docLog": "E",
-					"docOrigin": "1"
+					"docOrigin": "3"
 					},
 					"digitalizationReadyDate": "",
 					"fileCaptureReadyDate": "",

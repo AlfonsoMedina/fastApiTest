@@ -11,7 +11,7 @@ MEA_PERIODO_RECEPCION_horaOut = config_parametro('63')['valor4']
 MEA_ADJUNTOS_DESTINO_location = config_parametro('61')['valor3']
 MEA_IPAS_DESTINO = config_parametro('59')['valor2']
 WORKING_DAY_AND_TIME = config_parametro('63')['valor3']
-
+MEA_ACUSE_FORMULARIO = config_parametro('76')['valor2']
 
 
 ###################################################################
@@ -74,7 +74,7 @@ databaseCJ='db_caja_dinapi'
 
 #ipas Beta
 #                                192.168.80.42
-ipas_sprint = config_parametro('49')['valor1']
+ipas_sprint = config_parametro('49')['valor2']
 
 #                                     192.168.50.182
 ipas_produccion_A = config_parametro('50')['valor1']
@@ -152,6 +152,18 @@ updated_at,
 respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
 from tramites where id = {}
 """
+###################################################################
+#Campo respuesta
+TRAMITE_REG = """select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
+						to_char(t.created_at,'yyyy-mm-dd hh24:mi:ss')created_at,to_char(t.updated_at,'yyyy-mm-dd hh24:mi:ss')updated_at,t.respuestas,t.costo,t.usuario_id, t.deleted_at,
+						t.codigo,t.firmado_at,to_char(t.pagado_at,'yyyy-mm-dd hh24:mi:ss') as pagado_at,t.expediente_id,t.pdf_url,to_char(t.enviado_at,'yyyy-mm-dd hh24:mi:ss') as enviado_at,
+						to_char(t.recepcionado_at,'yyyy-mm-dd hh24:mi:ss') as recepcionado_at,t.nom_funcionario,t.pdf,t.expediente_afectado,t.notificacion_id,t.expedientes_autor,t.autorizado_por_id,u.nombre as nombre_agente,pa.numero_agente,
+						u.email as email_agente,pa.celular as telefonoAgente,pa.domicilio_agpi,t.nom_funcionario as funcionario_autorizado 
+						from tramites t join formularios f on t.formulario_id  = f.id  
+						join usuarios u on u.id = t.usuario_id  
+						join perfiles_agentes pa on pa.usuario_id = u.id         
+						where t.id = {};"""
+
 
 """
 http://192.168.50.194:8050/Stat/stat?type=loggedUser

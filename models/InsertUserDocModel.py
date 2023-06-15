@@ -1,6 +1,6 @@
 
 from asyncio.windows_events import NULL
-from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr
+from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, process_day_commit_Nbr
 from email_pdf_AG import agent_email
 from getFileDoc import getFile
 from wipo.function_for_reception_in import user_doc_getList_escrito
@@ -214,7 +214,7 @@ class userDocModel(object):
 			list_splits['campo'+str(i)] = data[0]['respuestas'][i]['campo']
 		exists = arg1 in list_splits.values()	
 		return(exists)
-
+		
 
 	#Adjunto requerido 
 	
@@ -817,5 +817,5 @@ class userDocModel(object):
 		except Exception as e:
 			self.representationData_representativeList_representativeType = "AG"
 
-
+		
 

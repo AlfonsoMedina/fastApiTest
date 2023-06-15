@@ -7,7 +7,7 @@ from datetime import timedelta
 
 
 def time_difference(date,diff):
-    # Marca de tiempo dada en cadena
+    # Marca de tiempo en cadena
     time_str = date
     date_format_str="%Y-%m-%d %H:%M:%S.%f"
     # crear un objeto de fecha y hora a partir de una fecha de tipo cadena

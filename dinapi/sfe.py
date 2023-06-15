@@ -3,31 +3,76 @@ from math import ceil
 import string
 import time
 import psycopg2
+from tools.data_format import fecha_barra,hora
 from tools.send_mail import enviar_back_notFile
 import tools.filing_date as captureDate
 import tools.connect as connex
-from wipo.ipas import Process_Read, mark_getlist, mark_read, personAgente
+from wipo.insertGroupProcessMEA import crear_grupo
+
+from wipo.ipas import Process_Read, fetch_all_user_mark,  mark_getlist, mark_read, personAgente
 from urllib import request
 import qrcode
 
 
-global_data = {}
 create_userdoc = {}
 default_val = lambda arg: arg if arg == "null" else "" 
 list_titulare = []
+
+
+def respuesta_sfe_campo(arg):
+	try:
+		list_campos = []
+		list_valores = {}
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
+			from tramites where expediente_electronico = true and id = {}
+		""".format(arg))
+		row=cursor.fetchall()
+		list_valores['id'] = row[0][0]
+		list_valores['fecha'] = row[0][1]
+		list_valores['formulario_id'] = row[0][2]
+		list_valores['estado'] = row[0][3]
+		list_valores['created_at'] = str(row[0][4])
+		list_valores['updated_at'] = str(row[0][5])
+		list_valores['costo'] = str(row[0][7])
+		list_valores['usuario_id'] = str(row[0][8])
+		list_valores['codigo'] = str(row[0][10])
+		list_valores['firmado_at'] = str(row[0][11])
+		list_valores['pagado_at'] = str(row[0][12])
+		list_valores['enviado_at'] = str(row[0][15])
+		list_valores['expediente_afectado'] = str(row[0][19])
+		list_valores['tipo_documento_id'] = str(row[0][25])
+		for i in range(0,len(row[0][6])):
+			list_campos.append(row[0][6][i]['campo'])
+		
+		#print(" ")
+		#print('[[[[[[[Lista de campos]]]]]]]]]')
+		#print(list_campos)
+
+		#print(" ")
+		#print('(((((((((]Lista de valores[)))))))))')
+
+		for item in range(0,len(list_campos)):
+			for x in list_campos:
+				if row[0][6][item]['campo'] == x:
+					try:
+						list_valores[x] = row[0][6][item]['valor']
+					except Exception as e:
+						list_valores[x] = 'sin valor'
+
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+	return(list_valores)
+
 def registro_sfe(arg):
+	global_data = {}
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
-						to_char(t.created_at,'yyyy-mm-dd hh24:mi:ss')created_at,to_char(t.updated_at,'yyyy-mm-dd hh24:mi:ss')updated_at,t.respuestas,t.costo,t.usuario_id, t.deleted_at,
-						t.codigo,t.firmado_at,to_char(t.pagado_at,'yyyy-mm-dd hh24:mi:ss') as pagado_at,t.expediente_id,t.pdf_url,to_char(t.enviado_at,'yyyy-mm-dd hh24:mi:ss') as enviado_at,
-						to_char(t.recepcionado_at,'yyyy-mm-dd hh24:mi:ss') as recepcionado_at,t.nom_funcionario,t.pdf,t.expediente_afectado,t.notificacion_id,t.expedientes_autor,t.autorizado_por_id,u.nombre as nombre_agente,pa.numero_agente,
-						u.email as email_agente,pa.celular as telefonoAgente,pa.domicilio_agpi,t.nom_funcionario as funcionario_autorizado 
-						from tramites t join formularios f on t.formulario_id  = f.id  
-						join usuarios u on u.id = t.usuario_id  
-						join perfiles_agentes pa on pa.usuario_id = u.id         
-						where t.id = {};""".format(int(arg)))
+		cursor.execute(connex.TRAMITE_REG.format(int(arg)))
 		row=cursor.fetchall()
 		global_data['fecha_envio'] = str(row[0][17])
 		global_data['expediente'] = str(row[0][15])
@@ -90,17 +135,22 @@ def registro_sfe(arg):
 				if(i['descripcion'] == "Especificar"):
 					global_data['especificar'] = i['valor']
 			except Exception as e:
-				global_data['especificar'] = "No definido"	
+				global_data['especificar'] = "No definido"
+
+
 			try:
-				if(i['descripcion'] == "Nombres y Apellidos" and i['campo'] == 'datospersonales_nombreapellido'): 
+				if(i['campo'] == 'datospersonales_nombreapellido'): 
 					global_data['nombre_soli'] = i['valor']
 			except Exception as e:
-				global_data['nombre_soli'] = "No definido"											
+				global_data['nombre_soli'] = "No definido"
+
 			try:
-				if(i['descripcion'] == "Razón Social" and i['campo'] == 'datospersonales_razonsocial'):
+				if(i['campo'] == 'datospersonales_razonsocial'):
 					global_data['razon_social']=i['valor']
 			except Exception as e:
 				global_data['razon_social'] = "No definido"	
+
+
 			try:
 				if(i['campo'] == 'datospersonales_calle'):
 					global_data['direccion']=i['valor']
@@ -180,11 +230,30 @@ def registro_sfe(arg):
 		print(e)
 	finally:
 		conn.close()
-	
+
 def titulare_reg(arg):
 	list_titulare = []
+
 	for i in range(2,10):
 		list_titulare.append(catch_owner(arg,i))
+
+	if list_titulare[0]['person']['personName'] == '':	
+		list_titulare.pop(0)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+	if list_titulare[1]['person']['personName'] == '':	
+		list_titulare.pop(1)
+						
 	return(list_titulare)
 
 def catch_owner(arg,number):
@@ -250,9 +319,8 @@ def catch_owner(arg,number):
 	finally:
 		conn.close()	
 
-#print(titulare_reg('1586'))#Paquete de titulares
-
 def renovacion_sfe(arg):
+	global_data = {}
 	try:
 		conn = psycopg2.connect(
 					host = '192.168.50.219',
@@ -275,24 +343,37 @@ def renovacion_sfe(arg):
 		global_data['expediente'] = str(row[0][15])
 		global_data['fecha_solicitud'] = str(row[0][18])
 		global_data['codigo_barr'] = str(row[0][12])
-		global_data['usuario'] = str(row[0][19])
+		global_data['usuario'] = str(row[0][10])
 		global_data['code_agente'] = str(row[0][26])
 		global_data['nombre_agente'] = str(row[0][25])
 		global_data['dir_agente'] = str(row[0][29])
 		global_data['TEL_agente'] = str(row[0][28])
 		global_data['email_agente'] = str(row[0][27])
 		global_data['nombre_formulario'] = str(row[0][3])
-		
+		#print(global_data)
 		for i in row[0][8]:
+			try:	
+				if(i['campo'] == 'marcarenov_registrono'): 
+					global_data['registro_nbr']=i['valor']
+			except Exception as e:
+				global_data['registro_nbr'] = "No definido"
+
+			
 
 			if(i['campo'] == 'marcarenov_clase'):
 				clase_tipo = i['valor']
 				if(int(clase_tipo.replace(".0","")) <= 34):
 					global_data['clasificacion']= 'PRODUCTO'
 				if(int(clase_tipo.replace(".0","")) >= 35):
-					global_data['clasificacion']= 'SERVICIO'			
+					global_data['clasificacion']= 'SERVICIO'
 
+			try:	
+				if(i['campo'] == 'marcarenov_tipomarca'):
+					global_data["tipo_guion"] = i['valor']
+			except Exception as e:
+				global_data['tipo_guion'] = "No definido"			
 
+			
 			try:					
 				if(i['campo'] == "marcarenov_distintivo"):
 					global_data['distintivo'] = i['valor']['archivo']['url']
@@ -304,7 +385,15 @@ def renovacion_sfe(arg):
 					global_data['distintivoAct'] = i['valor']['archivo']['url']
 			except Exception as e:
 					global_data['distintivoAct'] = "No definido"					
-			
+			try:	
+				if(i['campo'] == 'actualizacion_nodocumentoruc'):
+					global_data['act_numero']=i['valor']
+				else:
+					global_data['act_numero']="No definido"
+			except Exception as e:
+				global_data['act_numero'] = "No definido"
+				
+			"""
 			try:	
 				if(i['campo'] == "actualizacion_refdistitivo"):
 					global_data['distintivo2'] = i['valor']['archivo']['url']
@@ -334,11 +423,7 @@ def renovacion_sfe(arg):
 					global_data['reivindicaciones'] = i['valor']
 			except Exception as e:
 				global_data['reivindicaciones'] = "No definido"							
-			try:	
-				if(i['campo'] == 'marcarenov_tipomarca'):
-					global_data["tipo_guion"] = i['valor']
-			except Exception as e:
-				global_data['tipo_guion'] = "No definido"
+
 			try:	
 				if(i['descripcion'] == "Denominación"):
 					global_data['denominacion_on'] = i['valor']
@@ -396,11 +481,7 @@ def renovacion_sfe(arg):
 					global_data['distrito']=i['valor']
 			except Exception as e:
 				global_data['distrito'] = "No definido"						
-			try:	
-				if(i['descripcion'] == "N° de Documento / RUC" and i['campo'] == 'actualizacion_nodocumentoruc'):
-					global_data['act_numero']=i['valor']
-			except Exception as e:
-				global_data['act_numero'] = "No definido"
+
 
 			try:	
 				if(i['campo'] == 'actualizacion_pais'):
@@ -433,11 +514,7 @@ def renovacion_sfe(arg):
 					global_data['clase_on']=i['valor']
 			except Exception as e:
 				global_data['clase_on'] = "No definido"
-			try:	
-				if(i['descripcion'] == "Buscar Registro N°" and i['campo'] == 'marcarenov_registrono'):
-					global_data['registro_nbr']=i['valor']
-			except Exception as e:
-				global_data['registro_nbr'] = "No definido"
+
 			try:	
 				if(i['descripcion'] == "País " and i['campo'] == 'datospersonalesrenov_pais'):
 					global_data['solic_pais']=i['valor']
@@ -471,6 +548,7 @@ def renovacion_sfe(arg):
 					global_data['actc_num']=i['valor']
 			except Exception as e:
 				global_data['actc_num'] = "No definido"
+			"""
 
 		return(global_data)
 	except Exception as e:
@@ -479,6 +557,7 @@ def renovacion_sfe(arg):
 		conn.close()
 
 def oposicion_sfe(arg):
+			global_data = {}
 			try:
 				conn = psycopg2.connect(
 					host = 'pgsql-sprint.dinapi.gov.py',
@@ -651,7 +730,7 @@ select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usua
 codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
 to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,
 notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id, enviado_at as bruto from tramites where estado in ({}) and formulario_id in ({}) 
-and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by enviado_at asc LIMIT {} offset {}
+and enviado_at >= '{} 00:59:59' and expediente_electronico = true and enviado_at <= '{} 23:59:59' order by enviado_at asc LIMIT {} offset {}
 		""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha,ver,pag))
 		row=cursor.fetchall()
 		for i in row:
@@ -703,7 +782,7 @@ select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usua
 codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
 to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,
 notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id, enviado_at as bruto from tramites where estado in ({}) and formulario_id in ({}) 
-and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59' order by enviado_at asc 
+and enviado_at >= '{} 00:59:59' and expediente_electronico = true and enviado_at <= '{} 23:59:59' order by enviado_at asc 
 		""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha))
 		row=cursor.fetchall()
 		for i in row:
@@ -755,7 +834,7 @@ select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usua
 codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
 to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,
 notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id from tramites where estado in ({}) and formulario_id in ({}) 
-and enviado_at >= '{} 00:59:59' and enviado_at <= '{} 23:59:59'; 
+and enviado_at >= '{} 00:59:59' and expediente_electronico = true and enviado_at <= '{} 23:59:59'; 
 		""".format('99',connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha))
 		row=cursor.fetchall()
 		for i in row:
@@ -801,7 +880,7 @@ def pendiente_sfe(arg):
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
 		cursor.execute("""select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
-			from tramites where id = {}
+			from tramites where expediente_electronico = true and id = {}
 		""".format(arg))
 		row=cursor.fetchall()
 		for i in row:
@@ -942,6 +1021,7 @@ def cambio_estado_soporte(Id):
 			cursor.rowcount
 			conn.commit()
 			conn.close()
+			print('E99')
 	except Exception as e:
 		print(e)
 	finally:
@@ -953,7 +1033,7 @@ def count_pendiente(fecha:string):
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
 		cursor.execute("""select count(*) from tramites where estado in ({}) and formulario_id in ({}) and enviado_at >= '{} 00:59:59' 
-		and enviado_at <= '{} 23:59:59'""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha))
+		and expediente_electronico = true and enviado_at <= '{} 23:59:59'""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha))
 		row=cursor.fetchall()
 		for i in row:
 			reg=i[0]
@@ -1506,6 +1586,25 @@ def process_day_Nbr():
 	finally:
 		conn.close()			
 
+def COMMIT_NBR():
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select num_acta_ultima from dia_proceso where fec_proceso = '{}' and ind_atencion_comp = 'N' order by num_acta_ultima desc""".format(str(captureDate.capture_day())))
+		row=cursor.fetchall()
+		for i in row:
+			conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+			cursor = conn.cursor()
+			cursor.execute("""UPDATE public.dia_proceso SET  num_acta_ultima={}, fec_recepcion_comp=null WHERE fec_proceso='{}';""".format((int(i[0])+1),str(captureDate.capture_day())))
+			cursor.rowcount
+			conn.commit()
+			#conn.close()
+			return(int(i[0])+1)				
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()	
+
 def pago_data(pago):
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
@@ -1600,14 +1699,14 @@ def data_validator(msg,status,t_id):
 		conn.close()
 
 def qr_code(text): # convierte el texto en codigo QR y crea fichero .png
-    img = qrcode.make(text)
-    f = open("pdf/output.png", "wb")
-    img.save(f)
-    f.close()
+	img = qrcode.make(text)
+	f = open("pdf/output.png", "wb")
+	img.save(f)
+	f.close()
 
-    with open("pdf/output.png", "rb") as image2string: 
-        converted_string = base64.b64encode(image2string.read()) 
-    return(str(converted_string).replace("b'",'').replace("'","")) 
+	with open("pdf/output.png", "rb") as image2string: 
+		converted_string = base64.b64encode(image2string.read()) 
+	return(str(converted_string).replace("b'",'').replace("'","")) 
 
 def sendToUser(arg):
 	try:
@@ -1690,43 +1789,182 @@ def rule_notification(sig,exp):
 		rule = email_receiver(str(status_exp))
 		#print(rule)
 		try:	
-			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - N° {exp} status {str(status_exp)}")
+			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp} status {str(status_exp)}")
 		except Exception as e:
 			pass			
 	else:
 		if exist_notifi(sig) != 'null':
 			rule = email_receiver(str(sig))
 			try:	
-				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])}")
+				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
 			except Exception as e:
 				pass		
 			try:	
-				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])}")
+				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
 			except Exception as e:
 				pass
 		else:
 			rule = email_receiver('GEN')
 			try:	
-				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])}")
+				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
 			except Exception as e:
 				pass		
 			try:	
-				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])}")
+				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
 			except Exception as e:
 				pass				
 
 def log_info():
-	log_data = {}
+	pack_data = []
 	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 	cursor = conn.cursor()
 	cursor.execute("""SELECT * FROM public.log_error where evento = 'E99'""")
 	row=cursor.fetchall()
-	log_data = row
+	for it in range(len(row)):
+		compl = log_info_id_tramites(row[it][6])
+		pack_data.append({
+							'err_id':row[it][0],
+							'fecha':fecha_barra(str(row[it][1]))+" "+hora(str(row[it][1])),
+							'err_code':row[it][2],
+							'descrip':row[it][3],
+							'origin':row[it][4],
+							'run':row[it][5],
+							'tramite':row[it][6],
+							'typ':compl[0],
+							'enviado_at':fecha_barra(captureDate.time_difference(str(compl[1]),3))+" "+hora(captureDate.time_difference(str(compl[1]),3)),
+							'form_typ':compl[2]
+						})
+	conn.close()
+
+	return(pack_data)
+ 
+def log_info_id_tramites(arg):
+	try:
+		list_info = []
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select formulario_id,enviado_at,estado from tramites t where id = {}""".format(int(arg)))
+		row=cursor.fetchall()
+		return(row[0])
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+def log_info_serch(fecha,estado):
+	pack_data = []
+	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+	cursor = conn.cursor()
+	cursor.execute(f"""SELECT * FROM public.log_error where  evento = '{estado}' and  fecha_evento >= '{fecha} 00:59' and fecha_evento <= '{fecha} 21:59'""")
+	row=cursor.fetchall()
+	print(len(row))
+	for it in range(len(row)):
+		compl = log_info_id_tramites(row[it][6])
+		pack_data.append({
+							'err_id':row[it][0],
+							'fecha':fecha_barra(str(row[it][1]))+" "+hora(str(row[it][1])),
+							'err_code':row[it][2],
+							'descrip':row[it][3],
+							'origin':row[it][4],
+							'run':row[it][5],
+							'tramite':row[it][6],
+							'typ':compl[0],
+							'enviado_at':fecha_barra(captureDate.time_difference(str(compl[1]),3))+" "+hora(captureDate.time_difference(str(compl[1]),3)),
+							'form_typ':compl[2]
+						})
+	conn.close()
+	return(pack_data)
+
+def log_info_delete(t_id):
+	log_data = {}
+	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+	cursor = conn.cursor()
+	cursor.execute("""UPDATE public.log_error SET evento='E00' , break='false' WHERE id_tramite= {};""".format(t_id))
+	conn.commit()
 	conn.close()	
-	return(log_data)	
+	return(log_data)		
 
 def getSigla_tipoDoc(arg):
-	return(pendiente_sfe(arg)[0]['tipo_documento_id'])
+	try:
+		return(pendiente_sfe(arg)[0]['tipo_documento_id'])
+	except Exception as e:
+		return("")
+
+def what_it_this(arg):
+	try:
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""select formulario_id from tramites t where id = {}""".format(int(arg)))
+		row=cursor.fetchall()
+		return(row[0][0])
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+"""def Insert_Group_Process(grupo,fileNbr,user): 
+	expediente = mark_getlist(fileNbr)
+	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+	data = mark_read(
+		expediente[0]['fileId']['fileNbr']['doubleValue'], 
+		expediente[0]['fileId']['fileSeq'], 
+		expediente[0]['fileId']['fileSeries']['doubleValue'], 
+		expediente[0]['fileId']['fileType'])
+	return(ProcessGroupAddProcess(
+		grupo,
+		userId,
+		data['file']['processId']['processNbr']['doubleValue'],
+		data['file']['processId']['processType']))
+"""
+
+def USER_GROUP(sig):
+	data_user = {}
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select usuario FROM public.reglas_notificacion WHERE status_cod='{}'""".format(str(sig)))
+		row=cursor.fetchall()
+		return(row[0][0])	
+	except Exception as e:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""select usuario FROM public.reglas_notificacion WHERE status_cod='{}'""".format('GEN'))
+		row=cursor.fetchall()
+		return(row[0][0])
+	finally:
+		conn.close()
+
+
+def create_all_group():
+	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+	cursor = conn.cursor()
+	cursor.execute("""select usuario  from reglas_notificacion""")
+	row=cursor.fetchall()
+	for i in row:
+		crear_grupo(i[0])
+	conn.close()
+	return('listo')
+
+
+'''
+EXISTE O NO EL GRUPO 
+valid_group(userNbr,groupName,typ)
+
+EXISTE 
+ProcessGroupAddProcess
+
+NO EXISTE
+ProcessGroupInsert
+ProcessGroupAddProcess
+
+
+'''
+
+
+
+
+
+
 
 """def afected_relation_auth(arg):"""
 
