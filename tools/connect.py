@@ -163,6 +163,18 @@ TRAMITE_REG = """select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formular
 						join usuarios u on u.id = t.usuario_id  
 						join perfiles_agentes pa on pa.usuario_id = u.id         
 						where t.id = {};"""
+###################################################################
+#Consulta ultimo dia de proceso
+LAST_DAY_PROCESS = """select  fec_proceso from dia_proceso order by fec_proceso desc limit 1"""
+
+LAST_NUMBER = """select  num_acta_ultima from dia_proceso order by fec_proceso desc limit 1"""
+
+CLOSE_PROCESS_DATE = """UPDATE public.dia_proceso SET ind_atencion_comp='S', ind_recepcion_comp='S' WHERE fec_proceso='{}';"""
+
+OPEN_PROCESS_DATE = """INSERT INTO public.dia_proceso
+(fec_proceso, num_acta_primera, num_acta_ultima, ind_atencion_comp, ind_recepcion_comp, fec_recepcion_comp, ind_captura_comp, fec_captura_comp, ind_digitaliz_comp, fec_digitaliz_comp, ind_clasific_comp, fec_clasific_comp)
+VALUES('{}', {}, {}, 'N', 'N', NULL, 'N', NULL, 'N', NULL, 'N', NULL);"""
+###################################################################
 
 
 """

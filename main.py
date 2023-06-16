@@ -7,7 +7,7 @@ from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
 from tools.send_mail import enviar
 from tools.connect import MEA_TIEMPO_ACTUALIZACION, WORKING_DAY_AND_TIME
-from dinapi.sfe import count_pendiente, create_all_group, format_userdoc, getSigla_tipoDoc, log_info, log_info_delete, log_info_id_tramites, log_info_serch, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc, what_it_this
+from dinapi.sfe import count_pendiente, create_all_group, format_userdoc, getDia_proceso, getSigla_tipoDoc, log_info, log_info_delete, log_info_id_tramites, log_info_serch, newDayProcess, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc, what_it_this
 from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
@@ -2277,6 +2277,14 @@ def working_Day_AndTime():
 def CreateAllGroup():
 	return(create_all_group())
 
+@app.get('/sis/last_day_process', summary="sis", tags=["Devuelve la ultima fecha de proceso"])
+def lastdayprocess():
+	return(getDia_proceso())
+
+@app.get('/sis/new_day_process', summary="sis", tags=["Abre nuevo dia de proceso"])
+def newdayprocess():
+	return(newDayProcess())
+
 @app.post('/sup/direct_insert_mark', summary="sfe", tags=["Insert directo de escrito para soporte"])
 def insert_mark_sup(doc_id):
 	log_info_delete(doc_id)
@@ -2322,11 +2330,9 @@ def Process_Group_Add_Process(processGroupCode,userNbr,processNbr,processType):
 def Process_Group_Read(processGroupCode,userNbr):
 	return(ProcessGroupRead(processGroupCode,userNbr))
 
-
 @app.post('/sfe/valid_group', summary="sis", tags=["verifica si existe un grupo "])
 def valid_group_vg(userNbr,groupName,typ):
 	return(valid_group(userNbr,groupName,typ))
-
 
 @app.post('/sis/loginfoserch', summary="sis", tags=["Buscador soporte"])
 def log_info_serch_fun(fecha,estado):
