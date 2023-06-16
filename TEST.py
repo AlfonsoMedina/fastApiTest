@@ -2,6 +2,7 @@ from turtle import back
 import psycopg2
 from tools.filing_date import capture_day
 import tools.connect as connex
+from wipo.insertGroupProcessMEA import USER_GROUP, ProcessGroupGetList, email_receiver
 
 
 # Ultimo dia
@@ -65,4 +66,8 @@ def newDayProcess():
 			return(True)			
 
 
-print(newDayProcess())
+#print(newDayProcess())
+
+#print(ProcessGroupGetList('298'))
+
+print(USER_GROUP('CP'))

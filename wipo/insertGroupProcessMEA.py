@@ -261,7 +261,7 @@ def email_receiver(sig):
 	try:
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""select email_user,notas,status_name from reglas_notificacion where status_cod = '{}'""".format(str(sig)))
+		cursor.execute(connex.email_user_notas_status_name.format(str(sig)))
 		row=cursor.fetchall()
 		return(row)	
 	except Exception as e:
@@ -274,13 +274,13 @@ def USER_GROUP(sig):
 	try:
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""select usuario FROM public.reglas_notificacion WHERE status_cod='{}'""".format(str(sig)))
+		cursor.execute(connex.usuario_reglas_notificacion.format(str(sig)))
 		row=cursor.fetchall()
 		return(row[0][0])	
 	except Exception as e:
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""select usuario FROM public.reglas_notificacion WHERE status_cod='{}'""".format('GEN'))
+		cursor.execute(connex.usuario_reglas_notificacion.format('GEN'))
 		row=cursor.fetchall()
 		return(row[0][0])
 	finally:
@@ -290,7 +290,7 @@ def exist_main_mark(sig):
 	try:
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute("""select exp_ri from reglas_me where tipo_escrito = '{}'""".format(sig)) #select ttasa from reglas_me where tipo_doc like '{} %'
+		cursor.execute(connex.exp_ri_reglas_me.format(sig)) #select ttasa from reglas_me where tipo_doc like '{} %'
 		row=cursor.fetchall()
 		for i in row:
 			return(i[0])	

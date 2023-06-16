@@ -174,6 +174,14 @@ CLOSE_PROCESS_DATE = """UPDATE public.dia_proceso SET ind_atencion_comp='S', ind
 OPEN_PROCESS_DATE = """INSERT INTO public.dia_proceso
 (fec_proceso, num_acta_primera, num_acta_ultima, ind_atencion_comp, ind_recepcion_comp, fec_recepcion_comp, ind_captura_comp, fec_captura_comp, ind_digitaliz_comp, fec_digitaliz_comp, ind_clasific_comp, fec_clasific_comp)
 VALUES('{}', {}, {}, 'N', 'N', NULL, 'N', NULL, 'N', NULL, 'N', NULL);"""
+
+#reglas_notificacion
+email_user_notas_status_name = """select email_user,notas,status_name from reglas_notificacion where status_cod = '{}'"""
+usuario_reglas_notificacion = """select usuario FROM public.reglas_notificacion WHERE status_cod='{}'"""
+create_all_group = """select usuario from reglas_notificacion"""
+
+#reglas_me
+exp_ri_reglas_me = """select exp_ri from reglas_me where tipo_escrito = '{}'"""
 ###################################################################
 
 

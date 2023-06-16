@@ -2343,7 +2343,5 @@ def loginfoidtramites(t_id):
 	return(log_info_id_tramites(t_id))
 
 	
-
-
 app.openapi = custom_openapi
 
