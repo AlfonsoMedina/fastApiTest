@@ -19,7 +19,7 @@ def new_document(arg):
 					host = 'pgsql-sprint.dinapi.gov.py',
 					user= 'user-sprint',
 					password = 'user-sprint--201901',
-					database = 'db_sfe_production'
+					database = connex.MEA_DB_ORIGEN_database
 				)
 		cursor = conn.cursor()
 		cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,

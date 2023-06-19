@@ -11,7 +11,7 @@ import psycopg2
 from wipo.ipas import *
 from tools.base64Decode import decode_pdf
 from tools.data_format import signo_format
-
+import tools.connect as connex
 
 def renovacion_pdf_sfe_local(arg):
 	try:
@@ -27,10 +27,10 @@ def renovacion_pdf_sfe_local(arg):
 		def recorrer_sfe(arg):
 			try:
 				conn = psycopg2.connect(
-							host = '192.168.50.219',
-							user= 'user-developer',
-							password = 'user-developer--201901',
-							database = 'db_sfe_production'
+							host = connex.MEA_DB_ORIGEN_host,
+							user = connex.MEA_DB_ORIGEN_user,
+							password = connex.MEA_DB_ORIGEN_password,
+							database = connex.MEA_DB_ORIGEN_database
 						)
 				cursor = conn.cursor()
 				cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
@@ -54,6 +54,7 @@ def renovacion_pdf_sfe_local(arg):
 				global_data['TEL_agente'] = str(row[0][28])
 				global_data['email_agente'] = str(row[0][27])
 				global_data['nombre_formulario'] = str(row[0][3])
+				
 				for i in row[0][8]:
 
 					if(i['descripcion'] == "Clase" and i['campo'] == 'marcarenov_clase'):
@@ -155,7 +156,7 @@ def renovacion_pdf_sfe_local(arg):
 					except Exception as e:
 						global_data['distrito'] = ""
 
-							
+					
 										
 					try:	
 						if(i['campo'] == 'actualizacion_nodocumentoruc' or i['campo'] == 'actualizacion_noodocumentoruc'):
@@ -245,7 +246,7 @@ def renovacion_pdf_sfe_local(arg):
 					global_data['actc_num'] = ""
 
 
-
+				#print(global_data)	
 
 
 

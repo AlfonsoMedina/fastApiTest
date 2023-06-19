@@ -322,10 +322,10 @@ def renovacion_sfe(arg):
 	global_data = {}
 	try:
 		conn = psycopg2.connect(
-					host = '192.168.50.219',
-					user= 'user-developer',
-					password = 'user-developer--201901',
-					database = 'db_sfe_production'
+					host = connex.MEA_DB_ORIGEN_host,
+					user = connex.MEA_DB_ORIGEN_user,
+					password = connex.MEA_DB_ORIGEN_password,
+					database = connex.MEA_DB_ORIGEN_database
 				)
 		cursor = conn.cursor()
 		cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
@@ -562,7 +562,7 @@ def oposicion_sfe(arg):
 					host = 'pgsql-sprint.dinapi.gov.py',
 					user= 'user-sprint',
 					password = 'user-sprint--201901',
-					database = 'db_sfe_production'
+					database = connex.MEA_DB_ORIGEN_database
 				)
 				cursor = conn.cursor()
 				cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
@@ -1901,20 +1901,6 @@ def what_it_this(arg):
 	finally:
 		conn.close()
 
-"""def Insert_Group_Process(grupo,fileNbr,user): 
-	expediente = mark_getlist(fileNbr)
-	userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
-	data = mark_read(
-		expediente[0]['fileId']['fileNbr']['doubleValue'], 
-		expediente[0]['fileId']['fileSeq'], 
-		expediente[0]['fileId']['fileSeries']['doubleValue'], 
-		expediente[0]['fileId']['fileType'])
-	return(ProcessGroupAddProcess(
-		grupo,
-		userId,
-		data['file']['processId']['processNbr']['doubleValue'],
-		data['file']['processId']['processType']))
-"""
 
 def USER_GROUP(sig):
 	data_user = {}

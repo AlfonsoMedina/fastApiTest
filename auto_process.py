@@ -701,7 +701,6 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 				print('ENVIA PDF')
 				rule_notification(typ,'')# Correo al funcionario
 				print('CORREO FUNCIONARIO')
-			
 				try:
 					print(typ,'',str(new_Nbr))
 					group_addressing(typ,'',str(new_Nbr))	
@@ -1063,7 +1062,10 @@ def others_process_REG(tramite_Id,new_Nbr,ag_email,sigla):
 	print('COMPILA PDFs')
 	rule_notification(sigla,str(new_Nbr))										# Correo al funcionario
 	print('NOTIFICA AL FUNCIONARIO')
-	insertar_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))				# Crear grupo o inserta en grupo
+	try:
+		insertar_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))				# Crear grupo o inserta en grupo
+	except Exception as e:
+		print('no se inserto en grupo de trmites')
 	print('INSERT EN EL GRUPO DEL FUNCIONARIO')
 
 def others_process_REN(tramite_Id,new_Nbr,ag_email,sigla):
@@ -1084,7 +1086,10 @@ def others_process_REN(tramite_Id,new_Nbr,ag_email,sigla):
 	print('COMPILA PDFs')
 	rule_notification(sigla,str(new_Nbr))										# Correo al funcionario
 	print('NOTIFICA AL FUNCIONARIO')
-	insertar_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))				# Crear grupo o inserta en grupo
+	try:
+		insertar_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))				# Crear grupo o inserta en grupo
+	except Exception as e:
+		print('no se inserto en grupo de trmites')
 	print('INSERT EN EL GRUPO DEL FUNCIONARIO')
 
 def error_process(form_Id,error_msg,bool_estado):

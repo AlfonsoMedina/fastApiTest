@@ -1,8 +1,11 @@
 from turtle import back
 import psycopg2
+from dinapi.sfe import renovacion_sfe
+from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.filing_date import capture_day
 import tools.connect as connex
 from wipo.insertGroupProcessMEA import USER_GROUP, ProcessGroupGetList, email_receiver
+from wipo.ipas import fetch_all_user, mark_getlistReg, mark_read
 
 
 # Ultimo dia
@@ -70,4 +73,17 @@ def newDayProcess():
 
 #print(ProcessGroupGetList('298'))
 
-print(USER_GROUP('CP'))
+#print(USER_GROUP('CP'))
+
+
+
+
+
+#print(renovacion_sfe('1795'))
+
+
+
+#renovacion_pdf_sfe_local('1795')
+
+
+print(fetch_all_user('AMEDINA'))

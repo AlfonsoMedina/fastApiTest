@@ -2,7 +2,7 @@ import time
 import psycopg2
 import os, shutil
 from tools.filing_date import capture_year
-from tools.connect import  PENDING, MEA_ADJUNTOS_DESTINO_location, host_SFE_conn,user_SFE_conn,password_SFE_conn, database_SFE_conn ,MEA_SFE_FORMULARIOS_ID_estado,MEA_SFE_FORMULARIOS_ID_tipo
+from tools.connect import  MEA_ADJUNTOS_DESTINO_REG_REN, PENDING, MEA_ADJUNTOS_DESTINO_location, host_SFE_conn,user_SFE_conn,password_SFE_conn, database_SFE_conn ,MEA_SFE_FORMULARIOS_ID_estado,MEA_SFE_FORMULARIOS_ID_tipo
 from urllib import request	
 from PyPDF2 import PdfMerger, PdfReader
 import tools.filing_date as captureDate
@@ -69,7 +69,7 @@ def compilePDF(exp):
 	merger = PdfMerger()
 	for file in listaPdfs:
 		merger.append(PdfReader('temp_pdf/'+exp+'/'+file))
-	merger.write(str(MEA_ADJUNTOS_DESTINO_location)+'PY-M-'+captureDate.capture_year()+'-'+exp+'.pdf')
+	merger.write(str(MEA_ADJUNTOS_DESTINO_REG_REN)+'PY-M-'+captureDate.capture_year()+'-'+exp+'.pdf')
 	try:
 		shutil.rmtree('temp_pdf/'+exp)
 	except OSError:

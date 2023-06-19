@@ -190,13 +190,14 @@ class insertRenModel(object):
 		self.file_ownershipData_ownerList_person_ownerresidenceCountryCode = get_data_mark.file.ownershipData.ownerList[0].person.residenceCountryCode
 		self.file_rowVersion = "1.0"
 		self.agentCode = self.data['code_agente']
-		for i in range(0,len(get_data_mark.file.relationshipList)):
-			self.file_relationshipList_fileId_fileNbr = str(get_data_mark.file.relationshipList[i].fileId.fileNbr.doubleValue)
-			self.file_relationshipList_fileId_fileSeq = get_data_mark.file.relationshipList[i].fileId.fileSeq
-			self.file_relationshipList_fileId_fileSeries = str(get_data_mark.file.relationshipList[i].fileId.fileSeries.doubleValue)
-			self.file_relationshipList_fileId_fileType = get_data_mark.file.relationshipList[i].fileId.fileType
-			self.file_relationshipList_relationshipRole = get_data_mark.file.relationshipList[i].relationshipRole
-			self.file_relationshipList_relationshipType = get_data_mark.file.relationshipList[i].relationshipType
+
+		self.file_relationshipList_fileId_fileNbr = str(get_data_mark.file.fileId.fileNbr.doubleValue)
+		self.file_relationshipList_fileId_fileSeq = get_data_mark.file.fileId.fileSeq
+		self.file_relationshipList_fileId_fileSeries = str(get_data_mark.file.fileId.fileSeries.doubleValue)
+		self.file_relationshipList_fileId_fileType = get_data_mark.file.fileId.fileType
+		self.file_relationshipList_relationshipRole = '2'
+		self.file_relationshipList_relationshipType = 'REN'
+
 		self.file_representationData_representativeList_representativeType = get_data_mark.file.representationData.representativeList[0].representativeType
 		self.rowVersion = "1.0"
 		self.protectionData_dummy = str(get_data_mark.protectionData.dummy)
