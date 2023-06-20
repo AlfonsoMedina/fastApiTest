@@ -261,15 +261,7 @@ def catch_owner(arg,number):
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
-						to_char(t.created_at,'yyyy-mm-dd hh24:mi:ss')created_at,to_char(t.updated_at,'yyyy-mm-dd hh24:mi:ss')updated_at,t.respuestas,t.costo,t.usuario_id, t.deleted_at,
-						t.codigo,t.firmado_at,to_char(t.pagado_at,'yyyy-mm-dd hh24:mi:ss') as pagado_at,t.expediente_id,t.pdf_url,to_char(t.enviado_at,'yyyy-mm-dd hh24:mi:ss') as enviado_at,
-						to_char(t.recepcionado_at,'yyyy-mm-dd hh24:mi:ss') as recepcionado_at,t.nom_funcionario,t.pdf,t.expediente_afectado,t.notificacion_id,t.expedientes_autor,t.autorizado_por_id,u.nombre as nombre_agente,pa.numero_agente,
-						u.email as email_agente,pa.celular as telefonoAgente,pa.domicilio_agpi,t.nom_funcionario as funcionario_autorizado 
-						from tramites t join formularios f on t.formulario_id  = f.id  
-						join usuarios u on u.id = t.usuario_id  
-						join perfiles_agentes pa on pa.usuario_id = u.id         
-						where t.id = {};""".format(int(arg)))
+		cursor.execute(connex.TRAMITE_REG.format(int(arg)))
 		row=cursor.fetchall()
 		for i in row[0][8]:
 			if(i['campo'] == f"titular{number}_calle{number}"):
@@ -282,10 +274,6 @@ def catch_owner(arg,number):
 				global_data_titu['residenceCountryCode'] = i['valor']
 			if(i['campo'] == f"titular{number}_departamento{number}"):
 				global_data_titu['addressZone'] = i['valor']
-#			if(i['campo'] == f"titular{number}_actividad{number}"):
-#				global_data_titu['actividad'] = i['valor']
-#			if(i['campo'] == f"titular{number}_razonsocial{number}"):
-#				global_data_titu['razonsocial'] = i['valor']
 			if(i['campo'] == f"titular{number}_ciudad{number}"):
 				global_data_titu['cityName'] = i['valor']
 			if(i['campo'] == f"titular{number}_nrodocumento{number}"):
@@ -297,8 +285,6 @@ def catch_owner(arg,number):
 					global_data_titu['individualIdType'] = 'RUC'
 				else:
 					global_data_titu['legalIdType'] = 'CI'
-#			if(i['campo'] == f"titular{number}_sexo{number}"):
-#				global_data_titu['sexo'] = i['valor']
 			if(i['campo'] == f"titular{number}_correoelectronico{number}"):
 				global_data_titu['email'] = i['valor']
 			if(i['campo'] == f"titular{number}_codigopostal{number}"):

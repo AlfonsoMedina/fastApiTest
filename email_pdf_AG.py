@@ -8,7 +8,7 @@ from os import getcwd
 import barcode
 from barcode.writer import ImageWriter
 import psycopg2
-from dinapi.sfe import pendiente_sfe, qr_code
+from dinapi.sfe import pendiente_sfe, qr_code, titulare_reg
 import tools.filing_date as captureDate
 from wipo.ipas import *
 from tools.base64Decode import decode_pdf
@@ -528,8 +528,17 @@ def registro_pdf_con_acuse(arg):
 				hora_guionE = hora_puntoE[0].split("-")
 				return(str(fecha_formatE+" "+str(hora_guionE[0])))		
 		recorrer_sfe(arg)
-		
-		time.sleep(1)
+
+		try:
+			multitu = titulare_reg(arg)
+			if multitu != []:
+				if multitu[0]['person']['personName'] == '':
+					multitu = []
+		except Exception as e:
+			multitu = []
+
+
+		#time.sleep(1)
 
 		#print(global_data)
 		
@@ -544,7 +553,10 @@ def registro_pdf_con_acuse(arg):
 			pdf.set_font("helvetica", "B", 12)
 
 			hora_envio = hora(str(form_id(arg)[1])).split(".")
+
 			hora_recep = hora(str(form_id(arg)[2])).split(".")
+
+
 
 			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=15)
 
@@ -552,7 +564,7 @@ def registro_pdf_con_acuse(arg):
 			pdf.text(x=76, y=20, txt='Formulario')
 			pdf.set_font("helvetica", "", 8)
 			pdf.text(x=100, y=20, txt=str(form_descrip(str(form_id(arg)[0]))))			
-
+			
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=74, y=25, txt='Fecha envio')
 			pdf.set_font("helvetica", "", 8)
@@ -740,7 +752,9 @@ def registro_pdf_con_acuse(arg):
 				pdf.multi_cell(w=140, h=4, txt=str(global_data['direccion']), border=1, align='l',ln=1) 	
 			except Exception as e:
 				pdf.multi_cell(w=140, h=8, txt="", border=1, align='l',ln=1) 	
-			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			
+			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
+
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=35, h=8, txt='Ciudad', border=1 , align='c' )
 			
@@ -779,6 +793,95 @@ def registro_pdf_con_acuse(arg):
 			except Exception as e:
 				pdf.cell(w=65, h=8, txt="", border=1, align='c' )		
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
+
+
+
+
+
+			################################################################################################################################################
+															##Titulares adicionales##
+			try:												
+				contador:int = 1
+				numTitle:str = ""
+				for i in multitu:
+					contador = contador + 1
+					numTitle = contador
+					pdf.set_font("helvetica", "B", 12)
+					pdf.cell(w=190, h=8, txt=f'DATOS DEL SOLICITANTE {str(numTitle)}', border=1, align='c' )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
+					pdf.cell(w=50, h=8, txt='N° de Documento / RUC', border=1, align='c')
+					
+					try:
+						pdf.cell(w=50, h=8, txt=str(i['person']['legalIdNbr']) + str(i['person']['individualIdNbr']), border=1, align='l' )
+					except Exception as e:
+						pdf.cell(w=50, h=8, txt="", border=1, align='l' )
+
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 8)
+					pdf.cell(w=50, h=8, txt='Nombres y Apellidos Razón Social', border=1 , align='l' )
+					
+					pdf.cell(w=140, h=8, txt=str(i['person']['personName']), border=1, align='l' )
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=50, h=8, txt='Calle', border=1 , align='c' )
+					
+					try:	
+						pdf.multi_cell(w=140, h=8, txt=str(i['person']['addressStreet']), border=1, align='l',ln=1) 	
+					except Exception as e:
+						pdf.multi_cell(w=140, h=8, txt="", border=1, align='l',ln=1)
+
+					pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
+
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=35, h=8, txt='Ciudad', border=1 , align='c' )
+					
+					try:	
+						pdf.cell(w=50, h=8, txt=str(i['person']['cityName']), border=1, align='l' )
+					except Exception as e:
+						pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=35, h=8, txt='Pais', border=1 , align='c' )
+					
+					try:	
+						pdf.cell(w=50, h=8, txt=str(i['person']['nationalityCountryCode']), border=1, align='l' )
+					except Exception as e:
+						pdf.cell(w=50, h=8, txt="", border=1, align='c' )
+					pdf.set_font("helvetica", "B", 9)	
+					pdf.cell(w=55, h=8, txt='Codigo Postal', border=1, align='c' )
+					
+					try:	
+						pdf.cell(w=50, h=8, txt=str(i['person']['zipCode']), border=1, align='c' )
+					except Exception as e:
+						pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=35, h=8, txt='Telefono', border=1 , align='c' )
+					
+					try:	
+						pdf.cell(w=50, h=8, txt=str(i['person']['telephone']), border=1, align='l' )
+					except Exception as e:
+						pass
+					pdf.set_font("helvetica", "B", 9)	
+					pdf.cell(w=40, h=8, txt='Correo Electronico ', border=1, align='c' )
+					
+					try:
+						pdf.cell(w=65, h=8, txt=str(i['person']['email']), border=1, align='l' )
+					except Exception as e:
+						pdf.cell(w=65, h=8, txt="", border=1, align='c' )		
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			except Exception as e:
+				pass
+			################################################################################################################################################
+
+			
+
+
+
+
 			pdf.set_font("helvetica", "B", 12)
 			pdf.cell(w=190, h=8, txt='DATOS DE PRIORIDAD', border=1, align='c' )
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
@@ -800,6 +903,7 @@ def registro_pdf_con_acuse(arg):
 			except Exception as e:
 				pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
 			#############
 
 			pdf.set_font("helvetica", "B", 9)
@@ -817,6 +921,7 @@ def registro_pdf_con_acuse(arg):
 			except Exception as e:
 				pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
 			#############			
 
 
@@ -909,6 +1014,7 @@ def registro_pdf_con_acuse(arg):
 			except Exception as e:
 				pdf.cell(w=140, h=8, txt="", border=1, align='c' )	
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
+			
 
 
 			pdf.output('pdf/notificacion-DINAPI.pdf')

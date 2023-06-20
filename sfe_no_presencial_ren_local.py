@@ -8,6 +8,7 @@ from os import getcwd
 import barcode
 from barcode.writer import ImageWriter
 import psycopg2
+from dinapi.sfe import titulare_reg
 from wipo.ipas import *
 from tools.base64Decode import decode_pdf
 from tools.data_format import signo_format
@@ -257,6 +258,15 @@ def renovacion_pdf_sfe_local(arg):
 
 		recorrer_sfe(arg)
 
+		try:
+			multitu = titulare_reg(arg)
+			if multitu != []:
+				if multitu[0]['person']['personName'] == '':
+					multitu = []
+		except Exception as e:
+			multitu = []
+
+
 		def codebarheard(arg):
 			#Define content of the barcode as a string
 			number = arg
@@ -456,7 +466,7 @@ def renovacion_pdf_sfe_local(arg):
 			pdf.multi_cell(w=150, h=8, txt = str(global_data['solic_dir']), border=1, align='l')
 			
 
-			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='Ciudad', border=1, align='c')
 			
@@ -485,6 +495,70 @@ def renovacion_pdf_sfe_local(arg):
 			pdf.cell(w=50, h=8, txt=str(global_data['solic_email']), border=1, align='l')
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
+
+			################################################################################################################################################
+															##Titulares adicionales##
+			try:												
+				contador:int = 1
+				numTitle:str = ""
+				for i in multitu:
+					contador = contador + 1
+					numTitle = contador
+
+					pdf.set_font("helvetica", "B", 12)
+					pdf.cell(w=190, h=8, txt=f'DATOS DEL SOLICITANTE {str(numTitle)}', border=1, align='c' )
+
+
+
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=55, h=8, txt='Nombre y Apellido, Rason Social', border=1, align='c')
+					
+					pdf.cell(w=135, h=8, txt=str(i['person']['personName']), border=1, align='l')
+
+
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=40, h=8, txt='Calle', border=1, align='c')
+					
+					pdf.multi_cell(w=150, h=8, txt = str(i['person']['addressStreet']), border=1, align='l')
+					
+
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=40, h=8, txt='Ciudad', border=1, align='c')
+					
+					pdf.cell(w=50, h=8, txt=str(global_data['Ciudad']), border=1, align='l')
+
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=40, h=8, txt='País', border=1, align='c')
+					
+					pdf.cell(w=50, h=8, txt=str(i['person']['nationalityCountryCode']), border=1, align='l')
+
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=50, h=8, txt='Codigo Postal', border=1, align='c')
+					
+					pdf.cell(w=50, h=8, txt=str(i['person']['zipCode']), border=1, align='l')
+
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=40, h=8, txt='Teléfono', border=1, align='c')
+					
+					pdf.cell(w=50, h=8, txt=str(i['person']['telephone']), border=1, align='l')
+
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=50, h=8, txt='Correo Electronico', border=1, align='c')
+					
+					pdf.cell(w=50, h=8, txt=str(i['person']['email']), border=1, align='l')
+
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			except Exception as e:
+				pass
+			################################################################################################################################################
+
+
 
 			pdf.set_font("helvetica", "B", 12)
 			pdf.cell(w=190, h=8, txt='DATOS DEL AGENTE DE PROPIEDAD INTELECTUAL', border=1, align='c' )
@@ -542,9 +616,9 @@ def renovacion_pdf_sfe_local(arg):
 			pdf.cell(w=55, h=8, txt=str(global_data['TEL_agente']), border=1, align='l')
 
 			pdf.set_font("helvetica", "B", 9)
-			pdf.cell(w=50, h=8, txt='Correo Electronico', border=1, align='c')
+			pdf.cell(w=35, h=8, txt='Correo Electronico', border=1, align='c')
 			
-			pdf.cell(w=50, h=8, txt=str(global_data['email_agente']), border=1, align='l')
+			pdf.cell(w=65, h=8, txt=str(global_data['email_agente']), border=1, align='l')
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 
@@ -595,7 +669,8 @@ def renovacion_pdf_sfe_local(arg):
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
 			
-			pdf.output(getcwd()+f"/temp_pdf/{str(global_data['expediente'])}/{str(global_data['expediente'])}-0.pdf") #"/pdf/SFE_REGISTRO_"+str(arg)+"_local.pdf"
+			pdf.output(getcwd()+f"/temp_pdf/{str(global_data['expediente'])}/{str(global_data['expediente'])}-0.pdf") 
+			#pdf.output(getcwd()+"/pdf/SFE_RENOVACION_"+str(arg)+"_local.pdf")
 
 		traer_datos_pdf(str(global_data['expediente']))
 

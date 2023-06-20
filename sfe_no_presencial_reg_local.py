@@ -1,26 +1,24 @@
 import json
 from time import sleep
+from unicodedata import numeric
 from fpdf import FPDF, HTMLMixin  #pip install fpdf2
 from os import getcwd
 import barcode
 from barcode.writer import ImageWriter
 import psycopg2
+from dinapi.sfe import titulare_reg
 from wipo.ipas import mark_getlist, mark_read
 from tools.data_format import signo_format
 import tools.connect as connex
 
 def registro_pdf_sfe_local(arg):
-	try:	
+	try:
+		multitu = []	
 		global_data = {}
 		clase_tipo = 0
 		def recorrer_sfe(arg):
 			try:
-				conn = psycopg2.connect(
-							host = connex.MEA_DB_ORIGEN_host,
-							user = connex.MEA_DB_ORIGEN_user,
-							password = connex.MEA_DB_ORIGEN_password,
-							database = connex.MEA_DB_ORIGEN_database
-						)
+				conn = psycopg2.connect(host = connex.MEA_DB_ORIGEN_host,user = connex.MEA_DB_ORIGEN_user,password = connex.MEA_DB_ORIGEN_password,database = connex.MEA_DB_ORIGEN_database)
 				cursor = conn.cursor()
 				cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
 										to_char(t.created_at,'yyyy-mm-dd hh24:mi:ss')created_at,to_char(t.updated_at,'yyyy-mm-dd hh24:mi:ss')updated_at,t.respuestas,t.costo,t.usuario_id, t.deleted_at,
@@ -237,6 +235,14 @@ def registro_pdf_sfe_local(arg):
 				return(str(fecha_formatE+" "+str(hora_guionE[0])))		
 		recorrer_sfe(arg)
 		
+		try:
+			multitu = titulare_reg(arg)
+			if multitu != []:
+				if multitu[0]['person']['personName'] == '':
+					multitu = []
+		except Exception as e:
+			multitu = []	
+
 		sleep(1)
 
 		#print(global_data)
@@ -396,10 +402,12 @@ def registro_pdf_sfe_local(arg):
 			pdf.cell(w=50, h=8, txt='Calle', border=1 , align='c' )
 			
 			try:	
-				pdf.multi_cell(w=140, h=4, txt=str(global_data['direccion']), border=1, align='l',ln=1) 	
+				pdf.multi_cell(w=140, h=8, txt=str(global_data['direccion']), border=1, align='l',ln=1) 	
 			except Exception as e:
-				pdf.multi_cell(w=140, h=8, txt="", border=1, align='l',ln=1) 	
-			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+				pdf.multi_cell(w=140, h=8, txt="", border=1, align='l',ln=1) 
+
+			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
+
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=35, h=8, txt='Ciudad', border=1 , align='c' )
 			
@@ -438,6 +446,90 @@ def registro_pdf_sfe_local(arg):
 			except Exception as e:
 				pdf.cell(w=65, h=8, txt="", border=1, align='c' )		
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
+
+
+			################################################################################################################################################
+															##Titulares adicionales##
+			try:												
+				contador:int = 1
+				numTitle:str = ""
+				for i in multitu:
+					contador = contador + 1
+					numTitle = contador
+					pdf.set_font("helvetica", "B", 12)
+					pdf.cell(w=190, h=8, txt=f'DATOS DEL SOLICITANTE {str(numTitle)}', border=1, align='c' )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
+					pdf.cell(w=50, h=8, txt='N° de Documento / RUC', border=1, align='c')
+					
+					try:
+						pdf.cell(w=50, h=8, txt=str(i['person']['legalIdNbr']) + str(i['person']['individualIdNbr']), border=1, align='l' )
+					except Exception as e:
+						pdf.cell(w=50, h=8, txt="", border=1, align='l' )
+
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 8)
+					pdf.cell(w=50, h=8, txt='Nombres y Apellidos Razón Social', border=1 , align='l' )
+					
+					pdf.cell(w=140, h=8, txt=str(i['person']['personName']), border=1, align='l' )
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=50, h=8, txt='Calle', border=1 , align='c' )
+					
+					try:	
+						pdf.multi_cell(w=140, h=8, txt=str(i['person']['addressStreet']), border=1, align='l',ln=1) 	
+					except Exception as e:
+						pdf.multi_cell(w=140, h=8, txt="", border=1, align='l',ln=1)
+
+					pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
+
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=35, h=8, txt='Ciudad', border=1 , align='c' )
+					
+					try:	
+						pdf.cell(w=50, h=8, txt=str(i['person']['cityName']), border=1, align='l' )
+					except Exception as e:
+						pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=35, h=8, txt='Pais', border=1 , align='c' )
+					
+					try:	
+						pdf.cell(w=50, h=8, txt=str(i['person']['nationalityCountryCode']), border=1, align='l' )
+					except Exception as e:
+						pdf.cell(w=50, h=8, txt="", border=1, align='c' )
+					pdf.set_font("helvetica", "B", 9)	
+					pdf.cell(w=55, h=8, txt='Codigo Postal', border=1, align='c' )
+					
+					try:	
+						pdf.cell(w=50, h=8, txt=str(i['person']['zipCode']), border=1, align='c' )
+					except Exception as e:
+						pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+					pdf.set_font("helvetica", "B", 9)
+					pdf.cell(w=35, h=8, txt='Telefono', border=1 , align='c' )
+					
+					try:	
+						pdf.cell(w=50, h=8, txt=str(i['person']['telephone']), border=1, align='l' )
+					except Exception as e:
+						pass
+					pdf.set_font("helvetica", "B", 9)	
+					pdf.cell(w=40, h=8, txt='Correo Electronico ', border=1, align='c' )
+					
+					try:
+						pdf.cell(w=65, h=8, txt=str(i['person']['email']), border=1, align='l' )
+					except Exception as e:
+						pdf.cell(w=65, h=8, txt="", border=1, align='c' )		
+					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			except Exception as e:
+				pass
+			################################################################################################################################################
+
+
+
+
 			pdf.set_font("helvetica", "B", 12)
 			pdf.cell(w=190, h=8, txt='DATOS DE PRIORIDAD', border=1, align='c' )
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
@@ -477,7 +569,6 @@ def registro_pdf_sfe_local(arg):
 				pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			#############			
-
 
 
 			pdf.set_font("helvetica", "B", 12)
@@ -570,8 +661,8 @@ def registro_pdf_sfe_local(arg):
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 
 
-			pdf.output(getcwd()+f"/temp_pdf/{str(global_data['expediente'])}/{str(global_data['expediente'])}-0.pdf") #"/pdf/SFE_REGISTRO_"+str(arg)+"_local.pdf"
-
+			pdf.output(getcwd()+f"/temp_pdf/{str(global_data['expediente'])}/{str(global_data['expediente'])}-0.pdf") 
+			#pdf.output(getcwd()+"/pdf/SFE_REGISTRO_"+str(arg)+"_local.pdf")
 
 		traer_datos_pdf(arg)
 	except Exception as e:

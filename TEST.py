@@ -1,6 +1,8 @@
 from turtle import back
 import psycopg2
-from dinapi.sfe import renovacion_sfe
+from dinapi.sfe import renovacion_sfe, titulare_reg
+from email_pdf_AG import registro_pdf_con_acuse
+from sfe_no_presencial_reg_local import registro_pdf_sfe_local
 from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.filing_date import capture_day
 import tools.connect as connex
@@ -85,5 +87,10 @@ def newDayProcess():
 
 #renovacion_pdf_sfe_local('1795')
 
+#print(titulare_reg('1586'))
 
-print(fetch_all_user('AMEDINA'))
+#registro_pdf_sfe_local('1586')
+
+#renovacion_pdf_sfe_local('1941')
+
+#registro_pdf_con_acuse('1586')
