@@ -341,22 +341,14 @@ def compileAndInsert(form_Id,typ,in_group):
 			exists = str(user_doc_read_min('E',str(new_Nbr),str(connex.MEA_SFE_FORMULARIOS_ID_Origin),str(insert_doc.documentId_docSeries))['documentId']['docNbr']['doubleValue']).replace(".0","")
 			#exists = str(user_doc_read_min('E','2341453','3','2023')['documentId']['docNbr']['doubleValue']).replace(".0","")								
 			if exists == new_Nbr:
-				cambio_estado(form_Id,insert_doc.documentId_docNbr) 
-				print('CAMBIO DE ESTADO')																	# Cambio de estado
-				envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)																#Crear PDF
-				print('CREA PDF')
-				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Agente
-				print('ENVIA PDF')
-				rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr))														# Correo al funcionario
-				print('CORREO FUNCIONARIO')
-			
-				try:
-					print(typ,str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""),str(new_Nbr))
-					group_addressing(typ,str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""),str(new_Nbr))	
-				except Exception as e:
-					print(e)
 
-				print('INSERTA GRUPO')																# Envia al grupo de tramites			
+				funcion_uno(form_Id,
+							new_Nbr,
+							insert_doc.representationData_representativeList_person_email,
+							insert_doc.affectedFileIdList_fileNbr,
+							new_Nbr,
+							typ)
+
 		except Exception as e:
 			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
@@ -1098,6 +1090,29 @@ def error_process(form_Id,error_msg,bool_estado):
 	rule_notification('SOP',form_Id)	
 
 
+
+def funcion_uno(tram_id,person_email,affectedFileIdList_fileNbr,new_Nbr,sigla):
+	cambio_estado(tram_id,new_Nbr) 
+	print('CAMBIO DE ESTADO')												# Cambio de estado
+	envio_agente_recibido(tram_id,new_Nbr)									#Crear PDF
+	print('CREA PDF')
+	delete_file(enviar('notificacion-DINAPI.pdf',person_email,'M.E.A',''))	#Enviar Correo Agente
+	print('ENVIA PDF')
+	rule_notification(sigla,str(affectedFileIdList_fileNbr))				# Correo al funcionario
+	print('CORREO FUNCIONARIO')
+			
+	try:
+		print(sigla,str(affectedFileIdList_fileNbr).replace(".0",""),str(new_Nbr))
+		group_addressing(sigla,str(affectedFileIdList_fileNbr).replace(".0",""),str(new_Nbr))	
+	except Exception as e:
+		print(e)
+	print('INSERTA GRUPO')
+
+def funcion_dos():
+	pass
+
+def funcion_tres():
+	pass
 
 
 """
