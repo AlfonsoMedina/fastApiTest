@@ -6,7 +6,7 @@ from auto_process import insert_list, insertReg, insertRen
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
 from tools.send_mail import enviar
-from tools.connect import MEA_TIEMPO_ACTUALIZACION, WORKING_DAY_AND_TIME, MEA_OFICINA_ORIGEN_user
+from tools.connect import MEA_OFICINA_ORIGEN_FULL_VIEW, MEA_TIEMPO_ACTUALIZACION, WORKING_DAY_AND_TIME, MEA_OFICINA_ORIGEN_user
 from dinapi.sfe import count_pendiente, create_all_group, format_userdoc, getDia_proceso, getSigla_tipoDoc, log_info, log_info_delete, log_info_id_tramites, log_info_serch, newDayProcess, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc, what_it_this
 from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
@@ -2276,6 +2276,10 @@ def error_log():
 @app.get('/sis/workingDayAndTime', summary="sis", tags=["dias y rango horacio mea"])
 def working_Day_AndTime():
 	return(WORKING_DAY_AND_TIME)
+
+@app.get('/sis/views', summary="sis", tags=["Usuarios admin"])
+def workingViews():
+	return(MEA_OFICINA_ORIGEN_FULL_VIEW)
 
 @app.get('/sis/create_all_group', summary="sis", tags=["Crear grupos de tramites para los usuarios"])
 def CreateAllGroup():
