@@ -8,7 +8,7 @@ from barcode.writer import ImageWriter
 import psycopg2
 from wipo.ipas import mark_getlist, mark_read
 from tools.data_format import signo_format
-
+import tools.connect as connex
 global_data = {}
 def envio_agente_ren(exp):
 	
@@ -17,10 +17,10 @@ def envio_agente_ren(exp):
 	def recorrer_sfe(arg):
 		try:
 			conn = psycopg2.connect(
-					host = 'pgsql-sprint.dinapi.gov.py',
-					user= 'user-sprint',
-					password = 'user-sprint--201901',
-					database = connex.MEA_DB_ORIGEN_database
+                        host = connex.MEA_DB_ORIGEN_host,
+                        user = connex.MEA_DB_ORIGEN_user,
+                        password = connex.MEA_DB_ORIGEN_password,
+                        database = connex.MEA_DB_ORIGEN_database
 			)
 			cursor = conn.cursor()
 			cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
