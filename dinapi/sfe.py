@@ -39,6 +39,7 @@ def respuesta_sfe_campo(arg):
 		list_valores['codigo'] = str(row[0][10])
 		list_valores['firmado_at'] = str(row[0][11])
 		list_valores['pagado_at'] = str(row[0][12])
+		list_valores['expediente_id'] = str(row[0][13])
 		list_valores['enviado_at'] = str(row[0][15])
 		list_valores['expediente_afectado'] = str(row[0][19])
 		list_valores['tipo_documento_id'] = str(row[0][25])
@@ -1037,7 +1038,7 @@ def tip_doc():
 		tipo_form = []
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""select siglas  from tipos_documento  where formulario_id  in  ({})""".format(connex.MEA_SFE_FORMULARIOS_ID_tipo))
+		cursor.execute("""select siglas from tipos_documento  where formulario_id  in  ({})""".format(connex.MEA_SFE_FORMULARIOS_ID_tipo))
 		row=cursor.fetchall()
 		for i in row:
 			tipo_form.append(i)
@@ -1958,7 +1959,7 @@ def closed_process_day(fecha):
 #Abrir dia
 def open_process_day(fecha):
 	try:
-		num = int(getLast_number())
+		num = int(getLast_number())-1
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
 		cursor.execute(connex.OPEN_PROCESS_DATE.format(fecha,num,num))

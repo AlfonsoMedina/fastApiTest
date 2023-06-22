@@ -1,5 +1,4 @@
 
-from asyncio.windows_events import NULL
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, respuesta_sfe_campo
 from getFileDoc import getFile
 from wipo.function_for_reception_in import user_doc_getList_escrito

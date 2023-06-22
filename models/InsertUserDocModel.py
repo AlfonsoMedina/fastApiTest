@@ -1,5 +1,4 @@
 
-from asyncio.windows_events import NULL
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, process_day_commit_Nbr
 from email_pdf_AG import agent_email
 from getFileDoc import getFile

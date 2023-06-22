@@ -1,5 +1,4 @@
 
-from asyncio.windows_events import NULL
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe, titulare_reg
 from getFileDoc import getFile
 from respuesta_map import dir_titu, nom_titu

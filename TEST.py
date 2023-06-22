@@ -1,13 +1,13 @@
 from turtle import back
 import psycopg2
-from dinapi.sfe import renovacion_sfe, titulare_reg
+from dinapi.sfe import code_ag, renovacion_sfe, respuesta_sfe_campo, rule_notification, status_typ, titulare_reg
 from email_pdf_AG import registro_pdf_con_acuse
 from sfe_no_presencial_reg_local import registro_pdf_sfe_local
 from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.filing_date import capture_day
 import tools.connect as connex
-from wipo.insertGroupProcessMEA import USER_GROUP, ProcessGroupGetList, email_receiver
-from wipo.ipas import fetch_all_user, mark_getlistReg, mark_read
+from wipo.insertGroupProcessMEA import SIGLA_DE_ESTADO, USER_GROUP, ProcessGroupGetList, email_receiver, group_addressing, sigla_estado_exp
+from wipo.ipas import fetch_all_user, mark_getlistReg, mark_read, personAgente
 
 
 # Ultimo dia
@@ -69,6 +69,46 @@ def newDayProcess():
 	if closed_process_day(last_date) == True:		# Cierra ultima fecha 
 		if open_process_day(today) == True:			# Abre fecha nueva
 			return(True)			
+
+
+
+def other_process(tram_id):
+	#DATOS DE TRAMITE (SFE)
+	data = respuesta_sfe_campo(tram_id)
+
+	#DATOS DE AGENTE
+	AG_DATA = personAgente(code_ag(data['usuario_id']))
+
+	#SIGLA SEGUN TIPO TRAMITE
+	sigla = str(status_typ(data['tipo_documento_id'])[2])
+	if sigla == '[SIN DATO]':
+		sigla = 'GEN'
+	else:
+		sigla
+
+
+	AG_DATA[0]['email']
+	data['expediente_afectado']
+	data['expediente_id']
+
+	#recorrer IDs
+	print(f'rule_notification({sigla} {data["expediente_afectado"]})')
+	
+	print(f'getFile_reg_and_ren({tram_id} {data["expediente_id"]})')
+
+	#por id => sigla,affectNbr , fileNbr, email AG
+	print(f'group_addressing({sigla} {data["expediente_afectado"]} {data["expediente_id"]})')
+	
+
+
+other_process('1578')
+
+
+
+
+
+
+
 
 
 #print(newDayProcess())

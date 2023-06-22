@@ -9,6 +9,7 @@ import psycopg2
 from wipo.ipas import mark_getlist, mark_read
 from tools.data_format import signo_format
 import tools.connect as connex
+
 global_data = {}
 def envio_agente_ren(exp):
 	
