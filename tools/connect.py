@@ -19,6 +19,9 @@ MEA_DB_ORIGEN_password = config_parametro('58')['valor4']
 MEA_DB_ORIGEN_database = config_parametro('58')['valor5']
 MEA_OFICINA_ORIGEN_user = config_parametro('64')['valor5']
 MEA_OFICINA_ORIGEN_FULL_VIEW = config_parametro('64')['valor4']
+MEA_OFICINA_ORIGEN_cap = config_parametro('64')['valor3']
+
+
 
 ###################################################################
 

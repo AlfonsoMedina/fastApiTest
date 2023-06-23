@@ -6,8 +6,8 @@ from sfe_no_presencial_reg_local import registro_pdf_sfe_local
 from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.filing_date import capture_day
 import tools.connect as connex
-from wipo.insertGroupProcessMEA import USER_GROUP, ProcessGroupGetList, email_receiver
-from wipo.ipas import fetch_all_user, mark_getlistReg, mark_read
+
+
 
 
 # Ultimo dia
@@ -70,6 +70,8 @@ def newDayProcess():
 		if open_process_day(today) == True:			# Abre fecha nueva
 			return(True)			
 
+
+#print(fetch_all_user_mark('AMEDINA')[0]['sqlColumnList'][0]['sqlColumnValue'])
 
 #print(newDayProcess())
 
