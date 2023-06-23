@@ -81,7 +81,7 @@ def other_process(tram_id):
 
 	#SIGLA SEGUN TIPO TRAMITE
 	sigla = str(status_typ(data['tipo_documento_id'])[2])
-	if sigla == '[SIN DATO]':
+	if sigla == '[SIN DATO]' or sigla == None:
 		sigla = 'GEN'
 	else:
 		sigla
@@ -91,12 +91,11 @@ def other_process(tram_id):
 	data['expediente_afectado']
 	data['expediente_id']
 
-	#recorrer IDs
+
 	print(f'rule_notification({sigla} {data["expediente_afectado"]})')
 	
 	print(f'getFile_reg_and_ren({tram_id} {data["expediente_id"]})')
 
-	#por id => sigla,affectNbr , fileNbr, email AG
 	print(f'group_addressing({sigla} {data["expediente_afectado"]} {data["expediente_id"]})')
 	
 
