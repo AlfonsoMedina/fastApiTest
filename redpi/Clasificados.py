@@ -983,16 +983,49 @@ def existexp(exp):
 
 def checking_payment_suport(exp):
     today_paym = payment_today(exp)
-    print(today_paym)
     history_paym = payment_history(exp)
-    print(history_paym)
-    if today_paym != False:
+    today_paym_sfe = payment_today_sfe(exp)
+
+    if today_paym == True:
         return(True)
-    elif history_paym != False:
+    elif history_paym == True:
         return(True)
+    elif today_paym_sfe == True:
+        return(True)        
     else:
         return(False)
     
+def payment_today_sfe(exp):
+    try:
+        tram_id:int = 0
+        conn = psycopg2.connect(host = host_SFE_conn,user= user_SFE_conn,password = password_SFE_conn,database = database_SFE_conn)
+        cursor = conn.cursor()
+        cursor.execute(f"""select id from tramites where expediente_id = {exp}""")
+        row=cursor.fetchall()
+        try:
+            tram_id = int(row[0][0])
+        except Exception as e:
+            tram_id = 0    
+    except Exception as e:
+        print(e)
+    finally:
+        conn.close()
+
+    try:
+        conn = psycopg2.connect(host = host_SFE_conn,user= user_SFE_conn,password = password_SFE_conn,database = database_SFE_conn)
+        cursor = conn.cursor()
+        cursor.execute(f"""select status  from bancard_transactions where payable_id = {tram_id}""")
+        row=cursor.fetchall()
+        try:
+            if int(row[0][0]) == 1:
+                return True
+        except Exception as e:
+            return False
+        return False    
+    except Exception as e:
+        print(e)
+    finally:
+        conn.close()
 
 def payment_today(exp):
     try:
@@ -1008,15 +1041,18 @@ def payment_today(exp):
                             and dr.expediente_nro = {exp}""")
         row = cursor.fetchall()
         #________________________________________________________  
-        if row != []:  
-            return(True)
-        else:
-            return(False)   
+        try:
+            if row != []:  
+                return(True)
+            else:
+                return(False)   
+        except Exception as e:
+            return(False)
     except Exception as e:
-        print('Error de conexion DINAPI')
+        return(False)
     finally:
         conn.close() 
-
+    
 def payment_history(exp):
     try:
         #________________________________________________________
@@ -1040,6 +1076,7 @@ and rm.num_acta = {exp}""")
         print('Error de conexion DINAPI')
     finally:
         conn.close() 
+
 
 
 #print(consulta_sfe_prueba('10/01/2023'))
