@@ -4,7 +4,7 @@ from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, regist
 from getFileDoc import getFile
 from respuesta_map import dir_titu, nom_titu
 from wipo.function_for_reception_in import user_doc_getList_escrito
-from wipo.ipas import mark_getlist, personAgente
+from wipo.ipas import fetch_all_user_mark, mark_getlist, personAgente
 import tools.connect as connex
 import tools.filing_date as captureDate
 import tools.connect as connex
@@ -61,6 +61,8 @@ class insertRegModel(object):
 	multitu:str = ''
 	titular_uno:str = ''
 	ag_email:str = ''
+	user_responsible:str = ''
+	
 	def __init__(self):
 		self.signType = ""
 		self.tipo_clase = ""
@@ -68,6 +70,13 @@ class insertRegModel(object):
 		self.LogTyp = ""
 
 	def setData(self,doc_Id):
+
+		try:
+			self.user_responsible = fetch_all_user_mark(str(connex.MEA_OFICINA_ORIGEN_user))[0]['sqlColumnList'][0]['sqlColumnValue']
+		except Exception as e:
+			self.user_responsible = "4"
+			
+		print(str(connex.MEA_OFICINA_ORIGEN_user))
 		
 		self.data = registro_sfe(doc_Id) #pendiente_sfe(doc_Id)
 
@@ -221,7 +230,7 @@ class insertRegModel(object):
 			self.file_filingData_paymentList_receiptNbr = ""
 		self.file_filingData_paymentList_receiptNotes = " Caja MEA"
 		self.file_filingData_paymentList_receiptType = "1"
-		self.file_filingData_receptionUserId = "4"
+		self.file_filingData_receptionUserId = str(self.user_responsible)
 
 
 		try:

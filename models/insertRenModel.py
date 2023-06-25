@@ -3,7 +3,7 @@ from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, regist
 from getFileDoc import getFile
 from respuesta_map import dir_titu, nom_titu
 from wipo.function_for_reception_in import user_doc_getList_escrito
-from wipo.ipas import mark_getlist, mark_getlistReg, mark_read, mark_readlogo, personAgente
+from wipo.ipas import fetch_all_user_mark, mark_getlist, mark_getlistReg, mark_read, mark_readlogo, personAgente
 import tools.connect as connex
 import tools.filing_date as captureDate
 import tools.connect as connex
@@ -79,6 +79,13 @@ class insertRenModel(object):
 		self.LogTyp = ""
 
 	def setData(self,doc_Id):
+
+		try:
+			self.user_responsible = fetch_all_user_mark(str(connex.MEA_OFICINA_ORIGEN_user))[0]['sqlColumnList'][0]['sqlColumnValue']
+		except Exception as e:
+			self.user_responsible = "4"
+			
+		print(str(connex.MEA_OFICINA_ORIGEN_user))		
 		
 		self.data = renovacion_sfe(doc_Id) 
 
@@ -183,7 +190,7 @@ class insertRenModel(object):
 			self.file_filingData_paymentList_receiptNbr = ""
 			self.file_filingData_paymentList_receiptNotes = ""
 			self.file_filingData_paymentList_receiptType = ""			
-		self.file_filingData_receptionUserId = str("4")
+		self.file_filingData_receptionUserId = str(self.user_responsible)
 		self.file_ownershipData_ownerList_person_owneraddressStreet = get_data_mark.file.ownershipData.ownerList[0].person.addressStreet
 		self.file_ownershipData_ownerList_person_ownernationalityCountryCode = get_data_mark.file.ownershipData.ownerList[0].person.nationalityCountryCode
 		self.file_ownershipData_ownerList_person_ownerpersonName = get_data_mark.file.ownershipData.ownerList[0].person.personName
