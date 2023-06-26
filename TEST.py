@@ -1,6 +1,6 @@
 from turtle import back
 import psycopg2
-from dinapi.sfe import renovacion_sfe, titulare_reg
+from dinapi.sfe import email_receiver, renovacion_sfe, titulare_reg
 from email_pdf_AG import registro_pdf_con_acuse
 from sfe_no_presencial_reg_local import registro_pdf_sfe_local
 from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
@@ -80,7 +80,13 @@ def newDayProcess():
 #print(USER_GROUP('CP'))
 
 
+"""
+	data = email_receiver('GEN')
 
+	print(data[0][0])
+	print(data[0][1])
+	print(data[0][2])
+"""
 
 
 #print(renovacion_sfe('1795'))

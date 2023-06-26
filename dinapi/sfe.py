@@ -1774,28 +1774,28 @@ def rule_notification(sig,exp):
 		rule = email_receiver(str(status_exp))
 		#print(rule)
 		try:	
-			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp} status {str(status_exp)}")
+			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp} status {str(status_exp)}")
 		except Exception as e:
 			pass			
 	else:
 		if exist_notifi(sig) != 'null':
 			rule = email_receiver(str(sig))
 			try:	
-				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
+				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp}")
 			except Exception as e:
 				pass		
 			try:	
-				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
+				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp}")
 			except Exception as e:
 				pass
 		else:
 			rule = email_receiver('GEN')
 			try:	
-				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
+				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp}")
 			except Exception as e:
 				pass		
 			try:	
-				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
+				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp}")
 			except Exception as e:
 				pass				
 

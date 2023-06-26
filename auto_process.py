@@ -524,7 +524,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 			print('CREA PDF')
 			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico
 			print('ENVIA PDF')
-			rule_notification(typ,'')# Correo al funcionario
+			rule_notification(typ,new_Nbr)# Correo al funcionario
 			print('CORREO FUNCIONARIO')
 		
 			try:
@@ -699,7 +699,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 				print('CREA PDF')
 				delete_file(enviar('notificacion-DINAPI.pdf',escrito_escrito_pago.representationData_representativeList_person_email,'M.E.A',''))#Enviar Correo Electronico
 				print('ENVIA PDF')
-				rule_notification(typ,'')# Correo al funcionario
+				rule_notification(typ,new_Nbr)# Correo al funcionario
 				print('CORREO FUNCIONARIO')
 				try:
 					print(typ,'',str(new_Nbr))
