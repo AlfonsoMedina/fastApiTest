@@ -10850,7 +10850,7 @@ def daily_log_open(fecha):
 						"dateValue": str(fecha)+"T00:00:00-04:00"
 					},
 					"docLog": "E",
-					"docOrigin": "3"
+					"docOrigin": str(connex.MEA_SFE_FORMULARIOS_ID_Origin)
 					},
 					"digitalizationReadyDate": "",
 					"fileCaptureReadyDate": "",
@@ -10867,6 +10867,7 @@ def daily_log_open(fecha):
 	except zeep.exceptions.Fault as e:
 		return(str(e))
 
+
 def daily_log_close(fecha):
 	try:
 		mDailyLog = {
@@ -10878,7 +10879,7 @@ def daily_log_close(fecha):
 						"dateValue": str(fecha)+"T00:00:00-04:00"
 					},
 					"docLog": "E",
-					"docOrigin": "3"
+					"docOrigin": str(connex.MEA_SFE_FORMULARIOS_ID_Origin)
 					},
 					"digitalizationReadyDate": "",
 					"fileCaptureReadyDate": "",
@@ -10894,6 +10895,7 @@ def daily_log_close(fecha):
 		return(str(clientMark.service.DailyLogUpdate(**mDailyLog)))
 	except zeep.exceptions.Fault as e:
 		return(str(e))
+
 
 def get_agente(arg):
 	code = {

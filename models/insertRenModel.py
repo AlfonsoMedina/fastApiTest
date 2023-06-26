@@ -85,7 +85,7 @@ class insertRenModel(object):
 		except Exception as e:
 			self.user_responsible = "4"
 			
-		print(str(connex.MEA_OFICINA_ORIGEN_user))		
+		#print(str(connex.MEA_OFICINA_ORIGEN_user))		
 		
 		self.data = renovacion_sfe(doc_Id) 
 

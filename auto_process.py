@@ -763,12 +763,11 @@ def insertReg(form_Id):
 			if insertRegState == 'true':
 				others_process_REG(form_Id,new_Nbr,insert_mark.ag_email,'REG')
 			else:
-				error_process(form_Id,'Error en solicitud, tabla tramites ID','true')	
+				error_process(form_Id,f'Error en solicitud, tabla tramites ID: {insertRegState}','true')	
 		except Exception as e:
-			print(e)
-			error_process(form_Id,'Error en solicitud, tabla tramites ID','true')
+			error_process(form_Id,f'Error en solicitud, tabla tramites ID {e}','true')
 	else:
-		pass
+		error_process(form_Id,f'Error en solicitud, tabla tramites ID: {insertRegState}','true')
 
 def insertRen(form_Id):
 	flow_request = stop_request()

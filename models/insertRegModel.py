@@ -1,5 +1,3 @@
-
-from asyncio.windows_events import NULL
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe, titulare_reg
 from getFileDoc import getFile
 from respuesta_map import dir_titu, nom_titu
@@ -76,7 +74,7 @@ class insertRegModel(object):
 		except Exception as e:
 			self.user_responsible = "4"
 			
-		print(str(connex.MEA_OFICINA_ORIGEN_user))
+		#print(str(connex.MEA_OFICINA_ORIGEN_user))
 		
 		self.data = registro_sfe(doc_Id) #pendiente_sfe(doc_Id)
 
