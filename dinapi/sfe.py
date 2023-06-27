@@ -1767,13 +1767,10 @@ def exist_main_mark(sig):
 		conn.close()
 
 def rule_notification(sig,exp):
-	print(sig)
 	if exist_main_mark(sig) == 'S':
-		status_exp = main_State(exp)
-		#print(status_exp)
-		rule = email_receiver(str(status_exp))
-		#print(rule)
 		try:	
+			status_exp = main_State(exp)
+			rule = email_receiver(str(status_exp))
 			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp} status {str(status_exp)}")
 		except Exception as e:
 			pass			
@@ -1781,23 +1778,28 @@ def rule_notification(sig,exp):
 		if exist_notifi(sig) != 'null':
 			rule = email_receiver(str(sig))
 			try:	
-				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp}")
+				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp}")
 			except Exception as e:
-				pass		
+				pass
+			"""		
 			try:	
 				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp}")
 			except Exception as e:
 				pass
-		else:
+			"""
+		elif exist_notifi(sig) == 'null':
 			rule = email_receiver('GEN')
-			try:	
-				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp}")
+			try:
+				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} de tipo {sig}")
 			except Exception as e:
 				pass		
+			"""
 			try:	
 				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp}")
 			except Exception as e:
-				pass				
+				pass
+			"""
+							
 
 def log_info():
 	pack_data = []

@@ -294,25 +294,25 @@ class userDocModel(object):
 		try:
 			if str(data[0]['expediente_afectad']) != "None":
 				if mark_getlist(data[0]['expediente_afectad']) != []:
-					self.affectedFileIdList_fileNbr:str = mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileNbr']['doubleValue']
-					self.affectedFileIdList_fileSeq:str = mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeq']
-					self.affectedFileIdList_fileSeries:str = mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeries']['doubleValue']
-					self.affectedFileIdList_fileType:str = mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileType']
+					self.affectedFileIdList_fileNbr = str(mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileNbr']['doubleValue'])
+					self.affectedFileIdList_fileSeq = mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeq']
+					self.affectedFileIdList_fileSeries = str(mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeries']['doubleValue'])
+					self.affectedFileIdList_fileType = mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileType']
 				else:
-					self.affectedFileIdList_fileNbr:str = ""
-					self.affectedFileIdList_fileSeq:str = ""
-					self.affectedFileIdList_fileSeries:str = ""
-					self.affectedFileIdList_fileType:str = ""
+					self.affectedFileIdList_fileNbr = ""
+					self.affectedFileIdList_fileSeq = ""
+					self.affectedFileIdList_fileSeries = ""
+					self.affectedFileIdList_fileType = ""
 			else:
-				self.affectedFileIdList_fileNbr:str = ""
-				self.affectedFileIdList_fileSeq:str = ""
-				self.affectedFileIdList_fileSeries:str = ""
-				self.affectedFileIdList_fileType:str = ""
+				self.affectedFileIdList_fileNbr = ""
+				self.affectedFileIdList_fileSeq = ""
+				self.affectedFileIdList_fileSeries = ""
+				self.affectedFileIdList_fileType = ""
 		except Exception as e:
-			self.affectedFileIdList_fileNbr:str = ""
-			self.affectedFileIdList_fileSeq:str = ""
-			self.affectedFileIdList_fileSeries:str = ""
-			self.affectedFileIdList_fileType:str = ""
+			self.affectedFileIdList_fileNbr = ""
+			self.affectedFileIdList_fileSeq = ""
+			self.affectedFileIdList_fileSeries = ""
+			self.affectedFileIdList_fileType = ""
 
 
 		self.affectedFileSummaryList_disclaimer= ""

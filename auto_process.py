@@ -140,7 +140,7 @@ def compileAndInsert(form_Id,typ,in_group):
 		# start INSERT USERDOC ####################################################################################
 		try:
 			new_Nbr = str(COMMIT_NBR())
-			getFile(form_Id,str(new_Nbr))
+			getFile(str(form_Id),str(new_Nbr))
 			estado_ins = insert_user_doc_escritos(
 						insert_doc.affectedFileIdList_fileNbr,
 						insert_doc.affectedFileIdList_fileSeq,
@@ -347,7 +347,14 @@ def compileAndInsert(form_Id,typ,in_group):
 				print('CREA PDF')
 				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Agente
 				print('ENVIA PDF')
-				rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr))														# Correo al funcionario
+
+				if str(insert_doc.affectedFileIdList_fileNbr).replace(".0","") != "":
+					print(str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""))
+					rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""))
+				else:
+					print(str(new_Nbr))
+					rule_notification(typ,str(new_Nbr)) 
+																	
 				print('CORREO FUNCIONARIO')
 			
 				try:

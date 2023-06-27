@@ -1,11 +1,17 @@
-from turtle import back
+
+import os
+from urllib import request
 import psycopg2
-from dinapi.sfe import email_receiver, renovacion_sfe, titulare_reg
+from models.InsertUserDocModel import userDocModel
+from dinapi.sfe import email_receiver, exist_main_mark, exist_notifi, main_State, renovacion_sfe, respuesta_sfe_campo, rule_notification, titulare_reg
 from email_pdf_AG import registro_pdf_con_acuse
+from getFileDoc import compilePDF, getFile
 from sfe_no_presencial_reg_local import registro_pdf_sfe_local
 from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.filing_date import capture_day
 import tools.connect as connex
+from wipo.function_for_reception_in import user_doc_getList_escrito
+from wipo.ipas import mark_getlist
 
 
 
@@ -102,3 +108,74 @@ def newDayProcess():
 #renovacion_pdf_sfe_local('1941')
 
 #registro_pdf_con_acuse('1586')
+
+
+#print(user_doc_getList_escrito('2348615'))
+
+
+
+
+#print(getFile('1977','2348628'))
+
+insert_doc = userDocModel()
+insert_doc.setData('1977')
+#
+#print(len(insert_doc.affectedFileIdList_fileNbr))
+
+if len(insert_doc.affectedFileIdList_fileNbr) <= 2:
+	rule_notification('ED','2348612')
+else:
+	rule_notification('ED','2348660')
+
+
+#print(mark_getlist('2348612.0')[0])
+
+print(main_State('2348612.0'))
+
+
+def getFile_reg_and_ren(doc_id,fileNbr):
+
+	os.mkdir('temp_pdf/'+fileNbr)
+	try:
+		remote_url = respuesta_sfe_campo(doc_id)['observacion_documentos']['archivo']['url']
+		local_file = 'temp_pdf/'+fileNbr+'/'+fileNbr+'-1.pdf' 
+		request.urlretrieve(remote_url, local_file)
+	except Exception as e:
+		pass
+	try:	
+		remote_url = respuesta_sfe_campo(doc_id)['datosrepresentacion_decjurada']['archivo']['url']
+		local_file = 'temp_pdf/'+fileNbr+'/'+fileNbr+'-2.pdf' 
+		request.urlretrieve(remote_url, local_file)
+	except Exception as e:
+		pass
+	try:		
+		remote_url = respuesta_sfe_campo(doc_id)['datosrepresentacion_copcedula']['archivo']['url']
+		local_file = 'temp_pdf/'+fileNbr+'/'+fileNbr+'-3.pdf' 
+		request.urlretrieve(remote_url, local_file)
+	except Exception as e:
+		pass
+	try:		
+		remote_url = respuesta_sfe_campo(doc_id)['datosrepresentacion_docpatrocionio']['archivo']['url']
+		local_file = 'temp_pdf/'+fileNbr+'/'+fileNbr+'-4.pdf' 
+		request.urlretrieve(remote_url, local_file)
+	except Exception as e:
+		pass	
+
+
+#compilePDF('2348619')
+
+
+#print(getFile_reg_and_ren('1439','2348619'))
+
+#print(email_receiver('GEN'))
+
+#rule_notification('dpj1','2348614')
+
+
+#exist_notifi('AMA')
+
+
+#print(compilePDF())
+
+
+#registro_pdf_sfe_local('1439')

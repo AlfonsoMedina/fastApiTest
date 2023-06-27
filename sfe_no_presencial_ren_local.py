@@ -579,6 +579,7 @@ def renovacion_pdf_sfe_local(arg):
 			
 			pdf.cell(w=155, h=8, txt=str(global_data['nombre_agente']), border=1, align='l' )
 
+			"""
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=35, h=8, txt='Calle', border=1, align='c')
@@ -665,7 +666,7 @@ def renovacion_pdf_sfe_local(arg):
 			pdf.cell(w=35, h=8, txt='Nombre y Apellido', border=1 , align='c' )
 			
 			pdf.cell(w=155, h=8, txt=str(global_data['usuario']), border=1, align='l' )
-
+			"""
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
 			
