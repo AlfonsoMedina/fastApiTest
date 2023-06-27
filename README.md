@@ -31,7 +31,9 @@ Compilar ficheros a .pyc
 - python3 -mpy_compile nombre_fichero.py
 
 
-
+Documentacion FastApi: 
+                     /docs
+                     /redoc
 
 
 Ver pdf firmados por EDOC_ID desde la tabla DO_EDOC:
