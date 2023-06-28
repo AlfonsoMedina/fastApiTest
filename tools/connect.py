@@ -191,7 +191,11 @@ create_all_group = """select usuario from reglas_notificacion"""
 #reglas_me
 exp_ri_reglas_me = """select exp_ri from reglas_me where tipo_escrito = '{}'"""
 ###################################################################
+#MSG CORREO AGENTE
 
+msg_body_mail = '''Su solicitud de REGISTRO/RENOVACIÓN ha ingresado satisfactoriamente a la Dirección Nacional de Propiedad Intelectual – DINAPI, bajo los siguientes datos:  (se adjunta archivo PDF de su solicitud).\n Seguimos Mejorando para brindarte un servicio de calidad. \n --- \n Saludos cordiales,\n DIRECCIÓN NACIONAL DE PROPIEDAD INTELECTUAL''' 
+
+msg_body_ESC = '''Su solicitud de ESCRITO ha ingresado satisfactoriamente a la Dirección Nacional de Propiedad Intelectual – DINAPI, bajo los siguientes datos:  (se adjunta archivo PDF de su solicitud).\n Seguimos Mejorando para brindarte un servicio de calidad. \n --- \n Saludos cordiales,\n DIRECCIÓN NACIONAL DE PROPIEDAD INTELECTUAL''' 
 
 """
 http://192.168.50.194:8050/Stat/stat?type=loggedUser

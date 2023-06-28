@@ -187,6 +187,12 @@ def registro_pdf_sfe_local(arg):
 					except Exception as e:
 						global_data['espe'] = ""
 
+					try:	
+						if(i['campo'] == 'datostitular_agregar'):
+							global_data["titu_cant"] = i['valor']
+					except Exception as e:
+						global_data['titu_cant'] = ""
+
 				#print(global_data)
 
 
@@ -235,7 +241,7 @@ def registro_pdf_sfe_local(arg):
 		recorrer_sfe(arg)
 		
 		try:
-			multitu = titulare_reg(arg)
+			multitu = titulare_reg(arg,global_data["titu_cant"])
 			if multitu != []:
 				if multitu[0]['person']['personName'] == '':
 					multitu = []

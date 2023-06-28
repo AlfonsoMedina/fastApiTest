@@ -181,7 +181,7 @@ class insertRenModel(object):
 			self.file_filingData_paymentList_receiptAmount = str(pago_data(doc_Id)[1])
 			self.file_filingData_paymentList_receiptDate = str(pago_data(doc_Id)[2])[0:10]
 			self.file_filingData_paymentList_receiptNbr = str(pago_data(doc_Id)[0])
-			self.file_filingData_paymentList_receiptNotes = "Caja MEA"
+			self.file_filingData_paymentList_receiptNotes = "Pago SFE"
 			self.file_filingData_paymentList_receiptType = "1"
 		except Exception as e:
 			self.file_filingData_paymentList_currencyType = ""

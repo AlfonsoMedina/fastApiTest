@@ -462,7 +462,7 @@ class userDocModel_test(object):
 		except Exception as e:
 			self.filingData_paymentList_receiptNbr= ""		
 		
-		self.filingData_paymentList_receiptNotes = " Caja MEA"
+		self.filingData_paymentList_receiptNotes = " Pago SFE"
 		try:
 			self.filingData_paymentList_receiptType = str(data[0]['tasa_id'])
 		except Exception as e:

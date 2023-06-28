@@ -98,7 +98,14 @@ def registro_sfe(arg):
 				if(i['campo'] == "marca_distintivo"):
 					global_data['distintivo'] = i['valor']['archivo']['url']
 			except Exception as e:
-				global_data['distintivo'] = "No definido"					
+				global_data['distintivo'] = "No definido"
+
+			try:
+				if(i['campo'] == "datostitular_agregar"):
+					global_data['titu_cant'] = i['valor']
+			except Exception as e:
+				global_data['titu_cant'] = "No definido"
+
 			try:
 				if(i['descripcion'] == "N° de Documento" and i['campo'] == "datospersonales_nrodocumento"):
 					global_data['documento'] = i['valor']
@@ -230,10 +237,9 @@ def registro_sfe(arg):
 	finally:
 		conn.close()
 
-def titulare_reg(arg):
+def titulare_reg(arg,num):
 	list_titulare = []
-
-	for i in range(2,10):
+	for i in range(2,(int(num)+1)):
 		list_titulare.append(catch_owner(arg,i))
 
 	if list_titulare[0]['person']['personName'] == '':	

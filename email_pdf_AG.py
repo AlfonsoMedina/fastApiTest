@@ -482,6 +482,12 @@ def registro_pdf_con_acuse(arg):
 					except Exception as e:
 						global_data['espe'] = ""
 
+					try:
+						if(i['campo'] == "datostitular_agregar"):
+							global_data['titu_cant'] = i['valor']
+					except Exception as e:
+						global_data['titu_cant'] = "No definido"						
+
 
 
 
@@ -530,7 +536,7 @@ def registro_pdf_con_acuse(arg):
 		recorrer_sfe(arg)
 
 		try:
-			multitu = titulare_reg(arg)
+			multitu = titulare_reg(arg,global_data['titu_cant'])
 			if multitu != []:
 				if multitu[0]['person']['personName'] == '':
 					multitu = []

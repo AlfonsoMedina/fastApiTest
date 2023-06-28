@@ -11,7 +11,7 @@ from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.filing_date import capture_day
 import tools.connect as connex
 from wipo.function_for_reception_in import user_doc_getList_escrito
-from wipo.ipas import mark_getlist
+from wipo.ipas import fetch_all_user_mark, mark_getlist
 
 
 
@@ -101,7 +101,7 @@ def newDayProcess():
 
 #renovacion_pdf_sfe_local('1795')
 
-#print(titulare_reg('1586'))
+#print(titulare_reg('1586',10))
 
 #registro_pdf_sfe_local('1586')
 
@@ -115,22 +115,12 @@ def newDayProcess():
 
 
 
-#print(getFile('1977','2348628'))
 
-insert_doc = userDocModel()
-insert_doc.setData('1977')
-#
-#print(len(insert_doc.affectedFileIdList_fileNbr))
-
-if len(insert_doc.affectedFileIdList_fileNbr) <= 2:
-	rule_notification('ED','2348612')
-else:
-	rule_notification('ED','2348660')
 
 
 #print(mark_getlist('2348612.0')[0])
 
-print(main_State('2348612.0'))
+#print(main_State('2348612.0'))
 
 
 def getFile_reg_and_ren(doc_id,fileNbr):
@@ -179,3 +169,15 @@ def getFile_reg_and_ren(doc_id,fileNbr):
 
 
 #registro_pdf_sfe_local('1439')
+
+
+print(respuesta_sfe_campo('1985'))
+print()
+print(respuesta_sfe_campo('1982')['datostitular_agregar'])
+print()
+print(respuesta_sfe_campo('1985')['datospersonales_tipo'])
+print()
+print(fetch_all_user_mark('MEA')[0]['sqlColumnList'][0]['sqlColumnValue'])
+
+
+#ETIQUETA PARA CANTIDAD DE TITULARES ['datostitular_agregar']

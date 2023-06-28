@@ -1,4 +1,4 @@
-from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, process_day_commit_Nbr
+from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, process_day_commit_Nbr, respuesta_sfe_campo
 from email_pdf_AG import agent_email
 from getFileDoc import getFile
 from wipo.function_for_reception_in import user_doc_getList_escrito
@@ -202,6 +202,7 @@ class userDocModel(object):
 	representationData_representativeList_person_telephone:str = ""
 	representationData_representativeList_person_zipCode:str = ""
 	representationData_representativeList_representativeType:str = ""
+	user_responsible:str = ""
 	def __init__(self):
 		pass
 	
@@ -237,6 +238,7 @@ class userDocModel(object):
 		#print(str(connex.MEA_OFICINA_ORIGEN_user))
 
 		data = pendiente_sfe(doc_Id)
+		campo = respuesta_sfe_campo(doc_Id)
 		
 		try:
 			ag_data = personAgente(code_ag(data[0]['usuario_id']))[0]
@@ -244,33 +246,27 @@ class userDocModel(object):
 			print("")
 
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_tipo' and data[0]['respuestas'][i]['descripcion'] == 'Tipo':	
-					if str(data[0]['respuestas'][i]['valor']) == 'Persona Juridica':
-						ruc_Typ = 'RUC'
-					if str(data[0]['respuestas'][i]['valor']) == 'Persona Fisica':
-						ci_Typ = 'CED'
+			if str(campo['datospersonales_tipo']) == 'Persona Juridica':
+				ruc_Typ = 'RUC'
+			if str(campo['datospersonales_tipo']) == 'Persona Fisica':
+				ci_Typ = 'CED'
 		except Exception as e:
 				ruc_Typ = ''
 				ci_Typ = ''
 
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_pais':
-					datospersonales_pais = str(data[0]['respuestas'][i]['valor'])
+			datospersonales_pais = str(campo['datospersonales_pais'])
 		except Exception as e:
 			datospersonales_pais= "" 
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_pais':
-					expedienteoescrito_pais = str(data[0]['respuestas'][i]['valor'])
+			expedienteoescrito_pais = str(campo['expedienteoescrito_pais'])
 		except Exception as e:
 			expedienteoescrito_pais = ""				
 				
 				
 		try:
-			if str(data[0]['expediente_afectad']) != "None":
-				if user_doc_getList_escrito(data[0]['expediente_afectad']) != []:
+			if str(campo['expediente_afectado']) != "None":
+				if user_doc_getList_escrito(str(campo['expediente_afectado'])) != []:
 					self.affected_doc_Log = "E"
 					self.affected_doc_docNbr = str(user_doc_getList_escrito(data[0]['expediente_afectad'])['documentId']['docNbr']['doubleValue'])
 					self.affected_doc_docOrigin = str(user_doc_getList_escrito(data[0]['expediente_afectad'])['documentId']['docOrigin'])
@@ -292,8 +288,8 @@ class userDocModel(object):
 			self.affected_doc_docSeries = ""
 
 		try:
-			if str(data[0]['expediente_afectad']) != "None":
-				if mark_getlist(data[0]['expediente_afectad']) != []:
+			if str(campo['expediente_afectado']) != "None":
+				if mark_getlist(str(campo['expediente_afectado'])) != []:
 					self.affectedFileIdList_fileNbr = str(mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileNbr']['doubleValue'])
 					self.affectedFileIdList_fileSeq = mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeq']
 					self.affectedFileIdList_fileSeries = str(mark_getlist(data[0]['expediente_afectad'])[0]['fileId']['fileSeries']['doubleValue'])
@@ -338,22 +334,19 @@ class userDocModel(object):
 
  		
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_direccion' :				
-					datospersonales_direccion = str(data[0]['respuestas'][i]['valor'])
+			datospersonales_direccion = str(campo['datospersonales_calle'])
 		except Exception as e:
 			datospersonales_direccion= ""
+
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_direccion' :				
-					expedienteoescrito_direccion = str(data[0]['respuestas'][i]['valor'])
+			expedienteoescrito_direccion = str(campo['expedienteoescrito_direccion'])
 		except Exception as e:
 			expedienteoescrito_direccion= ""
 
 		if datospersonales_direccion != '':
-			self.applicant_person_addressStreet= datospersonales_direccion
+			self.applicant_person_addressStreet = datospersonales_direccion
 		elif expedienteoescrito_direccion != '':
-			self.applicant_person_addressStreet= expedienteoescrito_direccion
+			self.applicant_person_addressStreet = expedienteoescrito_direccion
 
 
 		self.applicant_person_addressStreetInOtherLang= ""
@@ -362,9 +355,7 @@ class userDocModel(object):
 		self.applicant_person_cityCode= ""
 		
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_ciudad':			
-					self.applicant_person_cityName = str(data[0]['respuestas'][i]['valor'])
+			self.applicant_person_cityName = str(campo['datospersonales_ciudad'])
 		except Exception as e:
 			self.applicant_person_cityName = ""
 		
@@ -372,25 +363,19 @@ class userDocModel(object):
 		self.applicant_person_companyRegisterRegistrationNbr= ""
 		
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_correoelectronico':			
-					self.applicant_person_email = str(data[0]['respuestas'][i]['valor'])
+			self.applicant_person_email = str(campo['datospersonales_correoelectronico'])
 		except Exception as e:
 			self.applicant_person_email= ""
 		
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_nrodocumento':		
-					self.applicant_person_individualIdNbr = str(data[0]['respuestas'][i]['valor'])
+			self.applicant_person_individualIdNbr = str(campo['datospersonales_nrodocumento'])
 		except Exception as e:
 			self.applicant_person_individualIdNbr = ""
 		
 		self.applicant_person_individualIdType = ci_Typ
 
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_ruc' and data[0]['respuestas'][i]['descripcion'] == "RUC":
-					self.applicant_person_legalIdNbr = str(data[0]['respuestas'][i]['valor'])
+			self.applicant_person_legalIdNbr = str(campo['datospersonales_ruc'])
 		except Exception as e:
 			self.applicant_person_legalIdNbr = ""
 
@@ -413,33 +398,27 @@ class userDocModel(object):
 
 
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'expedienteoescrito_nombrerazon':
-					nombrerazon = str(data[0]['respuestas'][i]['valor'])
+			nombrerazon = str(campo['expedienteoescrito_nombrerazon'])
 		except Exception as e:
 			nombrerazon= ""
 
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_razonsocial':
-					razonsocial = str(data[0]['respuestas'][i]['valor'])
+			razonsocial = str(campo['datospersonales_razonsocial'])
 		except Exception as e:
 			razonsocial= ""
 
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_nombreapellido' and data[0]['respuestas'][i]['descripcion'] == 'Nombres y Apellidos':
-					nombreapellido = str(data[0]['respuestas'][i]['valor'])
+			nombreapellido = str(campo['datospersonales_nombreapellido'])
 		except Exception as e:
 			nombreapellido= ""
 		
 		self.applicant_person_personNameInOtherLang= ""
 
-		if nombrerazon != '':
+		if nombrerazon != 'sin valor':
 			self.applicant_person_personName = nombrerazon
-		elif razonsocial != '':
+		elif razonsocial != 'sin valor':
 			self.applicant_person_personName = razonsocial
-		elif nombreapellido != '':
+		elif nombreapellido != 'sin valor':
 			self.applicant_person_personName = nombreapellido
 
 
@@ -455,16 +434,12 @@ class userDocModel(object):
 		self.applicant_person_stateName= ""
 		
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_telefono':
-					self.applicant_person_telephone = str(data[0]['respuestas'][i]['valor'])
+			self.applicant_person_telephone = str(campo['datospersonales_telefono'])
 		except Exception as e:
 			self.applicant_person_telephone= ""
 		
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_codigopostal':
-					self.applicant_person_zipCode = str(data[0]['respuestas'][i]['valor'])
+			self.applicant_person_zipCode = str(campo['datospersonales_codigopostal'])
 		except Exception as e:
 			self.applicant_person_zipCode= ""
 				
@@ -540,7 +515,7 @@ class userDocModel(object):
 		except Exception as e:
 			self.filingData_paymentList_receiptNbr= ""		
 		
-		self.filingData_paymentList_receiptNotes = " Caja MEA"
+		self.filingData_paymentList_receiptNotes = " Pago SFE"
 		try:
 			self.filingData_paymentList_receiptType = str(data[0]['tasa_id'])
 		except Exception as e:
@@ -582,9 +557,7 @@ class userDocModel(object):
 		self.newOwnershipData_ownerList_person_cityCode= ""
 		
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_ciudad':			
-					self.newOwnershipData_ownerList_person_cityName = str(data[0]['respuestas'][i]['valor'])
+			self.newOwnershipData_ownerList_person_cityName = str(campo['datospersonales_ciudad'])
 		except Exception as e:
 			self.newOwnershipData_ownerList_person_cityName = ""
 		
@@ -592,9 +565,7 @@ class userDocModel(object):
 		self.newOwnershipData_ownerList_person_companyRegisterRegistrationNbr= ""
 
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_correoelectronico':			
-					self.newOwnershipData_ownerList_person_email = str(data[0]['respuestas'][i]['valor'])
+			self.newOwnershipData_ownerList_person_email = str(campo['datospersonales_correoelectronico'])
 		except Exception as e:
 			self.newOwnershipData_ownerList_person_email= ""
 
@@ -602,9 +573,7 @@ class userDocModel(object):
 
 
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_nrodocumento':		
-					self.newOwnershipData_ownerList_person_individualIdNbr = str(data[0]['respuestas'][i]['valor'])
+			self.newOwnershipData_ownerList_person_individualIdNbr = str(campo['datospersonales_nrodocumento'])
 		except Exception as e:
 			self.newOwnershipData_ownerList_person_individualIdNbr = ""
 
@@ -615,9 +584,7 @@ class userDocModel(object):
 
 
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_ruc':
-					self.newOwnershipData_ownerList_person_legalIdNbr = str(data[0]['respuestas'][i]['valor'])
+			self.newOwnershipData_ownerList_person_legalIdNbr = str(campo['datospersonales_ruc'])
 		except Exception as e:
 			self.newOwnershipData_ownerList_person_legalIdNbr = ""
 
@@ -627,28 +594,28 @@ class userDocModel(object):
 		self.newOwnershipData_ownerList_person_legalNatureInOtherLang = ""
 		
 
-		if datospersonales_pais != '':
+		if datospersonales_pais != 'sin valor':
 			self.newOwnershipData_ownerList_person_nationalityCountryCode= datospersonales_pais
-		if expedienteoescrito_pais != '':
+		if expedienteoescrito_pais != 'sin valor':
 			self.newOwnershipData_ownerList_person_nationalityCountryCode= expedienteoescrito_pais
 
 		
 		self.newOwnershipData_ownerList_person_personGroupCode= ""
 		self.newOwnershipData_ownerList_person_personGroupName= ""
 		
-		if nombrerazon != '':
+		if nombrerazon != 'sin valor':
 			self.newOwnershipData_ownerList_person_personName = nombrerazon
-		elif razonsocial != '':
+		elif razonsocial != 'sin valor':
 			self.newOwnershipData_ownerList_person_personName = razonsocial
-		elif nombreapellido != '':
+		elif nombreapellido != 'sin valor':
 			self.newOwnershipData_ownerList_person_personName = nombreapellido
 
 		
 		self.newOwnershipData_ownerList_person_personNameInOtherLang= ""
 
-		if datospersonales_pais != '':
+		if datospersonales_pais != 'sin valor':
 			self.newOwnershipData_ownerList_person_residenceCountryCode= datospersonales_pais
-		if expedienteoescrito_pais != '':
+		if expedienteoescrito_pais != 'sin valor':
 			self.newOwnershipData_ownerList_person_residenceCountryCode= expedienteoescrito_pais
 
 		
@@ -656,9 +623,7 @@ class userDocModel(object):
 		self.newOwnershipData_ownerList_person_stateName= ""
 		
 		try:
-			for i in range(0,len(data[0]['respuestas'])):
-				if data[0]['respuestas'][i]['campo'] == 'datospersonales_telefono':
-					self.newOwnershipData_ownerList_person_telephone = str(data[0]['respuestas'][i]['valor'])
+			self.newOwnershipData_ownerList_person_telephone = str(campo['datospersonales_telefono'])
 		except Exception as e:
 			self.newOwnershipData_ownerList_person_telephone= ""	
 		

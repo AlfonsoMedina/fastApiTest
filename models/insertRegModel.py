@@ -81,7 +81,7 @@ class insertRegModel(object):
 		self.ag_email = self.data['email_agente']
 		
 		try:
-			self.multitu = titulare_reg(doc_Id)
+			self.multitu = titulare_reg(doc_Id,self.data['titu_cant'])
 			#print(len(self.multitu))
 			if self.multitu != []:
 				if self.multitu[0]['person']['personName'] == '':
@@ -226,7 +226,7 @@ class insertRegModel(object):
 			self.file_filingData_paymentList_receiptAmount = ""
 			self.file_filingData_paymentList_receiptDate = ""
 			self.file_filingData_paymentList_receiptNbr = ""
-		self.file_filingData_paymentList_receiptNotes = " Caja MEA"
+		self.file_filingData_paymentList_receiptNotes = " Pago SFE"
 		self.file_filingData_paymentList_receiptType = "1"
 		self.file_filingData_receptionUserId = str(self.user_responsible)
 

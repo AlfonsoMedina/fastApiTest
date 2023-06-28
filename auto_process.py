@@ -345,7 +345,7 @@ def compileAndInsert(form_Id,typ,in_group):
 				print('CAMBIO DE ESTADO')																	# Cambio de estado
 				envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)																#Crear PDF
 				print('CREA PDF')
-				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Agente
+				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',connex.msg_body_ESC))	#Enviar Correo Agente
 				print('ENVIA PDF')
 
 				if str(insert_doc.affectedFileIdList_fileNbr).replace(".0","") != "":
@@ -529,7 +529,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 			print('CAMBIO DE ESTADO')
 			envio_agente_recibido(form_Id,new_Nbr)		#Crear PDF
 			print('CREA PDF')
-			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',''))	#Enviar Correo Electronico
+			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',connex.msg_body_ESC))	#Enviar Correo Electronico
 			print('ENVIA PDF')
 			rule_notification(typ,new_Nbr)# Correo al funcionario
 			print('CORREO FUNCIONARIO')
@@ -704,7 +704,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 				print('CAMBIO DE ESTADO')
 				envio_agente_recibido(form_Id,new_Nbr)#Crear PDF
 				print('CREA PDF')
-				delete_file(enviar('notificacion-DINAPI.pdf',escrito_escrito_pago.representationData_representativeList_person_email,'M.E.A',''))#Enviar Correo Electronico
+				delete_file(enviar('notificacion-DINAPI.pdf',escrito_escrito_pago.representationData_representativeList_person_email,'M.E.A',connex.msg_body_ESC))#Enviar Correo Electronico
 				print('ENVIA PDF')
 				rule_notification(typ,new_Nbr)# Correo al funcionario
 				print('CORREO FUNCIONARIO')
@@ -1055,7 +1055,7 @@ def others_process_REG(tramite_Id,new_Nbr,ag_email,sigla):
 	print('CAMBIO DE ESTADO')													
 	acuse_from_AG_REG(str(connex.MEA_ACUSE_FORMULARIO),tramite_Id,new_Nbr)									# Crear PDF									
 	print('CREO PDF')
-	delete_file(enviar('notificacion-DINAPI.pdf',ag_email,'M.E.A',''))			# Enviar Correo Electronico
+	delete_file(enviar('notificacion-DINAPI.pdf',ag_email,'M.E.A',connex.msg_body_mail))			# Enviar Correo Electronico
 	print('ENVIO AL AG')
 	getFile_reg_and_ren(tramite_Id,new_Nbr) 									# Descargar pdfs de respuesta 
 	print('CAPTURA PDF DE TRAMITES')
@@ -1079,7 +1079,7 @@ def others_process_REN(tramite_Id,new_Nbr,ag_email,sigla):
 	print('CAMBIO DE ESTADO')													
 	acuse_from_AG_REN(str(connex.MEA_ACUSE_FORMULARIO),tramite_Id,new_Nbr)									# Crear PDF									
 	print('CREO PDF')
-	delete_file(enviar('notificacion-DINAPI.pdf',ag_email,'M.E.A',''))			# Enviar Correo Electronico
+	delete_file(enviar('notificacion-DINAPI.pdf',ag_email,'M.E.A',connex.msg_body_mail))			# Enviar Correo Electronico
 	print('ENVIO AL AG')
 	getFile_reg_and_ren(tramite_Id,new_Nbr) 									# Descargar pdfs de respuesta 
 	print('CAPTURA PDF DE TRAMITES')
