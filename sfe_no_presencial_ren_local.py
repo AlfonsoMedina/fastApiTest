@@ -96,7 +96,7 @@ def renovacion_pdf_sfe_local(arg):
 					except Exception as e:
 						global_data['reivindicaciones'] = ""							
 					try:	
-						if(i['descripcion'] == "-" and i['campo'] == 'marcarenov_tipomarca'):
+						if(i['campo'] == 'marcarenov_tipomarca'):
 							global_data["tipo_guion"] = i['valor']
 					except Exception as e:
 						global_data['tipo_guion'] = ""

@@ -410,7 +410,7 @@ def registro_pdf_con_acuse(arg):
 					except Exception as e:
 						global_data['razon_social'] = ""					
 					try:
-						if(i['descripcion'] == "Dirección" and i['campo'] == 'datospersonales_calle'):
+						if(i['campo'] == 'datospersonales_calle'):
 							global_data['direccion']=i['valor']
 					except Exception as e:
 						global_data['direccion'] = ""					
@@ -949,6 +949,8 @@ def registro_pdf_con_acuse(arg):
 			except Exception as e:
 				pdf.cell(w=140, h=8, txt="", border=1, align='c' )	
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			
+			"""	
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=50, h=8, txt='Calle', border=1 , align='c' )
 			
@@ -1012,7 +1014,9 @@ def registro_pdf_con_acuse(arg):
 			try:	
 				pdf.cell(w=140, h=8, txt=str(global_data['usuario']), border=1, align='l' )	
 			except Exception as e:
-				pdf.cell(w=140, h=8, txt="", border=1, align='c' )	
+				pdf.cell(w=140, h=8, txt="", border=1, align='c' )
+
+			"""	
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
 
@@ -1626,6 +1630,8 @@ def renovacion_pdf_con_acuse(arg):
 			pdf.cell(w=155, h=8, txt=str(global_data['nombre_agente']), border=1, align='l' )
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
+			"""
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=35, h=8, txt='Calle', border=1, align='c')
 			
@@ -1712,6 +1718,7 @@ def renovacion_pdf_con_acuse(arg):
 			
 			pdf.cell(w=155, h=8, txt=str(global_data['usuario']), border=1, align='l' )
 
+			"""
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
 			
