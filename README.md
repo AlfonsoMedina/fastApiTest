@@ -36,6 +36,16 @@ Documentacion FastApi:
                      /redoc
 
 
+Ver fecha y hora de servidor:
+                                    timedatectl status
+
+Establecer fecha y hora en servidor:
+                                    timedatectl set-time 00:00:00
+
+
+
+
+
 Ver pdf firmados por EDOC_ID desde la tabla DO_EDOC:
 
 - http://192.168.50.185:8888/nuxeo/restAPI/default/edmsAPI/getEDocPdfById?eDocId=2317835

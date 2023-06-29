@@ -94,6 +94,22 @@ def registro_sfe(arg):
 				if(int(clase_tipo.replace(".0","")) >= 35):
 					#print('SERVICIOS')
 					global_data['clasificacion']= 'SERVICIOS'
+
+
+			try:
+				if(i['campo'] == "datospersonales_tipo"):
+					if i['valor'] == 'Persona Fisica':
+						global_data['persona_fisica'] = 'CED'
+						global_data['persona_juridica'] = ""
+					if i['valor'] == 'Persona Juridica':
+						global_data['persona_fisica'] = ""
+						global_data['persona_juridica'] = 'RUC'
+
+			except Exception as e:
+				global_data['persona_fisica'] = "No definido"
+				global_data['persona_juridica'] = "No definido"
+
+
 			try:
 				if(i['campo'] == "marca_distintivo"):
 					global_data['distintivo'] = i['valor']['archivo']['url']
@@ -107,12 +123,12 @@ def registro_sfe(arg):
 				global_data['titu_cant'] = "No definido"
 
 			try:
-				if(i['descripcion'] == "N° de Documento" and i['campo'] == "datospersonales_nrodocumento"):
+				if(i['campo'] == "datospersonales_nrodocumento"):
 					global_data['documento'] = i['valor']
 			except Exception as e:
 				global_data['documento'] = "No definido"
 			try:
-				if(i['descripcion'] == "RUC" and i['campo'] == 'datospersonales_ruc'):
+				if(i['campo'] == 'datospersonales_ruc'):
 					#print(i['valor'])				
 					global_data['RUC']=i['valor']
 			except Exception as e:
@@ -169,12 +185,19 @@ def registro_sfe(arg):
 				global_data['direccion_dir'] = "No definido"
 		
 			try:
-				if(i['descripcion'] == "Ciudad" and i['campo'] == 'datospersonales_ciudad'):
+				if(i['campo'] == 'datospersonales_ciudad'):
 					global_data['ciudad']=i['valor']
 			except Exception as e:
-				global_data['ciudad'] = "No definido"					
+				global_data['ciudad'] = "No definido"
+
 			try:
-				if(i['descripcion'] == "País " and i['campo'] == 'datospersonales_pais'):
+				if(i['campo'] == 'datospersonales_sexo'):
+					global_data['sexo']=i['valor']
+			except Exception as e:
+				global_data['sexo'] = "No definido"
+							
+			try:
+				if(i['campo'] == 'datospersonales_pais'):
 					global_data['pais']=i['valor']
 			except Exception as e:
 				global_data['pais'] = "No definido"					
@@ -184,12 +207,25 @@ def registro_sfe(arg):
 			except Exception as e:
 				global_data['codigo_postal'] = "No definido"					
 			try:
-				if(i['descripcion'] == "Teléfono" and i['campo'] == 'datospersonales_telefono'):
+				if(i['campo'] == 'datospersonales_telefono'):
 					global_data['telefono']=i['valor']
 			except Exception as e:
-				global_data['telefono'] = "No definido"					
+				global_data['telefono'] = "No definido"	
+
 			try:
-				if(i['descripcion'] == "Correo Electrónico" and i['campo'] == 'datospersonales_correoelectronico'):
+				if(i['campo'] == 'datospersonales_departamento'):
+					global_data['departamento']=i['valor']
+			except Exception as e:
+				global_data['departamento'] = "No definido"
+
+			try:
+				if(i['campo'] == 'datospersonales_codigopostal'):
+					global_data['codigopostal']=i['valor']
+			except Exception as e:
+				global_data['codigopostal'] = "No definido"					
+
+			try:
+				if(i['campo'] == 'datospersonales_correoelectronico'):
 					global_data['email']=i['valor']
 			except Exception as e:
 				global_data['email'] = "No definido"					

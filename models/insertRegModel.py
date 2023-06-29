@@ -82,10 +82,32 @@ class insertRegModel(object):
 		
 		try:
 			self.multitu = titulare_reg(doc_Id,self.data['titu_cant'])
-			#print(len(self.multitu))
+			#print(self.multitu)
 			if self.multitu != []:
+				self.multitu.append({
+									'indService': 'true', 
+									'orderNbr': '', 
+									'ownershipNotes': '', 
+									'person': {
+												'nationalityCountryCode': self.data['pais'], 
+												'residenceCountryCode': self.data['pais'], 
+												'telephone': self.data['telefono'], 
+												'zipCode': self.data['codigopostal'], 
+												'personName': nom_titu(doc_Id)[0], 
+												'email': self.data['email'], 
+												'individualIdType': self.data['persona_fisica'], 
+												'individualIdNbr': self.data['documento'],
+												'legalIdType': self.data['persona_juridica'], 
+												'legalIdNbr': self.data['RUC'], 
+												'cityName': self.data['ciudad'], 
+												'addressStreet': self.data['direccion'], 
+												'addressZone': ''
+												}
+									})
 				if self.multitu[0]['person']['personName'] == '':
 					self.multitu = []
+				
+		
 		except Exception as e:
 			self.multitu = []		
 
