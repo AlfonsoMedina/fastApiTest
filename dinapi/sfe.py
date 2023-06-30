@@ -333,9 +333,9 @@ def catch_owner(arg,number):
 				global_data_titu['legalIdNbr'] = i['valor']
 			if(i['campo'] == f"titular{number}_tipo{number}"):
 				if i['valor'] == 'Persona Fisica':
-					global_data_titu['individualIdType'] = 'RUC'
+					global_data_titu['individualIdType'] = 'CED'
 				else:
-					global_data_titu['legalIdType'] = 'CED'
+					global_data_titu['legalIdType'] = 'RUC'
 			if(i['campo'] == f"titular{number}_correoelectronico{number}"):
 				global_data_titu['email'] = i['valor']
 			if(i['campo'] == f"titular{number}_codigopostal{number}"):
