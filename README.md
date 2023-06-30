@@ -36,11 +36,27 @@ Documentacion FastApi:
                      /redoc
 
 
+
+
+Establecer la sincronización horaria automática mediante el servidor NTP
+                                    - timedatectl set-ntp true
+                                    - timedatectl set-ntp false
+
+Establecer fecha y hora en un sistema Linux
+                                    - timedatectl set-time 18:30:45
+
+Para configurar la fecha solo en formato YY-MM-DD (Año: Mes: Día), use la sintaxis:
+                                    - timedatectl set-time 20201020
+
+Para configurar la fecha y la hora, ejecute:
+                                    - timedatectl set-time '2020-10-20 18:30:45'
+
+
 Ver fecha y hora de servidor:
-                                    timedatectl status
+                                    - timedatectl status
 
 Establecer fecha y hora en servidor:
-                                    timedatectl set-time 00:00:00
+                                    - timedatectl set-time 00:00:00
 
 
 

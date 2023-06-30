@@ -235,7 +235,7 @@ class insertRegModel(object):
 		self.file_fileId_fileType = "M"
 		self.file_filingData_applicationSubtype = self.tipo_clase
 		self.file_filingData_applicationType = "REG"
-		self.file_filingData_captureUserId = "4"
+		self.file_filingData_captureUserId = str(self.user_responsible)
 		self.file_filingData_filingDate = captureDate.capture_full()
 		self.file_filingData_captureDate = captureDate.capture_full()
 		self.file_filingData_lawCode = "1.0"

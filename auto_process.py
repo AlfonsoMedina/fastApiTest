@@ -201,7 +201,7 @@ def compileAndInsert(form_Id,typ,in_group):
 						insert_doc.filingData_applicationSubtype,
 						insert_doc.filingData_applicationType,
 						insert_doc.filingData_captureDate,
-						connex.MEA_PERIODO_RECEPCION_userId, #insert_doc.filingData_captureUserId
+						insert_doc.filingData_captureUserId,#connex.MEA_PERIODO_RECEPCION_userId
 						insert_doc.filingData_filingDate,
 						insert_doc.filingData_lawCode,
 						insert_doc.filingData_novelty1Date,
@@ -349,7 +349,7 @@ def compileAndInsert(form_Id,typ,in_group):
 				print('ENVIA PDF')
 
 				if str(insert_doc.affectedFileIdList_fileNbr).replace(".0","") != "":
-					print(str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""))
+					#print(str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""))
 					rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""))
 				else:
 					print(str(new_Nbr))

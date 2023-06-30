@@ -682,6 +682,7 @@ def mark_insert_reg(
 								},
 							"docSeqType": ""
 						}
+
 					}
 				},
 					'ownershipData': {
@@ -829,6 +830,7 @@ def mark_insert_reg(
 							"docSeqType": ""
 						}
 					}
+					
 					},
 					'ownershipData': {
 						'ownerList': {

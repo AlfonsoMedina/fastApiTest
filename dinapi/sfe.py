@@ -18,6 +18,7 @@ default_val = lambda arg: arg if arg == "null" else ""
 list_titulare = []
 
 
+
 def respuesta_sfe_campo(arg):
 	try:
 		list_campos = []
@@ -111,6 +112,12 @@ def registro_sfe(arg):
 
 
 			try:
+				if(i['campo'] == "marca_distintivotr"):
+					global_data['distintivo'] = i['valor']['archivo']['url']
+			except Exception as e:
+				global_data['distintivo'] = "No definido"
+
+			try:
 				if(i['campo'] == "marca_distintivo"):
 					global_data['distintivo'] = i['valor']['archivo']['url']
 			except Exception as e:
@@ -127,12 +134,14 @@ def registro_sfe(arg):
 					global_data['documento'] = i['valor']
 			except Exception as e:
 				global_data['documento'] = "No definido"
+			
 			try:
 				if(i['campo'] == 'datospersonales_ruc'):
 					#print(i['valor'])				
 					global_data['RUC']=i['valor']
 			except Exception as e:
 				global_data['RUC'] = "No definido"	
+			
 			try:
 				if(i['descripcion'] == "Productos o Servicios que distingue"):
 					global_data['distingue'] = i['valor']
@@ -319,14 +328,14 @@ def catch_owner(arg,number):
 			if(i['campo'] == f"titular{number}_ciudad{number}"):
 				global_data_titu['cityName'] = i['valor']
 			if(i['campo'] == f"titular{number}_nrodocumento{number}"):
-				global_data_titu['legalIdNbr'] = i['valor']                                    
+				global_data_titu['individualIdNbr'] = i['valor']                                    
 			if(i['campo'] == f"titular{number}_ruc{number}"):
-				global_data_titu['individualIdNbr'] = i['valor']
+				global_data_titu['legalIdNbr'] = i['valor']
 			if(i['campo'] == f"titular{number}_tipo{number}"):
 				if i['valor'] == 'Persona Fisica':
 					global_data_titu['individualIdType'] = 'RUC'
 				else:
-					global_data_titu['legalIdType'] = 'CI'
+					global_data_titu['legalIdType'] = 'CED'
 			if(i['campo'] == f"titular{number}_correoelectronico{number}"):
 				global_data_titu['email'] = i['valor']
 			if(i['campo'] == f"titular{number}_codigopostal{number}"):
@@ -1762,10 +1771,13 @@ def stop_request():
 		conn.close()
 
 def main_State(exp):
-	data_exp = mark_getlist(exp)[0]
-	data_exp_process = mark_read(data_exp.fileId.fileNbr.doubleValue, data_exp.fileId.fileSeq, data_exp.fileId.fileSeries.doubleValue, data_exp.fileId.fileType)
-	status_exp = Process_Read(data_exp_process.file.processId.processNbr.doubleValue, data_exp_process.file.processId.processType)
-	return(status_exp.status.statusId.statusCode)
+	try:
+		data_exp = mark_getlist(exp)[0]
+		data_exp_process = mark_read(data_exp.fileId.fileNbr.doubleValue, data_exp.fileId.fileSeq, data_exp.fileId.fileSeries.doubleValue, data_exp.fileId.fileType)
+		status_exp = Process_Read(data_exp_process.file.processId.processNbr.doubleValue, data_exp_process.file.processId.processType)
+		return(status_exp.status.statusId.statusCode)
+	except Exception as e:
+		return False
 
 def email_receiver(sig):
 	data_user = {}
@@ -1809,40 +1821,34 @@ def exist_main_mark(sig):
 		conn.close()
 
 def rule_notification(sig,exp):
-	if exist_main_mark(sig) == 'S':
+	if exist_main_mark(sig) == 'S' and main_State(exp) != False:
 		try:	
 			status_exp = main_State(exp)
 			rule = email_receiver(str(status_exp))
-			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp} status {str(status_exp)}")
+			print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")
+			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")
 		except Exception as e:
-			pass			
+			status_exp = main_State(exp)
+			rule = email_receiver('GEN')
+			print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")
+			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")			
 	else:
 		if exist_notifi(sig) != 'null':
 			rule = email_receiver(str(sig))
-			try:	
+			try:
+				print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp}")	
 				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp}")
 			except Exception as e:
 				pass
-			"""		
-			try:	
-				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp}")
-			except Exception as e:
-				pass
-			"""
+
 		elif exist_notifi(sig) == 'null':
 			rule = email_receiver('GEN')
 			try:
+				print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} de tipo {sig}")
 				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} de tipo {sig}")
 			except Exception as e:
-				pass		
-			"""
-			try:	
-				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} - {exp}")
-			except Exception as e:
 				pass
-			"""
 							
-
 def log_info():
 	pack_data = []
 	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
@@ -1930,7 +1936,6 @@ def what_it_this(arg):
 		print(e)
 	finally:
 		conn.close()
-
 
 def USER_GROUP(sig):
 	data_user = {}
