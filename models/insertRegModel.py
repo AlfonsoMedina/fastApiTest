@@ -134,7 +134,15 @@ class insertRegModel(object):
 		try:
 			if self.data['tipo_on'] == "Figurativa": 
 				self.signType="L"
-				self.LogData = image_url_to_b64(self.data['distintivo'])
+				self.LogData = image_url_to_b64(self.data['distintivofg'])
+				self.LogTyp = "JPG"			
+		except Exception as e:
+			pass
+
+		try:
+			if self.data['tipo_on'] == "Otros": 
+				self.signType="L"
+				self.LogData = image_url_to_b64(self.data['distintivotr'])
 				self.LogTyp = "JPG"			
 		except Exception as e:
 			pass
@@ -166,7 +174,7 @@ class insertRegModel(object):
 		try:
 			if self.data['tipo_on'] == "Tridimensional": 
 				self.signType="T"
-				self.LogData = image_url_to_b64(self.data['distintivo'])
+				self.LogData = image_url_to_b64(self.data['distintivotr'])
 				self.LogTyp = "JPG"				
 		except Exception as e:
 			pass
@@ -174,7 +182,7 @@ class insertRegModel(object):
 		try:
 			if self.data['tipo_on'] == "T": 
 				self.signType="T"
-				self.LogData = image_url_to_b64(self.data['distintivo'])
+				self.LogData = image_url_to_b64(self.data['distintivotr'])
 				self.LogTyp = "JPG"										
 		except Exception as e:
 			pass

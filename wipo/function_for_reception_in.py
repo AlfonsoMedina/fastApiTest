@@ -899,7 +899,6 @@ def user_doc_read(docLog, docNbr, docOrigin, docSeries): # {'docLog':'E','docNbr
 	except Exception as e:
 		return([])
 
-
 def user_doc_read_min(docLog, docNbr, docOrigin, docSeries): # {'docLog':'E','docNbr':{'doubleValue':'2104647'},'docOrigin':'2','docSeries':{'doubleValue':'2021'}
 	try:
 		UserdocRead = {'arg0': {'docLog':docLog,'docNbr':{'doubleValue':docNbr},'docOrigin':docOrigin,'docSeries':{'doubleValue':docSeries}}}

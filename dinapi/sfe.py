@@ -112,16 +112,25 @@ def registro_sfe(arg):
 
 
 			try:
-				if(i['campo'] == "marca_distintivotr"):
-					global_data['distintivo'] = i['valor']['archivo']['url']
+				if(i['campo'] == "marca_distintivofg") :
+					global_data['distintivofg'] = i['valor']['archivo']['url']
 			except Exception as e:
-				global_data['distintivo'] = "No definido"
+				global_data['distintivofg'] = "No definido"
+
 
 			try:
+				if(i['campo'] == "marca_distintivotr") :
+					global_data['distintivotr'] = i['valor']['archivo']['url']
+			except Exception as e:
+				global_data['distintivotr'] = "No definido"
+
+
+			try: 
 				if(i['campo'] == "marca_distintivo"):
 					global_data['distintivo'] = i['valor']['archivo']['url']
 			except Exception as e:
 				global_data['distintivo'] = "No definido"
+			
 
 			try:
 				if(i['campo'] == "datostitular_agregar"):
@@ -151,12 +160,14 @@ def registro_sfe(arg):
 				if(i['descripcion'] == "Reivindicaciones"):
 					global_data['reivindicaciones'] = i['valor']
 			except Exception as e:
-				global_data['reivindicaciones'] = "No definido"	
+				global_data['reivindicaciones'] = "No definido"
+
 			try:
 				if(i['campo'] == "marca_tipomarca"):
 					global_data["tipo_on"] = i['valor']
 			except Exception as e:
-				global_data['tipo_on'] = "No definido"	
+				global_data['tipo_on'] = "No definido"
+
 			try:
 				if(i['descripcion'] == "Denominación"):
 					global_data['denominacion_on'] = i['valor']
