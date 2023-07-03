@@ -14,7 +14,7 @@ from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.filing_date import capture_day
 import tools.connect as connex
 from wipo.function_for_reception_in import user_doc_getList_escrito
-from wipo.ipas import daily_log_close, daily_log_open, fetch_all_user_mark, mark_getlist
+from wipo.ipas import Process_Read_Action, Process_Read_EventList, daily_log_close, daily_log_open, fetch_all_user_mark, mark_getlist, process_read
 import tools.connect as conn_serv
 
 
@@ -25,7 +25,6 @@ try:
 	clientMark = Client(wsdl)
 except Exception as e:
 	print('Error de coneccion IPAS Marcas!!')
-
 
 # Ultimo dia
 def getDia_proceso():
@@ -87,7 +86,6 @@ def newDayProcess():
 		if open_process_day(today) == True:			# Abre fecha nueva
 			return(True)			
 
-
 #print(fetch_all_user_mark('AMEDINA')[0]['sqlColumnList'][0]['sqlColumnValue'])
 
 #print(newDayProcess())
@@ -95,7 +93,6 @@ def newDayProcess():
 #print(ProcessGroupGetList('298'))
 
 #print(USER_GROUP('CP'))
-
 
 """
 	data = email_receiver('GEN')
@@ -105,10 +102,7 @@ def newDayProcess():
 	print(data[0][2])
 """
 
-
 #print(renovacion_sfe('1795'))
-
-
 
 #renovacion_pdf_sfe_local('1795')
 
@@ -120,19 +114,11 @@ def newDayProcess():
 
 #registro_pdf_con_acuse('1586')
 
-
 #print(user_doc_getList_escrito('2348615'))
-
-
-
-
-
-
 
 #print(mark_getlist('2348612.0')[0])
 
 #print(main_State('2348612.0'))
-
 
 def getFile_reg_and_ren(doc_id,fileNbr):
 
@@ -162,9 +148,7 @@ def getFile_reg_and_ren(doc_id,fileNbr):
 	except Exception as e:
 		pass	
 
-
 #compilePDF('2348619')
-
 
 #print(getFile_reg_and_ren('1439','2348619'))
 
@@ -172,15 +156,11 @@ def getFile_reg_and_ren(doc_id,fileNbr):
 
 #rule_notification('dpj1','2348614')
 
-
 #exist_notifi('AMA')
-
 
 #print(compilePDF())
 
-
 #registro_pdf_sfe_local('1439')
-
 
 #print(respuesta_sfe_campo('1985'))
 #print()
@@ -231,9 +211,17 @@ def rule_notification(sig,exp):
 
 #ETIQUETA PARA CANTIDAD DE TITULARES ['datostitular_agregar']
 
-
-
 #print(respuesta_sfe_campo('2002'))
+
+print(fetch_all_user_mark('MEA')[0]['sqlColumnList'][0]['sqlColumnValue'])
+
+
+
+#print(Process_Read_EventList('2002432','1'))
+
+print(process_read('2005484', '1'))
+
+#print(Process_Read_Action('0','2002432','1'))
 
 
 

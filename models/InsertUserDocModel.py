@@ -235,7 +235,7 @@ class userDocModel(object):
 		except Exception as e:
 			self.user_responsible = "4"
 			
-		#print(str(connex.MEA_OFICINA_ORIGEN_user))
+		print(str(connex.MEA_OFICINA_ORIGEN_user))
 
 		data = pendiente_sfe(doc_Id)
 		campo = respuesta_sfe_campo(doc_Id)

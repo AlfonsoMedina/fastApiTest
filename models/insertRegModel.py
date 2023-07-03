@@ -101,13 +101,11 @@ class insertRegModel(object):
 												'legalIdNbr': self.data['RUC'], 
 												'cityName': self.data['ciudad'], 
 												'addressStreet': self.data['direccion'], 
-												'addressZone': ''
+												'addressZone': self.data['departamento']
 												}
 									})
 				if self.multitu[0]['person']['personName'] == '':
 					self.multitu = []
-				
-		
 		except Exception as e:
 			self.multitu = []		
 
