@@ -1000,7 +1000,7 @@ def payment_today_sfe(exp):
         tram_id:int = 0
         conn = psycopg2.connect(host = host_SFE_conn,user= user_SFE_conn,password = password_SFE_conn,database = database_SFE_conn)
         cursor = conn.cursor()
-        cursor.execute(f"""select id from tramites where expediente_id = {exp}""")
+        cursor.execute(f"""select status  from bancard_transactions where status = 1 and  payable_id = {exp}""")
         row=cursor.fetchall()
         try:
             tram_id = int(row[0][0])
