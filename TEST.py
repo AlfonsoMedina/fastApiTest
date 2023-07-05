@@ -201,7 +201,9 @@ def rule_notification(sig,exp):
 				print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} de tipo {sig}")
 				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} de tipo {sig}")
 			except Exception as e:
-				pass		
+				pass
+		
+
 
 #rule_notification('CP','2348740')
 
@@ -215,9 +217,12 @@ def rule_notification(sig,exp):
 
 print(fetch_all_user_mark('MEA')[0]['sqlColumnList'][0]['sqlColumnValue'])
 
+def test(a=17,b=32):
+	return(a,b)
 
+print(test())
 
-print(Process_Read_EventList('2002432','1'))
+#print(Process_Read_EventList('2002432','1'))
 
 #print(process_read('2005484', '1'))
 
