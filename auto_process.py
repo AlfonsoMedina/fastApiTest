@@ -789,7 +789,7 @@ def insertRen(form_Id):
 		try:
 			new_Nbr = str(COMMIT_NBR())
 			insertRenState = mark_insert_ren(
-						new_Nbr,
+						new_Nbr, 
 						insert_mark_ren.file_fileId_fileSeq,
 						insert_mark_ren.file_fileId_fileSeries,
 						insert_mark_ren.file_fileId_fileType,

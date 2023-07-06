@@ -1,0 +1,13 @@
+[
+    {
+        "group": "Mesa de Entrada Automatica",
+        "separator": false,
+        "items": [
+            {
+                "icon": "assets/icons/outline/cog.svg",
+                "label": "MEA",
+                "route": "/mesaEntradaAutomatica/recepcion"
+            }
+        ]
+    }
+]

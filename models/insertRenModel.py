@@ -171,7 +171,7 @@ class insertRenModel(object):
 		self.file_fileId_fileSeries = str(captureDate.capture_year())
 		self.file_fileId_fileType = get_data_mark.file.fileId.fileType
 		self.file_filingData_applicationSubtype = self.tipo_clase
-		self.file_filingData_applicationType = get_data_mark.file.filingData.applicationType
+		self.file_filingData_applicationType = "REN"
 		self.file_filingData_captureUserId = str(get_data_mark.file.filingData.captureUserId.doubleValue)
 		self.file_filingData_filingDate = str(captureDate.capture_full())
 		self.file_filingData_captureDate = str(captureDate.capture_full())

@@ -7,7 +7,7 @@ import zeep
 from models.InsertUserDocModel import userDocModel
 from dinapi.sfe import email_receiver, exist_main_mark, exist_notifi, main_State, registro_sfe, renovacion_sfe, respuesta_sfe_campo,  titulare_reg
 from email_pdf_AG import registro_pdf_con_acuse
-from getFileDoc import compilePDF, getFile
+from getFileDoc import compilePDF, getFile, getFile_reg_and_ren
 from tools.send_mail import enviar_back_notFile
 from sfe_no_presencial_reg_local import registro_pdf_sfe_local
 from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
@@ -16,7 +16,7 @@ import tools.connect as connex
 from wipo.function_for_reception_in import user_doc_getList_escrito
 from wipo.ipas import Process_Read_Action, Process_Read_EventList, daily_log_close, daily_log_open, fetch_all_user_mark, mark_getlist, process_read
 import tools.connect as conn_serv
-
+from PyPDF2 import PdfFileMerger,PdfMerger
 
 
 try:
@@ -120,7 +120,7 @@ def newDayProcess():
 
 #print(main_State('2348612.0'))
 
-def getFile_reg_and_ren(doc_id,fileNbr):
+"""def getFile_reg_and_ren(doc_id,fileNbr):
 
 	os.mkdir('temp_pdf/'+fileNbr)
 	try:
@@ -146,7 +146,7 @@ def getFile_reg_and_ren(doc_id,fileNbr):
 		local_file = 'temp_pdf/'+fileNbr+'/'+fileNbr+'-4.pdf' 
 		request.urlretrieve(remote_url, local_file)
 	except Exception as e:
-		pass	
+		pass	"""
 
 #compilePDF('2348619')
 
@@ -204,7 +204,6 @@ def rule_notification(sig,exp):
 				pass
 		
 
-
 #rule_notification('CP','2348740')
 
 #rule_notification('PDM','2348741')
@@ -215,12 +214,43 @@ def rule_notification(sig,exp):
 
 #print(respuesta_sfe_campo('2002'))
 
-print(fetch_all_user_mark('MEA')[0]['sqlColumnList'][0]['sqlColumnValue'])
+
+
+try:
+	getFile_reg_and_ren('1976','2348812')
+except Exception as e:
+	pass
+
+listaPdfs = os.listdir('temp_pdf/2348812')
+
+print(listaPdfs)
+
+listaPdfs.insert(0,'0.pdf')
+
+print(listaPdfs)
+
+pdfs = listaPdfs
+
+nombre_archivo_salida = "temp_pdf/2348812/salida.pdf"
+
+fusionador = PdfMerger()
+
+for pdf in pdfs:
+    fusionador.append(open(f'temp_pdf/2348812/{pdf}', 'rb'))
+
+with open(nombre_archivo_salida, 'wb') as salida:
+    fusionador.write(salida)
+
+
+
+
+
+#print(fetch_all_user_mark('MEA')[0]['sqlColumnList'][0]['sqlColumnValue'])
 
 def test(a=17,b=32):
 	return(a,b)
 
-print(test())
+#print(test())
 
 #print(Process_Read_EventList('2002432','1'))
 

@@ -19,7 +19,6 @@ def getFile(doc_id,fileNbr):
 	request.urlretrieve(remote_url, local_file)
 
 def getFile_reg_and_ren(doc_id,fileNbr):
-
 	os.mkdir('temp_pdf/'+fileNbr)
 	try:
 		remote_url = respuesta_sfe_campo(doc_id)['observacion_documentos']['archivo']['url']
@@ -27,18 +26,21 @@ def getFile_reg_and_ren(doc_id,fileNbr):
 		request.urlretrieve(remote_url, local_file)
 	except Exception as e:
 		pass
+
 	try:	
 		remote_url = respuesta_sfe_campo(doc_id)['datosrepresentacion_decjurada']['archivo']['url']
 		local_file = 'temp_pdf/'+fileNbr+'/'+fileNbr+'-2.pdf' 
 		request.urlretrieve(remote_url, local_file)
 	except Exception as e:
 		pass
+
 	try:		
 		remote_url = respuesta_sfe_campo(doc_id)['datosrepresentacion_copcedula']['archivo']['url']
 		local_file = 'temp_pdf/'+fileNbr+'/'+fileNbr+'-3.pdf' 
 		request.urlretrieve(remote_url, local_file)
 	except Exception as e:
 		pass
+	
 	try:		
 		remote_url = respuesta_sfe_campo(doc_id)['datosrepresentacion_docpatrocionio']['archivo']['url']
 		local_file = 'temp_pdf/'+fileNbr+'/'+fileNbr+'-4.pdf' 
@@ -49,8 +51,28 @@ def getFile_reg_and_ren(doc_id,fileNbr):
 def compilePDF(exp):
 	listaPdfs = os.listdir('temp_pdf/'+exp)
 	merger = PdfMerger()
-	for file in listaPdfs:
-		merger.append(PdfReader('temp_pdf/'+exp+'/'+file))
+	try:
+		merger.append(PdfReader(f'temp_pdf/{exp}/{exp}-0.pdf'))
+	except Exception as e:
+		pass	
+	try:
+		merger.append(PdfReader(f'temp_pdf/{exp}/{exp}-1.pdf'))
+	except Exception as e:
+		pass	
+	try:
+		merger.append(PdfReader(f'temp_pdf/{exp}/{exp}-2.pdf'))
+	except Exception as e:
+		pass	
+	try:
+		merger.append(PdfReader(f'temp_pdf/{exp}/{exp}-3.pdf'))
+	except Exception as e:
+		pass	
+	try:
+		merger.append(PdfReader(f'temp_pdf/{exp}/{exp}-4.pdf'))
+	except Exception as e:
+		pass	
+	#for file in listaPdfs:
+		#merger.append(PdfReader('temp_pdf/'+exp+'/'+file))
 	merger.write(str(MEA_ADJUNTOS_DESTINO_REG_REN)+'PY-M-'+captureDate.capture_year()+'-'+exp+'.pdf')
 	#merger.write('temp_pdf/'+'PY-M-'+captureDate.capture_year()+'-'+exp+'.pdf')
 	try:
