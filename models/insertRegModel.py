@@ -45,8 +45,13 @@ class insertRegModel(object):
 	protectionData_niceClassList_niceClassGlobalStatus:str = ""
 	protectionData_niceClassList_niceClassNbr:str = ""
 	protectionData_niceClassList_niceClassVersion:str = ""
+	documentId_PowerOfAttorneyRegister_docNbr:str = ""
+	documentId_PowerOfAttorneyRegister_docOrigin:str = ""
+	documentId_PowerOfAttorneyRegister_docSeries:str = ""
+	limitationData_disclaimer:str = ""
 	logoData:str = ""
 	logoType:str = ""
+	logo_colourDescription:str = ""
 	signData_markName:str = ""
 	signData_signType:str = ""
 	signType:str = ''
@@ -60,6 +65,7 @@ class insertRegModel(object):
 	titular_uno:str = ''
 	ag_email:str = ''
 	user_responsible:str = ''
+	logoDesc:str = ''
 	
 	def __init__(self):
 		self.signType = ""
@@ -109,7 +115,6 @@ class insertRegModel(object):
 		except Exception as e:
 			self.multitu = []		
 
-
 		try:
 			ag_data = personAgente(code_ag(self.data[0]['usuario_id']))[0]
 		except Exception as e:
@@ -135,7 +140,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "Figurativa": 
 				self.signType="L"
 				self.LogData = image_url_to_b64(self.data['distintivofg'])
-				self.LogTyp = "JPG"			
+				self.LogTyp = "JPG"	
+				self.logoDesc = 	"not data"	
 		except Exception as e:
 			pass
 
@@ -143,7 +149,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "Otros": 
 				self.signType="L"
 				self.LogData = image_url_to_b64(self.data['distintivotr'])
-				self.LogTyp = "JPG"			
+				self.LogTyp = "JPG"
+				self.logoDesc = 	"not data"			
 		except Exception as e:
 			pass
 
@@ -151,7 +158,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "F": 
 				self.signType="L"
 				self.LogData = image_url_to_b64(self.data['distintivo'])
-				self.LogTyp = "JPG"							
+				self.LogTyp = "JPG"
+				self.logoDesc = 	"not data"							
 		except Exception as e:
 			pass
 
@@ -159,7 +167,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "Mixta": 
 				self.signType="B"
 				self.LogData = image_url_to_b64(self.data['distintivo'])
-				self.LogTyp = "JPG"				
+				self.LogTyp = "JPG"
+				self.logoDesc = 	"not data"				
 		except Exception as e:
 			pass
 
@@ -167,7 +176,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "M": 
 				self.signType="B"
 				self.LogData = image_url_to_b64(self.data['distintivo'])
-				self.LogTyp = "JPG"				
+				self.LogTyp = "JPG"
+				self.logoDesc = 	"not data"				
 		except Exception as e:
 			pass
 
@@ -175,7 +185,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "Tridimensional": 
 				self.signType="T"
 				self.LogData = image_url_to_b64(self.data['distintivotr'])
-				self.LogTyp = "JPG"				
+				self.LogTyp = "JPG"
+				self.logoDesc = 	"not data"				
 		except Exception as e:
 			pass
 
@@ -183,7 +194,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "T": 
 				self.signType="T"
 				self.LogData = image_url_to_b64(self.data['distintivotr'])
-				self.LogTyp = "JPG"										
+				self.LogTyp = "JPG"
+				self.logoDesc = 	"not data"										
 		except Exception as e:
 			pass
 
@@ -191,7 +203,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "Sonora": 
 				self.signType="S"
 				self.LogData = ""
-				self.LogTyp = ""			
+				self.LogTyp = ""
+				self.logoDesc = 	"not data"			
 		except Exception as e:
 			pass
 
@@ -199,7 +212,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "S": 
 				self.signType="S"
 				self.LogData = ""
-				self.LogTyp = ""			
+				self.LogTyp = ""
+				self.logoDesc = 	"not data"			
 		except Exception as e:
 			pass
 
@@ -258,7 +272,6 @@ class insertRegModel(object):
 		self.file_filingData_paymentList_receiptType = "1"
 		self.file_filingData_receptionUserId = str(self.user_responsible)
 
-
 		try:
 			self.file_ownershipData_ownerList_person_addressStreet = dir_titu(doc_Id)[0] #self.dir_variant
 		except Exception as e:
@@ -294,8 +307,18 @@ class insertRegModel(object):
 		self.protectionData_niceClassList_niceClassNbr = self.data['clase_on']
 		
 		self.protectionData_niceClassList_niceClassVersion = "2023.01"
+
+		self.documentId_PowerOfAttorneyRegister_docNbr = "2136019" # self.data
+
+		self.documentId_PowerOfAttorneyRegister_docOrigin = "1" # self.data
+
+		self.documentId_PowerOfAttorneyRegister_docSeries = "2021" # self.data
+
+		self.limitationData_disclaimer = "not data" # self.data
+
 		self.logoData = self.LogData
 		self.logoType = self.LogTyp
+		self.logo_colourDescription = self.logoDesc
 		self.signData_markName = self.data['denominacion_on']
 		
 		self.signData_signType = self.signType						

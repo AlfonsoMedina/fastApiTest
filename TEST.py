@@ -14,7 +14,7 @@ from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.filing_date import capture_day
 import tools.connect as connex
 from wipo.function_for_reception_in import user_doc_getList_escrito
-from wipo.ipas import Process_Read_Action, Process_Read_EventList, daily_log_close, daily_log_open, fetch_all_user_mark, mark_getlist, process_read
+from wipo.ipas import Process_Read_Action, Process_Read_EventList, daily_log_close, daily_log_open, fetch_all_user_mark, getPoder, mark_getlist, process_read
 import tools.connect as conn_serv
 from PyPDF2 import PdfFileMerger,PdfMerger
 
@@ -216,39 +216,12 @@ def rule_notification(sig,exp):
 
 
 
-try:
-	getFile_reg_and_ren('1976','2348812')
-except Exception as e:
-	pass
-
-listaPdfs = os.listdir('temp_pdf/2348812')
-
-print(listaPdfs)
-
-listaPdfs.insert(0,'0.pdf')
-
-print(listaPdfs)
-
-pdfs = listaPdfs
-
-nombre_archivo_salida = "temp_pdf/2348812/salida.pdf"
-
-fusionador = PdfMerger()
-
-for pdf in pdfs:
-    fusionador.append(open(f'temp_pdf/2348812/{pdf}', 'rb'))
-
-with open(nombre_archivo_salida, 'wb') as salida:
-    fusionador.write(salida)
-
-
-
-
-
 #print(fetch_all_user_mark('MEA')[0]['sqlColumnList'][0]['sqlColumnValue'])
 
 def test(a=17,b=32):
 	return(a,b)
+
+print(getPoder('76583'))
 
 #print(test())
 

@@ -58,6 +58,23 @@ def mark_getlistReg(solidNbr):
 	MarkGetListReg = {'arg0': {'criteriaRegistrationData': {'registrationNbrFrom': {'doubleValue':solidNbr,},'registrationNbrTo': {'doubleValue':solidNbr}},},}
 	return clientMark.service.MarkGetList(**MarkGetListReg)
 
+
+#consulta registro de poder
+def getPoder(registro):
+	try:
+		data = {"arg0": {
+					"criteriaExtraData": {
+					"dataNbr1": {
+						"doubleValue": registro
+					}}}}
+		find_data = clientMark.service.UserdocGetList(**data)
+		if find_data != []:
+			return True
+		else:
+			return False	
+	except zeep.exceptions.Fault as e:
+		return False
+				
 # Envio => POST = {"arg0": {"fileNbr":  "2017020","fileSeq": "PY","fileSeries": "2020","fileType": "M"},"arg1": "","arg2": ""}
 def mark_readlogo(fileNbr, fileSeq, fileSeries, fileType): #{'doubleValue': '2177877',},'fileSeq': 'PY','fileSeries': {'doubleValue': '2021', },'fileType': 'M',
 	MarkReadLogo = {'arg0': {'fileNbr': {'doubleValue': fileNbr,},'fileSeq': fileSeq,'fileSeries': {'doubleValue': fileSeries, },'fileType': fileType, },	}
@@ -611,312 +628,353 @@ def mark_insert_reg(
 					protectionData_niceClassList_niceClassGlobalStatus,
 					protectionData_niceClassList_niceClassNbr,
 					protectionData_niceClassList_niceClassVersion,
+					documentId_PowerOfAttorneyRegister_docNbr,
+					documentId_PowerOfAttorneyRegister_docOrigin,
+					documentId_PowerOfAttorneyRegister_docSeries,
+					limitationData_disclaimer,
 					logoData,
 					logoType,
+					logo_colourDescription,
 					signData_markName,
 					signData_signType,
 					ownerList):
-	try:
-		logo = logoData
-		if ownerList == "":
-			markinsertreg = { 
-			'arg0': {
-				'file': {
-					'fileId': {
-						'fileNbr': {
-						'doubleValue': fileId_fileId_fileNbr
-						},
-						'fileSeq': file_fileId_fileSeq,
-						'fileSeries': {
-						'doubleValue': file_fileId_fileSeries,
-						},
-						'fileType': file_fileId_fileType
-					},
-					'filingData': {
-						'applicationSubtype': file_filingData_applicationSubtype,
-						'applicationType': file_filingData_applicationType,
-						'captureUserId': {
-						'doubleValue': file_filingData_captureUserId
-						},
-						'filingDate': {
-						'dateValue': file_filingData_filingDate    ########################################
-						},
-						'captureDate': {
-							'dateValue': file_filingData_captureDate  ################### problemas con fecha futura
-						},
-						'lawCode': {
-						'doubleValue': file_filingData_lawCode
-						},
-						'paymentList': {
-						'currencyType': file_filingData_paymentList_currencyType,
-						'receiptAmount': file_filingData_paymentList_receiptAmount,
-						'receiptDate': {
-							'dateValue': file_filingData_paymentList_receiptDate
-						},
-						'receiptNbr': file_filingData_paymentList_receiptNbr,
-						'receiptNotes': file_filingData_paymentList_receiptNotes,
-						'receiptType': file_filingData_paymentList_receiptType
-						},
-						'receptionUserId': {
-						'doubleValue': file_filingData_receptionUserId
-						},
-							"receptionDocument": {
-								"documentId": {
-								"docLog": "E",
-								"docNbr": {
-									"doubleValue": ""
-								},
-								"docOrigin": str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
-								"docSeries": {
-									"doubleValue": file_fileId_fileSeries
-								},
-								"selected": ""
-								},
-								"documentSeqId": {
-								"docSeqName": "",
-								"docSeqNbr": {
-									"doubleValue": ""
-								},
-								"docSeqSeries": {
-									"doubleValue": file_fileId_fileSeries
-								},
-							"docSeqType": ""
-						}
-
-					}
+  try:
+    logo = logoData
+    if ownerList == "":
+      markinsertreg = { 
+      'arg0': {
+        'file': {
+          'fileId': {
+            'fileNbr': {
+            'doubleValue': fileId_fileId_fileNbr
+            },
+            'fileSeq': file_fileId_fileSeq,
+            'fileSeries': {
+            'doubleValue': file_fileId_fileSeries,
+            },
+            'fileType': file_fileId_fileType
+          },
+          'filingData': {
+            'applicationSubtype': file_filingData_applicationSubtype,
+            'applicationType': file_filingData_applicationType,
+            'captureUserId': {
+            'doubleValue': file_filingData_captureUserId
+            },
+            'filingDate': {
+            'dateValue': file_filingData_filingDate    ########################################
+            },
+            'captureDate': {
+              'dateValue': file_filingData_captureDate  ################### problemas con fecha futura
+            },
+            'lawCode': {
+            'doubleValue': file_filingData_lawCode
+            },
+            'paymentList': {
+            'currencyType': file_filingData_paymentList_currencyType,
+            'receiptAmount': file_filingData_paymentList_receiptAmount,
+            'receiptDate': {
+              'dateValue': file_filingData_paymentList_receiptDate
+            },
+            'receiptNbr': file_filingData_paymentList_receiptNbr,
+            'receiptNotes': file_filingData_paymentList_receiptNotes,
+            'receiptType': file_filingData_paymentList_receiptType
+            },
+            'receptionUserId': {
+            'doubleValue': file_filingData_receptionUserId
+            },
+              "receptionDocument": {
+                "documentId": {
+                "docLog": "E",
+                "docNbr": {
+                  "doubleValue": ""
+                },
+                "docOrigin": str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
+                "docSeries": {
+                  "doubleValue": file_fileId_fileSeries
+                },
+                "selected": ""
+                },
+                "documentSeqId": {
+                "docSeqName": "",
+                "docSeqNbr": {
+                  "doubleValue": ""
+                },
+                "docSeqSeries": {
+                  "doubleValue": file_fileId_fileSeries
+                },
+              "docSeqType": ""
+            }
+          }
+        },
+          'ownershipData': {
+            'ownerList': {
+              'person': {
+                'addressStreet': file_ownershipData_ownerList_person_addressStreet,
+                'nationalityCountryCode': file_ownershipData_ownerList_person_nationalityCountryCode,
+                'personName': file_ownershipData_ownerList_person_personName,
+                'residenceCountryCode': file_ownershipData_ownerList_person_residenceCountryCode
+              },
+              
+              
+            },
+     
+          },
+          'representationData': {
+			"documentId_PowerOfAttorneyRegister": {
+				"docLog": "E",
+				"docNbr": {
+				"doubleValue": documentId_PowerOfAttorneyRegister_docNbr
 				},
-					'ownershipData': {
-						'ownerList': {
-							'person': {
-								'addressStreet': file_ownershipData_ownerList_person_addressStreet,
-								'nationalityCountryCode': file_ownershipData_ownerList_person_nationalityCountryCode,
-								'personName': file_ownershipData_ownerList_person_personName,
-								'residenceCountryCode': file_ownershipData_ownerList_person_residenceCountryCode
-							},
-							
-							
-						},
-	   
-					},
-					'representationData': {
-						'representativeList': {
-						'indService': "",
-								'person': {
-										'addressStreet': str(personAgente(agentCode)[0].addressStreet).replace("None",""),
-										'addressStreetInOtherLang': str(personAgente(agentCode)[0].addressStreetInOtherLang).replace("None",""),
-										'addressZone': str(personAgente(agentCode)[0].addressZone).replace("None",""),
-										'agentCode': {
-										'doubleValue':str(personAgente(agentCode)[0].agentCode.doubleValue).replace("None","")
-										},
-										'cityCode': str(personAgente(agentCode)[0].cityCode).replace("None",""),
-										'cityName': str(personAgente(agentCode)[0].cityName).replace("None",""),
-										'companyRegisterRegistrationDate': str(personAgente(agentCode)[0].companyRegisterRegistrationDate).replace("None",""),
-										'companyRegisterRegistrationNbr': str(personAgente(agentCode)[0].companyRegisterRegistrationNbr).replace("None",""),
-										'email': str(personAgente(agentCode)[0].email).replace("None",""),
-										'indCompany': str(personAgente(str(agentCode))[0].indCompany),
-										'individualIdNbr': str(personAgente(agentCode)[0].individualIdNbr).replace("None",""),
-										'individualIdType': str(personAgente(agentCode)[0].individualIdType).replace("None",""),
-										'legalIdNbr': str(personAgente(agentCode)[0].legalIdNbr).replace("None",""),
-										'legalIdType': str(personAgente(agentCode)[0].legalIdType).replace("None",""),
-										'legalNature': str(personAgente(agentCode)[0].legalNature).replace("None",""),
-										'legalNatureInOtherLang': str(personAgente(agentCode)[0].legalNatureInOtherLang).replace("None",""),
-										'nationalityCountryCode': str(personAgente(agentCode)[0].nationalityCountryCode).replace("None",""),
-										'personGroupCode': "",
-										'personGroupName': str(personAgente(agentCode)[0].personGroupName).replace("None",""),
-										'personName': str(personAgente(agentCode)[0].personName).replace("None",""),
-										'personNameInOtherLang': str(personAgente(agentCode)[0].personNameInOtherLang).replace("None",""),
-										'residenceCountryCode': str(personAgente(agentCode)[0].residenceCountryCode).replace("None",""),
-										'stateCode': str(personAgente(agentCode)[0].stateCode).replace("None",""),
-										'stateName': str(personAgente(agentCode)[0].stateName).replace("None",""),
-										'telephone': str(personAgente(agentCode)[0].telephone).replace("None",""),
-										'zipCode': str(personAgente(agentCode)[0].zipCode).replace("None","")
-										},
-						'representativeType': file_representationData_representativeList_representativeType
-						}
-					},
-					'rowVersion': {
-						'doubleValue': file_rowVersion
-					}
+				"docOrigin": documentId_PowerOfAttorneyRegister_docOrigin,
+				"docSeries": {
+				"doubleValue": documentId_PowerOfAttorneyRegister_docSeries
 				},
-				'protectionData': {
-					'dummy': protectionData_dummy,
-					'niceClassList': {
-						'niceClassDescription': protectionData_niceClassList_niceClassDescription,
-						'niceClassDetailedStatus': protectionData_niceClassList_niceClassDetailedStatus,
-						'niceClassEdition': {
-						'doubleValue': protectionData_niceClassList_niceClassEdition
-						},
-						'niceClassGlobalStatus': protectionData_niceClassList_niceClassGlobalStatus,
-						'niceClassNbr': {
-						'doubleValue': protectionData_niceClassList_niceClassNbr
-						},
-						'niceClassVersion': protectionData_niceClassList_niceClassVersion
-					}
-				},
-				'rowVersion': {
-					'doubleValue': rowVersion
-				},
-				'signData': {
-					'logo': {
-						'logoData':base64.b64decode(logo),  #Convertir cadena en bytes
-						'logoType': logoType
-					},
-					'markName': signData_markName,
-					'signType': signData_signType
-				}
-			} }
-		else:
-			markinsertreg = { 
-			'arg0': {
-				'file': {
-					'fileId': {
-						'fileNbr': {
-						'doubleValue': fileId_fileId_fileNbr
-						},
-						'fileSeq': file_fileId_fileSeq,
-						'fileSeries': {
-						'doubleValue': file_fileId_fileSeries,
-						},
-						'fileType': file_fileId_fileType
-					},
-					'filingData': {
-						'applicationSubtype': file_filingData_applicationSubtype,
-						'applicationType': file_filingData_applicationType,
-						'captureUserId': {
-						'doubleValue': file_filingData_captureUserId
-						},
-						'filingDate': {
-						'dateValue': file_filingData_filingDate    ########################################
-						},
-						'captureDate': {
-							'dateValue': file_filingData_captureDate  ################### problemas con fecha futura
-						},
-						'lawCode': {
-						'doubleValue': file_filingData_lawCode
-						},
-						'paymentList': {
-						'currencyType': file_filingData_paymentList_currencyType,
-						'receiptAmount': file_filingData_paymentList_receiptAmount,
-						'receiptDate': {
-							'dateValue': file_filingData_paymentList_receiptDate
-						},
-						'receiptNbr': file_filingData_paymentList_receiptNbr,
-						'receiptNotes': file_filingData_paymentList_receiptNotes,
-						'receiptType': file_filingData_paymentList_receiptType
-						},
-						'receptionUserId': {
-						'doubleValue': file_filingData_receptionUserId
-						},							
-						"receptionDocument": {
-								"documentId": {
-								"docLog": "E",
-								"docNbr": {
-									"doubleValue": ""
-								},
-								"docOrigin": str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
-								"docSeries": {
-									"doubleValue": file_fileId_fileSeries
-								},
-								"selected": ""
-								},
-								"documentSeqId": {
-								"docSeqName": "",
-								"docSeqNbr": {
-									"doubleValue": ""
-								},
-								"docSeqSeries": {
-									"doubleValue": file_fileId_fileSeries
-								},
-							"docSeqType": ""
-						}
-					}
-					
-					},
-					'ownershipData': {
-						'ownerList': {
-							'person': {
-								'addressStreet': file_ownershipData_ownerList_person_addressStreet,
-								'nationalityCountryCode': file_ownershipData_ownerList_person_nationalityCountryCode,
-								'personName': file_ownershipData_ownerList_person_personName,
-								'residenceCountryCode': file_ownershipData_ownerList_person_residenceCountryCode
-							},
-							
-							
-						},
-						"ownerList": ownerList
+				"selected": ""
+			},
+            'representativeList': {
+            'indService': "",
+                'person': {
+                    'addressStreet': str(personAgente(agentCode)[0].addressStreet).replace("None",""),
+                    'addressStreetInOtherLang': str(personAgente(agentCode)[0].addressStreetInOtherLang).replace("None",""),
+                    'addressZone': str(personAgente(agentCode)[0].addressZone).replace("None",""),
+                    'agentCode': {
+                    'doubleValue':str(personAgente(agentCode)[0].agentCode.doubleValue).replace("None","")
+                    },
+                    'cityCode': str(personAgente(agentCode)[0].cityCode).replace("None",""),
+                    'cityName': str(personAgente(agentCode)[0].cityName).replace("None",""),
+                    'companyRegisterRegistrationDate': str(personAgente(agentCode)[0].companyRegisterRegistrationDate).replace("None",""),
+                    'companyRegisterRegistrationNbr': str(personAgente(agentCode)[0].companyRegisterRegistrationNbr).replace("None",""),
+                    'email': str(personAgente(agentCode)[0].email).replace("None",""),
+                    'indCompany': str(personAgente(str(agentCode))[0].indCompany),
+                    'individualIdNbr': str(personAgente(agentCode)[0].individualIdNbr).replace("None",""),
+                    'individualIdType': str(personAgente(agentCode)[0].individualIdType).replace("None",""),
+                    'legalIdNbr': str(personAgente(agentCode)[0].legalIdNbr).replace("None",""),
+                    'legalIdType': str(personAgente(agentCode)[0].legalIdType).replace("None",""),
+                    'legalNature': str(personAgente(agentCode)[0].legalNature).replace("None",""),
+                    'legalNatureInOtherLang': str(personAgente(agentCode)[0].legalNatureInOtherLang).replace("None",""),
+                    'nationalityCountryCode': str(personAgente(agentCode)[0].nationalityCountryCode).replace("None",""),
+                    'personGroupCode': "",
+                    'personGroupName': str(personAgente(agentCode)[0].personGroupName).replace("None",""),
+                    'personName': str(personAgente(agentCode)[0].personName).replace("None",""),
+                    'personNameInOtherLang': str(personAgente(agentCode)[0].personNameInOtherLang).replace("None",""),
+                    'residenceCountryCode': str(personAgente(agentCode)[0].residenceCountryCode).replace("None",""),
+                    'stateCode': str(personAgente(agentCode)[0].stateCode).replace("None",""),
+                    'stateName': str(personAgente(agentCode)[0].stateName).replace("None",""),
+                    'telephone': str(personAgente(agentCode)[0].telephone).replace("None",""),
+                    'zipCode': str(personAgente(agentCode)[0].zipCode).replace("None","")
+                    },
+            'representativeType': file_representationData_representativeList_representativeType
+            }
+          },
+          'rowVersion': {
+            'doubleValue': file_rowVersion
+          }
+        },
+		"limitationData": {
+			"byConsent": "not data",
+			"disclaimer": limitationData_disclaimer,
+			"disclaimerInOtherLang": "not data",
+			"regulations": "not data"
+		},		
+        'protectionData': {
+          'dummy': protectionData_dummy,
+          'niceClassList': {
+            'niceClassDescription': protectionData_niceClassList_niceClassDescription,
+            'niceClassDetailedStatus': protectionData_niceClassList_niceClassDetailedStatus,
+            'niceClassEdition': {
+            'doubleValue': protectionData_niceClassList_niceClassEdition
+            },
+            'niceClassGlobalStatus': protectionData_niceClassList_niceClassGlobalStatus,
+            'niceClassNbr': {
+            'doubleValue': protectionData_niceClassList_niceClassNbr
+            },
+            'niceClassVersion': protectionData_niceClassList_niceClassVersion
+          }
+        },
+        'rowVersion': {
+          'doubleValue': rowVersion
+        },
+        'signData': {
+          'logo': {
+              'colourDescription': logo_colourDescription,
+              'colourDescriptionInOtherLang': '',
+              'logoData':base64.b64decode(logo),  #Convertir cadena en bytes
+              'logoType': logoType,
+            },
+          'markName': signData_markName,
+          'signType': signData_signType
+        }
+      } }
+    else:
+      markinsertreg = { 
+      'arg0': {
+        'file': {
+          'fileId': {
+            'fileNbr': {
+            'doubleValue': fileId_fileId_fileNbr
+            },
+            'fileSeq': file_fileId_fileSeq,
+            'fileSeries': {
+            'doubleValue': file_fileId_fileSeries,
+            },
+            'fileType': file_fileId_fileType
+          },
+          'filingData': {
+            'applicationSubtype': file_filingData_applicationSubtype,
+            'applicationType': file_filingData_applicationType,
+            'captureUserId': {
+            'doubleValue': file_filingData_captureUserId
+            },
+            'filingDate': {
+            'dateValue': file_filingData_filingDate    ########################################
+            },
+            'captureDate': {
+              'dateValue': file_filingData_captureDate  ################### problemas con fecha futura
+            },
+            'lawCode': {
+            'doubleValue': file_filingData_lawCode
+            },
+            'paymentList': {
+            'currencyType': file_filingData_paymentList_currencyType,
+            'receiptAmount': file_filingData_paymentList_receiptAmount,
+            'receiptDate': {
+              'dateValue': file_filingData_paymentList_receiptDate
+            },
+            'receiptNbr': file_filingData_paymentList_receiptNbr,
+            'receiptNotes': file_filingData_paymentList_receiptNotes,
+            'receiptType': file_filingData_paymentList_receiptType
+            },
+            'receptionUserId': {
+            'doubleValue': file_filingData_receptionUserId
+            },              
+            "receptionDocument": {
+                "documentId": {
+                "docLog": "E",
+                "docNbr": {
+                  "doubleValue": ""
+                },
+                "docOrigin": str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
+                "docSeries": {
+                  "doubleValue": file_fileId_fileSeries
+                },
+                "selected": ""
+                },
+                "documentSeqId": {
+                "docSeqName": "",
+                "docSeqNbr": {
+                  "doubleValue": ""
+                },
+                "docSeqSeries": {
+                  "doubleValue": file_fileId_fileSeries
+                },
+              "docSeqType": ""
+            }
+          }
+          },
+          'ownershipData': {
+            'ownerList': {
+              'person': {
+                'addressStreet': file_ownershipData_ownerList_person_addressStreet,
+                'nationalityCountryCode': file_ownershipData_ownerList_person_nationalityCountryCode,
+                'personName': file_ownershipData_ownerList_person_personName,
+                'residenceCountryCode': file_ownershipData_ownerList_person_residenceCountryCode
+              },
+              
+              
+            },
+            "ownerList": ownerList
    
+          },
+          'representationData': {
+				"documentId_PowerOfAttorneyRegister": {
+					"docLog": "E",
+					"docNbr": {
+					"doubleValue": documentId_PowerOfAttorneyRegister_docNbr
 					},
-					'representationData': {
-						'representativeList': {
-						'indService': "",
-								'person': {
-										'addressStreet': str(personAgente(agentCode)[0].addressStreet).replace("None",""),
-										'addressStreetInOtherLang': str(personAgente(agentCode)[0].addressStreetInOtherLang).replace("None",""),
-										'addressZone': str(personAgente(agentCode)[0].addressZone).replace("None",""),
-										'agentCode': {
-										'doubleValue':str(personAgente(agentCode)[0].agentCode.doubleValue).replace("None","")
-										},
-										'cityCode': str(personAgente(agentCode)[0].cityCode).replace("None",""),
-										'cityName': str(personAgente(agentCode)[0].cityName).replace("None",""),
-										'companyRegisterRegistrationDate': str(personAgente(agentCode)[0].companyRegisterRegistrationDate).replace("None",""),
-										'companyRegisterRegistrationNbr': str(personAgente(agentCode)[0].companyRegisterRegistrationNbr).replace("None",""),
-										'email': str(personAgente(agentCode)[0].email).replace("None",""),
-										'indCompany': str(personAgente(str(agentCode))[0].indCompany),
-										'individualIdNbr': str(personAgente(agentCode)[0].individualIdNbr).replace("None",""),
-										'individualIdType': str(personAgente(agentCode)[0].individualIdType).replace("None",""),
-										'legalIdNbr': str(personAgente(agentCode)[0].legalIdNbr).replace("None",""),
-										'legalIdType': str(personAgente(agentCode)[0].legalIdType).replace("None",""),
-										'legalNature': str(personAgente(agentCode)[0].legalNature).replace("None",""),
-										'legalNatureInOtherLang': str(personAgente(agentCode)[0].legalNatureInOtherLang).replace("None",""),
-										'nationalityCountryCode': str(personAgente(agentCode)[0].nationalityCountryCode).replace("None",""),
-										'personGroupCode': "",
-										'personGroupName': str(personAgente(agentCode)[0].personGroupName).replace("None",""),
-										'personName': str(personAgente(agentCode)[0].personName).replace("None",""),
-										'personNameInOtherLang': str(personAgente(agentCode)[0].personNameInOtherLang).replace("None",""),
-										'residenceCountryCode': str(personAgente(agentCode)[0].residenceCountryCode).replace("None",""),
-										'stateCode': str(personAgente(agentCode)[0].stateCode).replace("None",""),
-										'stateName': str(personAgente(agentCode)[0].stateName).replace("None",""),
-										'telephone': str(personAgente(agentCode)[0].telephone).replace("None",""),
-										'zipCode': str(personAgente(agentCode)[0].zipCode).replace("None","")
-										},
-						'representativeType': file_representationData_representativeList_representativeType
-						}
+					"docOrigin": documentId_PowerOfAttorneyRegister_docOrigin,
+					"docSeries": {
+					"doubleValue": documentId_PowerOfAttorneyRegister_docSeries
 					},
-					'rowVersion': {
-						'doubleValue': file_rowVersion
-					}
-				},
-				'protectionData': {
-					'dummy': protectionData_dummy,
-					'niceClassList': {
-						'niceClassDescription': protectionData_niceClassList_niceClassDescription,
-						'niceClassDetailedStatus': protectionData_niceClassList_niceClassDetailedStatus,
-						'niceClassEdition': {
-						'doubleValue': protectionData_niceClassList_niceClassEdition
-						},
-						'niceClassGlobalStatus': protectionData_niceClassList_niceClassGlobalStatus,
-						'niceClassNbr': {
-						'doubleValue': protectionData_niceClassList_niceClassNbr
-						},
-						'niceClassVersion': protectionData_niceClassList_niceClassVersion
-					}
-				},
-				'rowVersion': {
-					'doubleValue': rowVersion
-				},
-				'signData': {
-					'logo': {
-						'logoData':base64.b64decode(logo),  #Convertir cadena en bytes
-						'logoType': logoType
-					},
-					'markName': signData_markName,
-					'signType': signData_signType
-				}
-			} }
-		clientMark.service.MarkInsert(**markinsertreg)
-		return "true"
-	except zeep.exceptions.Fault as e:
-		return(str(e))
+					"selected": ""
+				},			  
+            'representativeList': {
+            'indService': "",
+                'person': {
+                    'addressStreet': str(personAgente(agentCode)[0].addressStreet).replace("None",""),
+                    'addressStreetInOtherLang': str(personAgente(agentCode)[0].addressStreetInOtherLang).replace("None",""),
+                    'addressZone': str(personAgente(agentCode)[0].addressZone).replace("None",""),
+                    'agentCode': {
+                    'doubleValue':str(personAgente(agentCode)[0].agentCode.doubleValue).replace("None","")
+                    },
+                    'cityCode': str(personAgente(agentCode)[0].cityCode).replace("None",""),
+                    'cityName': str(personAgente(agentCode)[0].cityName).replace("None",""),
+                    'companyRegisterRegistrationDate': str(personAgente(agentCode)[0].companyRegisterRegistrationDate).replace("None",""),
+                    'companyRegisterRegistrationNbr': str(personAgente(agentCode)[0].companyRegisterRegistrationNbr).replace("None",""),
+                    'email': str(personAgente(agentCode)[0].email).replace("None",""),
+                    'indCompany': str(personAgente(str(agentCode))[0].indCompany),
+                    'individualIdNbr': str(personAgente(agentCode)[0].individualIdNbr).replace("None",""),
+                    'individualIdType': str(personAgente(agentCode)[0].individualIdType).replace("None",""),
+                    'legalIdNbr': str(personAgente(agentCode)[0].legalIdNbr).replace("None",""),
+                    'legalIdType': str(personAgente(agentCode)[0].legalIdType).replace("None",""),
+                    'legalNature': str(personAgente(agentCode)[0].legalNature).replace("None",""),
+                    'legalNatureInOtherLang': str(personAgente(agentCode)[0].legalNatureInOtherLang).replace("None",""),
+                    'nationalityCountryCode': str(personAgente(agentCode)[0].nationalityCountryCode).replace("None",""),
+                    'personGroupCode': "",
+                    'personGroupName': str(personAgente(agentCode)[0].personGroupName).replace("None",""),
+                    'personName': str(personAgente(agentCode)[0].personName).replace("None",""),
+                    'personNameInOtherLang': str(personAgente(agentCode)[0].personNameInOtherLang).replace("None",""),
+                    'residenceCountryCode': str(personAgente(agentCode)[0].residenceCountryCode).replace("None",""),
+                    'stateCode': str(personAgente(agentCode)[0].stateCode).replace("None",""),
+                    'stateName': str(personAgente(agentCode)[0].stateName).replace("None",""),
+                    'telephone': str(personAgente(agentCode)[0].telephone).replace("None",""),
+                    'zipCode': str(personAgente(agentCode)[0].zipCode).replace("None","")
+                    },
+            'representativeType': file_representationData_representativeList_representativeType
+            }
+          },
+          'rowVersion': {
+            'doubleValue': file_rowVersion
+          }
+        },
+		"limitationData": {
+			"byConsent": "not data",
+			"disclaimer": limitationData_disclaimer,
+			"disclaimerInOtherLang": "not data",
+			"regulations": "not data"
+		},		
+        'protectionData': {
+          'dummy': protectionData_dummy,
+          'niceClassList': {
+            'niceClassDescription': protectionData_niceClassList_niceClassDescription,
+            'niceClassDetailedStatus': protectionData_niceClassList_niceClassDetailedStatus,
+            'niceClassEdition': {
+            'doubleValue': protectionData_niceClassList_niceClassEdition
+            },
+            'niceClassGlobalStatus': protectionData_niceClassList_niceClassGlobalStatus,
+            'niceClassNbr': {
+            'doubleValue': protectionData_niceClassList_niceClassNbr
+            },
+            'niceClassVersion': protectionData_niceClassList_niceClassVersion
+          }
+        },
+        'rowVersion': {
+          'doubleValue': rowVersion
+        },
+        'signData': {
+          'logo': {
+              'colourDescription': logo_colourDescription,
+              'colourDescriptionInOtherLang': '',
+              'logoData':base64.b64decode(logo),  #Convertir cadena en bytes
+              'logoType': logoType,
+            },
+          'markName': signData_markName,
+          'signType': signData_signType
+        }
+      } }
+    clientMark.service.MarkInsert(**markinsertreg)
+    return "true"
+  except zeep.exceptions.Fault as e:
+    return(str(e))
 		
 def mark_insert_ren(
 					file_fileId_fileNbr,

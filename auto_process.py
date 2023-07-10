@@ -760,8 +760,15 @@ def insertReg(form_Id):
 				insert_mark.protectionData_niceClassList_niceClassGlobalStatus,
 				insert_mark.protectionData_niceClassList_niceClassNbr,
 				insert_mark.protectionData_niceClassList_niceClassVersion,
+
+				insert_mark.documentId_PowerOfAttorneyRegister_docNbr,
+				insert_mark.documentId_PowerOfAttorneyRegister_docOrigin,
+				insert_mark.documentId_PowerOfAttorneyRegister_docSeries,
+				insert_mark.limitationData_disclaimer,
+
 				insert_mark.logoData,
 				insert_mark.logoType,
+				insert_mark.logo_colourDescription,
 				insert_mark.signData_markName,
 				insert_mark.signData_signType,
 				insert_mark.ownerList
