@@ -141,7 +141,7 @@ class insertRegModel(object):
 				self.signType="L"
 				self.LogData = image_url_to_b64(self.data['distintivofg'])
 				self.LogTyp = "JPG"	
-				self.logoDesc = 	"not data"	
+				self.logoDesc = 	self.data['deslogotipo']	
 		except Exception as e:
 			pass
 
@@ -150,7 +150,7 @@ class insertRegModel(object):
 				self.signType="L"
 				self.LogData = image_url_to_b64(self.data['distintivotr'])
 				self.LogTyp = "JPG"
-				self.logoDesc = 	"not data"			
+				self.logoDesc = 	self.data['deslogotipo']			
 		except Exception as e:
 			pass
 
@@ -159,7 +159,7 @@ class insertRegModel(object):
 				self.signType="L"
 				self.LogData = image_url_to_b64(self.data['distintivo'])
 				self.LogTyp = "JPG"
-				self.logoDesc = 	"not data"							
+				self.logoDesc = 	self.data['deslogotipo']							
 		except Exception as e:
 			pass
 
@@ -168,7 +168,7 @@ class insertRegModel(object):
 				self.signType="B"
 				self.LogData = image_url_to_b64(self.data['distintivo'])
 				self.LogTyp = "JPG"
-				self.logoDesc = 	"not data"				
+				self.logoDesc = 	self.data['deslogotipo']				
 		except Exception as e:
 			pass
 
@@ -177,7 +177,7 @@ class insertRegModel(object):
 				self.signType="B"
 				self.LogData = image_url_to_b64(self.data['distintivo'])
 				self.LogTyp = "JPG"
-				self.logoDesc = 	"not data"				
+				self.logoDesc = 	self.data['deslogotipo']				
 		except Exception as e:
 			pass
 
@@ -186,7 +186,7 @@ class insertRegModel(object):
 				self.signType="T"
 				self.LogData = image_url_to_b64(self.data['distintivotr'])
 				self.LogTyp = "JPG"
-				self.logoDesc = 	"not data"				
+				self.logoDesc = 	self.data['deslogotipo']				
 		except Exception as e:
 			pass
 
@@ -195,7 +195,7 @@ class insertRegModel(object):
 				self.signType="T"
 				self.LogData = image_url_to_b64(self.data['distintivotr'])
 				self.LogTyp = "JPG"
-				self.logoDesc = 	"not data"										
+				self.logoDesc = 	self.data['deslogotipo']										
 		except Exception as e:
 			pass
 
@@ -308,13 +308,13 @@ class insertRegModel(object):
 		
 		self.protectionData_niceClassList_niceClassVersion = "2023.01"
 
-		self.documentId_PowerOfAttorneyRegister_docNbr = "2136019" # self.data
+		self.documentId_PowerOfAttorneyRegister_docNbr = self.data['solpodernro']
 
-		self.documentId_PowerOfAttorneyRegister_docOrigin = "1" # self.data
+		self.documentId_PowerOfAttorneyRegister_docOrigin = self.data['origenreg']
 
-		self.documentId_PowerOfAttorneyRegister_docSeries = "2021" # self.data
+		self.documentId_PowerOfAttorneyRegister_docSeries = self.data['seriereg']
 
-		self.limitationData_disclaimer = "not data" # self.data
+		self.limitationData_disclaimer = self.data['reivindicaciones']
 
 		self.logoData = self.LogData
 		self.logoType = self.LogTyp

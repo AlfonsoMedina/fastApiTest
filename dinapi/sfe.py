@@ -18,7 +18,6 @@ default_val = lambda arg: arg if arg == "null" else ""
 list_titulare = []
 
 
-
 def respuesta_sfe_campo(arg):
 	try:
 		list_campos = []
@@ -284,7 +283,44 @@ def registro_sfe(arg):
 					global_data['espe']=i['valor']
 			except Exception as e:
 				global_data['espe'] = "No definido"
-		
+
+			try:
+				if(i['campo'] == 'marca_deslogotipo'):
+					global_data['deslogotipo']=i['valor']
+			except Exception as e:
+				global_data['deslogotipo'] = "No definido"	
+			
+			try:
+				if(i['campo'] == 'marca_especificar'):
+					global_data['reivindicaciones']=i['valor']
+			except Exception as e:
+				global_data['reivindicaciones'] = "No definido"
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_solpodernro'):
+					global_data['solpodernro']=i['valor']
+			except Exception as e:
+				global_data['solpodernro'] = "No definido"
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_tiporeg'):
+					global_data['tiporeg']=i['valor']
+			except Exception as e:
+				global_data['tiporeg'] = "No definido"
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_origenreg'):
+					global_data['origenreg']=i['valor']
+			except Exception as e:
+				global_data['origenreg'] = "No definido"
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_seriereg'):
+					global_data['seriereg']=i['valor']
+			except Exception as e:
+				global_data['seriereg'] = "No definido"
+
+
 		#print(global_data)
 		return(global_data)
 	
@@ -2021,7 +2057,7 @@ def open_process_day(fecha):
 		num = int(getLast_number())+1
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute(connex.OPEN_PROCESS_DATE.format(fecha,num,(num-1)))
+		cursor.execute(connex.OPEN_PROCESS_DATE.format(fecha,num,(num)))
 		conn.commit()
 		conn.close()
 		return(True)

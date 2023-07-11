@@ -21,12 +21,16 @@ import zeep
 default_val_e99 = lambda arg: arg if arg != "" else "E99"
 list_id = []
 sigla:string = ''
+
 def listar():
 	#print('............................................................................')
 	captura_pendientes() # Captura lista pendiente
 	time.sleep(int(connex.MEA_TIEMPO_ACTUALIZACION))#int(connex.MEA_TIEMPO_ACTUALIZACION)
 	listar()
 
+#this func I returned one list with pending to process.
+#query today with state 7 for the list create
+#the list is composed of id and formTyp  example: ['1586/REG',1572/CCP]"""
 def captura_pendientes():
 	list_id = []
 	today = time.strftime("%Y-%m-%d")
@@ -46,6 +50,7 @@ def captura_pendientes():
 			time.sleep(1)
 
 #arg0 id and arg1 sigla in state 7
+#this func insert a doc whatever to case, with payment, not paymet, mark or userDoc...
 def insert_list(arg0:string,arg1:string):
 	try:
 		pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
@@ -131,6 +136,7 @@ def insert_list(arg0:string,arg1:string):
 
 	return("Ok")		
 
+#insert for doc relation with main file or not relation 
 def compileAndInsert(form_Id,typ,in_group):
 	print('F1')
 	cheking = catch_toError(form_Id)
@@ -768,7 +774,9 @@ def insertReg(form_Id):
 
 				insert_mark.logoData,
 				insert_mark.logoType,
+
 				insert_mark.logo_colourDescription,
+				
 				insert_mark.signData_markName,
 				insert_mark.signData_signType,
 				insert_mark.ownerList
