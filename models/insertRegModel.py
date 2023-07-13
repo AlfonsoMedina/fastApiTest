@@ -308,7 +308,7 @@ class insertRegModel(object):
 		
 		self.protectionData_niceClassList_niceClassVersion = "2023.01"
 
-		self.documentId_PowerOfAttorneyRegister_docNbr = self.data['solpodernro'] # 2136019
+		self.documentId_PowerOfAttorneyRegister_docNbr = self.data['solpodernro'] 
 
 		self.documentId_PowerOfAttorneyRegister_docOrigin = self.data['origenreg']
 

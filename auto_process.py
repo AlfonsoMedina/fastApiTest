@@ -50,7 +50,7 @@ def captura_pendientes():
 			time.sleep(1)
 
 #arg0 id and arg1 sigla in state 7
-#this func insert a doc whatever to case, with payment, not paymet, mark or userDoc...
+#this func insert a doc whatever to case: payment, not payment, mark or userDoc...
 def insert_list(arg0:string,arg1:string):
 	try:
 		pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
@@ -776,7 +776,7 @@ def insertReg(form_Id):
 				insert_mark.logoType,
 
 				insert_mark.logo_colourDescription,
-				
+
 				insert_mark.signData_markName,
 				insert_mark.signData_signType,
 				insert_mark.ownerList
@@ -1117,9 +1117,6 @@ def error_process(form_Id,error_msg,bool_estado):
 	data_validator(f'{error_msg}: {form_Id}',bool_estado,form_Id)
 	cambio_estado_soporte(form_Id)
 	rule_notification('SOP',form_Id)	
-
-
-
 
 """
 

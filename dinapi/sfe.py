@@ -2054,10 +2054,10 @@ def closed_process_day(fecha):
 #Abrir dia
 def open_process_day(fecha):
 	try:
-		num = int(getLast_number())+1
+		num = int(getLast_number())
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute(connex.OPEN_PROCESS_DATE.format(fecha,num,(num)))
+		cursor.execute(connex.OPEN_PROCESS_DATE.format(fecha,num+1,(num)))
 		conn.commit()
 		conn.close()
 		return(True)
@@ -2071,18 +2071,6 @@ def newDayProcess():
 	if closed_process_day(last_date) == True:		# Cierra ultima fecha 
 		if open_process_day(today) == True:			# Abre fecha nueva
 			return(True)			
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 '''
