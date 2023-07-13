@@ -5,7 +5,7 @@ import psycopg2
 from zeep import Client
 import zeep
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import email_receiver, exist_main_mark, exist_notifi, main_State, registro_sfe, renovacion_sfe, respuesta_sfe_campo,  titulare_reg
+from dinapi.sfe import email_receiver, exist_main_mark, exist_notifi, main_State, pendientes_sfe_not_pag, registro_sfe, renovacion_sfe, respuesta_sfe_campo,  titulare_reg
 from email_pdf_AG import registro_pdf_con_acuse
 from getFileDoc import compilePDF, getFile, getFile_reg_and_ren
 from tools.send_mail import enviar_back_notFile
@@ -204,6 +204,10 @@ def rule_notification(sig,exp):
 				pass
 		
 
+print(registro_sfe('26333'))
+
+#print(pendientes_sfe_not_pag('2023-07-13'))
+
 #rule_notification('CP','2348740')
 
 #rule_notification('PDM','2348741')
@@ -221,7 +225,7 @@ def rule_notification(sig,exp):
 def test(a=17,b=32):
 	return(a,b)
 
-print(getPoder('76583'))
+#print(getPoder('76583'))
 
 #print(test())
 
@@ -234,7 +238,7 @@ print(getPoder('76583'))
 #print(registro_sfe('1982'))
 
 
-print(registro_sfe('2019'))
+#print(registro_sfe('2019'))
 
 
 

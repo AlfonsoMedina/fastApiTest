@@ -297,25 +297,25 @@ def registro_sfe(arg):
 				global_data['reivindicaciones'] = "No definido"
 
 			try:
-				if(i['campo'] == 'datosrepresentacion_regexpediente'):
+				if(i['campo'] == 'datosrepresentacion_solpodernro'):
 					global_data['solpodernro']=i['valor']
 			except Exception as e:
 				global_data['solpodernro'] = "No definido"
 
 			try:
-				if(i['campo'] == 'datosrepresentacion_regtipo'):
+				if(i['campo'] == 'datosrepresentacion_tiporeg'):
 					global_data['tiporeg']=i['valor']
 			except Exception as e:
 				global_data['tiporeg'] = "No definido"
 
 			try:
-				if(i['campo'] == 'datosrepresentacion_regorigen'):
+				if(i['campo'] == 'datosrepresentacion_origenreg'):
 					global_data['origenreg']=i['valor']
 			except Exception as e:
 				global_data['origenreg'] = "No definido"
 
 			try:
-				if(i['campo'] == 'datosrepresentacion_regserie'):
+				if(i['campo'] == 'datosrepresentacion_seriereg'):
 					global_data['seriereg']=i['valor']
 			except Exception as e:
 				global_data['seriereg'] = "No definido"
