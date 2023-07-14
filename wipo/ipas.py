@@ -58,7 +58,6 @@ def mark_getlistReg(solidNbr):
 	MarkGetListReg = {'arg0': {'criteriaRegistrationData': {'registrationNbrFrom': {'doubleValue':solidNbr,},'registrationNbrTo': {'doubleValue':solidNbr}},},}
 	return clientMark.service.MarkGetList(**MarkGetListReg)
 
-
 #consulta registro de poder
 def getPoder(registro):
 	try:
@@ -10927,7 +10926,6 @@ def daily_log_open(fecha):
 	except zeep.exceptions.Fault as e:
 		return(str(e))
 
-
 def daily_log_close(fecha):
 	try:
 		mDailyLog = {
@@ -10955,7 +10953,6 @@ def daily_log_close(fecha):
 		return(str(clientMark.service.DailyLogUpdate(**mDailyLog)))
 	except zeep.exceptions.Fault as e:
 		return(str(e))
-
 
 def get_agente(arg):
 	code = {

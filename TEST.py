@@ -204,7 +204,7 @@ def rule_notification(sig,exp):
 				pass
 		
 
-print(registro_sfe('26333'))
+print(registro_sfe('26336'))
 
 #print(pendientes_sfe_not_pag('2023-07-13'))
 

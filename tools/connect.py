@@ -105,10 +105,16 @@ password_SFE_conn ='user-sprint--201901'
 database_SFE_conn = 'db_sfe_production'
 '''
 ###################################################################
-host_SFE_conn = '192.168.50.219'
-user_SFE_conn = 'user-developer'
-password_SFE_conn ='user-developer--201901'
-database_SFE_conn = 'db_sfe_production'
+#host_SFE_conn = '192.168.50.219'
+#user_SFE_conn = 'user-developer'
+#password_SFE_conn ='user-developer--201901'
+#database_SFE_conn = 'db_sfe_production'
+
+host_SFE_conn = MEA_DB_ORIGEN_host
+user_SFE_conn = MEA_DB_ORIGEN_user
+password_SFE_conn = MEA_DB_ORIGEN_password
+database_SFE_conn = MEA_DB_ORIGEN_database
+
 
 #centura
 host_centura = '192.168.50.231'
