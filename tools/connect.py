@@ -33,7 +33,7 @@ MEA_OFICINA_ORIGEN_cap = config_parametro('64')['valor3']
 ###################################################################
 
 #Base de datos PUBLICACIONES posgresSql v14 
-db_host = '192.168.50.215'
+db_host = '192.168.50.216'
 db_user='user_app_publicacion'
 db_password='user_app_publicacion-202201!'
 db_database='db_publicacion'
@@ -49,7 +49,7 @@ db_database='db_publicacion'
 ###################################################################
 
 #Base de datos MESA DE ENTRADA posgresSql v14
-hostME = '192.168.50.215'
+hostME = '192.168.50.216'
 userME='user_app_recepcion'
 passwordME='user_app_recepcion-202201!'
 databaseME='db_sfe_presencial'
@@ -73,7 +73,7 @@ databaseME='db_sfe_presencial'
 ###################################################################
 
 #Base de datos CAJA posgresSql v14 
-hostCJ = '192.168.50.215'
+hostCJ = '192.168.50.216'
 userCJ='user_app_caja'
 passwordCJ='user_app_caja-202201!'
 databaseCJ='db_caja_dinapi'
@@ -209,7 +209,10 @@ http://192.168.50.194:8050/Stat/stat?type=loggedUser
 """
 
 
-
+            #JCENTURION
+            #IMATTO
+            #IPAS TEST - 50.155 (glassfish)
+            # nombre de archivo en ves de E poner PY
 
 
 

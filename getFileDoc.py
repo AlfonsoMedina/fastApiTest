@@ -14,7 +14,7 @@ def getFile(doc_id,fileNbr):
 	#data_doc = user_doc_getList_escrito(fileNbr)
 	#print(data_doc)
 	remote_url = respuesta_sfe_campo(doc_id)['observacion_documentos']['archivo']['url']
-	local_file = str(MEA_ADJUNTOS_DESTINO_location)+str('3')+'-'+str('E')+'-'+str(capture_year())+'-'+str(fileNbr)+'.pdf' 
+	local_file = str(MEA_ADJUNTOS_DESTINO_location)+str('3')+'-'+str('PY')+'-'+str(capture_year())+'-'+str(fileNbr)+'.pdf' 
 	#local_file = f"temp_pdf/ {str('3')}-{str('E')}-{str('2023')}-{str(fileNbr)}.pdf" 					
 	request.urlretrieve(remote_url, local_file)
 
