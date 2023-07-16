@@ -13,7 +13,7 @@ from sfe_no_presencial_reg_local import registro_pdf_sfe_local
 from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.filing_date import capture_day
 import tools.connect as connex
-from wipo.function_for_reception_in import user_doc_getList_escrito
+from wipo.function_for_reception_in import user_doc_getList_escrito, user_doc_read_min
 from wipo.ipas import Process_Read_Action, Process_Read_EventList, daily_log_close, daily_log_open, fetch_all_user_mark, getPoder, mark_getlist, process_read
 import tools.connect as conn_serv
 from PyPDF2 import PdfFileMerger,PdfMerger
@@ -204,7 +204,9 @@ def rule_notification(sig,exp):
 				pass
 		
 
-print(registro_sfe('26336'))
+#print(registro_sfe('26336'))
+
+print(user_doc_read_min('E','2355704','3','2023'))
 
 #print(pendientes_sfe_not_pag('2023-07-13'))
 

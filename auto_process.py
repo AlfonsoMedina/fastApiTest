@@ -425,7 +425,8 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 			rule_notification('SOP',form_Id)
 		# end USERDOCRECEIVE ####################################################################################
 
-		sigla_desc = str(escrito_relacionado.filingData_userdocTypeList_userdocName).split("- ")
+		sigla_desc = str(escrito_relacionado.filingData_userdocTypeList_userdocType).split("- ")
+
 
 		# start USERDOCUPDATE ###################################################################################		
 		try:
@@ -466,7 +467,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 							escrito_relacionado.filingData_documentId_receptionDocument_docNbr,
 							escrito_relacionado.filingData_documentId_receptionDocument_docOrigin,
 							escrito_relacionado.filingData_documentId_receptionDocument_docSeries,
-							sigla_desc[1],
+							escrito_relacionado.filingData_userdocTypeList_userdocName,
 							escrito_relacionado.filingData_userdocTypeList_userdocType,					
 							"1",
 							escrito_relacionado.newOwnershipData_ownerList_ownershipNotes,
@@ -767,6 +768,7 @@ def insertReg(form_Id):
 				insert_mark.protectionData_niceClassList_niceClassNbr,
 				insert_mark.protectionData_niceClassList_niceClassVersion,
 
+				insert_mark.documentId_PowerOfAttorneyRegister_docLog,
 				insert_mark.documentId_PowerOfAttorneyRegister_docNbr,
 				insert_mark.documentId_PowerOfAttorneyRegister_docOrigin,
 				insert_mark.documentId_PowerOfAttorneyRegister_docSeries,

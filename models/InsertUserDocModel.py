@@ -412,13 +412,15 @@ class userDocModel(object):
 		except Exception as e:
 			nombreapellido= ""
 		
+
 		self.applicant_person_personNameInOtherLang= ""
 
-		if nombrerazon != 'sin valor':
+
+		if nombrerazon != '':
 			self.applicant_person_personName = nombrerazon
-		elif razonsocial != 'sin valor':
+		elif razonsocial != '':
 			self.applicant_person_personName = razonsocial
-		elif nombreapellido != 'sin valor':
+		elif nombreapellido != '':
 			self.applicant_person_personName = nombreapellido
 
 
@@ -594,28 +596,28 @@ class userDocModel(object):
 		self.newOwnershipData_ownerList_person_legalNatureInOtherLang = ""
 		
 
-		if datospersonales_pais != 'sin valor':
+		if datospersonales_pais != '':
 			self.newOwnershipData_ownerList_person_nationalityCountryCode= datospersonales_pais
-		if expedienteoescrito_pais != 'sin valor':
+		if expedienteoescrito_pais != '':
 			self.newOwnershipData_ownerList_person_nationalityCountryCode= expedienteoescrito_pais
 
 		
 		self.newOwnershipData_ownerList_person_personGroupCode= ""
 		self.newOwnershipData_ownerList_person_personGroupName= ""
 		
-		if nombrerazon != 'sin valor':
+		if nombrerazon != '':
 			self.newOwnershipData_ownerList_person_personName = nombrerazon
-		elif razonsocial != 'sin valor':
+		elif razonsocial != '':
 			self.newOwnershipData_ownerList_person_personName = razonsocial
-		elif nombreapellido != 'sin valor':
+		elif nombreapellido != '':
 			self.newOwnershipData_ownerList_person_personName = nombreapellido
 
 		
 		self.newOwnershipData_ownerList_person_personNameInOtherLang= ""
 
-		if datospersonales_pais != 'sin valor':
+		if datospersonales_pais != '':
 			self.newOwnershipData_ownerList_person_residenceCountryCode= datospersonales_pais
-		if expedienteoescrito_pais != 'sin valor':
+		if expedienteoescrito_pais != '':
 			self.newOwnershipData_ownerList_person_residenceCountryCode= expedienteoescrito_pais
 
 		

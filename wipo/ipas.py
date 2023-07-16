@@ -627,6 +627,7 @@ def mark_insert_reg(
 					protectionData_niceClassList_niceClassGlobalStatus,
 					protectionData_niceClassList_niceClassNbr,
 					protectionData_niceClassList_niceClassVersion,
+					documentId_PowerOfAttorneyRegister_docLog,
 					documentId_PowerOfAttorneyRegister_docNbr,
 					documentId_PowerOfAttorneyRegister_docOrigin,
 					documentId_PowerOfAttorneyRegister_docSeries,
@@ -720,7 +721,7 @@ def mark_insert_reg(
           },
           'representationData': {
 			"documentId_PowerOfAttorneyRegister": {
-				"docLog": "E",
+				"docLog": documentId_PowerOfAttorneyRegister_docLog,
 				"docNbr": {
 				"doubleValue": documentId_PowerOfAttorneyRegister_docNbr
 				},
@@ -886,7 +887,7 @@ def mark_insert_reg(
           },
           'representationData': {
 				"documentId_PowerOfAttorneyRegister": {
-					"docLog": "E",
+					"docLog": documentId_PowerOfAttorneyRegister_docLog,
 					"docNbr": {
 					"doubleValue": documentId_PowerOfAttorneyRegister_docNbr
 					},

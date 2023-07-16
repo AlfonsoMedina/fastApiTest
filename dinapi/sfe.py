@@ -58,7 +58,7 @@ def respuesta_sfe_campo(arg):
 					try:
 						list_valores[x] = row[0][6][item]['valor']
 					except Exception as e:
-						list_valores[x] = 'sin valor'
+						list_valores[x] = ''
 
 	except Exception as e:
 		print(e)
@@ -296,29 +296,56 @@ def registro_sfe(arg):
 			except Exception as e:
 				global_data['reivindicaciones'] = "No definido"
 
-			try:
-				if(i['campo'] == 'datosrepresentacion_solpodernro'):
-					global_data['solpodernro']=i['valor']
-			except Exception as e:
-				global_data['solpodernro'] = "No definido"
+
 
 			try:
-				if(i['campo'] == 'datosrepresentacion_tiporeg'):
-					global_data['tiporeg']=i['valor']
+				if(i['campo'] == 'datosrepresentacion_regexpediente'):
+					global_data['regexpediente']=i['valor']
 			except Exception as e:
-				global_data['tiporeg'] = "No definido"
+				global_data['regexpediente'] = ""
 
 			try:
-				if(i['campo'] == 'datosrepresentacion_origenreg'):
-					global_data['origenreg']=i['valor']
+				if(i['campo'] == 'datosrepresentacion_regtipo'):
+					global_data['regtipo']=i['valor']
 			except Exception as e:
-				global_data['origenreg'] = "No definido"
+				global_data['regtipo'] = ""
 
 			try:
-				if(i['campo'] == 'datosrepresentacion_seriereg'):
-					global_data['seriereg']=i['valor']
+				if(i['campo'] == 'datosrepresentacion_regorigen'):
+					global_data['regorigen']=i['valor']
 			except Exception as e:
-				global_data['seriereg'] = "No definido"
+				global_data['regorigen'] = ""
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_regserie'):
+					global_data['regserie']=i['valor']
+			except Exception as e:
+				global_data['regserie'] = ""
+
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_solexpediente'):
+					global_data['solexpediente']=i['valor']
+			except Exception as e:
+				global_data['solexpediente'] = ""
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_soltipo'):
+					global_data['soltipo']=i['valor']
+			except Exception as e:
+				global_data['soltipo'] = ""
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_solorigen'):
+					global_data['solorigen']=i['valor']
+			except Exception as e:
+				global_data['solorigen'] = ""
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_solserie'):
+					global_data['solserie']=i['valor']
+			except Exception as e:
+				global_data['solserie'] = ""
 
 
 		#print(global_data)

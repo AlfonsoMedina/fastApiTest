@@ -2102,6 +2102,7 @@ def TEST_MEA_reg(id_tramite):
 	create_userdoc['protectionData_niceClassList_niceClassNbr'] = catch_data.protectionData_niceClassList_niceClassNbr
 	create_userdoc['protectionData_niceClassList_niceClassVersion'] = catch_data.protectionData_niceClassList_niceClassVersion
 
+	create_userdoc['documentId_PowerOfAttorneyRegister_docLog'] = catch_data.documentId_PowerOfAttorneyRegister_docLog
 	create_userdoc['documentId_PowerOfAttorneyRegister_docNbr'] = catch_data.documentId_PowerOfAttorneyRegister_docNbr
 	create_userdoc['documentId_PowerOfAttorneyRegister_docOrigin'] = catch_data.documentId_PowerOfAttorneyRegister_docOrigin
 	create_userdoc['documentId_PowerOfAttorneyRegister_docSeries'] = catch_data.documentId_PowerOfAttorneyRegister_docSeries
