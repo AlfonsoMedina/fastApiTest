@@ -2091,7 +2091,6 @@ def open_process_day(fecha):
 	except Exception as e:
 		return(e)
 
-
 def newDayProcess():
 	last_date = getDia_proceso() 					# Ultima fecha de proceso 
 	today = captureDate.capture_day()				# fecha de hoy

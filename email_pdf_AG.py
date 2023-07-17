@@ -11,7 +11,7 @@ import psycopg2
 from dinapi.sfe import pendiente_sfe, qr_code, titulare_reg
 import tools.filing_date as captureDate
 from wipo.ipas import *
-from tools.base64Decode import decode_pdf
+from tools.base64Decode import decode_pdf, delete_img
 from tools.data_format import fecha_barra, hora, signo_format
 import tools.connect as connex
 
@@ -260,7 +260,7 @@ def envio_agente_recibido_reg(arg0,fileNbr):
 			pdf.text(x=100, y=20, txt=str(form_descrip(str(form_id(arg0)[0]))))			
 
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=74, y=25, txt='Fecha envio')
+			pdf.text(x=58, y=25, txt='Fecha de presentación')
 			pdf.set_font("helvetica", "", 8)
 			pdf.text(x=100, y=25, txt=fecha_barra(str(form_id(arg0)[1]))+" "+hora_envio[0])			
 
@@ -572,7 +572,7 @@ def registro_pdf_con_acuse(arg):
 			pdf.text(x=100, y=20, txt=str(form_descrip(str(form_id(arg)[0]))))			
 			
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=74, y=25, txt='Fecha envio')
+			pdf.text(x=58, y=25, txt='Fecha de presentación')
 			pdf.set_font("helvetica", "", 8)
 			pdf.text(x=100, y=25, txt=fecha_barra(str(form_id(arg)[1]))+" "+hora_envio[0])			
 
@@ -625,7 +625,7 @@ def registro_pdf_con_acuse(arg):
 			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
 			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
 			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )			
-			pdf.cell(w=35, h=8, txt='Fecha de Envío', border=1 , align='c' )
+			pdf.cell(w=35, h=8, txt='Fecha Presentación', border=1 , align='c' )
 			
 			try:
 				pdf.cell(w=155, h=8, txt=convert_fecha_hora_sfe(str(global_data['fecha_envio'])), border=1, align='l' )
@@ -1059,7 +1059,7 @@ def envio_agente_recibido_ren(arg0,fileNbr):
 			pdf.text(x=100, y=20, txt=str(form_descrip(str(form_id(arg0)[0]))))			
 
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=74, y=25, txt='Fecha envio')
+			pdf.text(x=58, y=25, txt='Fecha de presentación')
 			pdf.set_font("helvetica", "", 8)
 			pdf.text(x=100, y=25, txt=fecha_barra(str(form_id(arg0)[1]))+" "+hora_envio[0])			
 
@@ -1109,7 +1109,6 @@ def renovacion_pdf_con_acuse(arg):
 			data = mark_read(str(int(get_list[0].fileId.fileNbr.doubleValue)),str(get_list[0].fileId.fileSeq),str(get_list[0].fileId.fileSeries.doubleValue),str(get_list[0].fileId.fileType))
 		except Exception as e:
 			data = ''
-
 
 		def recorrer_sfe(arg):
 			try:
@@ -1369,9 +1368,10 @@ def renovacion_pdf_con_acuse(arg):
 				hora_puntoE = date_fullE[1].split(".")
 				hora_guionE = hora_puntoE[0].split("-")
 				a=hora_guionE[0].split(":")
-				backhour = str(int(a[0])-3)+":"+a[1]+":"+a[2]
+				backhour = str(int(a[0])-4).rjust(2, '0') +":"+a[1]+":"+a[2]
 				#print(backhour)
 				return(str(fecha_formatE+" "+str(backhour)))
+				
 		def convert_fecha_hora(data):
 			date_fullE = str(data).split(" ")
 			fecha_fullE = date_fullE[0].split("-")
@@ -1404,7 +1404,7 @@ def renovacion_pdf_con_acuse(arg):
 			pdf.text(x=100, y=20, txt=str(global_data['nombre_formulario']))			
 
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=74, y=25, txt='Fecha envio')
+			pdf.text(x=58, y=25, txt='Fecha de presentación')
 			pdf.set_font("helvetica", "", 8)
 			pdf.text(x=100, y=25, txt=convert_fecha_hora_sfe(str(global_data['fecha_envio'])))			
 
@@ -1461,7 +1461,7 @@ def renovacion_pdf_con_acuse(arg):
 			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
 			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )			
 
-			pdf.cell(w=35, h=8, txt='Fecha de Envío', border=1 , align='c' )
+			pdf.cell(w=35, h=8, txt='Fecha Presentación', border=1 , align='c' )
 			
 			try:
 				pdf.cell(w=155, h=8, txt=convert_fecha_hora_sfe(str(global_data['fecha_envio'])), border=1, align='l' )
@@ -1539,7 +1539,7 @@ def renovacion_pdf_con_acuse(arg):
 
 			pdf.multi_cell(w=120, h=28, txt="", border=1, align='L',ln=1) 
 			try:
-				pdf.image(str(global_data['distintivo2']),x=123,y=(pdf.get_y()-27),w=25,h=25)
+				pdf.image(f"{str(global_data['expediente'])}.png",x=123,y=(pdf.get_y()-27),w=25,h=25)
 			except Exception as e:
 				pdf.image("static/sfe_default.PNG",x=123,y=(pdf.get_y()-27),w=25,h=25)
 
@@ -1556,16 +1556,19 @@ def renovacion_pdf_con_acuse(arg):
 			pdf.cell(w=35, h=8, txt='Especificar', border=1 , align='c' )
 			pdf.cell(w=155, h=8, txt='', border=1, align='c' )	
 
-			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
+			#pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 
-
-
-
-			pdf.add_page()
+			#########################################################################################################################
+			#########################################################################################################################
+			#########################################################################################################################
+			# 			
+			#pdf.add_page()
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 
-			pdf.image("static/sfe_no_pres_head.png",x=145,y=(pdf.get_y()-18),w=30,h=15)
+
+			#pdf.image("static/sfe_no_pres_head.png",x=145,y=(pdf.get_y()-18),w=30,h=15)
 
 			pdf.set_font("helvetica", "B", 12)
 			pdf.cell(w=190, h=8, txt='DATOS DEL SOLICITANTE', border=1, align='c' )
@@ -1730,7 +1733,10 @@ def renovacion_pdf_con_acuse(arg):
 			
 			pdf.output('pdf/notificacion-DINAPI.pdf')
 
+
 		traer_datos_pdf(str(global_data['expediente']))
+
+		delete_img(str(global_data['expediente']))
 
 		#print(global_data)
 

@@ -1,6 +1,7 @@
 from sqlite3 import Time
 import string
 import time
+from tools.base64Decode import b64_to_img
 from email_pdf_AG import  acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_reg, envio_agente_recibido_ren
 from models.InsertUserDocModel import userDocModel
 from dinapi.sfe import  COMMIT_NBR, USER_GROUP, cambio_estado, cambio_estado_soporte, data_validator, esc_relation,  exp_relation,  pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
@@ -799,6 +800,7 @@ def insertRen(form_Id):
 		try:
 			insert_mark_ren = insertRenModel()
 			insert_mark_ren.setData(form_Id)
+			b64_to_img(insert_mark_ren.logoData)
 		except Exception as e:
 			data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id}','true',form_Id)
 			cambio_estado_soporte(form_Id)

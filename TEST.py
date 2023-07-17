@@ -1,12 +1,15 @@
 
+import base64
+import binascii
 import os
 from urllib import request
 import psycopg2
 from zeep import Client
 import zeep
+from tools.base64Decode import decode_img, delete_img
 from models.InsertUserDocModel import userDocModel
 from dinapi.sfe import email_receiver, exist_main_mark, exist_notifi, main_State, pendientes_sfe_not_pag, registro_sfe, renovacion_sfe, respuesta_sfe_campo,  titulare_reg
-from email_pdf_AG import registro_pdf_con_acuse
+from email_pdf_AG import registro_pdf_con_acuse, renovacion_pdf_con_acuse
 from getFileDoc import compilePDF, getFile, getFile_reg_and_ren
 from tools.send_mail import enviar_back_notFile
 from sfe_no_presencial_reg_local import registro_pdf_sfe_local
@@ -206,7 +209,7 @@ def rule_notification(sig,exp):
 
 #print(registro_sfe('26336'))
 
-print(user_doc_read_min('E','2355704','3','2023'))
+#print(user_doc_read_min('E','2355704','3','2023'))
 
 #print(pendientes_sfe_not_pag('2023-07-13'))
 
@@ -241,6 +244,20 @@ def test(a=17,b=32):
 
 
 #print(registro_sfe('2019'))
+
+
+def b64_to_img(base,exp):
+	try:
+		image = base64.b64decode(base, validate=True)
+		file_to_save = exp+'.png'
+		with open(file_to_save, "wb") as f:
+			f.write(image)
+	except binascii.Error as e:
+		print(e)
+
+logo = "AA=="
+b64_to_img(logo,'2355761')
+renovacion_pdf_con_acuse('26832')
 
 
 
