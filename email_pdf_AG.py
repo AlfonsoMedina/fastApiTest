@@ -373,7 +373,15 @@ def registro_pdf_con_acuse(arg):
 							global_data['distingue'] = i['valor']
 					except Exception as e:
 						global_data['distingue'] = ""					
-					
+
+
+					try:
+						if(i['campo'] == "marca_deslogotipo"):
+							global_data['deslogotipo'] = i['valor']
+					except Exception as e:
+						global_data['deslogotipo'] = ""
+
+
 					try:
 						if(i['descripcion'] == "Reivindicaciones"):
 							global_data['reivindicaciones'] = i['valor']
@@ -399,7 +407,7 @@ def registro_pdf_con_acuse(arg):
 						global_data['especificar'] = ""	
 
 					try:
-						if(i['descripcion'] == "Nombres y Apellidos" and i['campo'] == 'datospersonales_nombreapellido'):
+						if(i['campo'] == 'datospersonales_nombreapellido'):
 							global_data['nombre_soli'] = i['valor']
 					except Exception as e:
 						global_data['nombre_soli'] = ""
@@ -523,7 +531,7 @@ def registro_pdf_con_acuse(arg):
 				a=hora_guionE[0].split(":")
 				#if (str(a[0]) <= '01'):
 					#fail_hour_sfe = (int(a[0]) + 3)
-				backhour = str(int(a[0])-3)+":"+a[1]+":"+a[2]
+				backhour = str(int(a[0])-4).rjust(2, '0') +":"+a[1]+":"+a[2]
 				#print(backhour)
 				return(str(fecha_formatE+" "+str(backhour)))
 		def convert_fecha_hora(data):
@@ -574,7 +582,7 @@ def registro_pdf_con_acuse(arg):
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=58, y=25, txt='Fecha de presentación')
 			pdf.set_font("helvetica", "", 8)
-			pdf.text(x=100, y=25, txt=fecha_barra(str(form_id(arg)[1]))+" "+hora_envio[0])			
+			pdf.text(x=100, y=25, txt=convert_fecha_hora_sfe(str(global_data['fecha_envio'])))		
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=66, y=30, txt='Fecha Recepcion')
@@ -692,13 +700,33 @@ def registro_pdf_con_acuse(arg):
 
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
-			pdf.cell(w=70, h=28, txt='Referencia de Distintivo:', border=1 , align='c' )
+			pdf.cell(w=70, h=28, txt='Distintivo:', border=1 , align='c' )
 
 			pdf.multi_cell(w=120, h=28, txt="", border=1, align='L',ln=1) 
+
 			try:
 				pdf.image(str(global_data['distintivo']),x=123,y=(pdf.get_y()-27),w=25,h=25)
 			except Exception as e:
 				pdf.image("static/sfe_default.PNG",x=123,y=(pdf.get_y()-27),w=25,h=25)
+
+			alt_fil:int = (round(len(global_data['deslogotipo'])/98)*2)
+			val_num:int = 0
+			val_lab:int = 0
+			if alt_fil == 0:
+				val_num = 8
+				val_lab = 4
+			else:
+				val_lab = alt_fil
+				val_num = alt_fil
+
+			pdf.cell(w=70, h=val_lab*2, txt='Descripción de Distintivo:', border=1 , align='c' )
+
+			pdf.set_font("helvetica", "B", 7)
+
+			try:
+				pdf.multi_cell(w=120, h=val_num, txt=str(global_data['deslogotipo']), border=1, align='L',ln=1)
+			except Exception as e:
+				pdf.multi_cell(w=130, h=val_num, txt="", border=1, align='L',ln=1)
 
 			"""			
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
@@ -711,9 +739,9 @@ def registro_pdf_con_acuse(arg):
 
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
-			pdf.cell(w=35, h=8, txt='Reivindicaciones', border=1, align='l')
+			pdf.cell(w=70, h=val_lab*2, txt='Reivindicaciones', border=1, align='l')
 			
-			pdf.cell(w=35, h=8, txt=global_data['reivindicaciones'], border=1, align='l')
+			pdf.cell(w=120, h=val_lab*2, txt=global_data['reivindicaciones'], border=1, align='l')
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=30, h=8, txt='Especificar', border=1 , align='c' )
@@ -721,13 +749,13 @@ def registro_pdf_con_acuse(arg):
 			pdf.cell(w=160, h=8, txt=global_data['espe'], border=1, align='l' )	
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
-			
-			
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			#############################################################################################################################
-
-
-
+			#############################################################################################################################			
+			#############################################################################################################################
+			#############################################################################################################################			
 			pdf.add_page()
+			
 			pdf.set_font("helvetica", "B", 12)
 			pdf.image("static/sfe_no_pres_head.png",x=145,y=(pdf.get_y() + 4),w=30,h=15)
 			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )

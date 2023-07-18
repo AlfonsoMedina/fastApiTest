@@ -255,11 +255,11 @@ def b64_to_img(base,exp):
 	except binascii.Error as e:
 		print(e)
 
-logo = "AA=="
-b64_to_img(logo,'2355761')
-renovacion_pdf_con_acuse('26832')
+#logo = "AA=="
+#b64_to_img(logo,'2355761')
+#renovacion_pdf_con_acuse('26832')
 
-
+registro_pdf_con_acuse('26836')
 
 """
 def file_Receive():

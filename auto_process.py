@@ -1147,17 +1147,6 @@ def error_process(form_Id,error_msg,bool_estado):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 """
 data = pendiente_sfe('1551')
 for i in range(0,len(data[0]['respuestas'])):
