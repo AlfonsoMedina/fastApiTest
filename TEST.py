@@ -17,7 +17,7 @@ from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
 from tools.filing_date import capture_day
 import tools.connect as connex
 from wipo.function_for_reception_in import user_doc_getList_escrito, user_doc_read_min
-from wipo.ipas import Process_Read_Action, Process_Read_EventList, daily_log_close, daily_log_open, fetch_all_user_mark, getPoder, mark_getlist, process_read
+from wipo.ipas import Process_Read_Action, Process_Read_EventList, daily_log_close, daily_log_open, fetch_all_user_mark, getPoder, mark_getlist, mark_getlistReg, mark_read, process_read
 import tools.connect as conn_serv
 from PyPDF2 import PdfFileMerger,PdfMerger
 
@@ -259,7 +259,18 @@ def b64_to_img(base,exp):
 #b64_to_img(logo,'2355761')
 #renovacion_pdf_con_acuse('26832')
 
-registro_pdf_con_acuse('26836')
+#registro_pdf_con_acuse('26836')
+
+
+
+#get_List = mark_getlistReg('386104')				
+#get_data_mark = mark_read(get_List[0].fileId.fileNbr.doubleValue,get_List[0].fileId.fileSeq,get_List[0].fileId.fileSeries.doubleValue,get_List[0].fileId.fileType)
+
+#print(get_data_mark['file']['ownershipData']['ownerList'][0]['person']['personName'])
+
+
+renovacion_pdf_con_acuse('26891')
+
 
 """
 def file_Receive():
