@@ -263,13 +263,23 @@ def b64_to_img(base,exp):
 
 
 
-#get_List = mark_getlistReg('386104')				
+#get_List = mark_getlist('2355790')				
 #get_data_mark = mark_read(get_List[0].fileId.fileNbr.doubleValue,get_List[0].fileId.fileSeq,get_List[0].fileId.fileSeries.doubleValue,get_List[0].fileId.fileType)
 
-#print(get_data_mark['file']['ownershipData']['ownerList'][0]['person']['personName'])
+#print(get_data_mark['file'])
+
+#print(get_data_mark['file']['filingData']['captureDate']['dateValue'])
 
 
-renovacion_pdf_con_acuse('26891')
+#renovacion_pdf_con_acuse('26837')
+
+#renovacion_pdf_con_acuse('26891')
+
+
+registro_pdf_sfe_local('26949')
+
+
+
 
 
 """

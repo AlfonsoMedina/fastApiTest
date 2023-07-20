@@ -364,6 +364,13 @@ def registro_pdf_con_acuse(arg):
 							global_data['distintivo'] = i['valor']['archivo']['url']
 					except Exception as e:
 						global_data['distintivo'] = ""
+
+					try:
+						if(i['campo'] == "marca_distintivofg"):
+							global_data['distintivofg'] = i['valor']['archivo']['url']
+					except Exception as e:
+						global_data['distintivofg'] = ""
+
 					
 					try:
 						if(i['descripcion'] == "N° de Documento" and i['campo'] == "datospersonales_nrodocumento"):
@@ -712,7 +719,7 @@ def registro_pdf_con_acuse(arg):
 			pdf.multi_cell(w=120, h=28, txt="", border=1, align='L',ln=1) 
 
 			try:
-				pdf.image(str(global_data['distintivo']),x=123,y=(pdf.get_y()-27),w=25,h=25)
+				pdf.image(str(global_data['distintivo']) + str(global_data['distintivofg']),x=123,y=(pdf.get_y()-27),w=25,h=25)
 			except Exception as e:
 				pdf.image("static/sfe_default.PNG",x=123,y=(pdf.get_y()-27),w=25,h=25)
 
@@ -1415,7 +1422,7 @@ def renovacion_pdf_con_acuse(arg):
 			hora_guionE = hora_puntoE[0].split("-")
 			return(str(fecha_formatE+" "+str(hora_guionE[0])))
     
-		get_List = mark_getlistReg(global_data['registro_nbr'])
+		get_List = mark_getlist(global_data['expediente'])
         
 
 		def traer_datos_pdf(arg):
@@ -1455,7 +1462,7 @@ def renovacion_pdf_con_acuse(arg):
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=66, y=30, txt='Fecha Recepcion')
 			pdf.set_font("helvetica", "", 8)
-			pdf.text(x=100, y=30, txt=convert_fecha_hora(str(global_data['fecha_solicitud'])))			
+			pdf.text(x=100, y=30, txt=convert_fecha_hora(str(get_data_mark_ren['file']['filingData']['captureDate']['dateValue']).replace("-04:00","").replace("-03:00","")))			
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=75, y=35, txt='Expediente')
@@ -1523,7 +1530,7 @@ def renovacion_pdf_con_acuse(arg):
 			pdf.cell(w=55, h=8, txt='Fecha y Hora de Solicitud', border=1, align='c' )
 			
 			try:
-				pdf.cell(w=50, h=8, txt=convert_fecha_hora(str(global_data['fecha_solicitud'])), border=1, align='l' )
+				pdf.cell(w=50, h=8, txt=convert_fecha_hora(str(get_data_mark_ren['file']['filingData']['captureDate']['dateValue']).replace("-04:00","").replace("-03:00","")), border=1, align='l' )
 			except Exception as e:
 				pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )

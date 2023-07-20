@@ -30,7 +30,7 @@ def listar():
 	listar()
 
 #this func I returned one list with pending to process.
-#query today with state 7 for the list create
+#query today with 7 state for the list create
 #the list is composed of id and formTyp  example: ['1586/REG',1572/CCP]"""
 def captura_pendientes():
 	list_id = []
@@ -808,7 +808,7 @@ def insertRen(form_Id):
 			data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id}','true',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
-			
+
 		try:
 			new_Nbr = str(COMMIT_NBR())
 			insertRenState = mark_insert_ren(
@@ -1074,25 +1074,25 @@ def catch_toError(form_Id):
 			pass
 
 def others_process_REG(tramite_Id,new_Nbr,ag_email,sigla):
-	cambio_estado(tramite_Id,new_Nbr)											# Cambio de estado
+	cambio_estado(tramite_Id,new_Nbr)																# Cambio de estado
 	print('CAMBIO DE ESTADO')													
-	acuse_from_AG_REG(str(connex.MEA_ACUSE_FORMULARIO),tramite_Id,new_Nbr)									# Crear PDF									
+	acuse_from_AG_REG(str(connex.MEA_ACUSE_FORMULARIO),tramite_Id,new_Nbr)							# Crear PDF									
 	print('CREO PDF')
 	delete_file(enviar('notificacion-DINAPI.pdf',ag_email,'M.E.A',connex.msg_body_mail))			# Enviar Correo Electronico
 	print('ENVIO AL AG')
-	getFile_reg_and_ren(tramite_Id,new_Nbr) 									# Descargar pdfs de respuesta 
+	getFile_reg_and_ren(tramite_Id,new_Nbr) 														# Descargar pdfs de respuesta 
 	print('CAPTURA PDF DE TRAMITES')
 	if sigla == 'REG':
-		registro_pdf_sfe_local(tramite_Id)										# Crear formulario completo REG
+		registro_pdf_sfe_local(tramite_Id)															# Crear formulario completo REG
 	if sigla == 'REN':
-		renovacion_pdf_sfe_local(tramite_Id)									# Crear formulario completo	REN										
+		renovacion_pdf_sfe_local(tramite_Id)														# Crear formulario completo	REN										
 	print('CREA PDF DE FORMULARIO')
-	compilePDF(new_Nbr)															# Crear pdf compilado de todos los ficheros
+	compilePDF(new_Nbr)																				# Crear pdf compilado de todos los ficheros
 	print('COMPILA PDFs')
-	rule_notification(sigla,str(new_Nbr))										# Correo al funcionario
+	rule_notification(sigla,str(new_Nbr))															# Correo al funcionario
 	print('NOTIFICA AL FUNCIONARIO')
 	try:
-		insertar_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))				# Crear grupo o inserta en grupo
+		insertar_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))								# Crear grupo o inserta en grupo
 	except Exception as e:
 		print('no se inserto en grupo de trmites')
 	print('INSERT EN EL GRUPO DEL FUNCIONARIO')

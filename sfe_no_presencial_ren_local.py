@@ -300,7 +300,7 @@ def renovacion_pdf_sfe_local(arg):
 				hora_puntoE = date_fullE[1].split(".")
 				hora_guionE = hora_puntoE[0].split("-")
 				a=hora_guionE[0].split(":")
-				backhour = str(int(a[0])-3)+":"+a[1]+":"+a[2]
+				backhour = str(int(a[0])-4)+":"+a[1]+":"+a[2]
 				#print(backhour)
 				return(str(fecha_formatE+" "+str(backhour)))
 		def convert_fecha_hora(data):
@@ -311,7 +311,21 @@ def renovacion_pdf_sfe_local(arg):
 			hora_guionE = hora_puntoE[0].split("-")
 			return(str(fecha_formatE+" "+str(hora_guionE[0])))
 
+		
+		get_List = mark_getlist(global_data['expediente'])		
+		
 		def traer_datos_pdf(arg):
+
+
+
+			get_data_mark_ren = mark_read(
+			get_List[0].fileId.fileNbr.doubleValue, 
+			get_List[0].fileId.fileSeq, 
+			get_List[0].fileId.fileSeries.doubleValue, 
+			get_List[0].fileId.fileType
+			)
+
+
 
 			codebarheard("*"+str(global_data['expediente'])+"*")
 			codebarfoot("*"+str(global_data['codigo_barr'])+"*")
@@ -360,7 +374,7 @@ def renovacion_pdf_sfe_local(arg):
 			pdf.cell(w=55, h=8, txt='Fecha y Hora de Solicitud', border=1, align='c' )
 			
 			try:
-				pdf.cell(w=50, h=8, txt=convert_fecha_hora(str(global_data['fecha_solicitud'])), border=1, align='l' )
+				pdf.cell(w=50, h=8, txt=convert_fecha_hora(str(get_data_mark_ren['file']['filingData']['captureDate']['dateValue']).replace("-04:00","").replace("-03:00","")), border=1, align='l' )
 			except Exception as e:
 				pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
@@ -462,48 +476,65 @@ def renovacion_pdf_sfe_local(arg):
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=55, h=8, txt='Nombre y Apellido, Razón Social', border=1, align='c')
-			
-			pdf.cell(w=135, h=8, txt=str(global_data['nombre_soli']), border=1, align='l')
 
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['personName']) != 'None':
+				pdf.cell(w=135, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['personName']), border=1, align='l')
+			else:
+				pdf.cell(w=135, h=8, txt="", border=1, align='l')
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='Calle', border=1, align='c')
 			
-			pdf.multi_cell(w=150, h=8, txt = str(global_data['solic_dir']), border=1, align='l')
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['addressStreet']) != 'None':
+				pdf.multi_cell(w=150, h=8, txt = str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['addressStreet']), border=1, align='l')
+			else:
+				pdf.cell(w=150, h=8, txt="", border=1, align='l')			
 			
-
-			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='Ciudad', border=1, align='c')
 			
-			pdf.cell(w=50, h=8, txt=str(global_data['ciudad']), border=1, align='l')
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['cityName']) != 'None':
+				pdf.cell(w=50, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['cityName']), border=1, align='l')
+			else:
+				pdf.cell(w=50, h=8, txt="", border=1, align='l')			
+			
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='País', border=1, align='c')
 			
-			pdf.cell(w=50, h=8, txt=str(global_data['solic_pais']), border=1, align='l')
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['nationalityCountryCode']) != 'None':
+				pdf.cell(w=50, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['nationalityCountryCode']), border=1, align='l')
+			else:
+				pdf.cell(w=50, h=8, txt="", border=1, align='l')			
+			
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=50, h=8, txt='Codigo Postal', border=1, align='c')
 			
-			pdf.cell(w=50, h=8, txt=str(global_data['codigo_postal']), border=1, align='l')
-
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['zipCode']) != 'None':
+				pdf.cell(w=50, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['zipCode']), border=1, align='l')
+			else:
+				pdf.cell(w=50, h=8, txt="", border=1, align='l')				
+			
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='Teléfono', border=1, align='c')
-			
-			pdf.cell(w=50, h=8, txt=str(global_data['telefono']), border=1, align='l')
 
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['telephone']) != 'None':
+				pdf.cell(w=50, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['telephone']), border=1, align='l')
+			else:
+				pdf.cell(w=50, h=8, txt="", border=1, align='l')
+			
 			pdf.set_font("helvetica", "B", 9)
-			pdf.cell(w=50, h=8, txt='Correo Electronico', border=1, align='c')
+			pdf.cell(w=40, h=8, txt='Correo Electronico', border=1, align='c')
 			
-			pdf.cell(w=50, h=8, txt=str(global_data['solic_email']), border=1, align='l')
-
-			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
-
-
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['email']) != 'None':
+				pdf.cell(w=60, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['email']), border=1, align='l')
+			else:
+				pdf.cell(w=60, h=8, txt="", border=1, align='l')
 			################################################################################################################################################
 															##Titulares adicionales##
 			try:												
@@ -688,5 +719,5 @@ def renovacion_pdf_sfe_local(arg):
 		print(e)
 			
 
-#renovacion_pdf_sfe_local("26832")
+renovacion_pdf_sfe_local("26837")
 #renovacion_pdf_sfe_local("22106266")

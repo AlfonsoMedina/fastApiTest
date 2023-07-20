@@ -60,6 +60,12 @@ def registro_pdf_sfe_local(arg):
 							global_data['distintivo'] = i['valor']['archivo']['url']
 					except Exception as e:
 						global_data['distintivo'] = ""
+
+					try:
+						if(i['campo'] == "marca_distintivofg"):
+							global_data['distintivofg'] = i['valor']['archivo']['url']
+					except Exception as e:
+						global_data['distintivofg'] = ""
 					
 					try:
 						if(i['descripcion'] == "N° de Documento" and i['campo'] == "datospersonales_nrodocumento"):
@@ -348,7 +354,7 @@ def registro_pdf_sfe_local(arg):
 
 			pdf.multi_cell(w=120, h=28, txt="", border=1, align='L',ln=1) 
 			try:
-				pdf.image(str(global_data['distintivo']),x=123,y=(pdf.get_y()-27),w=25,h=25)
+				pdf.image(str(global_data['distintivo']) + str(global_data['distintivofg']),x=123,y=(pdf.get_y()-27),w=25,h=25)
 			except Exception as e:
 				pdf.image("static/sfe_default.PNG",x=123,y=(pdf.get_y()-27),w=25,h=25)
 
