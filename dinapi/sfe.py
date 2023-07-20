@@ -154,12 +154,15 @@ def registro_sfe(arg):
 				if(i['descripcion'] == "Productos o Servicios que distingue"):
 					global_data['distingue'] = i['valor']
 			except Exception as e:
-				global_data['distingue'] = "No definido"										
+				global_data['distingue'] = "No definido"
+
+			'''
 			try:
 				if(i['descripcion'] == "Reivindicaciones"):
 					global_data['reivindicaciones'] = i['valor']
 			except Exception as e:
 				global_data['reivindicaciones'] = "No definido"
+			'''
 
 			try:
 				if(i['campo'] == "marca_tipomarca"):
@@ -279,7 +282,7 @@ def registro_sfe(arg):
 			except Exception as e:
 				global_data['pais_pri'] = "No definido"
 			try:
-				if(i['descripcion'] == "Especificar" and i['campo'] == 'marca_especificar'):
+				if(i['campo'] == 'marca_especificar'):
 					global_data['espe']=i['valor']
 			except Exception as e:
 				global_data['espe'] = "No definido"
@@ -295,7 +298,6 @@ def registro_sfe(arg):
 					global_data['reivindicaciones']=i['valor']
 			except Exception as e:
 				global_data['reivindicaciones'] = "No definido"
-
 
 
 			try:

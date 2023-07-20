@@ -461,7 +461,7 @@ def renovacion_pdf_sfe_local(arg):
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
-			pdf.cell(w=55, h=8, txt='Nombre y Apellido, Rason Social', border=1, align='c')
+			pdf.cell(w=55, h=8, txt='Nombre y Apellido, Razón Social', border=1, align='c')
 			
 			pdf.cell(w=135, h=8, txt=str(global_data['nombre_soli']), border=1, align='l')
 
@@ -677,8 +677,8 @@ def renovacion_pdf_sfe_local(arg):
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
 			
-			pdf.output(getcwd()+f"/temp_pdf/{str(global_data['expediente'])}/{str(global_data['expediente'])}-0.pdf") 
-			#pdf.output(getcwd()+"/pdf/SFE_RENOVACION_"+str(arg)+"_local.pdf")
+			#pdf.output(getcwd()+f"/temp_pdf/{str(global_data['expediente'])}/{str(global_data['expediente'])}-0.pdf") 
+			pdf.output(getcwd()+"/pdf/SFE_RENOVACION_"+str(arg)+"_local.pdf")
 
 		traer_datos_pdf(str(global_data['expediente']))
 
@@ -688,4 +688,5 @@ def renovacion_pdf_sfe_local(arg):
 		print(e)
 			
 
+#renovacion_pdf_sfe_local("26832")
 #renovacion_pdf_sfe_local("22106266")

@@ -800,11 +800,15 @@ def insertRen(form_Id):
 		try:
 			insert_mark_ren = insertRenModel()
 			insert_mark_ren.setData(form_Id)
-			b64_to_img(insert_mark_ren.logoData)
+			try:
+				b64_to_img(insert_mark_ren.logoData)
+			except Exception as e:
+				pass	
 		except Exception as e:
 			data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id}','true',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
+			
 		try:
 			new_Nbr = str(COMMIT_NBR())
 			insertRenState = mark_insert_ren(
