@@ -246,7 +246,7 @@ def test(a=17,b=32):
 #print(registro_sfe('2019'))
 
 
-def b64_to_img(base,exp):
+def b64_to_img_pdf(base,exp):
 	try:
 		image = base64.b64decode(base, validate=True)
 		file_to_save = exp+'.png'
@@ -263,20 +263,23 @@ def b64_to_img(base,exp):
 
 
 
-#get_List = mark_getlist('2355790')				
-#get_data_mark = mark_read(get_List[0].fileId.fileNbr.doubleValue,get_List[0].fileId.fileSeq,get_List[0].fileId.fileSeries.doubleValue,get_List[0].fileId.fileType)
+get_List = mark_getlist('2356458')				
+get_data_mark = mark_read(get_List[0].fileId.fileNbr.doubleValue,get_List[0].fileId.fileSeq,get_List[0].fileId.fileSeries.doubleValue,get_List[0].fileId.fileType)
 
-#print(get_data_mark['file'])
+#print(b64_to_img_pdf(base64.b64encode(get_data_mark['signData']['logo']['logoData']),'2356458'))
+
+#decode_img(get_data_mark['signData']['logo']['logoData'])
 
 #print(get_data_mark['file']['filingData']['captureDate']['dateValue'])
 
 
-#renovacion_pdf_con_acuse('26837')
+
+renovacion_pdf_con_acuse('26919')
 
 #renovacion_pdf_con_acuse('26891')
 
 
-registro_pdf_sfe_local('26949')
+#registro_pdf_sfe_local('26938')
 
 
 

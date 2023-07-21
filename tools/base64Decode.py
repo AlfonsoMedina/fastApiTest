@@ -23,11 +23,19 @@ def decode_img(data):
     except Exception as e:
         return("")
 
-
 def b64_to_img(base,exp):
 	try:
 		image = base64.b64decode(base, validate=True)
 		file_to_save = exp
+		with open(file_to_save, "wb") as f:
+			f.write(image)
+	except binascii.Error as e:
+		print(e)
+
+def b64_to_img_pdf(base,exp):
+	try:
+		image = base64.b64decode(base, validate=True)
+		file_to_save = exp+'.png'
 		with open(file_to_save, "wb") as f:
 			f.write(image)
 	except binascii.Error as e:
