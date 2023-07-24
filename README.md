@@ -42,7 +42,7 @@ Establecer la sincronización horaria automática mediante el servidor NTP
                                     - timedatectl set-ntp true
                                     - timedatectl set-ntp false
 
-Establecer fecha y hora en un sistema Linux
+Establecer hora en un sistema Linux
                                     - timedatectl set-time 18:30:45
 
 Para configurar la fecha solo en formato YY-MM-DD (Año: Mes: Día), use la sintaxis:

@@ -97,7 +97,7 @@ ipas_produccion_patent = config_parametro('53')['valor1']
 ipas_produccion_disenio = config_parametro('54')['valor1']
 
 ###################################################################
-'''
+
 #pagos SFE
 host_SFE_conn = 'pgsql-sprint.dinapi.gov.py'
 user_SFE_conn = 'user-sprint'
@@ -114,7 +114,7 @@ host_SFE_conn = MEA_DB_ORIGEN_host
 user_SFE_conn = MEA_DB_ORIGEN_user
 password_SFE_conn = MEA_DB_ORIGEN_password
 database_SFE_conn = MEA_DB_ORIGEN_database
-
+'''
 
 #centura
 host_centura = '192.168.50.231'

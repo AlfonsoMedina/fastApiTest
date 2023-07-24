@@ -43,12 +43,12 @@ def captura_pendientes():
 		except Exception as e:
 			pass
 	print(list_id)
-	if list_id != []:
+	'''if list_id != []:
 		for i in list_id:
 			params = str(i).split('/')
 			print('doc pendiente '+str(params[0]))
 			insert_list(str(params[0]),str(params[1]))
-			time.sleep(1)
+			time.sleep(1)'''
 
 #arg0 id and arg1 sigla in state 7
 #this func insert a doc whatever to case: payment, not payment, mark or userDoc...
