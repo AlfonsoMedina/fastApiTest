@@ -1,9 +1,8 @@
-
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, registro_sfe, titulare_reg
 from getFileDoc import getFile
 from respuesta_map import dir_titu, nom_titu
 from wipo.function_for_reception_in import user_doc_getList_escrito
-from wipo.ipas import mark_getlist, personAgente
+from wipo.ipas import fetch_all_user_mark, mark_getlist, personAgente
 import tools.connect as connex
 import tools.filing_date as captureDate
 import tools.connect as connex
@@ -46,8 +45,16 @@ class insertRegModel(object):
 	protectionData_niceClassList_niceClassGlobalStatus:str = ""
 	protectionData_niceClassList_niceClassNbr:str = ""
 	protectionData_niceClassList_niceClassVersion:str = ""
+
+	documentId_PowerOfAttorneyRegister_docLog:str = ""
+	documentId_PowerOfAttorneyRegister_docNbr:str = ""
+	documentId_PowerOfAttorneyRegister_docOrigin:str = ""
+	documentId_PowerOfAttorneyRegister_docSeries:str = ""
+
+	limitationData_disclaimer:str = ""
 	logoData:str = ""
 	logoType:str = ""
+	logo_colourDescription:str = ""
 	signData_markName:str = ""
 	signData_signType:str = ""
 	signType:str = ''
@@ -60,6 +67,9 @@ class insertRegModel(object):
 	multitu:str = ''
 	titular_uno:str = ''
 	ag_email:str = ''
+	user_responsible:str = ''
+	logoDesc:str = ''
+	
 	def __init__(self):
 		self.signType = ""
 		self.tipo_clase = ""
@@ -67,20 +77,46 @@ class insertRegModel(object):
 		self.LogTyp = ""
 
 	def setData(self,doc_Id):
+
+		try:
+			self.user_responsible = fetch_all_user_mark(str(connex.MEA_OFICINA_ORIGEN_user))[0]['sqlColumnList'][0]['sqlColumnValue']
+		except Exception as e:
+			self.user_responsible = "4"
+			
+		#print(str(connex.MEA_OFICINA_ORIGEN_user))
 		
 		self.data = registro_sfe(doc_Id) #pendiente_sfe(doc_Id)
 
 		self.ag_email = self.data['email_agente']
 		
 		try:
-			self.multitu = titulare_reg(doc_Id)
-			#print(len(self.multitu))
+			self.multitu = titulare_reg(doc_Id,self.data['titu_cant'])
+			#print(self.multitu)
 			if self.multitu != []:
+				self.multitu.append({
+									'indService': 'true', 
+									'orderNbr': '', 
+									'ownershipNotes': '', 
+									'person': {
+												'nationalityCountryCode': self.data['pais'], 
+												'residenceCountryCode': self.data['pais'], 
+												'telephone': self.data['telefono'], 
+												'zipCode': self.data['codigopostal'], 
+												'personName': nom_titu(doc_Id)[0], 
+												'email': self.data['email'], 
+												'individualIdType': self.data['persona_fisica'], 
+												'individualIdNbr': self.data['documento'],
+												'legalIdType': self.data['persona_juridica'], 
+												'legalIdNbr': self.data['RUC'], 
+												'cityName': self.data['ciudad'], 
+												'addressStreet': self.data['direccion'], 
+												'addressZone': self.data['departamento']
+												}
+									})
 				if self.multitu[0]['person']['personName'] == '':
 					self.multitu = []
 		except Exception as e:
 			self.multitu = []		
-
 
 		try:
 			ag_data = personAgente(code_ag(self.data[0]['usuario_id']))[0]
@@ -106,8 +142,18 @@ class insertRegModel(object):
 		try:
 			if self.data['tipo_on'] == "Figurativa": 
 				self.signType="L"
-				self.LogData = image_url_to_b64(self.data['distintivo'])
-				self.LogTyp = "JPG"			
+				self.LogData = image_url_to_b64(self.data['distintivofg'])
+				self.LogTyp = "JPG"	
+				self.logoDesc = 	self.data['deslogotipo']	
+		except Exception as e:
+			pass
+
+		try:
+			if self.data['tipo_on'] == "Otros": 
+				self.signType="L"
+				self.LogData = image_url_to_b64(self.data['distintivotr'])
+				self.LogTyp = "JPG"
+				self.logoDesc = 	self.data['deslogotipo']			
 		except Exception as e:
 			pass
 
@@ -115,7 +161,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "F": 
 				self.signType="L"
 				self.LogData = image_url_to_b64(self.data['distintivo'])
-				self.LogTyp = "JPG"							
+				self.LogTyp = "JPG"
+				self.logoDesc = 	self.data['deslogotipo']							
 		except Exception as e:
 			pass
 
@@ -123,7 +170,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "Mixta": 
 				self.signType="B"
 				self.LogData = image_url_to_b64(self.data['distintivo'])
-				self.LogTyp = "JPG"				
+				self.LogTyp = "JPG"
+				self.logoDesc = 	self.data['deslogotipo']				
 		except Exception as e:
 			pass
 
@@ -131,23 +179,26 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "M": 
 				self.signType="B"
 				self.LogData = image_url_to_b64(self.data['distintivo'])
-				self.LogTyp = "JPG"				
+				self.LogTyp = "JPG"
+				self.logoDesc = 	self.data['deslogotipo']				
 		except Exception as e:
 			pass
 
 		try:
 			if self.data['tipo_on'] == "Tridimensional": 
 				self.signType="T"
-				self.LogData = image_url_to_b64(self.data['distintivo'])
-				self.LogTyp = "JPG"				
+				self.LogData = image_url_to_b64(self.data['distintivotr'])
+				self.LogTyp = "JPG"
+				self.logoDesc = 	self.data['deslogotipo']				
 		except Exception as e:
 			pass
 
 		try:
 			if self.data['tipo_on'] == "T": 
 				self.signType="T"
-				self.LogData = image_url_to_b64(self.data['distintivo'])
-				self.LogTyp = "JPG"										
+				self.LogData = image_url_to_b64(self.data['distintivotr'])
+				self.LogTyp = "JPG"
+				self.logoDesc = 	self.data['deslogotipo']										
 		except Exception as e:
 			pass
 
@@ -155,7 +206,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "Sonora": 
 				self.signType="S"
 				self.LogData = ""
-				self.LogTyp = ""			
+				self.LogTyp = ""
+				self.logoDesc = 	"not data"			
 		except Exception as e:
 			pass
 
@@ -163,7 +215,8 @@ class insertRegModel(object):
 			if self.data['tipo_on'] == "S": 
 				self.signType="S"
 				self.LogData = ""
-				self.LogTyp = ""			
+				self.LogTyp = ""
+				self.logoDesc = 	"not data"			
 		except Exception as e:
 			pass
 
@@ -205,7 +258,7 @@ class insertRegModel(object):
 		self.file_fileId_fileType = "M"
 		self.file_filingData_applicationSubtype = self.tipo_clase
 		self.file_filingData_applicationType = "REG"
-		self.file_filingData_captureUserId = "4"
+		self.file_filingData_captureUserId = str(self.user_responsible)
 		self.file_filingData_filingDate = captureDate.capture_full()
 		self.file_filingData_captureDate = captureDate.capture_full()
 		self.file_filingData_lawCode = "1.0"
@@ -218,10 +271,9 @@ class insertRegModel(object):
 			self.file_filingData_paymentList_receiptAmount = ""
 			self.file_filingData_paymentList_receiptDate = ""
 			self.file_filingData_paymentList_receiptNbr = ""
-		self.file_filingData_paymentList_receiptNotes = " Caja MEA"
+		self.file_filingData_paymentList_receiptNotes = " Pago SFE"
 		self.file_filingData_paymentList_receiptType = "1"
-		self.file_filingData_receptionUserId = "4"
-
+		self.file_filingData_receptionUserId = str(self.user_responsible)
 
 		try:
 			self.file_ownershipData_ownerList_person_addressStreet = dir_titu(doc_Id)[0] #self.dir_variant
@@ -258,8 +310,31 @@ class insertRegModel(object):
 		self.protectionData_niceClassList_niceClassNbr = self.data['clase_on']
 		
 		self.protectionData_niceClassList_niceClassVersion = "2023.01"
+
+		try:
+			if self.data['regtipo'] != "":
+				self.documentId_PowerOfAttorneyRegister_docLog = self.data['regtipo'] 
+				self.documentId_PowerOfAttorneyRegister_docNbr = str(self.data['regexpediente'])
+				self.documentId_PowerOfAttorneyRegister_docOrigin = str(self.data['regorigen']) 
+				self.documentId_PowerOfAttorneyRegister_docSeries = str(self.data['regserie'])
+			elif self.data['soltipo'] != "":
+				self.documentId_PowerOfAttorneyRegister_docLog = self.data['soltipo']
+				self.documentId_PowerOfAttorneyRegister_docNbr = str(self.data['solexpediente']) 
+				self.documentId_PowerOfAttorneyRegister_docOrigin = str(self.data['solorigen'])
+				self.documentId_PowerOfAttorneyRegister_docSeries = str(self.data['solserie'])
+			else:
+				self.documentId_PowerOfAttorneyRegister_docLog = ""
+				self.documentId_PowerOfAttorneyRegister_docNbr = "" 
+				self.documentId_PowerOfAttorneyRegister_docOrigin = ""
+				self.documentId_PowerOfAttorneyRegister_docSeries = ""						 
+		except Exception as e:
+			pass
+
+		self.limitationData_disclaimer = self.data['reivindicaciones']
+
 		self.logoData = self.LogData
 		self.logoType = self.LogTyp
+		self.logo_colourDescription = self.logoDesc
 		self.signData_markName = self.data['denominacion_on']
 		
 		self.signData_signType = self.signType						

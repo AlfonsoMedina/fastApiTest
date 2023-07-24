@@ -10,7 +10,7 @@ from barcode.writer import ImageWriter
 import psycopg2
 from dinapi.sfe import titulare_reg
 from wipo.ipas import *
-from tools.base64Decode import decode_pdf
+from tools.base64Decode import b64_to_img, b64_to_img_pdf, decode_pdf, delete_img
 from tools.data_format import signo_format
 import tools.connect as connex
 
@@ -69,93 +69,100 @@ def renovacion_pdf_sfe_local(arg):
 						if(i['campo'] == "marca_distintivo"):
 							global_data['distintivo'] = i['valor']['archivo']['url']
 					except Exception as e:
-						global_data['distintivo'] = ""							
+						global_data['distintivo'] = "-"							
 					try:	
 						if(i['campo'] == "actualizacion_refdistitivo"):
 							global_data['distintivo2'] = i['valor']['archivo']['url']
 					except Exception as e:
-						global_data['distintivo2'] = ""							
+						global_data['distintivo2'] = "-"							
 					try:	
 						if(i['descripcion'] == "N° de Documento"):
 							global_data['documento'] = i['valor']
 					except Exception as e:
-						global_data['documento'] = ""							
+						global_data['documento'] = "-"							
 					try:	
 						if(i['descripcion'] == "RUC"):				
 							global_data['RUC']=i['valor']
 					except Exception as e:
-						global_data['RUC'] = ""							
+						global_data['RUC'] = "-"							
 					try:	
 						if(i['descripcion'] == "Productos o Servicios que distingue"):
 							global_data['distingue'] = i['valor']
 					except Exception as e:
-						global_data['distingue'] = ""							
+						global_data['distingue'] = "-"							
 					try:								
 						if(i['descripcion'] == "Reivindicaciones"):
 							global_data['reivindicaciones'] = i['valor']
 					except Exception as e:
-						global_data['reivindicaciones'] = ""							
+						global_data['reivindicaciones'] = "-"							
 					try:	
-						if(i['descripcion'] == "-" and i['campo'] == 'marcarenov_tipomarca'):
+						if(i['campo'] == 'marcarenov_tipomarca'):
 							global_data["tipo_guion"] = i['valor']
 					except Exception as e:
-						global_data['tipo_guion'] = ""
+						global_data['tipo_guion'] = "-"
+					
+					try:	
+						if(i['campo'] == 'datostitular_agregar'):
+							global_data["titu_cant"] = i['valor']
+					except Exception as e:
+						global_data['titu_cant'] = "-"
+
 
 					try:	
 						if(i['descripcion'] == "Denominación"):
 							global_data['denominacion_on'] = i['valor']
 					except Exception as e:
-						global_data['denominacion_on'] = ""							
+						global_data['denominacion_on'] = "-"							
 					try:	
 						if(i['descripcion'] == "Especificar"):
 							global_data['especificar'] = i['valor']
 					except Exception as e:
-						global_data['especificar'] = ""							
+						global_data['especificar'] = "-"							
 					try:	
-						if(i['descripcion'] == "Nombres y Apellidos / Razón Social" and i['campo'] == 'datospersonalesrenov_nombrerazon'):
+						if(i['campo'] == 'datospersonalesrenov_nombrerazon'):
 							global_data['nombre_soli'] = i['valor']
 					except Exception as e:
-						global_data['nombre_soli'] = ""							
+						global_data['nombre_soli'] = "-"							
 					try:						
 						if(i['descripcion'] == "Razón Social" and i['campo'] == 'datospersonales_razonsocial'):
 							global_data['razon_social']=i['valor']
 					except Exception as e:
-						global_data['razon_social'] = ""							
+						global_data['razon_social'] = "-"							
 					try:	
 						if(i['descripcion'] == "Dirección"):
 							global_data['direccion']=i['valor']
 					except Exception as e:
-						global_data['direccion'] = ""							
+						global_data['direccion'] = "-"							
 					try:	
 						if(i['descripcion'] == "Ciudad"):
 							global_data['ciudad']=i['valor']
 					except Exception as e:
-						global_data['ciudad'] = ""							
+						global_data['ciudad'] = "-"							
 					try:	
 						if(i['descripcion'] == "País "):
 							global_data['pais']=i['valor']
 					except Exception as e:
-						global_data['pais'] = ""							
+						global_data['pais'] = "-"							
 					try:						
 						if(i['descripcion'] == "Código Postal"):
 							global_data['codigo_postal']=i['valor']
 					except Exception as e:
-						global_data['codigo_postal'] = ""							
+						global_data['codigo_postal'] = "-"							
 					try:	
 						if(i['descripcion'] == "Teléfono"):
 							global_data['telefono']=i['valor']
 					except Exception as e:
-						global_data['telefono'] = ""							
+						global_data['telefono'] = "-"							
 					try:	
 						if(i['descripcion'] == "Correo Electrónico"):
 							global_data['email']=i['valor']
 					except Exception as e:
-						global_data['email'] = ""							
+						global_data['email'] = "-"							
 					try:
 						if(i['descripcion'] == "Distrito"):
 							global_data['distrito']=i['valor']
 					except Exception as e:
-						global_data['distrito'] = ""
+						global_data['distrito'] = "-"
 
 					
 										
@@ -163,45 +170,45 @@ def renovacion_pdf_sfe_local(arg):
 						if(i['campo'] == 'actualizacion_nodocumentoruc' or i['campo'] == 'actualizacion_noodocumentoruc'):
 							global_data['act_numero']=i['valor']
 					except Exception as e:
-						global_data['act_numero'] = ""
+						global_data['act_numero'] = "-"
 					
 
 					try:	
 						if(i['descripcion'] == "País " and i['campo'] == 'actualizacion_pais'):
 							global_data['act_pais']=i['valor']
 					except Exception as e:
-						global_data['act_pais'] = ""
+						global_data['act_pais'] = "-"
 
 					try:	
 						if(i['descripcion'] == "Ciudad" and i['campo'] == 'actualizacion_ciudad'):
 							global_data['act_ciudad']=i['valor']
 					except Exception as e:
-						global_data['act_ciudad'] = ""
+						global_data['act_ciudad'] = "-"
 
 					try:	
 						if(i['descripcion'] == "Código Postal" and i['campo'] == 'actualizacion_codigopostal'):
 							global_data['act_post']=i['valor']
 					except Exception as e:
-						global_data['act_post'] = ""
+						global_data['act_post'] = "-"
 
 					try:	
 						if(i['descripcion'] == "Teléfono" and i['campo'] == 'actualizacion_telefono'):
 							global_data['act_tel']=i['valor']
 					except Exception as e:
-						global_data['act_tel'] = ""
+						global_data['act_tel'] = "-"
 
 					try:	
 						if(i['descripcion'] == "Correo Electrónico" and i['campo'] == 'actualizacion_correoelectronico'):
 							global_data['act_email']=i['valor']
 					except Exception as e:
-						global_data['act_email'] = ""
+						global_data['act_email'] = "-"
 
 
 					try:	
 						if(i['descripcion'] == "Clase" and i['campo'] == 'marcarenov_clase'):
 							global_data['clase_on']=i['valor']
 					except Exception as e:
-						global_data['clase_on'] = ""
+						global_data['clase_on'] = "-"
 
 
 
@@ -209,35 +216,35 @@ def renovacion_pdf_sfe_local(arg):
 						if(i['campo'] == 'marcarenov_registrono'):
 							global_data['registro_nbr']=i['valor']
 					except Exception as e:
-						global_data['registro_nbr'] = ""
+						global_data['registro_nbr'] = "-"
 
 
 					try:	
 						if(i['descripcion'] == "País " and i['campo'] == 'datospersonalesrenov_pais'):
 							global_data['solic_pais']=i['valor']
 					except Exception as e:
-						global_data['solic_pais'] = ""
+						global_data['solic_pais'] = "-"
 
 
 					try:	
 						if(i['campo'] == 'datospersonalesrenov_calle'):
 							global_data['solic_dir'] = str(i['valor']).replace(" – "," | ")
 					except Exception as e:
-						global_data['solic_dir'] = ""
+						global_data['solic_dir'] = "-"
 
 
 					try:	
 						if(i['descripcion'] == "Teléfono" and i['campo'] == 'datospersonalesrenov_telefono'):
 							global_data['solic_tel']=i['valor']
 					except Exception as e:
-						global_data['solic_tel'] = ""
+						global_data['solic_tel'] = "-"
 
 
 					try:	
 						if(i['descripcion'] == "Correo Electrónico" and i['campo'] == 'datospersonalesrenov_correoelectronico'):
 							global_data['solic_email']=i['valor']
 					except Exception as e:
-						global_data['solic_email'] = ""
+						global_data['solic_email'] = "-"
 
 
 					#try:	
@@ -259,7 +266,7 @@ def renovacion_pdf_sfe_local(arg):
 		recorrer_sfe(arg)
 
 		try:
-			multitu = titulare_reg(arg)
+			multitu = titulare_reg(arg,global_data["titu_cant"])
 			if multitu != []:
 				if multitu[0]['person']['personName'] == '':
 					multitu = []
@@ -293,7 +300,7 @@ def renovacion_pdf_sfe_local(arg):
 				hora_puntoE = date_fullE[1].split(".")
 				hora_guionE = hora_puntoE[0].split("-")
 				a=hora_guionE[0].split(":")
-				backhour = str(int(a[0])-3)+":"+a[1]+":"+a[2]
+				backhour = str(int(a[0])-4)+":"+a[1]+":"+a[2]
 				#print(backhour)
 				return(str(fecha_formatE+" "+str(backhour)))
 		def convert_fecha_hora(data):
@@ -304,7 +311,23 @@ def renovacion_pdf_sfe_local(arg):
 			hora_guionE = hora_puntoE[0].split("-")
 			return(str(fecha_formatE+" "+str(hora_guionE[0])))
 
+		
+		get_List = mark_getlist(global_data['expediente'])		
+		
 		def traer_datos_pdf(arg):
+
+
+
+			get_data_mark_ren = mark_read(
+			get_List[0].fileId.fileNbr.doubleValue, 
+			get_List[0].fileId.fileSeq, 
+			get_List[0].fileId.fileSeries.doubleValue, 
+			get_List[0].fileId.fileType
+			)
+			try:
+				b64_to_img_pdf(base64.b64encode(get_data_mark_ren['signData']['logo']['logoData']),global_data['expediente'])
+			except Exception as e:
+				pass
 
 			codebarheard("*"+str(global_data['expediente'])+"*")
 			codebarfoot("*"+str(global_data['codigo_barr'])+"*")
@@ -353,7 +376,7 @@ def renovacion_pdf_sfe_local(arg):
 			pdf.cell(w=55, h=8, txt='Fecha y Hora de Solicitud', border=1, align='c' )
 			
 			try:
-				pdf.cell(w=50, h=8, txt=convert_fecha_hora(str(global_data['fecha_solicitud'])), border=1, align='l' )
+				pdf.cell(w=50, h=8, txt=convert_fecha_hora(str(get_data_mark_ren['file']['filingData']['captureDate']['dateValue']).replace("-04:00","").replace("-03:00","")), border=1, align='l' )
 			except Exception as e:
 				pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
@@ -402,7 +425,7 @@ def renovacion_pdf_sfe_local(arg):
 			try:
 				pdf.multi_cell(w=130, h=4, txt=str(global_data['distingue']), border=1, align='L',ln=1)
 			except Exception as e:
-				pdf.multi_cell(w=130, h=4, txt="", border=1, align='L',ln=1) 
+				pdf.multi_cell(w=130, h=4, txt="-", border=1, align='L',ln=1) 
 			
 			########################################################################################################################################
 
@@ -413,7 +436,7 @@ def renovacion_pdf_sfe_local(arg):
 
 			pdf.multi_cell(w=120, h=28, txt="", border=1, align='L',ln=1) 
 			try:
-				pdf.image(str(global_data['distintivo2']),x=123,y=(pdf.get_y()-27),w=25,h=25)
+				pdf.image('./'+global_data['expediente']+'.png',x=123,y=(pdf.get_y()-27),w=25,h=25)
 			except Exception as e:
 				pdf.image("static/sfe_default.PNG",x=123,y=(pdf.get_y()-27),w=25,h=25)
 
@@ -430,11 +453,11 @@ def renovacion_pdf_sfe_local(arg):
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=35, h=8, txt='Reivindicaciones', border=1, align='c')
 			
-			pdf.cell(w=35, h=8, txt="", border=1, align='c')
+			pdf.cell(w=35, h=8, txt="-", border=1, align='l')
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=35, h=8, txt='Especificar', border=1 , align='c' )
-			pdf.cell(w=155, h=8, txt='', border=1, align='c' )	
+			pdf.cell(w=155, h=8, txt='-', border=1, align='l' )	
 
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 
@@ -454,49 +477,66 @@ def renovacion_pdf_sfe_local(arg):
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
-			pdf.cell(w=55, h=8, txt='Nombre y Apellido, Rason Social', border=1, align='c')
-			
-			pdf.cell(w=135, h=8, txt=str(global_data['nombre_soli']), border=1, align='l')
+			pdf.cell(w=55, h=8, txt='Nombre y Apellido, Razón Social', border=1, align='c')
 
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['personName']) != 'None':
+				pdf.cell(w=135, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['personName']), border=1, align='l')
+			else:
+				pdf.cell(w=135, h=8, txt="-", border=1, align='l')
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='Calle', border=1, align='c')
 			
-			pdf.multi_cell(w=150, h=8, txt = str(global_data['solic_dir']), border=1, align='l')
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['addressStreet']) != 'None':
+				pdf.multi_cell(w=150, h=8, txt = str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['addressStreet']), border=1, align='l')
+			else:
+				pdf.cell(w=150, h=8, txt="-", border=1, align='l')			
 			
-
-			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='Ciudad', border=1, align='c')
 			
-			pdf.cell(w=50, h=8, txt=str(global_data['ciudad']), border=1, align='l')
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['cityName']) != 'None':
+				pdf.cell(w=50, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['cityName']), border=1, align='l')
+			else:
+				pdf.cell(w=50, h=8, txt="-", border=1, align='l')			
+			
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='País', border=1, align='c')
 			
-			pdf.cell(w=50, h=8, txt=str(global_data['solic_pais']), border=1, align='l')
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['nationalityCountryCode']) != 'None':
+				pdf.cell(w=50, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['nationalityCountryCode']), border=1, align='l')
+			else:
+				pdf.cell(w=50, h=8, txt="-", border=1, align='l')			
+			
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=50, h=8, txt='Codigo Postal', border=1, align='c')
 			
-			pdf.cell(w=50, h=8, txt=str(global_data['codigo_postal']), border=1, align='l')
-
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['zipCode']) != 'None':
+				pdf.cell(w=50, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['zipCode']), border=1, align='l')
+			else:
+				pdf.cell(w=50, h=8, txt="-", border=1, align='l')				
+			
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='Teléfono', border=1, align='c')
-			
-			pdf.cell(w=50, h=8, txt=str(global_data['telefono']), border=1, align='l')
 
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['telephone']) != 'None':
+				pdf.cell(w=50, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['telephone']), border=1, align='l')
+			else:
+				pdf.cell(w=50, h=8, txt="-", border=1, align='l')
+			
 			pdf.set_font("helvetica", "B", 9)
-			pdf.cell(w=50, h=8, txt='Correo Electronico', border=1, align='c')
+			pdf.cell(w=40, h=8, txt='Correo Electronico', border=1, align='c')
 			
-			pdf.cell(w=50, h=8, txt=str(global_data['solic_email']), border=1, align='l')
-
-			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
-
-
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['email']) != 'None':
+				pdf.cell(w=60, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['email']), border=1, align='l')
+			else:
+				pdf.cell(w=60, h=8, txt="-", border=1, align='l')
 			################################################################################################################################################
 															##Titulares adicionales##
 			try:												
@@ -553,17 +593,17 @@ def renovacion_pdf_sfe_local(arg):
 					
 					pdf.cell(w=50, h=8, txt=str(i['person']['email']), border=1, align='l')
 
-					pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
 			except Exception as e:
 				pass
 			################################################################################################################################################
 
-
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 
 			pdf.set_font("helvetica", "B", 12)
 			pdf.cell(w=190, h=8, txt='DATOS DEL AGENTE DE PROPIEDAD INTELECTUAL', border=1, align='c' )
+			
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
-
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=35, h=8, txt='Matricula', border=1, align='c')
@@ -675,10 +715,12 @@ def renovacion_pdf_sfe_local(arg):
 
 		traer_datos_pdf(str(global_data['expediente']))
 
+		delete_img(str(global_data['expediente']))
 		#print(global_data)
 
 	except Exception as e:
 		print(e)
 			
 
+#renovacion_pdf_sfe_local("26919")
 #renovacion_pdf_sfe_local("22106266")

@@ -19,11 +19,13 @@ MEA_DB_ORIGEN_password = config_parametro('58')['valor4']
 MEA_DB_ORIGEN_database = config_parametro('58')['valor5']
 MEA_OFICINA_ORIGEN_user = config_parametro('64')['valor5']
 MEA_OFICINA_ORIGEN_FULL_VIEW = config_parametro('64')['valor4']
+MEA_OFICINA_ORIGEN_cap = config_parametro('64')['valor3']
+
 
 ###################################################################
 
 #Base de datos PUBLICACIONES posgresSql v14 
-#db_host = '192.168.50.216'
+#db_host = '192.168.50.215'
 #db_user='user_app_publicacion'
 #db_password='user_app_publicacion-202201!'
 #db_database='db_publicacion'
@@ -55,7 +57,7 @@ databaseME='db_sfe_presencial'
 ###################################################################
 
 #Base de datos MESA DE ENTRADA posgresSql v14
-#hostME = '192.168.50.216'
+#hostME = '192.168.50.215'
 #userME='user_app_recepcion'
 #passwordME='user_app_recepcion-202201!'
 #databaseME='db_sfe_presencial'
@@ -103,10 +105,16 @@ password_SFE_conn ='user-sprint--201901'
 database_SFE_conn = 'db_sfe_production'
 '''
 ###################################################################
-host_SFE_conn = '192.168.50.219'
-user_SFE_conn = 'user-developer'
-password_SFE_conn ='user-developer--201901'
-database_SFE_conn = 'db_sfe_production'
+#host_SFE_conn = '192.168.50.219'
+#user_SFE_conn = 'user-developer'
+#password_SFE_conn ='user-developer--201901'
+#database_SFE_conn = 'db_sfe_production'
+
+host_SFE_conn = MEA_DB_ORIGEN_host
+user_SFE_conn = MEA_DB_ORIGEN_user
+password_SFE_conn = MEA_DB_ORIGEN_password
+database_SFE_conn = MEA_DB_ORIGEN_database
+
 
 #centura
 host_centura = '192.168.50.231'
@@ -189,7 +197,11 @@ create_all_group = """select usuario from reglas_notificacion"""
 #reglas_me
 exp_ri_reglas_me = """select exp_ri from reglas_me where tipo_escrito = '{}'"""
 ###################################################################
+#MSG CORREO AGENTE
 
+msg_body_mail = '''Su solicitud de REGISTRO/RENOVACIÓN ha ingresado satisfactoriamente a la Dirección Nacional de Propiedad Intelectual – DINAPI, bajo los siguientes datos:  (se adjunta archivo PDF de su solicitud).\n Seguimos Mejorando para brindarte un servicio de calidad. \n --- \n Saludos cordiales,\n DIRECCIÓN NACIONAL DE PROPIEDAD INTELECTUAL''' 
+
+msg_body_ESC = '''Su solicitud de ESCRITO ha ingresado satisfactoriamente a la Dirección Nacional de Propiedad Intelectual – DINAPI, bajo los siguientes datos:  (se adjunta archivo PDF de su solicitud).\n Seguimos Mejorando para brindarte un servicio de calidad. \n --- \n Saludos cordiales,\n DIRECCIÓN NACIONAL DE PROPIEDAD INTELECTUAL''' 
 
 """
 http://192.168.50.194:8050/Stat/stat?type=loggedUser
@@ -197,7 +209,10 @@ http://192.168.50.194:8050/Stat/stat?type=loggedUser
 """
 
 
-
+            #JCENTURION
+            #IMATTO
+            #IPAS TEST - 50.155 (glassfish)
+            # nombre de archivo en ves de E poner PY
 
 
 

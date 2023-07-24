@@ -60,6 +60,24 @@ def registro_pdf_sfe_local(arg):
 							global_data['distintivo'] = i['valor']['archivo']['url']
 					except Exception as e:
 						global_data['distintivo'] = ""
+
+					try:
+						if(i['campo'] == "marca_deslogotipo"):
+							global_data['deslogotipo'] = i['valor']
+					except Exception as e:
+						global_data['deslogotipo'] = ""
+
+					try:
+						if(i['campo'] == "marca_deslogotipofg"):
+							global_data['deslogotipofg'] = i['valor']
+					except Exception as e:
+						global_data['deslogotipofg'] = ""
+
+					try:
+						if(i['campo'] == "marca_distintivofg"):
+							global_data['distintivofg'] = i['valor']['archivo']['url']
+					except Exception as e:
+						global_data['distintivofg'] = ""
 					
 					try:
 						if(i['descripcion'] == "N° de Documento" and i['campo'] == "datospersonales_nrodocumento"):
@@ -68,8 +86,7 @@ def registro_pdf_sfe_local(arg):
 						global_data['documento'] = ""
 
 					try:
-						if(i['descripcion'] == "RUC" and i['campo'] == 'datospersonales_ruc'):
-							#print(i['valor'])				
+						if(i['campo'] == 'datospersonales_ruc'):				
 							global_data['RUC']=i['valor']
 					except Exception as e:
 						global_data['RUC'] = ""	
@@ -111,7 +128,7 @@ def registro_pdf_sfe_local(arg):
 						global_data['nombre_soli'] = ""
 											
 					try:
-						if(i['descripcion'] == "Razón Social" and i['campo'] == 'datospersonales_razonsocial'):
+						if(i['campo'] == 'datospersonales_razonsocial'):
 							global_data['razon_social']=i['valor']
 					except Exception as e:
 						global_data['razon_social'] = ""					
@@ -188,7 +205,13 @@ def registro_pdf_sfe_local(arg):
 					except Exception as e:
 						global_data['espe'] = ""
 
+					try:	
+						if(i['campo'] == 'datostitular_agregar'):
+							global_data["titu_cant"] = i['valor']
+					except Exception as e:
+						global_data['titu_cant'] = ""
 
+				#print(global_data)
 
 
 			except Exception as e:
@@ -236,7 +259,7 @@ def registro_pdf_sfe_local(arg):
 		recorrer_sfe(arg)
 		
 		try:
-			multitu = titulare_reg(arg)
+			multitu = titulare_reg(arg,global_data["titu_cant"])
 			if multitu != []:
 				if multitu[0]['person']['personName'] == '':
 					multitu = []
@@ -343,9 +366,28 @@ def registro_pdf_sfe_local(arg):
 
 			pdf.multi_cell(w=120, h=28, txt="", border=1, align='L',ln=1) 
 			try:
-				pdf.image(str(global_data['distintivo']),x=123,y=(pdf.get_y()-27),w=25,h=25)
+				pdf.image(str(global_data['distintivo']) + str(global_data['distintivofg']),x=123,y=(pdf.get_y()-27),w=25,h=25)
 			except Exception as e:
 				pdf.image("static/sfe_default.PNG",x=123,y=(pdf.get_y()-27),w=25,h=25)
+
+			alt_fil:int = (round(len(global_data['deslogotipofg']+global_data['deslogotipo'])/98))
+			val_num:int = 0
+			val_lab:int = 0
+			if alt_fil == 0:
+				val_num = 8
+				val_lab = 4
+			else:
+				val_lab = alt_fil
+				val_num = alt_fil
+
+			pdf.cell(w=70, h=val_lab*2, txt='Descripción de Distintivo:', border=1 , align='c' )
+
+			pdf.set_font("helvetica", "B", 7)
+
+			try:
+				pdf.multi_cell(w=120, h=val_num, txt=str(global_data['deslogotipo']) + str(global_data['deslogotipofg']), border=1, align='L',ln=1)
+			except Exception as e:
+				pdf.multi_cell(w=130, h=val_num, txt="", border=1, align='L',ln=1)
 
 			"""			
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
@@ -358,10 +400,11 @@ def registro_pdf_sfe_local(arg):
 
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
-			pdf.cell(w=35, h=8, txt='Reivindicaciones', border=1, align='l')
+			pdf.cell(w=70, h=val_lab*2, txt='Reivindicaciones', border=1, align='l')
 			
-			pdf.cell(w=35, h=8, txt=global_data['reivindicaciones'], border=1, align='l')
+			pdf.cell(w=120, h=val_lab*2, txt=global_data['reivindicaciones'], border=1, align='l')
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=30, h=8, txt='Especificar', border=1 , align='c' )
 			

@@ -3,7 +3,7 @@ from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, regist
 from getFileDoc import getFile
 from respuesta_map import dir_titu, nom_titu
 from wipo.function_for_reception_in import user_doc_getList_escrito
-from wipo.ipas import mark_getlist, mark_getlistReg, mark_read, mark_readlogo, personAgente
+from wipo.ipas import fetch_all_user_mark, mark_getlist, mark_getlistReg, mark_read, mark_readlogo, personAgente
 import tools.connect as connex
 import tools.filing_date as captureDate
 import tools.connect as connex
@@ -79,6 +79,13 @@ class insertRenModel(object):
 		self.LogTyp = ""
 
 	def setData(self,doc_Id):
+
+		try:
+			self.user_responsible = fetch_all_user_mark(str(connex.MEA_OFICINA_ORIGEN_user))[0]['sqlColumnList'][0]['sqlColumnValue']
+		except Exception as e:
+			self.user_responsible = "4"
+			
+		#print(str(connex.MEA_OFICINA_ORIGEN_user))		
 		
 		self.data = renovacion_sfe(doc_Id) 
 
@@ -164,7 +171,7 @@ class insertRenModel(object):
 		self.file_fileId_fileSeries = str(captureDate.capture_year())
 		self.file_fileId_fileType = get_data_mark.file.fileId.fileType
 		self.file_filingData_applicationSubtype = self.tipo_clase
-		self.file_filingData_applicationType = get_data_mark.file.filingData.applicationType
+		self.file_filingData_applicationType = "REN"
 		self.file_filingData_captureUserId = str(get_data_mark.file.filingData.captureUserId.doubleValue)
 		self.file_filingData_filingDate = str(captureDate.capture_full())
 		self.file_filingData_captureDate = str(captureDate.capture_full())
@@ -174,7 +181,7 @@ class insertRenModel(object):
 			self.file_filingData_paymentList_receiptAmount = str(pago_data(doc_Id)[1])
 			self.file_filingData_paymentList_receiptDate = str(pago_data(doc_Id)[2])[0:10]
 			self.file_filingData_paymentList_receiptNbr = str(pago_data(doc_Id)[0])
-			self.file_filingData_paymentList_receiptNotes = "Caja MEA"
+			self.file_filingData_paymentList_receiptNotes = "Pago SFE"
 			self.file_filingData_paymentList_receiptType = "1"
 		except Exception as e:
 			self.file_filingData_paymentList_currencyType = ""
@@ -183,7 +190,7 @@ class insertRenModel(object):
 			self.file_filingData_paymentList_receiptNbr = ""
 			self.file_filingData_paymentList_receiptNotes = ""
 			self.file_filingData_paymentList_receiptType = ""			
-		self.file_filingData_receptionUserId = str("4")
+		self.file_filingData_receptionUserId = str(self.user_responsible)
 		self.file_ownershipData_ownerList_person_owneraddressStreet = get_data_mark.file.ownershipData.ownerList[0].person.addressStreet
 		self.file_ownershipData_ownerList_person_ownernationalityCountryCode = get_data_mark.file.ownershipData.ownerList[0].person.nationalityCountryCode
 		self.file_ownershipData_ownerList_person_ownerpersonName = get_data_mark.file.ownershipData.ownerList[0].person.personName

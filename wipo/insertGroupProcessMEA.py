@@ -254,7 +254,7 @@ def sigla_estado_exp(sig,fileNbr):
 		rule = email_receiver(str(status_exp))
 		return(status_exp)	
 	else:
-		return('GEN')
+		pass
 
 def email_receiver(sig):
 	data_user = {}

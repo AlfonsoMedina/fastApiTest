@@ -1,4 +1,5 @@
 
+from asyncio.windows_events import NULL
 from dinapi.sfe import pendiente_sfe,code_ag, pago_data, process_day_Nbr, respuesta_sfe_campo
 from getFileDoc import getFile
 from wipo.function_for_reception_in import user_doc_getList_escrito
@@ -461,7 +462,7 @@ class userDocModel_test(object):
 		except Exception as e:
 			self.filingData_paymentList_receiptNbr= ""		
 		
-		self.filingData_paymentList_receiptNotes = " Caja MEA"
+		self.filingData_paymentList_receiptNotes = " Pago SFE"
 		try:
 			self.filingData_paymentList_receiptType = str(data[0]['tasa_id'])
 		except Exception as e:

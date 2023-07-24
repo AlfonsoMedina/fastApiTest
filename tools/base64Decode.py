@@ -1,5 +1,7 @@
 import base64
+import binascii
 import codecs
+import os
 import re
 from time import sleep
 import requests
@@ -21,6 +23,30 @@ def decode_img(data):
     except Exception as e:
         return("")
 
+def b64_to_img(base,exp):
+	try:
+		image = base64.b64decode(base, validate=True)
+		file_to_save = exp
+		with open(file_to_save, "wb") as f:
+			f.write(image)
+	except binascii.Error as e:
+		print(e)
+
+def b64_to_img_pdf(base,exp):
+	try:
+		image = base64.b64decode(base, validate=True)
+		file_to_save = exp+'.png'
+		with open(file_to_save, "wb") as f:
+			f.write(image)
+	except binascii.Error as e:
+		print(e)
+
+def delete_img(exp):
+    if os.path.exists(f"{exp}.png"):
+        os.remove(f"{exp}.png")
+        return('true')
+    else:
+        return('false')
 
 #url image to base64  
 def image_url_to_b64(url):

@@ -11,7 +11,7 @@ import psycopg2
 from dinapi.sfe import pendiente_sfe, qr_code, titulare_reg
 import tools.filing_date as captureDate
 from wipo.ipas import *
-from tools.base64Decode import decode_pdf
+from tools.base64Decode import b64_to_img, b64_to_img_pdf, decode_pdf, delete_img
 from tools.data_format import fecha_barra, hora, signo_format
 import tools.connect as connex
 
@@ -260,7 +260,7 @@ def envio_agente_recibido_reg(arg0,fileNbr):
 			pdf.text(x=100, y=20, txt=str(form_descrip(str(form_id(arg0)[0]))))			
 
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=74, y=25, txt='Fecha envio')
+			pdf.text(x=58, y=25, txt='Fecha de presentación')
 			pdf.set_font("helvetica", "", 8)
 			pdf.text(x=100, y=25, txt=fecha_barra(str(form_id(arg0)[1]))+" "+hora_envio[0])			
 
@@ -336,7 +336,17 @@ def registro_pdf_con_acuse(arg):
 				global_data['direccion_agente'] = str(row[0][29])
 				global_data['nombre_formulario'] = str(row[0][3])
 				global_data['pais_agente'] = "PY"
+
+				get_List = mark_getlistReg('386104')
 				
+				get_data_mark = mark_read(
+					get_List[0].fileId.fileNbr.doubleValue, 
+					get_List[0].fileId.fileSeq, 
+					get_List[0].fileId.fileSeries.doubleValue, 
+					get_List[0].fileId.fileType
+					)
+
+								
 
 				for i in row[0][8]:
 
@@ -354,6 +364,13 @@ def registro_pdf_con_acuse(arg):
 							global_data['distintivo'] = i['valor']['archivo']['url']
 					except Exception as e:
 						global_data['distintivo'] = ""
+
+					try:
+						if(i['campo'] == "marca_distintivofg"):
+							global_data['distintivofg'] = i['valor']['archivo']['url']
+					except Exception as e:
+						global_data['distintivofg'] = ""
+
 					
 					try:
 						if(i['descripcion'] == "N° de Documento" and i['campo'] == "datospersonales_nrodocumento"):
@@ -373,7 +390,15 @@ def registro_pdf_con_acuse(arg):
 							global_data['distingue'] = i['valor']
 					except Exception as e:
 						global_data['distingue'] = ""					
-					
+
+
+					try:
+						if(i['campo'] == "marca_deslogotipo"):
+							global_data['deslogotipo'] = i['valor']
+					except Exception as e:
+						global_data['deslogotipo'] = ""
+
+
 					try:
 						if(i['descripcion'] == "Reivindicaciones"):
 							global_data['reivindicaciones'] = i['valor']
@@ -399,7 +424,7 @@ def registro_pdf_con_acuse(arg):
 						global_data['especificar'] = ""	
 
 					try:
-						if(i['descripcion'] == "Nombres y Apellidos" and i['campo'] == 'datospersonales_nombreapellido'):
+						if(i['campo'] == 'datospersonales_nombreapellido'):
 							global_data['nombre_soli'] = i['valor']
 					except Exception as e:
 						global_data['nombre_soli'] = ""
@@ -410,7 +435,7 @@ def registro_pdf_con_acuse(arg):
 					except Exception as e:
 						global_data['razon_social'] = ""					
 					try:
-						if(i['descripcion'] == "Dirección" and i['campo'] == 'datospersonales_calle'):
+						if(i['campo'] == 'datospersonales_calle'):
 							global_data['direccion']=i['valor']
 					except Exception as e:
 						global_data['direccion'] = ""					
@@ -482,8 +507,11 @@ def registro_pdf_con_acuse(arg):
 					except Exception as e:
 						global_data['espe'] = ""
 
-
-
+					try:
+						if(i['campo'] == "datostitular_agregar"):
+							global_data['titu_cant'] = i['valor']
+					except Exception as e:
+						global_data['titu_cant'] = "No definido"						
 
 			except Exception as e:
 				print(e)
@@ -517,7 +545,7 @@ def registro_pdf_con_acuse(arg):
 				a=hora_guionE[0].split(":")
 				#if (str(a[0]) <= '01'):
 					#fail_hour_sfe = (int(a[0]) + 3)
-				backhour = str(int(a[0])-3)+":"+a[1]+":"+a[2]
+				backhour = str(int(a[0])-4).rjust(2, '0') +":"+a[1]+":"+a[2]
 				#print(backhour)
 				return(str(fecha_formatE+" "+str(backhour)))
 		def convert_fecha_hora(data):
@@ -530,7 +558,7 @@ def registro_pdf_con_acuse(arg):
 		recorrer_sfe(arg)
 
 		try:
-			multitu = titulare_reg(arg)
+			multitu = titulare_reg(arg,global_data['titu_cant'])
 			if multitu != []:
 				if multitu[0]['person']['personName'] == '':
 					multitu = []
@@ -566,9 +594,9 @@ def registro_pdf_con_acuse(arg):
 			pdf.text(x=100, y=20, txt=str(form_descrip(str(form_id(arg)[0]))))			
 			
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=74, y=25, txt='Fecha envio')
+			pdf.text(x=58, y=25, txt='Fecha de presentación')
 			pdf.set_font("helvetica", "", 8)
-			pdf.text(x=100, y=25, txt=fecha_barra(str(form_id(arg)[1]))+" "+hora_envio[0])			
+			pdf.text(x=100, y=25, txt=convert_fecha_hora_sfe(str(global_data['fecha_envio'])))		
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=66, y=30, txt='Fecha Recepcion')
@@ -619,7 +647,7 @@ def registro_pdf_con_acuse(arg):
 			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
 			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
 			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )			
-			pdf.cell(w=35, h=8, txt='Fecha de Envío', border=1 , align='c' )
+			pdf.cell(w=35, h=8, txt='Fecha Presentación', border=1 , align='c' )
 			
 			try:
 				pdf.cell(w=155, h=8, txt=convert_fecha_hora_sfe(str(global_data['fecha_envio'])), border=1, align='l' )
@@ -686,13 +714,33 @@ def registro_pdf_con_acuse(arg):
 
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
-			pdf.cell(w=70, h=28, txt='Referencia de Distintivo:', border=1 , align='c' )
+			pdf.cell(w=70, h=28, txt='Distintivo:', border=1 , align='c' )
 
 			pdf.multi_cell(w=120, h=28, txt="", border=1, align='L',ln=1) 
+
 			try:
-				pdf.image(str(global_data['distintivo']),x=123,y=(pdf.get_y()-27),w=25,h=25)
+				pdf.image(str(global_data['distintivo']) + str(global_data['distintivofg']),x=123,y=(pdf.get_y()-27),w=25,h=25)
 			except Exception as e:
 				pdf.image("static/sfe_default.PNG",x=123,y=(pdf.get_y()-27),w=25,h=25)
+
+			alt_fil:int = (round(len(global_data['deslogotipo'])/98)*2)
+			val_num:int = 0
+			val_lab:int = 0
+			if alt_fil == 0:
+				val_num = 8
+				val_lab = 4
+			else:
+				val_lab = alt_fil
+				val_num = alt_fil
+
+			pdf.cell(w=70, h=val_lab*2, txt='Descripción de Distintivo:', border=1 , align='c' )
+
+			pdf.set_font("helvetica", "B", 7)
+
+			try:
+				pdf.multi_cell(w=120, h=val_num, txt=str(global_data['deslogotipo']), border=1, align='L',ln=1)
+			except Exception as e:
+				pdf.multi_cell(w=130, h=val_num, txt="", border=1, align='L',ln=1)
 
 			"""			
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
@@ -705,9 +753,9 @@ def registro_pdf_con_acuse(arg):
 
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
-			pdf.cell(w=35, h=8, txt='Reivindicaciones', border=1, align='l')
+			pdf.cell(w=70, h=val_lab*2, txt='Reivindicaciones', border=1, align='l')
 			
-			pdf.cell(w=35, h=8, txt=global_data['reivindicaciones'], border=1, align='l')
+			pdf.cell(w=120, h=val_lab*2, txt=global_data['reivindicaciones'], border=1, align='l')
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=30, h=8, txt='Especificar', border=1 , align='c' )
@@ -715,13 +763,13 @@ def registro_pdf_con_acuse(arg):
 			pdf.cell(w=160, h=8, txt=global_data['espe'], border=1, align='l' )	
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
-			
-			
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			#############################################################################################################################
-
-
-
+			#############################################################################################################################			
+			#############################################################################################################################
+			#############################################################################################################################			
 			pdf.add_page()
+			
 			pdf.set_font("helvetica", "B", 12)
 			pdf.image("static/sfe_no_pres_head.png",x=145,y=(pdf.get_y() + 4),w=30,h=15)
 			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
@@ -949,6 +997,8 @@ def registro_pdf_con_acuse(arg):
 			except Exception as e:
 				pdf.cell(w=140, h=8, txt="", border=1, align='c' )	
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			
+			"""	
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=50, h=8, txt='Calle', border=1 , align='c' )
 			
@@ -1012,7 +1062,9 @@ def registro_pdf_con_acuse(arg):
 			try:	
 				pdf.cell(w=140, h=8, txt=str(global_data['usuario']), border=1, align='l' )	
 			except Exception as e:
-				pdf.cell(w=140, h=8, txt="", border=1, align='c' )	
+				pdf.cell(w=140, h=8, txt="", border=1, align='c' )
+
+			"""	
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
 
@@ -1049,7 +1101,7 @@ def envio_agente_recibido_ren(arg0,fileNbr):
 			pdf.text(x=100, y=20, txt=str(form_descrip(str(form_id(arg0)[0]))))			
 
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=74, y=25, txt='Fecha envio')
+			pdf.text(x=58, y=25, txt='Fecha de presentación')
 			pdf.set_font("helvetica", "", 8)
 			pdf.text(x=100, y=25, txt=fecha_barra(str(form_id(arg0)[1]))+" "+hora_envio[0])			
 
@@ -1099,7 +1151,6 @@ def renovacion_pdf_con_acuse(arg):
 			data = mark_read(str(int(get_list[0].fileId.fileNbr.doubleValue)),str(get_list[0].fileId.fileSeq),str(get_list[0].fileId.fileSeries.doubleValue),str(get_list[0].fileId.fileType))
 		except Exception as e:
 			data = ''
-
 
 		def recorrer_sfe(arg):
 			try:
@@ -1359,9 +1410,10 @@ def renovacion_pdf_con_acuse(arg):
 				hora_puntoE = date_fullE[1].split(".")
 				hora_guionE = hora_puntoE[0].split("-")
 				a=hora_guionE[0].split(":")
-				backhour = str(int(a[0])-3)+":"+a[1]+":"+a[2]
+				backhour = str(int(a[0])-4).rjust(2, '0') +":"+a[1]+":"+a[2]
 				#print(backhour)
 				return(str(fecha_formatE+" "+str(backhour)))
+				
 		def convert_fecha_hora(data):
 			date_fullE = str(data).split(" ")
 			fecha_fullE = date_fullE[0].split("-")
@@ -1369,9 +1421,23 @@ def renovacion_pdf_con_acuse(arg):
 			hora_puntoE = date_fullE[1].split(".")
 			hora_guionE = hora_puntoE[0].split("-")
 			return(str(fecha_formatE+" "+str(hora_guionE[0])))
+    
+		get_List = mark_getlist(global_data['expediente'])
+        
 
-	
 		def traer_datos_pdf(arg):
+
+			get_data_mark_ren = mark_read(
+			get_List[0].fileId.fileNbr.doubleValue, 
+			get_List[0].fileId.fileSeq, 
+			get_List[0].fileId.fileSeries.doubleValue, 
+			get_List[0].fileId.fileType
+			)
+
+			try:
+				b64_to_img_pdf(base64.b64encode(get_data_mark_ren['signData']['logo']['logoData']),global_data['expediente'])
+			except Exception as e:
+				pass			
 
 			codebarheard("*"+str(global_data['expediente'])+"*")
 			codebarfoot("*"+str(global_data['codigo_barr'])+"*")
@@ -1394,14 +1460,14 @@ def renovacion_pdf_con_acuse(arg):
 			pdf.text(x=100, y=20, txt=str(global_data['nombre_formulario']))			
 
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=74, y=25, txt='Fecha envio')
+			pdf.text(x=58, y=25, txt='Fecha de presentación')
 			pdf.set_font("helvetica", "", 8)
 			pdf.text(x=100, y=25, txt=convert_fecha_hora_sfe(str(global_data['fecha_envio'])))			
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=66, y=30, txt='Fecha Recepcion')
 			pdf.set_font("helvetica", "", 8)
-			pdf.text(x=100, y=30, txt=convert_fecha_hora(str(global_data['fecha_solicitud'])))			
+			pdf.text(x=100, y=30, txt=convert_fecha_hora(str(get_data_mark_ren['file']['filingData']['captureDate']['dateValue']).replace("-04:00","").replace("-03:00","")))			
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=75, y=35, txt='Expediente')
@@ -1451,7 +1517,7 @@ def renovacion_pdf_con_acuse(arg):
 			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )
 			pdf.cell(w=0, h=4, txt='', border=0,ln=1 )			
 
-			pdf.cell(w=35, h=8, txt='Fecha de Envío', border=1 , align='c' )
+			pdf.cell(w=35, h=8, txt='Fecha Presentación', border=1 , align='c' )
 			
 			try:
 				pdf.cell(w=155, h=8, txt=convert_fecha_hora_sfe(str(global_data['fecha_envio'])), border=1, align='l' )
@@ -1464,14 +1530,14 @@ def renovacion_pdf_con_acuse(arg):
 			try:
 				pdf.cell(w=50, h=8, txt=str(str(global_data['expediente'])), border=1, align='l' )
 			except Exception as e:
-				pdf.cell(w=50, h=8, txt="", border=1, align='c' )
+				pdf.cell(w=50, h=8, txt="-", border=1, align='c' )
 			pdf.set_font("helvetica", "B", 9)	
 			pdf.cell(w=55, h=8, txt='Fecha y Hora de Solicitud', border=1, align='c' )
 			
 			try:
-				pdf.cell(w=50, h=8, txt=convert_fecha_hora(str(global_data['fecha_solicitud'])), border=1, align='l' )
+				pdf.cell(w=50, h=8, txt=convert_fecha_hora(str(get_data_mark_ren['file']['filingData']['captureDate']['dateValue']).replace("-04:00","").replace("-03:00","")), border=1, align='l' )
 			except Exception as e:
-				pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
+				pdf.cell(w=50, h=8, txt="-", border=1, align='c' )	
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 12)
 			pdf.cell(w=190, h=8, txt='DATOS DE LA MARCA', border=1, align='c' )
@@ -1479,9 +1545,10 @@ def renovacion_pdf_con_acuse(arg):
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=35, h=8, txt='Registro Nro.', border=1, align='c')
-			
-			pdf.cell(w=35, h=8, txt=str(global_data['registro_nbr']), border=1, align='l')
-
+			try:
+				pdf.cell(w=35, h=8, txt=str(global_data['registro_nbr']), border=1, align='l')
+			except Exception as e:
+				pdf.cell(w=35, h=8, txt='-', border=1, align='l')
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
@@ -1500,7 +1567,7 @@ def renovacion_pdf_con_acuse(arg):
 			try:	
 				pdf.cell(w=50, h=8, txt=str(global_data['clasificacion']), border=1, align='l' )
 			except Exception as e:
-				pdf.cell(w=50, h=8, txt="", border=1, align='c' )
+				pdf.cell(w=50, h=8, txt="-", border=1, align='c' )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=55, h=8, txt='Clase Niza', border=1, align='c' )
 			
@@ -1508,7 +1575,7 @@ def renovacion_pdf_con_acuse(arg):
 			try:
 				pdf.cell(w=50, h=8, txt=str(global_data['clase_on']).replace('.0',""), border=1, align='l' )
 			except Exception as e:
-				pdf.cell(w=50, h=8, txt="", border=1, align='c' )
+				pdf.cell(w=50, h=8, txt="-", border=1, align='c' )
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 
 			pdf.set_font("helvetica", "B", 9) 
@@ -1529,7 +1596,7 @@ def renovacion_pdf_con_acuse(arg):
 
 			pdf.multi_cell(w=120, h=28, txt="", border=1, align='L',ln=1) 
 			try:
-				pdf.image(str(global_data['distintivo2']),x=123,y=(pdf.get_y()-27),w=25,h=25)
+				pdf.image('./'+global_data['expediente']+'.png',x=123,y=(pdf.get_y()-27),w=25,h=25)
 			except Exception as e:
 				pdf.image("static/sfe_default.PNG",x=123,y=(pdf.get_y()-27),w=25,h=25)
 
@@ -1540,22 +1607,26 @@ def renovacion_pdf_con_acuse(arg):
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=35, h=8, txt='Reivindicaciones', border=1, align='c')
 			
-			pdf.cell(w=35, h=8, txt="", border=1, align='c')
+			pdf.cell(w=35, h=8, txt="-", border=1, align='l')
+
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=35, h=8, txt='Especificar', border=1 , align='c' )
-			pdf.cell(w=155, h=8, txt='', border=1, align='c' )	
+			pdf.cell(w=155, h=8, txt='-', border=1, align='l' )	
 
-			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
+			#pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 
-
-
-
-			pdf.add_page()
+			#########################################################################################################################
+			#########################################################################################################################
+			#########################################################################################################################
+			# 			
+			#pdf.add_page()
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 
-			pdf.image("static/sfe_no_pres_head.png",x=145,y=(pdf.get_y()-18),w=30,h=15)
+
+			#pdf.image("static/sfe_no_pres_head.png",x=145,y=(pdf.get_y()-18),w=30,h=15)
 
 			pdf.set_font("helvetica", "B", 12)
 			pdf.cell(w=190, h=8, txt='DATOS DEL SOLICITANTE', border=1, align='c' )
@@ -1564,45 +1635,67 @@ def renovacion_pdf_con_acuse(arg):
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
-			pdf.cell(w=55, h=8, txt='Nombre y Apellido, Rason Social', border=1, align='c')
-			
-			pdf.cell(w=135, h=8, txt=str(global_data['nombre_soli']), border=1, align='l')
+			pdf.cell(w=55, h=8, txt='Nombre y Apellido, Razón Social', border=1, align='c')
 
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['personName']) != 'None':
+				pdf.cell(w=135, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['personName']), border=1, align='l')
+			else:
+				pdf.cell(w=135, h=8, txt="-", border=1, align='l')
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='Calle', border=1, align='c')
 			
-			pdf.multi_cell(w=150, h=8, txt = str(global_data['solic_dir']), border=1, align='l')
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['addressStreet']) != 'None':
+				pdf.multi_cell(w=150, h=8, txt = str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['addressStreet']), border=1, align='l')
+			else:
+				pdf.cell(w=150, h=8, txt="-", border=1, align='l')			
 			
-
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='Ciudad', border=1, align='c')
 			
-			pdf.cell(w=50, h=8, txt=str(global_data['ciudad']), border=1, align='l')
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['cityName']) != 'None':
+				pdf.cell(w=50, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['cityName']), border=1, align='l')
+			else:
+				pdf.cell(w=50, h=8, txt="-", border=1, align='l')			
+			
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='País', border=1, align='c')
 			
-			pdf.cell(w=50, h=8, txt=str(global_data['solic_pais']), border=1, align='l')
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['nationalityCountryCode']) != 'None':
+				pdf.cell(w=50, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['nationalityCountryCode']), border=1, align='l')
+			else:
+				pdf.cell(w=50, h=8, txt="-", border=1, align='l')			
+			
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=50, h=8, txt='Codigo Postal', border=1, align='c')
 			
-			pdf.cell(w=50, h=8, txt=str(global_data['codigo_postal']), border=1, align='l')
-
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['zipCode']) != 'None':
+				pdf.cell(w=50, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['zipCode']), border=1, align='l')
+			else:
+				pdf.cell(w=50, h=8, txt="-", border=1, align='l')				
+			
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='Teléfono', border=1, align='c')
-			
-			pdf.cell(w=50, h=8, txt=str(global_data['telefono']), border=1, align='l')
 
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['telephone']) != 'None':
+				pdf.cell(w=50, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['telephone']), border=1, align='l')
+			else:
+				pdf.cell(w=50, h=8, txt="-", border=1, align='l')
+			
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=40, h=8, txt='Correo Electronico', border=1, align='c')
 			
-			pdf.cell(w=60, h=8, txt=str(global_data['solic_email']), border=1, align='l')
+			if str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['email']) != 'None':
+				pdf.cell(w=60, h=8, txt=str(get_data_mark_ren['file']['ownershipData']['ownerList'][0]['person']['email']), border=1, align='l')
+			else:
+				pdf.cell(w=60, h=8, txt="-", border=1, align='l')			
+			
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 
@@ -1617,7 +1710,7 @@ def renovacion_pdf_con_acuse(arg):
 			try:
 				pdf.cell(w=35, h=8, txt=str(global_data['code_agente']), border=1, align='l')
 			except Exception as e:
-				pdf.cell(w=35, h=8, txt="", border=1, align='c')
+				pdf.cell(w=35, h=8, txt="-", border=1, align='c')
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
@@ -1626,6 +1719,8 @@ def renovacion_pdf_con_acuse(arg):
 			pdf.cell(w=155, h=8, txt=str(global_data['nombre_agente']), border=1, align='l' )
 
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
+			"""
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=35, h=8, txt='Calle', border=1, align='c')
 			
@@ -1712,12 +1807,16 @@ def renovacion_pdf_con_acuse(arg):
 			
 			pdf.cell(w=155, h=8, txt=str(global_data['usuario']), border=1, align='l' )
 
+			"""
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
 			
 			pdf.output('pdf/notificacion-DINAPI.pdf')
 
+
 		traer_datos_pdf(str(global_data['expediente']))
+
+		delete_img(str(global_data['expediente']))
 
 		#print(global_data)
 
@@ -1803,7 +1902,6 @@ def agent_id(arg):
 		print(e)
 	finally:
 		conn.close()
-
 
 def acuse_from_AG_REG(param,tramite_id,fileNbr):
 	if param == 'N':

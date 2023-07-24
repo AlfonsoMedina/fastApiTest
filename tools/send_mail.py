@@ -11,7 +11,7 @@ import os
 #only file name send
 def enviar(fileName,mail_ag,asunto,msg_body):
     try:
-        mess_body = '''Su solicitud de REGISTRO/RENOVACIÓN ha ingresado satisfactoriamente a la Dirección Nacional de Propiedad Intelectual – DINAPI, bajo los siguientes datos:  (se adjunta archivo PDF de su solicitud).\n Seguimos Mejorando para brindarte un servicio de calidad. \n --- \n Saludos cordiales,\n DIRECCIÓN NACIONAL DE PROPIEDAD INTELECTUAL'''    
+        mess_body = msg_body    
         email = "noreply@dinapi.gov.py"
         password = "N0reply.com"
         send_to_email = mail_ag

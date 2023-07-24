@@ -39,7 +39,6 @@ def respuesta_sfe_campo(arg):
 		list_valores['codigo'] = str(row[0][10])
 		list_valores['firmado_at'] = str(row[0][11])
 		list_valores['pagado_at'] = str(row[0][12])
-		list_valores['expediente_id'] = str(row[0][13])
 		list_valores['enviado_at'] = str(row[0][15])
 		list_valores['expediente_afectado'] = str(row[0][19])
 		list_valores['tipo_documento_id'] = str(row[0][25])
@@ -59,7 +58,7 @@ def respuesta_sfe_campo(arg):
 					try:
 						list_valores[x] = row[0][6][item]['valor']
 					except Exception as e:
-						list_valores[x] = 'sin valor'
+						list_valores[x] = ''
 
 	except Exception as e:
 		print(e)
@@ -95,37 +94,82 @@ def registro_sfe(arg):
 				if(int(clase_tipo.replace(".0","")) >= 35):
 					#print('SERVICIOS')
 					global_data['clasificacion']= 'SERVICIOS'
+
+
 			try:
+				if(i['campo'] == "datospersonales_tipo"):
+					if i['valor'] == 'Persona Fisica':
+						global_data['persona_fisica'] = 'CED'
+						global_data['persona_juridica'] = ""
+					if i['valor'] == 'Persona Juridica':
+						global_data['persona_fisica'] = ""
+						global_data['persona_juridica'] = 'RUC'
+
+			except Exception as e:
+				global_data['persona_fisica'] = "No definido"
+				global_data['persona_juridica'] = "No definido"
+
+
+			try:
+				if(i['campo'] == "marca_distintivofg") :
+					global_data['distintivofg'] = i['valor']['archivo']['url']
+			except Exception as e:
+				global_data['distintivofg'] = "No definido"
+
+
+			try:
+				if(i['campo'] == "marca_distintivotr") :
+					global_data['distintivotr'] = i['valor']['archivo']['url']
+			except Exception as e:
+				global_data['distintivotr'] = "No definido"
+
+
+			try: 
 				if(i['campo'] == "marca_distintivo"):
 					global_data['distintivo'] = i['valor']['archivo']['url']
 			except Exception as e:
-				global_data['distintivo'] = "No definido"					
+				global_data['distintivo'] = "No definido"
+			
+
 			try:
-				if(i['descripcion'] == "N° de Documento" and i['campo'] == "datospersonales_nrodocumento"):
+				if(i['campo'] == "datostitular_agregar"):
+					global_data['titu_cant'] = i['valor']
+			except Exception as e:
+				global_data['titu_cant'] = "No definido"
+
+			try:
+				if(i['campo'] == "datospersonales_nrodocumento"):
 					global_data['documento'] = i['valor']
 			except Exception as e:
 				global_data['documento'] = "No definido"
+			
 			try:
-				if(i['descripcion'] == "RUC" and i['campo'] == 'datospersonales_ruc'):
+				if(i['campo'] == 'datospersonales_ruc'):
 					#print(i['valor'])				
 					global_data['RUC']=i['valor']
 			except Exception as e:
 				global_data['RUC'] = "No definido"	
+			
 			try:
 				if(i['descripcion'] == "Productos o Servicios que distingue"):
 					global_data['distingue'] = i['valor']
 			except Exception as e:
-				global_data['distingue'] = "No definido"										
+				global_data['distingue'] = "No definido"
+
+			'''
 			try:
 				if(i['descripcion'] == "Reivindicaciones"):
 					global_data['reivindicaciones'] = i['valor']
 			except Exception as e:
-				global_data['reivindicaciones'] = "No definido"	
+				global_data['reivindicaciones'] = "No definido"
+			'''
+
 			try:
 				if(i['campo'] == "marca_tipomarca"):
 					global_data["tipo_on"] = i['valor']
 			except Exception as e:
-				global_data['tipo_on'] = "No definido"	
+				global_data['tipo_on'] = "No definido"
+
 			try:
 				if(i['descripcion'] == "Denominación"):
 					global_data['denominacion_on'] = i['valor']
@@ -163,12 +207,19 @@ def registro_sfe(arg):
 				global_data['direccion_dir'] = "No definido"
 		
 			try:
-				if(i['descripcion'] == "Ciudad" and i['campo'] == 'datospersonales_ciudad'):
+				if(i['campo'] == 'datospersonales_ciudad'):
 					global_data['ciudad']=i['valor']
 			except Exception as e:
-				global_data['ciudad'] = "No definido"					
+				global_data['ciudad'] = "No definido"
+
 			try:
-				if(i['descripcion'] == "País " and i['campo'] == 'datospersonales_pais'):
+				if(i['campo'] == 'datospersonales_sexo'):
+					global_data['sexo']=i['valor']
+			except Exception as e:
+				global_data['sexo'] = "No definido"
+							
+			try:
+				if(i['campo'] == 'datospersonales_pais'):
 					global_data['pais']=i['valor']
 			except Exception as e:
 				global_data['pais'] = "No definido"					
@@ -178,12 +229,25 @@ def registro_sfe(arg):
 			except Exception as e:
 				global_data['codigo_postal'] = "No definido"					
 			try:
-				if(i['descripcion'] == "Teléfono" and i['campo'] == 'datospersonales_telefono'):
+				if(i['campo'] == 'datospersonales_telefono'):
 					global_data['telefono']=i['valor']
 			except Exception as e:
-				global_data['telefono'] = "No definido"					
+				global_data['telefono'] = "No definido"	
+
 			try:
-				if(i['descripcion'] == "Correo Electrónico" and i['campo'] == 'datospersonales_correoelectronico'):
+				if(i['campo'] == 'datospersonales_departamento'):
+					global_data['departamento']=i['valor']
+			except Exception as e:
+				global_data['departamento'] = "No definido"
+
+			try:
+				if(i['campo'] == 'datospersonales_codigopostal'):
+					global_data['codigopostal']=i['valor']
+			except Exception as e:
+				global_data['codigopostal'] = "No definido"					
+
+			try:
+				if(i['campo'] == 'datospersonales_correoelectronico'):
 					global_data['email']=i['valor']
 			except Exception as e:
 				global_data['email'] = "No definido"					
@@ -218,11 +282,74 @@ def registro_sfe(arg):
 			except Exception as e:
 				global_data['pais_pri'] = "No definido"
 			try:
-				if(i['descripcion'] == "Especificar" and i['campo'] == 'marca_especificar'):
+				if(i['campo'] == 'marca_especificar'):
 					global_data['espe']=i['valor']
 			except Exception as e:
 				global_data['espe'] = "No definido"
-		
+
+			try:
+				if(i['campo'] == 'marca_deslogotipo'):
+					global_data['deslogotipo']=i['valor']
+			except Exception as e:
+				global_data['deslogotipo'] = "No definido"	
+			
+			try:
+				if(i['campo'] == 'marca_especificar'):
+					global_data['reivindicaciones']=i['valor']
+			except Exception as e:
+				global_data['reivindicaciones'] = "No definido"
+
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_regexpediente'):
+					global_data['regexpediente']=i['valor']
+			except Exception as e:
+				global_data['regexpediente'] = ""
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_regtipo'):
+					global_data['regtipo']=i['valor']
+			except Exception as e:
+				global_data['regtipo'] = ""
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_regorigen'):
+					global_data['regorigen']=i['valor']
+			except Exception as e:
+				global_data['regorigen'] = ""
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_regserie'):
+					global_data['regserie']=i['valor']
+			except Exception as e:
+				global_data['regserie'] = ""
+
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_solexpediente'):
+					global_data['solexpediente']=i['valor']
+			except Exception as e:
+				global_data['solexpediente'] = ""
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_soltipo'):
+					global_data['soltipo']=i['valor']
+			except Exception as e:
+				global_data['soltipo'] = ""
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_solorigen'):
+					global_data['solorigen']=i['valor']
+			except Exception as e:
+				global_data['solorigen'] = ""
+
+			try:
+				if(i['campo'] == 'datosrepresentacion_solserie'):
+					global_data['solserie']=i['valor']
+			except Exception as e:
+				global_data['solserie'] = ""
+
+
 		#print(global_data)
 		return(global_data)
 	
@@ -231,10 +358,9 @@ def registro_sfe(arg):
 	finally:
 		conn.close()
 
-def titulare_reg(arg):
+def titulare_reg(arg,num):
 	list_titulare = []
-
-	for i in range(2,10):
+	for i in range(2,(int(num)+1)):
 		list_titulare.append(catch_owner(arg,i))
 
 	if list_titulare[0]['person']['personName'] == '':	
@@ -278,14 +404,14 @@ def catch_owner(arg,number):
 			if(i['campo'] == f"titular{number}_ciudad{number}"):
 				global_data_titu['cityName'] = i['valor']
 			if(i['campo'] == f"titular{number}_nrodocumento{number}"):
-				global_data_titu['legalIdNbr'] = i['valor']                                    
+				global_data_titu['individualIdNbr'] = i['valor']                                    
 			if(i['campo'] == f"titular{number}_ruc{number}"):
-				global_data_titu['individualIdNbr'] = i['valor']
+				global_data_titu['legalIdNbr'] = i['valor']
 			if(i['campo'] == f"titular{number}_tipo{number}"):
 				if i['valor'] == 'Persona Fisica':
-					global_data_titu['individualIdType'] = 'RUC'
+					global_data_titu['individualIdType'] = 'CED'
 				else:
-					global_data_titu['legalIdType'] = 'CI'
+					global_data_titu['legalIdType'] = 'RUC'
 			if(i['campo'] == f"titular{number}_correoelectronico{number}"):
 				global_data_titu['email'] = i['valor']
 			if(i['campo'] == f"titular{number}_codigopostal{number}"):
@@ -1038,7 +1164,7 @@ def tip_doc():
 		tipo_form = []
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""select siglas from tipos_documento  where formulario_id  in  ({})""".format(connex.MEA_SFE_FORMULARIOS_ID_tipo))
+		cursor.execute("""select siglas  from tipos_documento  where formulario_id  in  ({})""".format(connex.MEA_SFE_FORMULARIOS_ID_tipo))
 		row=cursor.fetchall()
 		for i in row:
 			tipo_form.append(i)
@@ -1721,10 +1847,13 @@ def stop_request():
 		conn.close()
 
 def main_State(exp):
-	data_exp = mark_getlist(exp)[0]
-	data_exp_process = mark_read(data_exp.fileId.fileNbr.doubleValue, data_exp.fileId.fileSeq, data_exp.fileId.fileSeries.doubleValue, data_exp.fileId.fileType)
-	status_exp = Process_Read(data_exp_process.file.processId.processNbr.doubleValue, data_exp_process.file.processId.processType)
-	return(status_exp.status.statusId.statusCode)
+	try:
+		data_exp = mark_getlist(exp)[0]
+		data_exp_process = mark_read(data_exp.fileId.fileNbr.doubleValue, data_exp.fileId.fileSeq, data_exp.fileId.fileSeries.doubleValue, data_exp.fileId.fileType)
+		status_exp = Process_Read(data_exp_process.file.processId.processNbr.doubleValue, data_exp_process.file.processId.processType)
+		return(status_exp.status.statusId.statusCode)
+	except Exception as e:
+		return False
 
 def email_receiver(sig):
 	data_user = {}
@@ -1768,38 +1897,34 @@ def exist_main_mark(sig):
 		conn.close()
 
 def rule_notification(sig,exp):
-	print(sig)
-	if exist_main_mark(sig) == 'S':
-		status_exp = main_State(exp)
-		#print(status_exp)
-		rule = email_receiver(str(status_exp))
-		#print(rule)
+	if exist_main_mark(sig) == 'S' and main_State(exp) != False:
 		try:	
-			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp} status {str(status_exp)}")
+			status_exp = main_State(exp)
+			rule = email_receiver(str(status_exp))
+			print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")
+			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")
 		except Exception as e:
-			pass			
+			status_exp = main_State(exp)
+			rule = email_receiver('GEN')
+			print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")
+			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")			
 	else:
 		if exist_notifi(sig) != 'null':
 			rule = email_receiver(str(sig))
-			try:	
-				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
-			except Exception as e:
-				pass		
-			try:	
-				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
+			try:
+				print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp}")	
+				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp}")
 			except Exception as e:
 				pass
-		else:
-			rule = email_receiver('GEN')
-			try:	
-				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
-			except Exception as e:
-				pass		
-			try:	
-				enviar_back_notFile(str(rule[1][0]), str(rule[0][2]), f"{str(rule[0][1])} -  {exp}")
-			except Exception as e:
-				pass				
 
+		elif exist_notifi(sig) == 'null':
+			rule = email_receiver('GEN')
+			try:
+				print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} de tipo {sig}")
+				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} de tipo {sig}")
+			except Exception as e:
+				pass
+							
 def log_info():
 	pack_data = []
 	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
@@ -1888,7 +2013,6 @@ def what_it_this(arg):
 	finally:
 		conn.close()
 
-
 def USER_GROUP(sig):
 	data_user = {}
 	try:
@@ -1959,16 +2083,15 @@ def closed_process_day(fecha):
 #Abrir dia
 def open_process_day(fecha):
 	try:
-		num = int(getLast_number())-1
+		num = int(getLast_number())
 		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
 		cursor = conn.cursor()
-		cursor.execute(connex.OPEN_PROCESS_DATE.format(fecha,num,num))
+		cursor.execute(connex.OPEN_PROCESS_DATE.format(fecha,num+1,(num)))
 		conn.commit()
 		conn.close()
 		return(True)
 	except Exception as e:
 		return(e)
-
 
 def newDayProcess():
 	last_date = getDia_proceso() 					# Ultima fecha de proceso 
@@ -1976,18 +2099,6 @@ def newDayProcess():
 	if closed_process_day(last_date) == True:		# Cierra ultima fecha 
 		if open_process_day(today) == True:			# Abre fecha nueva
 			return(True)			
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 '''

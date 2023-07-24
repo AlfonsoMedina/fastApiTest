@@ -1,9 +1,11 @@
-from ipas.function_for_reception_in import *
-from ipas.ipas_methods import *
+from wipo.function_for_reception_in import *
+from wipo.ipas_methods import *
 from datetime import datetime
 from fpdf import FPDF, HTMLMixin  #pip install fpdf2
 from tools.data_format import fecha_mes_hora
 from os import getcwd
+
+from wipo.ipas import disenio_getlist_fecha, disenio_user_doc_getlist_fecha, mark_getlistFecha, patent_getlist_fecha, patent_user_doc_getlist_fecha, user_doc_getlist_fecha
 
 
 
