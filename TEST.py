@@ -272,9 +272,9 @@ get_data_mark = mark_read(get_List[0].fileId.fileNbr.doubleValue,get_List[0].fil
 
 #print(get_data_mark['file']['filingData']['captureDate']['dateValue'])
 
+registro_pdf_con_acuse('27077')
 
-
-renovacion_pdf_con_acuse('26919')
+#renovacion_pdf_con_acuse('26919')
 
 #renovacion_pdf_con_acuse('26891')
 

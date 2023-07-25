@@ -760,7 +760,8 @@ def registro_pdf_con_acuse(arg):
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=30, h=8, txt='Especificar', border=1 , align='c' )
 			
-			pdf.cell(w=160, h=8, txt=global_data['espe'], border=1, align='l' )	
+			pdf.set_font("helvetica", "", 7)
+			pdf.multi_cell(w=160, h=8, txt=global_data['espe'], border=1, align='l' )	
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
