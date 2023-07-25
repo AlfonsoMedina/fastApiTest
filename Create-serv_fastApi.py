@@ -45,7 +45,7 @@ WantedBy=multi-user.target""")
     file_state.close()
 
 
-    #####################################
+    #####################################################################################
     #### RUN .SH CONFIGURATION FILE
     file_state = open(f"{DIR_BASE}/.SprintV2_MEA_backend/run-{appName}.sh", "w")
     file_state.write(
@@ -56,7 +56,7 @@ cd {DIR_BASE}/ && source {DIR_BASE}/venv/bin/activate && gunicorn -w 4 -k uvicor
 
 
 
-    #########################################
+    #####################################################################################
     #### SERVICE FILE RESTART
     file_state = open(f"{DIR_BASE}/.SprintV2_MEA_backend/run-{appName}-restart.sh", "w")
     file_state.write(

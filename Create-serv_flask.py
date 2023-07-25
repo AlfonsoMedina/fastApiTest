@@ -85,4 +85,4 @@ systemctl stop {appName}.service && kill -9 $(sudo lsof -t -i:{appPort})
 
     
 else:
-    print("Ejecute el file_state con SUDO")
+    print(" SUDO")

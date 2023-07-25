@@ -1,6 +1,8 @@
 from dataclasses import replace
 import json
+import time
 import psycopg2
+from dinapi.sfe import respuesta_sfe_campo
 import tools.connect as connex
 
 
@@ -117,15 +119,19 @@ import tools.connect as connex
 
 
 
-def respuesta_sfe_campo(arg):
-	data = ''
+
+
+
+
+
+def campo_scan(arg):
 	try:
 		list_campos = []
 		list_valores = {}
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
 		cursor.execute("""select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
-			from tramites where formulario_id in (29,4,3,27) and id = {}
+			from tramites where formulario_id in (29,4,3,70) and id = {}
 		""".format(arg))
 		row=cursor.fetchall()
 		#print(row[0][6])
@@ -150,8 +156,35 @@ def respuesta_sfe_campo(arg):
 	
 	return('true')
 
+def create_list(arg):
+	listId = []
+	try:
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""SELECT id FROM public.tramites WHERE created_at >= '{} 00:59' and formulario_id in (27,29,4,70,3) and created_at <= '{} 20:59'""".format(arg,arg))
+		row=cursor.fetchall()
+		for i in row:
+			campo_scan(i[0])
+			listId.append(i[0])
+		return listId
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()	 
 
-listId = [27042,27040,27035,27034,27033,27032,27031,27030,27029,27028,27027,27026,27025,27024,27023,27022,27015,27014,27013,27012,27009,27007,27005,27004,27003,27002,27001,26998,26997,26996,26995,26990,26987,26986,26985,26983,26981,26980,26977,26975,26965,26964,26963,26962,26951,26949,26946,26945,26944,26943,26941,26939,26938,26937,26933,26932,26930,26922,26921,26919,26916,26915,26913,26911,26910,26909,26908,26907,26902,26901,26900,26899,26898,26897,26896,26895,26894,26893,26892,26891,26890,26889,26887,26886,26885,26884,26883,26882,26881,26880,26879,26878,26877,26876,26875,26874,26873,26872,26868,26867,26864,26863,26862,26861,26860,26857,26855,26854,26853,26852,26851,26850,26848,26847,26846,26845,26842,26841,26840,26839,26838,26837,26836,26835,26834,26833,26832,26831,26830,26829,26827,26826,26795,26794,26793,26788,26786,26785,26765,26760,25838,22340,22339]
+def timer(step):
+	print('')
+	i = 0
+	while i < step:
+		if i == 3:
+	##############################################################################################################                
+			try:
+				print(create_list('2023-07-25'))
+			except Exception as e:
+				pass
+	##############################################################################################################
+		time.sleep(1)
+		if(i == 58):
+			i=0
 
-for i in listId:
-	respuesta_sfe_campo(i)
+timer(59)
