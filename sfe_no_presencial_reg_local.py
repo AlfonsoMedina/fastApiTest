@@ -408,7 +408,7 @@ def registro_pdf_sfe_local(arg):
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=30, h=8, txt='Especificar', border=1 , align='c' )
 			
-			pdf.cell(w=160, h=8, txt=global_data['espe'], border=1, align='l' )	
+			pdf.multi_cell(w=160, h=8, txt=global_data['espe'], border=1, align='l' )	
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
 			
@@ -717,7 +717,7 @@ def registro_pdf_sfe_local(arg):
 		print(e)
 	
 
-
+#registro_pdf_sfe_local('27077')
 
 
 
