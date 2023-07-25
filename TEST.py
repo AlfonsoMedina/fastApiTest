@@ -172,19 +172,19 @@ def create_list(arg):
 	finally:
 		conn.close()	 
 
+#print(create_list('2023-07-25'))
+
 def timer(step):
 	print('')
 	i = 0
 	while i < step:
-		if i == 3:
 	##############################################################################################################                
-			try:
-				print(create_list('2023-07-25'))
-			except Exception as e:
-				pass
+		try:
+			print(create_list('2023-07-25'))
+		except Exception as e:
+			pass
 	##############################################################################################################
-		time.sleep(1)
-		if(i == 58):
-			i=0
+		time.sleep(3)
+
 
 timer(59)
