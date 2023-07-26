@@ -79,7 +79,7 @@ def consulta_sfe(fecha):
         +" where bancard_transactions.status = 1 \n" 
         +" and public.tramites.estado = 7 \n" 
         +" and  public.tramites.formulario_id = 29 \n" 
-        + "and enviado_at >= '"+fecha+" 00:59:00.0' and enviado_at <= '"+fecha+" 14:59:00.0'")
+        + "and enviado_at >= '"+fecha+" 00:59:00.0' and enviado_at <= '"+fecha+" 22:59:00.0'")
         row=cursor.fetchall()
         pagosSFE = []
         for i in row:
