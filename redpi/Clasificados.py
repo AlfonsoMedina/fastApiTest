@@ -172,7 +172,6 @@ def full_package(fecha):
     return(*consulta_sfe(fecha),*consulta_caja(fecha))
 
 
-
 """
 
 la fecha a procesar en testing 2022-12-01

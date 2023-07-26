@@ -232,7 +232,7 @@ class insert_ipas(BaseModel):
 	evento:str = ""
 @app.post('/api/insert_ipas', tags=["Isert IPAS para soporte"], summary="#", description="")
 def insert_redpi(item:insert_ipas):	
-	Insert_Action(item.exp,item.pago,item.userid,item.nota,item.evento)
+	Insert_Action(item.exp,item.pago,'4',item.nota,item.evento)
 	return('573 ok')
 
 @app.post('/api/cargar_nuevo_form_op', tags=["Isert en form_orden_publicacion"], summary="#", description="")
