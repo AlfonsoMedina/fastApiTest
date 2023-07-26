@@ -131,15 +131,15 @@ def campo_scan(arg):
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
 		cursor.execute("""select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
-			from tramites where formulario_id in (29,4,3,70) and id = {}
+			from tramites where formulario_id in (27,28,29,4,70,95,3,100,101,102) and id = {}
 		""".format(arg))
 		row=cursor.fetchall()
 		#print(row[0][6])
 		for i in row[0][6]:
 			try:
-				list_campos.append({"campo": i['campo'],"valor": i['valor'],"isValid": "true","condicion": "","requerido": "false","componente": "textview","validacion": "","descripcion": i['descripcion']})			
+				list_campos.append({"campo": i['campo'],"valor": i['valor'],"isValId": "true","condicion": "","requerido": "false","componente": "textview","validacion": "","descripcion": i['descripcion']})			
 			except Exception as e:
-				list_campos.append({"campo": "","valor": "","isValid": "true","condicion": "","requerido": "false","componente": "textview","validacion": "","descripcion": ""})
+				list_campos.append({"campo": "","valor": "","isValId": "true","condicion": "","requerido": "false","componente": "textview","validacion": "","descripcion": ""})
 
 		connUP = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = connUP.cursor()
@@ -161,7 +161,7 @@ def create_list(arg):
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""SELECT id FROM public.tramites WHERE created_at >= '{} 00:59' and formulario_id in (27,28,29,4,70,3,100,101) and created_at <= '{} 20:59'""".format(arg,arg))
+		cursor.execute("""SELECT id FROM public.tramites WHERE created_at >= '{} 00:59' and formulario_id in (27,28,29,95,4,70,3,100,101,102) and created_at <= '{} 20:59'""".format(arg,arg))
 		row=cursor.fetchall()
 		for i in row:
 			campo_scan(i[0])
