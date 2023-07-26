@@ -161,7 +161,7 @@ def create_list(arg):
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""SELECT id FROM public.tramites WHERE created_at >= '{} 00:59' and formulario_id in (27,29,4,70,3,100,101) and created_at <= '{} 20:59'""".format(arg,arg))
+		cursor.execute("""SELECT id FROM public.tramites WHERE created_at >= '{} 00:59' and formulario_id in (27,28,29,4,70,3,100,101) and created_at <= '{} 20:59'""".format(arg,arg))
 		row=cursor.fetchall()
 		for i in row:
 			campo_scan(i[0])
@@ -180,7 +180,7 @@ def timer(step):
 	while i < step:
 	##############################################################################################################                
 		try:
-			print(create_list('2023-07-25'))
+			print(create_list('2023-07-26'))
 		except Exception as e:
 			pass
 	##############################################################################################################

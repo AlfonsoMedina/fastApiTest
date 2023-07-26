@@ -42,13 +42,13 @@ def captura_pendientes():
 				list_id.append(str(i['Id'])+"/"+str(sigla_doc[0]))
 		except Exception as e:
 			pass
-	print(list_id)
-	'''if list_id != []:
+	#print(list_id)
+	if list_id != []:
 		for i in list_id:
 			params = str(i).split('/')
-			print('doc pendiente '+str(params[0]))
+			#print('doc pendiente '+str(params[0]))
 			insert_list(str(params[0]),str(params[1]))
-			time.sleep(1)'''
+			time.sleep(1)
 
 #arg0 id and arg1 sigla in state 7
 #this func insert a doc whatever to case: payment, not payment, mark or userDoc...
@@ -733,6 +733,7 @@ def insertReg(form_Id):
 	if flow_request == 0:
 		insert_mark = insertRegModel()
 		insert_mark.setData(form_Id)
+		print(insert_mark.file_filingData_captureDate)
 		try:
 			new_Nbr = str(COMMIT_NBR())
 			insertRegState = mark_insert_reg(
