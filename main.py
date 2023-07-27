@@ -38,7 +38,7 @@ app.add_middleware(
 	CORSMiddleware,
 	allow_origins=origins,
 	allow_credentials=True,
-	allow_methods=['*'], #["POST"]
+	allow_methods=['*'], #["POST","GET","PUT","DELETE"]
 	allow_headers=["*"],
 )
 
@@ -1176,7 +1176,6 @@ def insert_user_doc_sin_recibo_con_exp(item:userdoc_upd_sr_cr):
 				item.representativeList_representativeType))
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
-
 
 class insert_reg(BaseModel):
 	file_fileId_fileNbr:str = ""
