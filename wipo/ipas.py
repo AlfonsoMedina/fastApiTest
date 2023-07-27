@@ -9923,11 +9923,11 @@ for i in range(0,len(user_doc_read('E','2104647','2','2021'))):
 	print(user_doc_read('E','2104647','2','2021'))'''
 
 
-#event redpi insert
+#ipas insert event redpi
 '''
-exp_ipas = [22100937,2273856]
+exp_ipas = [2127817,2127831,2127811,2127815,2129741,21100186,2172679,21106543,21106538,21106551,21106553,2140935,2132167,2140952,2140939,21106569,227421,2272473,2251903,2322200,2322197,2322198,1994000]
 for i in range(len(exp_ipas)):	
-	Insert_Action_soporte(exp_ipas[i],'2023-01-02','282','Publicado en RedPI','573')
+	Insert_Action_soporte(exp_ipas[i],'2023-07-13','4','Actualización de datos, Publicado en RedPI','573')
 '''
 
 
