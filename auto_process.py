@@ -4,7 +4,7 @@ import time
 from tools.base64Decode import b64_to_img
 from email_pdf_AG import  acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_reg, envio_agente_recibido_ren
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import  COMMIT_NBR, USER_GROUP, cambio_estado, cambio_estado_soporte, data_validator, esc_relation,  exp_relation,  pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
+from dinapi.sfe import  COMMIT_NBR, USER_GROUP, cambio_estado, cambio_estado_soporte, data_validator, esc_relation,  exp_relation, notification_package,  pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
 from getFileDoc import  compilePDF, getFile, getFile_reg_and_ren
 from sfe_no_presencial_reg_local import registro_pdf_sfe_local
 from models.insertRegModel import insertRegModel
@@ -22,6 +22,8 @@ import zeep
 default_val_e99 = lambda arg: arg if arg != "" else "E99"
 list_id = []
 sigla:string = ''
+
+subsequent_list = []
 
 def listar():
 	#print('............................................................................')
@@ -61,7 +63,6 @@ def insert_list(arg0:string,arg1:string):
 		return()	
 	pago_auth:str = str(pago_id(arg0)).replace("None","sin dato en bancar")
 	valid_rules:str = []
-
 
 	#print(' ')
 	#print(arg0) #tramite ID	
@@ -345,8 +346,7 @@ def compileAndInsert(form_Id,typ,in_group):
 		# start CHECK USERDOC ####################################################################################		
 		try:
 			print('check')
-			exists = str(user_doc_read_min('E',str(new_Nbr),str(connex.MEA_SFE_FORMULARIOS_ID_Origin),str(insert_doc.documentId_docSeries))['documentId']['docNbr']['doubleValue']).replace(".0","")
-			#exists = str(user_doc_read_min('E','2341453','3','2023')['documentId']['docNbr']['doubleValue']).replace(".0","")								
+			exists = str(user_doc_read_min('E',str(new_Nbr),str(connex.MEA_SFE_FORMULARIOS_ID_Origin),str(insert_doc.documentId_docSeries))['documentId']['docNbr']['doubleValue']).replace(".0","")				
 			if exists == new_Nbr:
 				cambio_estado(form_Id,insert_doc.documentId_docNbr) 
 				print('CAMBIO DE ESTADO')																	# Cambio de estado
@@ -733,6 +733,7 @@ def insertReg(form_Id):
 	if flow_request == 0:
 		insert_mark = insertRegModel()
 		insert_mark.setData(form_Id)
+		print(insert_mark.file_filingData_captureDate)
 		try:
 			new_Nbr = str(COMMIT_NBR())
 			insertRegState = mark_insert_reg(
@@ -786,9 +787,11 @@ def insertReg(form_Id):
 			)
 			print('INSERTO EL REGISTRO => ' + insertRegState)
 			if insertRegState == 'true':
+				subsequent_list.append({"fileNbr":new_Nbr,"tram_id":form_Id,"fecha":insert_mark.file_filingData_captureDate,"email":insert_mark.ag_email,"sigla":"REG"})
 				others_process_REG(form_Id,new_Nbr,insert_mark.ag_email,'REG')
+				print(subsequent_list)
 			else:
-				error_process(form_Id,f'Error en solicitud, tabla tramites ID: {insertRegState}','true')	
+				error_process(form_Id,f'Error en solicitud, tabla tramites: {insertRegState}','true')
 		except Exception as e:
 			error_process(form_Id,f'Error en solicitud, tabla tramites ID {e}','true')
 	else:
@@ -856,7 +859,9 @@ def insertRen(form_Id):
 						insert_mark_ren.signData_signType)			
 			print('INSERTO EL RENOVACION => ' + insertRenState)
 			if insertRenState == 'true':
+				subsequent_list.append({"fileNbr":new_Nbr,"tram_id":form_Id,"fecha":insert_mark_ren.file_filingData_captureDate,"email":insert_mark_ren.ag_email,"sigla":"REN"})
 				others_process_REN(form_Id,new_Nbr,insert_mark_ren.ag_email,'REN')
+				print(subsequent_list)
 			else:
 				error_process(form_Id,'Error en solicitud o falta número de registro, tabla tramites ID','true')
 		except Exception as e:

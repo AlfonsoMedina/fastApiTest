@@ -154,8 +154,7 @@ def registro_sfe(arg):
 				if(i['descripcion'] == "Productos o Servicios que distingue"):
 					global_data['distingue'] = i['valor']
 			except Exception as e:
-				global_data['distingue'] = "No definido"
-
+				global_data['distingue'] = "No definido"										
 			'''
 			try:
 				if(i['descripcion'] == "Reivindicaciones"):
@@ -163,7 +162,6 @@ def registro_sfe(arg):
 			except Exception as e:
 				global_data['reivindicaciones'] = "No definido"
 			'''
-
 			try:
 				if(i['campo'] == "marca_tipomarca"):
 					global_data["tipo_on"] = i['valor']
@@ -282,7 +280,7 @@ def registro_sfe(arg):
 			except Exception as e:
 				global_data['pais_pri'] = "No definido"
 			try:
-				if(i['campo'] == 'marca_especificar'):
+				if(i['descripcion'] == "Especificar" and i['campo'] == 'marca_especificar'):
 					global_data['espe']=i['valor']
 			except Exception as e:
 				global_data['espe'] = "No definido"
@@ -298,6 +296,7 @@ def registro_sfe(arg):
 					global_data['reivindicaciones']=i['valor']
 			except Exception as e:
 				global_data['reivindicaciones'] = "No definido"
+
 
 
 			try:
@@ -2099,6 +2098,18 @@ def newDayProcess():
 	if closed_process_day(last_date) == True:		# Cierra ultima fecha 
 		if open_process_day(today) == True:			# Abre fecha nueva
 			return(True)			
+
+def notification_package(arg):
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute("""UPDATE public.parametros SET valor4='{}' WHERE id=63;""".format(arg))
+		cursor.rowcount
+		conn.commit()
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
 
 
 '''
