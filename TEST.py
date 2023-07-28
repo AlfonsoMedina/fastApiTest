@@ -1,3 +1,4 @@
+from email_pdf_AG import envio_agente_recibido
 from tools.filing_date import capture_day, capture_full, capture_full_upd
 from dataclasses import replace
 import json
@@ -11,7 +12,9 @@ import tools.connect as connex
 print(capture_day())
 
 
+envio_agente_recibido('27228','AMA')
 
+#respuesta_sfe_campo('27228')
 
 
 def campo_scan(arg):
@@ -76,4 +79,4 @@ def timer(step):
 	##############################################################################################################
 		time.sleep(3)
 
-timer(59)
+#timer(59)

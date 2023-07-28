@@ -37,6 +37,7 @@ def respuesta_sfe_campo(arg):
 		list_valores['costo'] = str(row[0][7])
 		list_valores['usuario_id'] = str(row[0][8])
 		list_valores['codigo'] = str(row[0][10])
+		list_valores['expediente_id'] = str(row[0][13])
 		list_valores['firmado_at'] = str(row[0][11])
 		list_valores['pagado_at'] = str(row[0][12])
 		list_valores['enviado_at'] = str(row[0][15])

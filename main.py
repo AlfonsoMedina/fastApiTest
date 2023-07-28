@@ -2364,9 +2364,14 @@ def loginfoidtramites(t_id):
 	return(log_info_id_tramites(t_id))
 
 
-@app.get("/api/ver_pdf", tags=["Consultar PDF"], summary="#", description="Consulta una revista segun su fecha de publicacion")
-def get_pdf_redpi(serie,fileName):
+@app.get("/api/ver_pdf", tags=["Consultar SOL PDF"], summary="#", description="Consulta solicitudes principales en pdf")
+def get_pdf_pdf(serie,fileName):
 	return FileResponse(f'media/wipopublish/appdoc/PY-M-{serie}-{fileName}.pdf')
+
+
+@app.get("/api/ver_esc_pdf", tags=["Consultar ESC PDF"], summary="#", description="Consulta escritos en pdf")
+def get_pdf_esc(serie,fileName):
+	return FileResponse(f'media/wipopublish/usrdoc/3-PY-{serie}-{fileName}.pdf')
 
 
 
