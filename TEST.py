@@ -14,7 +14,7 @@ from getFileDoc import compilePDF, getFile, getFile_reg_and_ren
 from tools.send_mail import enviar_back_notFile
 from sfe_no_presencial_reg_local import registro_pdf_sfe_local
 from sfe_no_presencial_ren_local import renovacion_pdf_sfe_local
-from tools.filing_date import capture_day
+from tools.filing_date import capture_day, capture_full
 import tools.connect as connex
 from wipo.function_for_reception_in import user_doc_getList_escrito, user_doc_read_min
 from wipo.ipas import Process_Read_Action, Process_Read_EventList, daily_log_close, daily_log_open, fetch_all_user_mark, getPoder, mark_getlist, mark_getlistReg, mark_read, process_read
@@ -207,6 +207,11 @@ def rule_notification(sig,exp):
 				pass
 		
 
+
+print(capture_full())
+
+
+
 #print(registro_sfe('26336'))
 
 #print(user_doc_read_min('E','2355704','3','2023'))
@@ -263,8 +268,8 @@ def b64_to_img_pdf(base,exp):
 
 
 
-get_List = mark_getlist('2356458')				
-get_data_mark = mark_read(get_List[0].fileId.fileNbr.doubleValue,get_List[0].fileId.fileSeq,get_List[0].fileId.fileSeries.doubleValue,get_List[0].fileId.fileType)
+#get_List = mark_getlist('2356458')				
+#get_data_mark = mark_read(get_List[0].fileId.fileNbr.doubleValue,get_List[0].fileId.fileSeq,get_List[0].fileId.fileSeries.doubleValue,get_List[0].fileId.fileType)
 
 #print(b64_to_img_pdf(base64.b64encode(get_data_mark['signData']['logo']['logoData']),'2356458'))
 
@@ -272,7 +277,7 @@ get_data_mark = mark_read(get_List[0].fileId.fileNbr.doubleValue,get_List[0].fil
 
 #print(get_data_mark['file']['filingData']['captureDate']['dateValue'])
 
-registro_pdf_con_acuse('27077')
+#registro_pdf_con_acuse('27077')
 
 #renovacion_pdf_con_acuse('26919')
 

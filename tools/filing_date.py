@@ -27,7 +27,9 @@ def capture_houer():
     return time.strftime("%H:%M:%S")
 
 def capture_full():
-    return time.strftime("%Y-%m-%d")+"T"+time.strftime("%H:%M:%S")
+    hour_row = time.strftime("%H:%M:%S")
+    huor_split = hour_row.split(':')
+    return time.strftime("%Y-%m-%d")+"T"+huor_split[0]+":"+str(int(huor_split[1])-2).rjust(2,'0')+":"+huor_split[2]
 
 def capture_full_upd():
     return time.strftime("%Y-%m-%d")+" "+time.strftime("%H:%M:%S")
