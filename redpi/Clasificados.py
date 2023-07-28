@@ -580,7 +580,7 @@ def insert_only_new_pub(fecha):
 		for i in row:
 			exp_ipas = str(i[1]).replace("[","").replace("]","").split(',')
 			for x in range(len(exp_ipas)):
-				print(Insert_Action_soporte(exp_ipas[x],str(date.today()),'47','Publicacion REDPI','573'))
+				print(Insert_Action_soporte(exp_ipas[x],str(date.today()),'4','Publicacion REDPI','573'))
 		connH.close()
 	except Exception as e:
 		pass
@@ -600,7 +600,7 @@ def processToDate(fecha):
     time.sleep(1) 
 
     masUno = timedelta(1)                 
-    insertar_edicion(date.today()+masUno,'77')        
+    insertar_edicion(date.today()+masUno,'')        
     
     time.sleep(1) 
                    
