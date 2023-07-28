@@ -2,6 +2,7 @@ from time import sleep
 from urllib import request
 from fastapi import  FastAPI
 from pydantic import BaseModel
+from fastapi.responses import FileResponse
 from auto_process import insert_list, insertReg, insertRen
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
@@ -2361,6 +2362,30 @@ def log_info_serch_fun(fecha,estado):
 @app.post('/sis/loginfo_idtramites', summary="sis", tags=["Datos complementarios para tabla de soporte"])
 def loginfoidtramites(t_id):
 	return(log_info_id_tramites(t_id))
+
+
+@app.get("/api/ver_pdf", tags=["Consultar PDF"], summary="#", description="Consulta una revista segun su fecha de publicacion")
+def get_pdf_redpi(serie,fileName):
+	return FileResponse(f'media/wipopublish/appdoc/PY-M-{serie}-{fileName}.pdf')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	
 app.openapi = custom_openapi
