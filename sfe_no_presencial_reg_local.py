@@ -380,14 +380,14 @@ def registro_pdf_sfe_local(arg):
 				val_lab = alt_fil
 				val_num = alt_fil
 
-			pdf.cell(w=70, h=val_lab*2, txt='Descripción de Distintivo:', border=1 , align='c' )
+			pdf.cell(w=70, h=6, txt='Descripción de Distintivo:', border=1 , align='c' )
 
 			pdf.set_font("helvetica", "B", 7)
 
 			try:
-				pdf.multi_cell(w=120, h=val_num, txt=str(global_data['deslogotipo']) + str(global_data['deslogotipofg']), border=1, align='L',ln=1)
+				pdf.multi_cell(w=120, h=4, txt=str(global_data['deslogotipo']) + str(global_data['deslogotipofg']), border=1, align='L',ln=1)
 			except Exception as e:
-				pdf.multi_cell(w=130, h=val_num, txt="", border=1, align='L',ln=1)
+				pdf.multi_cell(w=130, h=6, txt="", border=1, align='L',ln=1)
 
 			"""			
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
@@ -400,9 +400,9 @@ def registro_pdf_sfe_local(arg):
 
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
-			pdf.cell(w=70, h=val_lab*2, txt='Reivindicaciones', border=1, align='l')
+			pdf.cell(w=70, h=6, txt='Reivindicaciones', border=1, align='l')
 			
-			pdf.cell(w=120, h=val_lab*2, txt=global_data['reivindicaciones'], border=1, align='l')
+			pdf.cell(w=120, h=6, txt=global_data['reivindicaciones'], border=1, align='l')
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 
 			pdf.set_font("helvetica", "B", 9)
@@ -718,7 +718,7 @@ def registro_pdf_sfe_local(arg):
 		print(e)
 	
 
-#registro_pdf_sfe_local('27077')
+#registro_pdf_sfe_local('27264')
 
 
 

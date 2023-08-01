@@ -8,13 +8,14 @@ from dinapi.sfe import respuesta_sfe_campo
 import tools.connect as connex
 
 
-
-print(capture_day())
-
-
-envio_agente_recibido('27228','AMA')
-
 #respuesta_sfe_campo('27228')
+
+
+
+
+
+
+
 
 
 def campo_scan(arg):
@@ -30,7 +31,8 @@ def campo_scan(arg):
 		#print(row[0][6])
 		for i in row[0][6]:
 			try:
-				list_campos.append({"campo": i['campo'],"valor": i['valor'],"isValId": "true","condicion": "","requerido": "false","componente": "textview","validacion": "","descripcion": i['descripcion']})			
+				if i['campo'] != 'descripcion_documentos2':
+					list_campos.append({"campo": i['campo'],"valor": i['valor'],"isValId": "true","condicion": "","requerido": "false","componente": "textview","validacion": "","descripcion": i['descripcion']})			
 			except Exception as e:
 				list_campos.append({"campo": "","valor": "","isValId": "true","condicion": "","requerido": "false","componente": "textview","validacion": "","descripcion": ""})
 
@@ -54,7 +56,7 @@ def create_list(arg):
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""SELECT id FROM public.tramites WHERE created_at >= '{} 00:59' and formulario_id in (27,28,29,95,4,70,3,100,101,102) and created_at <= '{} 20:59'""".format(arg,arg))
+		cursor.execute("""SELECT id FROM public.tramites WHERE created_at >= '{} 00:59' and formulario_id in (27,28,29,95,4,70,3,100,101,102) and created_at <= '{} 22:59'""".format(arg,arg))
 		row=cursor.fetchall()
 		for i in row:
 			campo_scan(i[0])
@@ -79,4 +81,4 @@ def timer(step):
 	##############################################################################################################
 		time.sleep(3)
 
-#timer(59)
+timer(59)
