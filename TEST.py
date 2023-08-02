@@ -1,4 +1,5 @@
 from email_pdf_AG import envio_agente_recibido
+from getFileDoc import compilePDF_DOCS, getFile
 from tools.filing_date import capture_day, capture_full, capture_full_upd
 from dataclasses import replace
 import json
@@ -81,4 +82,10 @@ def timer(step):
 	##############################################################################################################
 		time.sleep(3)
 
-timer(59)
+#timer(59)
+
+
+
+getFile('27328','2002251')
+
+#compilePDF_DOCS('2002251')
