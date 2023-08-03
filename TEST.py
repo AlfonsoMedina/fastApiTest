@@ -134,12 +134,12 @@ def create_list(arg):
 #print(create_list('2023-07-25'))
 
 def timer(step):
-	print('')
+	#print('')
 	i = 0
 	while i < step:
 	##############################################################################################################                
 		try:
-			print(create_list(capture_day()))
+			create_list(capture_day())
 		except Exception as e:
 			pass
 	##############################################################################################################
