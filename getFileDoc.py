@@ -117,8 +117,8 @@ def compilePDF_DOCS(exp):
 	except Exception as e:
 		pass	
 
-	#merger.write(str(MEA_ADJUNTOS_DESTINO_REG_REN)+'3-PY-'+captureDate.capture_year()+'-'+exp+'.pdf')
-	merger.write('temp_pdf/DOCS/'+'3-PY-'+captureDate.capture_year()+'-'+exp+'.pdf')
+	merger.write(str(MEA_ADJUNTOS_DESTINO_location)+'3-PY-'+captureDate.capture_year()+'-'+exp+'.pdf')
+	#merger.write('temp_pdf/DOCS/'+'3-PY-'+captureDate.capture_year()+'-'+exp+'.pdf')
 
 	try:
 		os.remove(f'temp_pdf/DOCS/{exp}-0.pdf')

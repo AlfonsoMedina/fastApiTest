@@ -11,8 +11,6 @@ import tools.connect as connex
 
 #respuesta_sfe_campo('27228')
 
-
-
 #getFile('27328','2360799')
 
 #compilePDF_DOCS('2359729')
