@@ -1026,8 +1026,8 @@ def Insert_Action_soporte(exp,pago,userid,nota,evento): # {"exp":"","pago":"","u
 		fin = ''
 		f_inicio = ''
 		f_fin = ''
-		print(str(pub_uno).replace(" 00:00:00",""))
-		print(str(pub_tres).replace(" 00:00:00",""))
+		#print(str(pub_uno).replace(" 00:00:00",""))
+		#print(str(pub_tres).replace(" 00:00:00",""))
 
 		ultimo = int(len(mark_getlist(exp)))-1
 		expediente = mark_getlist(exp)[ultimo]

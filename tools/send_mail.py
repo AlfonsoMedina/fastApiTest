@@ -1,3 +1,4 @@
+from email.message import EmailMessage
 from fileinput import filename
 import smtplib
 from email.mime.text import MIMEText
@@ -6,6 +7,7 @@ from email.mime.base import MIMEBase
 from email import encoders
 import os.path
 import os
+import ssl
 
 
 #only file name send
@@ -91,6 +93,25 @@ def delete_file(req):
         else:
             return('true')
     
+
+def redpi_mail(send_to_email, subject, mess_body):    
+    email = "noreply@dinapi.gov.py"
+    password = "N0reply.com"
+    send_to_email = send_to_email 
+    subject = subject
+    mess_body = mess_body      
+
+    em = EmailMessage()
+    em['From'] = email
+    em['To'] = send_to_email
+    em['Subject'] = subject
+    em.set_content(mess_body)
+
+    contexto = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=contexto) as smtp:
+        smtp.login(email,password) 
+        smtp.sendmail(email,send_to_email, em.as_string())
 
 
 
