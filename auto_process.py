@@ -23,7 +23,7 @@ default_val_e99 = lambda arg: arg if arg != "" else "E99"
 list_id = []
 sigla:string = ''
 
-subsequent_list = []
+subsequent_list = [] 
 
 def listar():
 	#print('............................................................................')
