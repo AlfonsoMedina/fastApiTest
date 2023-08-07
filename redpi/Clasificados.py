@@ -276,7 +276,7 @@ def sfe_fileNbr(fecha):
         where bancard_transactions.status = 1  
         and public.tramites.estado = 7  
         and  public.tramites.formulario_id = 29  
-        and enviado_at >= '{} 01:59:00.0' and enviado_at <= '{} 14:59:00.0'""".format(fecha,fecha))
+        and enviado_at >= '{} 00:59:00.0' and enviado_at <= '{} 22:59:00.0'""".format(fecha,fecha))
         row=cursor.fetchall()
         pagosSFE = []
         for i in row:
@@ -828,7 +828,7 @@ def migrar_servicios(fecha):
         print(er)
     return('Migrada la fecha ' + fecha)
 
-#Datos de publicacion 
+#Inserta el dia de proceso nuevo para registro historico  
 def insert_dia_proceso(fecha,sfe,caja,reg,ren,total,process):
     try:
             url = "INSERT INTO dia_proceso (fecha_proceso, sfe, caja, reg, ren, total, process) values ('"+fecha+"',"+str(sfe)+","+str(caja)+","+str(reg)+","+str(ren)+","+str(total)+",'"+process+"');"
@@ -894,7 +894,7 @@ def consulta_sfe_prueba(fecha):
         +" where bancard_transactions.status = 1 \n" 
         +" and public.tramites.estado = 7 \n" 
         +" and  public.tramites.formulario_id = 29 \n" 
-        + "and enviado_at >= '"+fecha_uno+" 01:59:00.0' and enviado_at <= '"+fecha_uno+" 14:59:00.0'")
+        + "and enviado_at >= '"+fecha_uno+" 00:59:00.0' and enviado_at <= '"+fecha_uno+" 22:59:00.0'")
         row=cursor.fetchall()
         pagosSFE = []
         for i in row:
