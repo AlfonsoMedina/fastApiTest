@@ -755,15 +755,6 @@ VALUES(76, 'MEA', 'Envio de formulario con acuse ', 'MEA_ACUSE_FORMULARIO ', 'N'
 
 
 
-
-
-
-
-
-
-
-
-
 --form_orden_publicacion 
 select  pp.fecha_publicacion, pp.nexpedientes  
 from publicaciones_publicaciones pp  
@@ -778,8 +769,8 @@ and dc.inicio  <= '2023-08-03'
 --form_orden_publicacion 
 select f.num_acta, f.tip_solicitud,f.fecha_pago, f.fecha_inicio, f.fecha_fin  
 from form_orden_publicacion f 
-where f.fecha_inicio >= to_date('01/01/2023','dd/mm/yyyy') 
-and f.fecha_inicio <= to_date('03/08/2023','dd/mm/yyyy') 
+where f.fecha_inicio >= to_date('01/12/2022','dd/mm/yyyy') 
+and f.fecha_inicio <= to_date('08/08/2023','dd/mm/yyyy') 
  
 --Consulta caja Osvaldo
 select distinct r.num_recibo as RECIBO, dr.tasa_id as TASA, dr.expediente_nro as EXPEDIENTE, to_char(r.fec_recibo,'DD/MM/YYYY') as FECHA_RECIBO
