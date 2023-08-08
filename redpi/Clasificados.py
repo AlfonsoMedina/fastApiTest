@@ -600,7 +600,7 @@ def processToDate(fecha):
     time.sleep(1) 
 
     masUno = timedelta(1)                 
-    insertar_edicion(date.today()+masUno,'')        
+    insertar_edicion(date.today() + masUno, str(edicion_cont()))        
     
     time.sleep(1) 
                    

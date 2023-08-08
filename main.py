@@ -119,17 +119,14 @@ def fop_consulta(item:por_expediente):
 	finally:
 		pass
 
-
 @app.post('/api/packageToDay', tags=["Lista de pagos de caja y de SFE con su relacion en form_orden_publicacion"], summary="#", description="Conjunto de datos para llenar vista ")
 def packageToDay(fecha):
 	return(full_package(fecha))
-
 
 @app.post('/api/processToDate', tags=["Procesar fecha"], summary="#", description="consulta pagos, inserta clasificados, actualiza form, inserta en ipas")
 def process_To_Date(fecha):
 	processToDate(fecha)
 	return('end')
-
 
 @app.post('/api/diaproceso_nuevo', tags=["Proceso nuevo"], summary="#", description="")
 def select_back_process():
@@ -143,7 +140,6 @@ def insertar_nuevo_proceso(item:process_day):
 	except Exception as e:
 		pass
 
-
 #Actualiza el ultimo dia de proceso para la vista 
 @app.post('/api/updatediaproceso_nuevo', tags=["update dia proceso nuevo"], summary="#", description="")
 def update_nuevo_proceso(item:process_day):
@@ -153,16 +149,13 @@ def update_nuevo_proceso(item:process_day):
 	except Exception as e:
 		pass	
 
-
 @app.post('/api/edicionnumber', tags=[""], summary="#", description="")
 def numberedition():
 	return(edicion_cont())
 
-
 @app.post('/api/admin_soporte', tags=[""], summary="#", description="")
 def user_admin():	
 	return(user_admin_redpi())
-
 
 @app.post('/api/user_mark', tags=[""], summary="#", description="")
 def fetchallusermark(item:user_mark):
@@ -175,16 +168,9 @@ def fetchallusermark(item:user_mark):
 	except Exception as e:
 		return({"error":"undefine"})
 
-
 @app.post('/api/publicar', tags=["update dia proceso nuevo"], summary="#", description="")
 def publicarhoy(item:pub_day):
 	return(insertar_edicion(item.fecha,item.edicion))
-
-
-@app.post('/api/edicionnumber', tags=[""], summary="#", description="")
-def numberedition():
-	return(edicion_cont())
-
 
 @app.post('/api/admin_soporte', tags=[""], summary="#", description="")
 def user_admin():	
@@ -194,21 +180,17 @@ def user_admin():
 def ultima_sesion():
 	return(format_fecha_mes_hora())
 
-
 @app.post('/api/pubhoy', tags=["Clasificados por fecha"], summary="#", description="Devuelve una lista de clasificados segun la fecha indicada")
 def pubtoday(item:por_fecha):
 	return previa_edicion(item.fecha)
-
 
 @app.post('/api/casificado_pdf', tags=["Crear PDF"], summary="#", description="Crea la revista de clasificados como un archivo PDF")
 def pub_pdf_revista(fecha):
 	return(crear_pub(fecha))
 
-
 @app.get("/api/pdf_redpi", tags=["Consultar PDF"], summary="#", description="Consulta una revista segun su fecha de publicacion")
 def get_pdf_redpi(fileName):
 	return FileResponse(f'static/clasificados_{fileName}.pdf')
-
 
 @app.post('/api/soporteExp', tags=["Consulta expediente"], summary="#", description="")
 def soporte_exp(item:por_expediente):
@@ -245,21 +227,13 @@ def nuevo_en_form(item:por_expediente):
 	else:	
 		return('false')
 
-
-@app.post('/api/edicionnumber', tags=["Consulta edicion"], summary="#", description="")
-def numberedition():
-	return(edicion_cont())
-
-
 @app.post('/api/admin_soporte', tags=["User soporte"], summary="#", description="")
 def user_admin():
 	return(user_admin_redpi())
 
-
 @app.post('/api/autentication', tags=["Auth"], summary="#", description="")
 def auth(item:user_pwr):
 	return(authentication(item.user,item.pwr))
-
 
 @app.post('/api/change_autentication', tags=["change_autentication"], summary="#", description="")
 def change_auth(item:user_pwr_new):
@@ -268,7 +242,6 @@ def change_auth(item:user_pwr_new):
 @app.post('/api/checking_payment_suport', tags=["Suport payment checking"], summary="#", description="Chekar pago para soporte REDPI")
 def checkingpaymentsuport(exp):
 	return(checking_payment_suport(exp))
-
 
 class in_ipas_method(BaseModel):
 	exp:str = ""
