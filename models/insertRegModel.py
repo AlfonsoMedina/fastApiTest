@@ -311,24 +311,24 @@ class insertRegModel(object):
 		
 		self.protectionData_niceClassList_niceClassVersion = "2023.01"
 
+
 		try:
 			if self.data['regtipo'] != "":
 				self.documentId_PowerOfAttorneyRegister_docLog = self.data['regtipo'] 
 				self.documentId_PowerOfAttorneyRegister_docNbr = str(self.data['regexpediente'])
 				self.documentId_PowerOfAttorneyRegister_docOrigin = str(self.data['regorigen']) 
 				self.documentId_PowerOfAttorneyRegister_docSeries = str(self.data['regserie'])
-			elif self.data['soltipo'] != "":
+		except Exception as e:
+			pass
+		try:
+			if self.data['soltipo'] != "":
 				self.documentId_PowerOfAttorneyRegister_docLog = self.data['soltipo']
 				self.documentId_PowerOfAttorneyRegister_docNbr = str(self.data['solexpediente']) 
 				self.documentId_PowerOfAttorneyRegister_docOrigin = str(self.data['solorigen'])
 				self.documentId_PowerOfAttorneyRegister_docSeries = str(self.data['solserie'])
-			else:
-				self.documentId_PowerOfAttorneyRegister_docLog = ""
-				self.documentId_PowerOfAttorneyRegister_docNbr = "" 
-				self.documentId_PowerOfAttorneyRegister_docOrigin = ""
-				self.documentId_PowerOfAttorneyRegister_docSeries = ""						 
 		except Exception as e:
 			pass
+
 
 		self.limitationData_disclaimer = self.data['reivindicaciones']
 

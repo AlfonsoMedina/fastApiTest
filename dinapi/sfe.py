@@ -298,8 +298,7 @@ def registro_sfe(arg):
 			except Exception as e:
 				global_data['reivindicaciones'] = "No definido"
 
-
-
+			#################################################################################
 			try:
 				if(i['campo'] == 'datosrepresentacion_regexpediente'):
 					global_data['regexpediente']=i['valor']
@@ -323,7 +322,7 @@ def registro_sfe(arg):
 					global_data['regserie']=i['valor']
 			except Exception as e:
 				global_data['regserie'] = ""
-
+			#################################################################################
 
 			try:
 				if(i['campo'] == 'datosrepresentacion_solexpediente'):
@@ -348,7 +347,7 @@ def registro_sfe(arg):
 					global_data['solserie']=i['valor']
 			except Exception as e:
 				global_data['solserie'] = ""
-
+			#################################################################################
 
 		#print(global_data)
 		return(global_data)

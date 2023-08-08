@@ -551,7 +551,16 @@ ALTER TABLE public.reglas_me ADD sigla varchar(10) NULL;
 --###########################################################################################################################################
 
 
-SELECT * FROM public.tramites WHERE enviado_at >= '2023-08-02 00:59' and expediente_electronico = true and enviado_at <= '2023-08-03 20:59' order by 1 LIMIT 300 offset 0;
+SELECT * FROM public.tramites 
+WHERE enviado_at >= '2023-07-17 00:59' 
+and 
+expediente_electronico = true 
+and
+formulario_id in (3,4,27,100,101)
+and 
+estado = 8
+and 
+enviado_at <= '2023-08-07 20:59' order by enviado_at  LIMIT 300 offset 0;
 
 
 SELECT * FROM public.tramites WHERE created_at >= '2023-07-25 00:59' and formulario_id in (27,29,4,70,3) and created_at <= '2023-07-30 20:59' 
