@@ -10,8 +10,9 @@ from tools.send_mail import redpi_mail
 print(str(date.today()))
 
 insertOk = 0
-
+list_for_mail = ''
 def timer(step):
+	dia = str(time.strftime("%Y-%m-%d"))
 	print('Proceso de publicacion automatica............... Proxima publicacion 00:11 Horas')
 	H = str(time.strftime("%H:%M:%S"))
 	i = 0
@@ -23,6 +24,12 @@ def timer(step):
 			##############################################################################################################                
 				check_date()
 			##############################################################################################################
+
+			if(H == '06:05:01'):
+			##############################################################################################################                
+				redpi_mail('jun.taniwaki@dinapi.gov.py', 'REDPI', F'Publicacion REDPI e IPAS de la fecha {dia} - {list_for_mail} ')
+			##############################################################################################################			
+			
 			time.sleep(0.5)	
 			if(i == 10):
 				i=0
@@ -81,7 +88,6 @@ def check_date():
 
 			msg = 'publicado por el usuario: '+ str(dia)
 
-			redpi_mail('jun.taniwaki@dinapi.gov.py', 'REDPI', F'Publicacion REDPI e IPAS de la fecha {dia} ')
 
 		else:
 		#########################################################################################################################
@@ -142,13 +148,15 @@ def iniciar_publicacion():
 		print(e)
 
 def re_insert_redpi(fecha):
+	list_for_mail = ''
 	try:
 		connH = psycopg2.connect(host=db_host,user=db_user,password=db_password,database=db_database)
 		cursor = connH.cursor()
 		cursor.execute("SELECT fecha_publicacion,nexpedientes FROM public.publicaciones_publicaciones where fecha_publicacion = '"+str(fecha)+"'")    
 		row=cursor.fetchall()
 		for i in row:
-			print(str(i[0]))
+			#print(str(i[0]))
+			list_for_mail = str(i[0])
 			exp_ipas = str(i[1]).replace("[","").replace("]","").split(',')
 			print(exp_ipas)
 	

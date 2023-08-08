@@ -262,12 +262,12 @@ SELECT * FROM publicacion_detalle_clasificado WHERE enviado_at like '2022-09-13 
 
 
 
-select pagado_at,  authorization_number , to_char(bancard_transactions.updated_at,'DD/MM/YYYY') as fecha_pago ,status, respuestas,public.tramites.expediente_id,enviado_at
+select pagado_at,  authorization_number , to_char(bancard_transactions.updated_at,'DD/MM/YYYY') as fecha_pago ,status, respuestas,expediente_id,enviado_at
 from bancard_transactions left join public.tramites on public.tramites.id = bancard_transactions.payable_id
 where bancard_transactions.status = 1 
 and public.tramites.estado = 7 
 and  public.tramites.formulario_id = 29 
-and enviado_at >= '2023-08-07 00:59:00.0' and enviado_at <= '2023-08-07 22:59:00.0'
+and enviado_at >= '2023-07-17 00:59:00.0' and enviado_at <= '2023-08-03 22:59:00.0'
 
 
 SELECT * FROM public.tramites WHERE created_at >= '2023-07-26 00:59' and formulario_id in (27,29,4,70,3) and created_at <= '2023-07-26 20:59'
@@ -551,7 +551,16 @@ ALTER TABLE public.reglas_me ADD sigla varchar(10) NULL;
 --###########################################################################################################################################
 
 
-SELECT * FROM public.tramites WHERE enviado_at >= '2023-08-07 00:59' and expediente_electronico = true and enviado_at <= '2023-08-07 20:59' order by 1 LIMIT 300 offset 0;
+SELECT * FROM public.tramites 
+WHERE enviado_at >= '2023-07-17 00:59' 
+and 
+expediente_electronico = true 
+and
+formulario_id in (3,4,27,100,101)
+and 
+estado = 8
+and 
+enviado_at <= '2023-08-07 20:59' order by enviado_at  LIMIT 300 offset 0;
 
 
 SELECT * FROM public.tramites WHERE created_at >= '2023-07-25 00:59' and formulario_id in (27,29,4,70,3) and created_at <= '2023-07-30 20:59' 
@@ -709,12 +718,37 @@ select status  from bancard_transactions where status = 1 and  payable_id = 2367
 
 
 
+INSERT INTO public.parametros
+(id, origen, descripcion, valor1, valor2, valor3, valor4, valor5, estado, sistema_id)
+VALUES(58, 'MEA', 'Conexion a la Base de Datos de Origen', 'MEA_DB_ORIGEN', '192.168.50.219', 'user-developer', 'user-developer--201901', 'db_sfe_production', 0, 0);
 
+INSERT INTO public.parametros
+(id, origen, descripcion, valor1, valor2, valor3, valor4, valor5, estado, sistema_id)
+VALUES(59, 'MEA', 'Conexion a IPAS Marcas Destino', 'MEA_IPAS_DESTINO', 'http://192.168.50.194:8050', 'http://192.168.50.194:8050', 'http://192.168.80.42:8050', '', 0, 0);
 
+INSERT INTO public.parametros
+(id, origen, descripcion, valor1, valor2, valor3, valor4, valor5, estado, sistema_id)
+VALUES(60, 'MEA', 'Formularios SFE para Recepcionar', 'MEA_SFE_FORMULARIOS_ID', '3,4,27', '68,69,70,3,4,27', '7,8,99', '1', 0, 0);
 
+INSERT INTO public.parametros
+(id, origen, descripcion, valor1, valor2, valor3, valor4, valor5, estado, sistema_id)
+VALUES(61, 'MEA', 'Ubicación Destino de los Adjuntos de Formularios SFE', 'MEA_ADJUNTOS_DESTINO', 'Escritos (usrdoc) - Expedientes (appdoc)', 'media/wipopublish/usrdoc/', 'media/wipopublish/appdoc/', '', 0, 0);
 
+INSERT INTO public.parametros
+(id, origen, descripcion, valor1, valor2, valor3, valor4, valor5, estado, sistema_id)
+VALUES(62, 'MEA', 'Tiempo de Actualizacion para el Procesamiento', 'MEA_TIEMPO_ACTUALIZACION', '30000', '', '', '', 0, 0);
 
+INSERT INTO public.parametros
+(id, origen, descripcion, valor1, valor2, valor3, valor4, valor5, estado, sistema_id)
+VALUES(63, 'MEA', 'Horario por dia de procesamiento de recepcion', 'MEA_PERIODO_RECEPCION', 'Ejemplo: lunes(07:00,14:15);martes(07:00,14:15);', 'lunes(07:00,15:15);martes(07:00,15:15);miércoles(07:00,15:15);jueves(07:00,22:15);viernes(07:00,15:07);sabado(00:00,00:00);domingo(00:00,00:00);', '', '298', 0, 0);
 
+INSERT INTO public.parametros
+(id, origen, descripcion, valor1, valor2, valor3, valor4, valor5, estado, sistema_id)
+VALUES(64, 'MEA', 'Oficina de origen IPAS y usuario responsable', 'MEA_OFICINA_ORIGEN', '3', 'MEA_CAP', 'AMEDINA,JGONZALEZ,GBRITEZ,MEA_CAP', 'MEA', 0, 0);
+
+INSERT INTO public.parametros
+(id, origen, descripcion, valor1, valor2, valor3, valor4, valor5, estado, sistema_id)
+VALUES(76, 'MEA', 'Envio de formulario con acuse ', 'MEA_ACUSE_FORMULARIO ', 'N', 'N', 'N', 'N', 0, 0);
 
 
 
@@ -732,14 +766,12 @@ from detalle_clasificado dc
 where dc.inicio  >= '2023-01-01'
 and dc.inicio  <= '2023-08-03'
 
-
 --form_orden_publicacion 
-select f.num_acta, f.tip_solicitud,f.fecha_pago, f.fecha_inicio, f.fecha_fin  
+select f.num_acta,f.tip_movimiento , f.tip_solicitud,f.fecha_pago, f.fecha_inicio, f.fecha_fin  
 from form_orden_publicacion f 
-where f.fecha_inicio >= to_date('01/01/2023','dd/mm/yyyy') 
-and f.fecha_inicio <= to_date('03/08/2023','dd/mm/yyyy') 
+where f.fecha_inicio >= to_date('01/12/2022','dd/mm/yyyy') 
+and f.fecha_inicio <= to_date('08/08/2023','dd/mm/yyyy') 
  
-
 --Consulta caja Osvaldo
 select distinct r.num_recibo as RECIBO, dr.tasa_id as TASA, dr.expediente_nro as EXPEDIENTE, to_char(r.fec_recibo,'DD/MM/YYYY') as FECHA_RECIBO
 from public.recibo r left join public.recibo_tipo_tasa rtt on rtt.recibo_id = r.id 
