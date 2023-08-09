@@ -1013,7 +1013,7 @@ def payment_today_sfe(exp):
     try:
         conn = psycopg2.connect(host = host_SFE_conn,user= user_SFE_conn,password = password_SFE_conn,database = database_SFE_conn)
         cursor = conn.cursor()
-        cursor.execute(f"""select status  from bancard_transactions where payable_id = {tram_id}""")
+        cursor.execute(f"""select status from  bancard_transactions where payable_id = {tram_id} order  by id desc limit 1""")
         row=cursor.fetchall()
         try:
             if int(row[0][0]) == 1:
