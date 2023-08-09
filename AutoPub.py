@@ -7,13 +7,14 @@ from datetime import date, datetime, timedelta
 from tools.connect import db_host, db_user, db_password, db_database, host_SFE_conn, user_SFE_conn, password_SFE_conn, database_SFE_conn,host_centura, user_centura, password_centura, database_centura
 from tools.send_mail import redpi_mail
 
-print(str(date.today()))
+#print(str(date.today()))
 
 insertOk = 0
 list_for_mail = ''
 def timer(step):
 	dia = str(time.strftime("%Y-%m-%d"))
-	print('Proceso de publicacion automatica............... Proxima publicacion 00:11 Horas')
+	print('Proceso de publicacion automatica............... Proxima publicacion 00:11AM Horas')
+	print('Envio de correo...............  06:10AM Horas')
 	H = str(time.strftime("%H:%M:%S"))
 	i = 0
 	while i < step:
@@ -26,7 +27,8 @@ def timer(step):
 			##############################################################################################################
 
 			if(H == '06:05:01'):
-			##############################################################################################################                
+			##############################################################################################################
+				list_for_mail = report_package_this_today()                
 				redpi_mail('jun.taniwaki@dinapi.gov.py', 'REDPI', F'Publicacion REDPI e IPAS de la fecha {dia} - {list_for_mail} ')
 			##############################################################################################################			
 			
@@ -43,6 +45,7 @@ def check_new_package(step):
 	if(M == '20:01' and insertOk == 0):
 	##############################################################################################################                
 		re_insert_redpi('1977-09-01')
+	'''
 	##############################################################################################################
 	if(M == '30:01' and insertOk == 0):
 	##############################################################################################################                
@@ -58,7 +61,7 @@ def check_new_package(step):
 	##############################################################################################################
 	if(M == '59:01' and insertOk == 0):
 	##############################################################################################################                
-		re_insert_redpi('1977-09-01')
+		re_insert_redpi('1977-09-01')'''
 	
 def check_date():
 	try:
@@ -132,7 +135,6 @@ def iniciar_publicacion():
 		for i in row:
 			#print(i[1]) # captura la fecha pendiente
 			#print(date.today()) # capturo la fecha de publicacion
-
 			try:   
 				conn = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
 				cursor = conn.cursor()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           #Nombre
@@ -169,6 +171,24 @@ def re_insert_redpi(fecha):
 		pass
 
 timer(3)
+
+
+
+def report_package_this_today():
+	try:
+		connH = psycopg2.connect(host=db_host,user=db_user,password=db_password,database=db_database)
+		cursor = connH.cursor()
+		cursor.execute("select  id,nexpedientes  from publicaciones_publicaciones pp order by id desc limit 1")    
+		row=cursor.fetchall()
+		for i in row:
+			return(str(i[1]))
+		connH.close()
+	except Exception as e:
+		pass	
+
+
+
+
 
 '''
 ##############################################################################################################
