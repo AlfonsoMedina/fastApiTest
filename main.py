@@ -2363,11 +2363,9 @@ def log_info_serch_fun(fecha,estado):
 def loginfoidtramites(t_id):
 	return(log_info_id_tramites(t_id))
 
-
 @app.get("/api/ver_pdf", tags=["Consultar SOL PDF"], summary="#", description="Consulta solicitudes principales en pdf")
 def get_pdf_pdf(serie,fileName):
 	return FileResponse(f'media/wipopublish/appdoc/PY-M-{serie}-{fileName}.pdf')
-
 
 @app.get("/api/ver_esc_pdf", tags=["Consultar ESC PDF"], summary="#", description="Consulta escritos en pdf")
 def get_pdf_esc(serie,fileName):
