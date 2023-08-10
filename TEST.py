@@ -96,7 +96,7 @@ def campo_scan(arg):
 		for i in row[0][6]:
 			try:
 				if i['campo'] != 'descripcion_documentos2':
-					list_campos.append({"campo": i['campo'],"valor": i['valor'],"isValId": "true","condicion": "","requerido": "false","componente": "textview","validacion": "","descripcion": i['descripcion']})			
+					list_campos.append({"campo": i["campo"],"valor": i["valor"],"isValId": "true","condicion": "","requerido": "false","componente": "textview","validacion": "","descripcion": i["descripcion"]})			
 			except Exception as e:
 				list_campos.append({"campo": "","valor": "","isValId": "true","condicion": "","requerido": "false","componente": "textview","validacion": "","descripcion": ""})
 
