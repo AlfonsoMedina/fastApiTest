@@ -485,7 +485,7 @@ def insert_clasificado(exp,userp):# Inserta la info del clasificado segun iterad
                 conn.commit()
                 conn.close()
                 update_inicio_fin(exp)               
-                return('indexado...')
+                return('true')
             except Exception as e:
                 print(e)
             finally:
@@ -588,12 +588,12 @@ def insert_only_new_pub(fecha):
 #->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->
 def processToDate(fecha):
 
-    print(len(fileNbr_List(fecha)))
+    #print(len(fileNbr_List(fecha)))
 
     for i in fileNbr_List(fecha):
         try:
             if update_inicio_fin(str(i)) == 'ok':
-                insert_clasificado(str(i),'47')
+                insert_clasificado(str(i),'4')
         except Exception as e:
             pass    
     
@@ -605,6 +605,7 @@ def processToDate(fecha):
     time.sleep(1) 
                    
     insert_only_new_pub('1977-09-01')
+
     
 def insertar_edicion_finde(fecha,edicion):
     lista_exp = []

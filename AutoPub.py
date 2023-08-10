@@ -170,10 +170,6 @@ def re_insert_redpi(fecha):
 	except Exception as e:
 		pass
 
-timer(3)
-
-
-
 def report_package_this_today():
 	try:
 		connH = psycopg2.connect(host=db_host,user=db_user,password=db_password,database=db_database)
@@ -184,7 +180,13 @@ def report_package_this_today():
 			return(str(i[1]))
 		connH.close()
 	except Exception as e:
-		pass	
+		pass
+
+timer(3)
+
+
+
+	
 
 
 
