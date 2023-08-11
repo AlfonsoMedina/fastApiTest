@@ -102,7 +102,7 @@ def envio_agente_recibido_affect(arg0,arg1,ser_afect,afect):
 			pdf.text(x=100, y=20, txt=str(form_descrip(str(form_id(arg0)[0]))))			
 
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=58, y=25, txt='Fecha de presentación')
+			pdf.text(x=58, y=25, txt='Fecha de Presentación')
 			pdf.set_font("helvetica", "", 8)
 			pdf.text(x=100, y=25, txt = fecha_barra(str(form_id(arg0)[1]))+" "+ajuste_hora(hora_envio[0]))
 			
@@ -127,7 +127,7 @@ def envio_agente_recibido_affect(arg0,arg1,ser_afect,afect):
 			pdf.text(x=100, y=45, txt=str(sigla_id(str(form_id(arg0)[3]))))
 
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=80, y=50, txt='Titulo de presentación:')			
+			pdf.text(x=80, y=50, txt='Titulo de Presentación:')			
 
 			pdf.multi_cell(w=190, h=40, txt='', border="LRT" , align='c' )
 			
@@ -1833,6 +1833,6 @@ def ajuste_hora(hora):
 
 #print(ajuste_hora("14:37:00"))
 
-envio_agente_recibido('27645','2363526')
+#envio_agente_recibido('27645','2363526')
 
 #envio_agente_recibido_affect('27645','2363526','2020','2362084')

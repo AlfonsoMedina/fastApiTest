@@ -1178,7 +1178,6 @@ def insert_user_doc_sin_recibo_con_exp(item:userdoc_upd_sr_cr):
 	except zeep.exceptions.Fault as e:
 		return(str(e.message))
 
-
 class insert_reg(BaseModel):
 	file_fileId_fileNbr:str = ""
 	file_fileId_fileSeq:str = ""
