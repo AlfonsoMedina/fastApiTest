@@ -862,7 +862,7 @@ and enviado_at >= '{} 00:59:59' and expediente_electronico = true and enviado_at
 						'pagado_at':str(pago_id(i[0])),         
 						'expediente_id':i[13],     
 						'pdf_url':i[14],           
-						'enviado_at':str(i[15])[0:10]+" "+str(captureDate.time_difference(str(i[26]),3))[10:19],        
+						'enviado_at':str(i[15])[0:10]+" "+str(captureDate.time_difference(str(i[26]),4))[10:19],        
 						'recepcionado_at':i[16],   
 						'nom_funcionario':i[17],   
 						'pdf':str(i[18]),               
@@ -874,7 +874,7 @@ and enviado_at >= '{} 00:59:59' and expediente_electronico = true and enviado_at
 						'locked_by_id':i[24],      
 						'tipo_documento_id':status_typ(str(i[25]))[2],
 						'tool_tip':status_typ(str(i[25]))[1],
-						'row':str(captureDate.time_difference(str(i[26]),3))
+						'row':str(captureDate.time_difference(str(i[26]),4))
 						})
 			
 		return(lista)	
@@ -914,7 +914,7 @@ and enviado_at >= '{} 00:59:59' and expediente_electronico = true and enviado_at
 						'pagado_at':str(pago_id(i[0])),         
 						'expediente_id':i[13],     
 						'pdf_url':i[14],           
-						'enviado_at':str(i[15])[0:10]+" "+str(captureDate.time_difference(str(i[26]),3))[10:19],        
+						'enviado_at':str(i[15])[0:10]+" "+str(captureDate.time_difference(str(i[26]),4))[10:19],        
 						'recepcionado_at':i[16],   
 						'nom_funcionario':i[17],   
 						'pdf':str(i[18]),               
@@ -926,7 +926,7 @@ and enviado_at >= '{} 00:59:59' and expediente_electronico = true and enviado_at
 						'locked_by_id':i[24],      
 						'tipo_documento_id':status_typ(str(i[25]))[2],
 						'tool_tip':status_typ(str(i[25]))[1],
-						'row':str(captureDate.time_difference(str(i[26]),3))
+						'row':str(captureDate.time_difference(str(i[26]),4))
 						})
 			
 		return(lista)	
@@ -1941,7 +1941,7 @@ def log_info():
 							'run':row[it][5],
 							'tramite':row[it][6],
 							'typ':compl[0],
-							'enviado_at':fecha_barra(captureDate.time_difference(str(compl[1]),3))+" "+hora(captureDate.time_difference(str(compl[1]),3)),
+							'enviado_at':fecha_barra(captureDate.time_difference(str(compl[1]),4))+" "+hora(captureDate.time_difference(str(compl[1]),4)),
 							'form_typ':compl[2]
 						})
 	conn.close()
@@ -1979,7 +1979,7 @@ def log_info_serch(fecha,estado):
 							'run':row[it][5],
 							'tramite':row[it][6],
 							'typ':compl[0],
-							'enviado_at':fecha_barra(captureDate.time_difference(str(compl[1]),3))+" "+hora(captureDate.time_difference(str(compl[1]),3)),
+							'enviado_at':fecha_barra(captureDate.time_difference(str(compl[1]),4))+" "+hora(captureDate.time_difference(str(compl[1]),4)),
 							'form_typ':compl[2]
 						})
 	conn.close()
@@ -2125,11 +2125,6 @@ ProcessGroupAddProcess
 
 
 '''
-
-
-
-
-
 
 
 """def afected_relation_auth(arg):"""
