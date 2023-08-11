@@ -50,7 +50,7 @@ def envio_agente_recibido(arg0,arg1):
 			pdf.text(x=100, y=30, txt=fecha_barra(str(form_id(arg0)[2]))+" "+ hora_recep[0])			
 
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=75, y=35, txt='Expediente')
+			pdf.text(x=75, y=35, txt='Escrito Nro.')
 			pdf.set_font("helvetica", "", 8)
 			pdf.text(x=100, y=35, txt= str(captureDate.capture_year())+'-'+str(arg1))
 
@@ -112,12 +112,12 @@ def envio_agente_recibido_affect(arg0,arg1,ser_afect,afect):
 			pdf.text(x=100, y=30, txt=fecha_barra(str(form_id(arg0)[2]))+" "+ hora_recep[0])			
 
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=75, y=35, txt='Expediente')
+			pdf.text(x=75, y=35, txt='Escrito Nro.')
 			pdf.set_font("helvetica", "", 8)
 			pdf.text(x=100, y=35, txt= str(captureDate.capture_year())+'-'+str(arg1))
 
 			pdf.set_font("helvetica", "B", 9)
-			pdf.text(x=78, y=40, txt='Afectado')
+			pdf.text(x=72, y=40, txt='Exp. Afectado')
 			pdf.set_font("helvetica", "", 8)
 			pdf.text(x=100, y=40, txt= str(ser_afect)+'-'+str(afect))
 
@@ -1833,6 +1833,6 @@ def ajuste_hora(hora):
 
 #print(ajuste_hora("14:37:00"))
 
-#envio_agente_recibido('27645','2363526')
+envio_agente_recibido('27645','2363526')
 
 #envio_agente_recibido_affect('27645','2363526','2020','2362084')

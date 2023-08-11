@@ -50,7 +50,7 @@ WantedBy=multi-user.target""")
     file_state = open(f"{DIR_BASE}/.SprintV2_MEA_backend/run-{appName}.sh", "w")
     file_state.write(
 f"""#!/bin/bash
-cd {DIR_BASE}/ && source {DIR_BASE}/venv/bin/activate && gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind {ip}:{appPort} main:app
+cd {DIR_BASE}/ && source {DIR_BASE}/venv/bin/activate && uvicorn -w 4 -k uvicorn.workers.UvicornWorker --bind {ip}:{appPort} main:app
 """)
     file_state.close()
 
