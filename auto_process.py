@@ -2,7 +2,7 @@ from sqlite3 import Time
 import string
 import time
 from tools.base64Decode import b64_to_img
-from email_pdf_AG import  acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_reg, envio_agente_recibido_ren
+from email_pdf_AG import  acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_affect, envio_agente_recibido_reg, envio_agente_recibido_ren
 from models.InsertUserDocModel import userDocModel
 from dinapi.sfe import  COMMIT_NBR, USER_GROUP, cambio_estado, cambio_estado_soporte, data_validator, esc_relation,  exp_relation, notification_package,  pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
 from getFileDoc import  compilePDF, getFile, getFile_reg_and_ren
@@ -349,9 +349,15 @@ def compileAndInsert(form_Id,typ,in_group):
 			exists = str(user_doc_read_min('E',str(new_Nbr),str(connex.MEA_SFE_FORMULARIOS_ID_Origin),str(insert_doc.documentId_docSeries))['documentId']['docNbr']['doubleValue']).replace(".0","")				
 			if exists == new_Nbr:
 				cambio_estado(form_Id,insert_doc.documentId_docNbr) 
-				print('CAMBIO DE ESTADO')																	# Cambio de estado
-				envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)																#Crear PDF
-				print('CREA PDF')
+				print('CAMBIO DE ESTADO')
+
+				if insert_doc.affectedFileIdList_fileNbr == "":																	# Cambio de estado
+					envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)
+					print('CREA PDF sin afectado')
+				else:	
+					envio_agente_recibido_affect(form_Id,insert_doc.documentId_docNbr,insert_doc.affectedFileIdList_fileSeries,insert_doc.affectedFileIdList_fileNbr)																#Crear PDF
+					print('CREA PDF con afectado')
+
 				delete_file(enviar('notificacion-DINAPI.pdf',insert_doc.representationData_representativeList_person_email,'M.E.A',connex.msg_body_ESC))	#Enviar Correo Agente
 				print('ENVIA PDF')
 
@@ -535,8 +541,14 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 		if newDoc == new_Nbr:
 			cambio_estado(form_Id,new_Nbr)
 			print('CAMBIO DE ESTADO')
-			envio_agente_recibido(form_Id,new_Nbr)		#Crear PDF
-			print('CREA PDF')
+			
+			if escrito_relacionado.affected_doc_docNbr == "":																	# Cambio de estado
+				envio_agente_recibido(form_Id,new_Nbr)		#Crear PDF acuse
+				print('CREA PDF sin afectado')
+			else:	
+				envio_agente_recibido_affect(form_Id,new_Nbr,escrito_relacionado.affected_doc_docSeries,escrito_relacionado.affected_doc_docNbr)																#Crear PDF
+				print('CREA PDF con afectado')
+
 			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',connex.msg_body_ESC))	#Enviar Correo Electronico
 			print('ENVIA PDF')
 			rule_notification(typ,new_Nbr)# Correo al funcionario
@@ -554,6 +566,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
 		# end CHECK USERDOC ######################################################################################
+		
 def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 		print('F3')		
 		cheking = catch_toError(form_Id)
@@ -710,7 +723,14 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 			if newDoc == new_Nbr:
 				cambio_estado(form_Id,new_Nbr)
 				print('CAMBIO DE ESTADO')
-				envio_agente_recibido(form_Id,new_Nbr)#Crear PDF
+
+				if escrito_escrito_pago.affected_doc_docNbr == "":																	# Cambio de estado
+					envio_agente_recibido(form_Id,new_Nbr)		#Crear PDF acuse
+					print('CREA PDF sin afectado')
+				else:	
+					envio_agente_recibido_affect(form_Id,new_Nbr,escrito_escrito_pago.affected_doc_docSeries,escrito_escrito_pago.affected_doc_docNbr)																#Crear PDF
+					print('CREA PDF con afectado')
+
 				print('CREA PDF')
 				delete_file(enviar('notificacion-DINAPI.pdf',escrito_escrito_pago.representationData_representativeList_person_email,'M.E.A',connex.msg_body_ESC))#Enviar Correo Electronico
 				print('ENVIA PDF')

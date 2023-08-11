@@ -78,6 +78,73 @@ def envio_agente_recibido(arg0,arg1):
 	except Exception as e:
 		print(e)
 
+def envio_agente_recibido_affect(arg0,arg1,ser_afect,afect):
+	try:
+		qr_code('https://sfe-beta.dinapi.gov.py/dashboard/expedientes/tramites/'+str(arg0))
+
+		def traer_datos_pdf():
+				
+			dataoftable = respuesta_sfe_campo(arg0)
+			pdf = FPDF()
+			pdf.add_page()
+			pdf.set_font("helvetica", "B", 12)
+
+			hora_envio = hora(str(form_id(arg0)[1])).split(".")
+			print(hora_envio)
+			hora_recep = hora(str(form_id(arg0)[2])).split(".")
+			print(hora_recep)
+
+			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=15)
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=76, y=20, txt='Formulario')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=20, txt=str(form_descrip(str(form_id(arg0)[0]))))			
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=58, y=25, txt='Fecha de presentación')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=25, txt = fecha_barra(str(form_id(arg0)[1]))+" "+ajuste_hora(hora_envio[0]))
+			
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=66, y=30, txt='Fecha Recepcion')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=30, txt=fecha_barra(str(form_id(arg0)[2]))+" "+ hora_recep[0])			
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=75, y=35, txt='Expediente')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=35, txt= str(captureDate.capture_year())+'-'+str(arg1))
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=78, y=40, txt='Afectado')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=40, txt= str(ser_afect)+'-'+str(afect))
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=85, y=45, txt='Tipo')
+			pdf.set_font("helvetica", "", 8)
+			pdf.text(x=100, y=45, txt=str(sigla_id(str(form_id(arg0)[3]))))
+
+			pdf.set_font("helvetica", "B", 9)
+			pdf.text(x=80, y=50, txt='Titulo de presentación:')			
+
+			pdf.multi_cell(w=190, h=40, txt='', border="LRT" , align='c' )
+			
+			pdf.cell(w=0, h=0, txt='', border=0,ln=1 )
+			pdf.set_font("helvetica", "", 8)
+			pdf.multi_cell(w=190, h=8, txt="                                                                                         "+str(description(arg0)), border="LRB", align='L' )
+			pdf.cell(w=0, h=11, txt='', border=0,ln=1 )
+
+			pdf.image('pdf/output.png',x=170,y=20,w=18,h=18)			
+
+			pdf.output('pdf/notificacion-DINAPI.pdf')
+
+		traer_datos_pdf()
+		return(True)
+	except Exception as e:
+		print(e)
+
 def envio_agente_recibido_reg(arg0,fileNbr):
 	try:
 		qr_code('https://sfe-beta.dinapi.gov.py/dashboard/expedientes/tramites/'+str(arg0))
@@ -1765,3 +1832,7 @@ def ajuste_hora(hora):
 	return(str(int(huor_split[0])-4).rjust(2,'0')+":"+str(int(huor_split[1])).rjust(2,'0')+":"+huor_split[2])	
 
 #print(ajuste_hora("14:37:00"))
+
+#envio_agente_recibido('27645','2363526')
+
+#envio_agente_recibido_affect('27645','2363526','2020','2362084')
