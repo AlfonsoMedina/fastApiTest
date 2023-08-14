@@ -119,7 +119,7 @@ def envio_agente_recibido_affect(arg0,arg1,ser_afect,afect):
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=72, y=40, txt='Exp. Afectado')
 			pdf.set_font("helvetica", "", 8)
-			pdf.text(x=100, y=40, txt= str(ser_afect)+'-'+str(afect))
+			pdf.text(x=100, y=40, txt= str(ser_afect).replace(".0","")+'-'+str(afect).replace(".0",""))
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=85, y=45, txt='Tipo')
