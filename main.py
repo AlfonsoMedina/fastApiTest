@@ -8,7 +8,7 @@ from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
 from tools.send_mail import enviar
 from tools.connect import MEA_OFICINA_ORIGEN_FULL_VIEW, MEA_TIEMPO_ACTUALIZACION, WORKING_DAY_AND_TIME, MEA_OFICINA_ORIGEN_cap, MEA_OFICINA_ORIGEN_user
-from dinapi.sfe import count_pendiente, create_all_group, format_userdoc, getDia_proceso, getSigla_tipoDoc, log_info, log_info_delete, log_info_id_tramites, log_info_serch, newDayProcess, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc, what_it_this
+from dinapi.sfe import count_pendiente, create_all_group, create_all_group_fecha, format_userdoc, getDia_proceso, getSigla_tipoDoc, log_info, log_info_delete, log_info_id_tramites, log_info_serch, newDayProcess, oposicion_sfe, pendientes_sfe, pendientes_sfe_not_pag, pendientes_sfe_soporte, registro_sfe, reglas_me, renovacion_sfe, stop_request, tip_doc, what_it_this
 from models.InsertUserDocModel import userDocModel
 from tools.params_seting import  get_parametro, get_parametros, get_parametros_mea, upDate_parametro
 from tools.base64Decode import image_url_to_b64
@@ -2296,6 +2296,10 @@ def workingViews():
 @app.get('/sis/create_all_group', summary="sis", tags=["Crear grupos de tramites para los usuarios"])
 def CreateAllGroup():
 	return(create_all_group())
+
+@app.get('/sis/create_all_group_fecha', summary="sis", tags=["Crear grupos de tramites para los usuarios por fecha"])
+def CreateAllGroupFecha(fecha):
+	return(create_all_group_fecha(fecha))
 
 @app.get('/sis/last_day_process', summary="sis", tags=["Devuelve la ultima fecha de proceso"])
 def lastdayprocess():

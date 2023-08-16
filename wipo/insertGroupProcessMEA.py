@@ -110,6 +110,8 @@ def ProcessGroupGetList(userNbr):
 	except zeep.exceptions.Fault as e:
 		return(e)
 
+#print(ProcessGroupGetList('147')) #buscar grupo de tramite por usuario
+
 def valid_group(userNbr,groupName,typ):
 	try:
 		for i in range(len(ProcessGroupGetList(userNbr))):
@@ -171,6 +173,10 @@ def main_State(exp):
 	status_exp = Process_Read(data_exp_process.file.processId.processNbr.doubleValue, data_exp_process.file.processId.processType)
 	return(status_exp.status.statusId.statusCode)
 
+
+#print(main_State('2359548'))
+
+
 def group_typ(num):
 	list = {'1':'[Expediente]','10':'[Escrito+expediente]','11':'[Escrito]'}
 	group_name = str(fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00"))+" "+list[str(num)])
@@ -229,6 +235,8 @@ def Process_Get_List(userdocSeqNbrFrom,userdocSeqNbrTo,userdocSeqSeries,userdocT
 				}
 	data = clientMark.service.ProcessGetList(**data_exp)
 	return(data)
+
+#print(Process_Get_List('2364500','2364500','2023','ED'))	
 
 def SIGLA_DE_ESTADO(sig,exp):
 	#print(sig)
@@ -322,7 +330,42 @@ def group_addressing(sig,affectNbr,fileNbr):
 # Solo CREAR GRUPO por nombre usuario (AMEDINA)
 def crear_grupo(user):
 	try:
-		fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" )) 
+		fecha = fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00" ))
+		userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
+		#####################################################################################################
+		group_exp = f'{fecha} [Expediente]'
+		group_esc = f'{fecha} [Escrito]'
+		group_esc_exp = f'{fecha} [Escrito+expediente]'
+
+		exists_group_exp = group_today(userId, group_exp)
+
+		exists_group_esc = group_today(userId, group_esc)
+
+		exists_group_esc_exp = group_today(userId, group_esc_exp)
+
+		#####################################################################################################
+
+		if exists_group_exp == False:
+			ProcessGroupInsert(last_group(userId)+1,userId,fecha,'Creado por M.E.A.','1','1')
+		else:
+			pass
+			
+		if exists_group_esc == False:
+			ProcessGroupInsert(last_group(userId)+1,userId,fecha,'Creado por M.E.A.','1','10')
+		else:
+			pass
+
+		if exists_group_esc_exp == False:
+			ProcessGroupInsert(last_group(userId)+1,userId,fecha,'Creado por M.E.A.','1','11')
+		else:
+			pass
+		return(True)	
+	except Exception as e:
+		return(e)
+
+def crear_grupo_fecha(user,yourDate):
+	try:
+		fecha = fecha_barra(f'{yourDate} 00:00:00')
 		userId = fetch_all_user_mark(user)[0].sqlColumnList[0].sqlColumnValue
 		#####################################################################################################
 		group_exp = f'{fecha} [Expediente]'

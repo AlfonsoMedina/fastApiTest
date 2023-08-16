@@ -7,7 +7,7 @@ from tools.data_format import fecha_barra,hora
 from tools.send_mail import enviar_back_notFile
 import tools.filing_date as captureDate
 import tools.connect as connex
-from wipo.insertGroupProcessMEA import crear_grupo
+from wipo.insertGroupProcessMEA import crear_grupo, crear_grupo_fecha
 
 from wipo.ipas import Process_Read, mark_getlist, mark_read, personAgente
 import qrcode
@@ -2036,6 +2036,16 @@ def create_all_group():
 	row=cursor.fetchall()
 	for i in row:
 		crear_grupo(i[0])
+	conn.close()
+	return('listo')
+
+def create_all_group_fecha(fecha):
+	conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+	cursor = conn.cursor()
+	cursor.execute(connex.create_all_group)
+	row=cursor.fetchall()
+	for i in row:
+		crear_grupo_fecha(i[0],fecha)
 	conn.close()
 	return('listo')
 
