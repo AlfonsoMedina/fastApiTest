@@ -63,8 +63,6 @@ cd {DIR_BASE}/ && source {DIR_BASE}/venv/bin/activate && gunicorn -w 4 -k uvicor
 """)
     file_state.close()
 
-
-
     #########################################
     #### ARCHIVO DE REINICIO DEL DEL SERVICIO
     file_state = open(f"{DIR_BASE}/.SprintV2System/run-{appName}-restart.sh", "w")
@@ -74,8 +72,6 @@ systemctl stop {appName}.service && kill -9 $(sudo lsof -t -i:{appPort})
 systemctl start {appName}.service""")
     file_state.close()
 
-
-
     #######################################
     #### ARCHIVO DE INICIO DEL DEL SERVICIO
     file_state = open(f"{DIR_BASE}/.SprintV2System/run-{appName}-start.sh", "w")
@@ -84,7 +80,6 @@ f"""#!/bin/bash
 systemctl start {appName}.service
 """)
     file_state.close()
-
 
 
     ##########################################

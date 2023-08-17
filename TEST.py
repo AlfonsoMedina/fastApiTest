@@ -95,8 +95,12 @@ def campo_scan(arg):
 		#print(row[0][6])
 		for i in row[0][6]:
 			try:
+				if i['campo'] == 'titular2_nombreapellido2':
+					i['campo'] = 'titular2_nombreapellido'
+				
 				if i['campo'] != 'descripcion_documentos2':
 					list_campos.append({"campo": i["campo"],"valor": i["valor"],"isValId": "true","condicion": "","requerido": "false","componente": "textview","validacion": "","descripcion": i["descripcion"]})			
+			
 			except Exception as e:
 				list_campos.append({"campo": "","valor": "","isValId": "true","condicion": "","requerido": "false","componente": "textview","validacion": "","descripcion": ""})
 
@@ -139,7 +143,7 @@ def timer(step):
 	while i < step:
 	##############################################################################################################                
 		try:
-			create_list(capture_day())
+			create_list(capture_day()) # '2023-08-16'
 		except Exception as e:
 			pass
 	##############################################################################################################
