@@ -718,7 +718,7 @@ def registro_pdf_sfe_local(arg):
 		print(e)
 	
 
-#registro_pdf_sfe_local('27264')
+#registro_pdf_sfe_local('27764')
 
 
 

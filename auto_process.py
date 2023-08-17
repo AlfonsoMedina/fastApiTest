@@ -828,7 +828,7 @@ def insertRen(form_Id):
 			except Exception as e:
 				pass	
 		except Exception as e:
-			data_validator(f'Error en solicitud o falta número de registro, tabla tramites ID: {form_Id}','true',form_Id)
+			data_validator(f'Tiempo agotado, carga datos de ipas para renovacion, ID: {form_Id}','true',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
 

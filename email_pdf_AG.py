@@ -1836,3 +1836,6 @@ def ajuste_hora(hora):
 #envio_agente_recibido('27645','2363526')
 
 #envio_agente_recibido_affect('27645','2363526','2020','2362084')
+
+
+#acuse_from_AG_REG('S','27764','2365156')

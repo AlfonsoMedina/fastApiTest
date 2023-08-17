@@ -359,9 +359,8 @@ def registro_sfe(arg):
 
 def titulare_reg(arg,num):
 	list_titulare = []
-	for i in range(2,(int(num)+1)):
+	for i in range(2,10):
 		list_titulare.append(catch_owner(arg,i))
-
 	if list_titulare[0]['person']['personName'] == '':	
 		list_titulare.pop(0)
 	if list_titulare[1]['person']['personName'] == '':	
