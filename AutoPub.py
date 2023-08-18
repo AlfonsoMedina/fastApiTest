@@ -10,7 +10,7 @@ from tools.send_mail import redpi_mail
 #print(str(date.today()))
 
 insertOk = 0
-list_for_mail = ''
+list_for_mail = {}
 def timer(step):
 	dia = str(time.strftime("%Y-%m-%d"))
 	print('Proceso de publicacion automatica............... Proxima publicacion 00:11AM Horas')
@@ -25,13 +25,11 @@ def timer(step):
 			##############################################################################################################                
 				check_date()
 			##############################################################################################################
-
 			if(H == '06:05:01'):
 			##############################################################################################################
-				list_for_mail = report_package_this_today()                
-				redpi_mail('jun.taniwaki@dinapi.gov.py', 'REDPI', F'Publicacion REDPI e IPAS de la fecha {dia} - {list_for_mail} ')
+				list_for_mail = report_package_this_today()               
+				redpi_mail('jun.taniwaki@dinapi.gov.py', 'REDPI', f'Publicacion REDPI e IPAS de la fecha { list_for_mail["fecha"] } - { list_for_mail["exp"] } ')
 			##############################################################################################################			
-			
 			time.sleep(0.5)	
 			if(i == 10):
 				i=0
@@ -174,22 +172,15 @@ def report_package_this_today():
 	try:
 		connH = psycopg2.connect(host=db_host,user=db_user,password=db_password,database=db_database)
 		cursor = connH.cursor()
-		cursor.execute("select  id,nexpedientes  from publicaciones_publicaciones pp order by id desc limit 1")    
+		cursor.execute("select  id, fecha_publicacion, nexpedientes from publicaciones_publicaciones pp order by id desc limit 1")    
 		row=cursor.fetchall()
 		for i in row:
-			return(str(i[1]))
+			return({"id":str(i[0]),"fecha":str(i[1]),"exp":str(i[2])})
 		connH.close()
 	except Exception as e:
 		pass
 
 timer(3)
-
-
-
-	
-
-
-
 
 
 '''
