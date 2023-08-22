@@ -883,10 +883,10 @@ def insertRen(form_Id):
 				others_process_REN(form_Id,new_Nbr,insert_mark_ren.ag_email,'REN')
 				print(subsequent_list)
 			else:
-				error_process(form_Id,'Error en solicitud o falta número de registro, tabla tramites ID','true')
+				error_process(form_Id,'Tiempo agotado, carga datos de ipas para renovacion, ID','true')
 		except Exception as e:
 			print(e)
-			error_process(form_Id,'Error en solicitud o falta número de registro, tabla tramites ID','true')
+			error_process(form_Id,'Tiempo agotado, carga datos de ipas para renovacion, ID','true')
 	else:
 		pass
 
