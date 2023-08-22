@@ -1077,6 +1077,76 @@ and rm.num_acta = {exp}""")
     finally:
         conn.close() 
 
+class getClasificados():
+
+    def edicion(self,fecha):
+        try:
+            conn = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
+            cursor = conn.cursor()
+            cursor.execute(f"select id from publicaciones_publicaciones where fecha_publicacion = '{fecha}' ")    
+            row=cursor.fetchall()
+            for i in row:
+                return(i[0])
+        except Exception as e:
+            print(e)
+        finally:
+            conn.close()
+    
+    def listado(self,edit):
+        try:
+            list = []
+            conn = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
+            cursor = conn.cursor()
+            cursor.execute(f"select detalle_publicacion_id from publicacion_detalle_clasificado where publicacion_id = {edit}")    
+            row=cursor.fetchall()
+            for i in row:
+                list.append(i[0])
+            return(str(list).replace("[","").replace("]",""))
+        except Exception as e:
+            print(e)
+        finally:
+            conn.close()
+
+    def detalles(self,list_id):
+        try:
+            list_details = []
+            conn = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
+            cursor = conn.cursor()
+            cursor.execute(f"select * from detalle_clasificado where id in ({list_id})")    
+            row=cursor.fetchall()
+            for i in row:
+                list_details.append({
+                                        "id":i[0],
+                                        "num_orden":i[1],
+                                        "fecha_solicitud":i[2],
+                                        "hora_solicitud":i[3],
+                                        "tipo_solicitud":i[4],
+                                        "tipo_signo":i[5],
+                                        "tipo_marca":i[6],
+                                        "clase":i[7],
+                                        "denominacion":i[8],
+                                        "solicitante":i[9],
+                                        "direccion":i[10],
+                                        "pais":i[11],
+                                        "agente":i[12],
+                                        "descripcion":i[13],
+                                        "logo":i[14],
+                                        "expediente":i[15],
+                                        "nom_agente":i[16],
+                                        "user_login":i[17],
+                                        "edicion":i[18],
+                                        "estado":i[19],
+                                        "inicio":i[20],
+                                        "fin":i[21],
+                                        "fecha_pago":i[22],
+                                        "fec_reg":i[23],
+                                        "process_user":i[24],
+                                    }) 
+            return(list_details)
+        except Exception as e:
+            print(e)
+        finally:
+            conn.close()
 
 
 #print(consulta_sfe_prueba('10/01/2023'))

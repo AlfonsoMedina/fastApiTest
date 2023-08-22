@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from login.LogIn import authentication, new_password
 from publicaciones.pub_2023 import convert_fecha_hora, orden_emitida, orden_emitida_exp
-from redpi.Clasificados import checking_payment_suport, consulta_Fop, consulta_Fop_expediente, consulta_Fop_fecha, consulta_caja, consulta_sfe, edicion_cont, existexp, full_package, insert_clasificado, insert_dia_proceso, insert_form_orden_publicacion, insertar_edicion, no_enviado_sfe, previa_edicion, processToDate, select_dia_proceso, update_dia_proceso, update_inicio_fin, update_inicio_fin_soporte, user_admin_redpi
+from redpi.Clasificados import checking_payment_suport, consulta_Fop, consulta_Fop_expediente, consulta_Fop_fecha, consulta_caja, consulta_sfe, edicion_cont, existexp, full_package, getClasificados, insert_clasificado, insert_dia_proceso, insert_form_orden_publicacion, insertar_edicion, no_enviado_sfe, previa_edicion, processToDate, select_dia_proceso, update_dia_proceso, update_inicio_fin, update_inicio_fin_soporte, user_admin_redpi
 from tools.data_format import format_fecha_mes_hora
 from wipo.ipas import Insert_Action, Insert_Action_soporte, fetch_all_do_edoc_nuxeo, fetch_all_officdoc_nuxeo, fetch_all_user_mark, get_agente, mark_getlist, mark_getlistReg #pip install "fastapi[all]"
 from fastapi.middleware.cors import CORSMiddleware
@@ -253,6 +253,13 @@ class in_ipas_method(BaseModel):
 def insert_action_sop(item:in_ipas_method):
 	return(Insert_Action_soporte(item.exp,item.pago,item.userid,item.nota,item.evento))
 
+@app.get('/api/post_view', tags=["Post"], summary="#", description="Vista de clasificados")
+def insert_action_sop(date_post):
+	data = getClasificados()
+	edit_Nbr = data.edicion(date_post)
+	list_post = data.listado(edit_Nbr)
+	data_list = data.detalles(list_post)	
+	return(data_list)
 
 
 
