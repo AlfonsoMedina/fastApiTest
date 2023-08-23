@@ -254,11 +254,17 @@ def insert_action_sop(item:in_ipas_method):
 	return(Insert_Action_soporte(item.exp,item.pago,item.userid,item.nota,item.evento))
 
 @app.get('/api/post_view', tags=["Post"], summary="#", description="Vista de clasificados")
-def insert_action_sop(date_post):
+def post_view(date_post):
 	data = getClasificados()
 	edit_Nbr = data.edicion(date_post)
 	list_post = data.listado(edit_Nbr)
 	data_list = data.detalles(list_post)	
+	return(data_list)
+
+@app.get('/api/one_post_view', tags=["Post"], summary="#", description="Vista para un clasificado")
+def one_post_view(post_Id):
+	data = getClasificados()
+	data_list = data.detalles(post_Id)	
 	return(data_list)
 
 

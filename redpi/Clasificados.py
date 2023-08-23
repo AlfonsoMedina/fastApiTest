@@ -9,7 +9,7 @@ from flask import jsonify
 import psycopg2
 from datetime import date, timedelta
 from wipo.ipas import Fech_All_Exp, Insert_Action_soporte, mark_getlist, mark_read
-from tools.data_format import Fecha_atras, signo_format
+from tools.data_format import Fecha_atras, fecha_barra, signo_format
 from datetime import datetime
 from tools.connect import db_host, db_user, db_password, db_database, hostCJ, userCJ, passwordCJ, databaseCJ, host_SFE_conn, user_SFE_conn, password_SFE_conn, database_SFE_conn,host_centura, user_centura, password_centura, database_centura
 
@@ -605,8 +605,7 @@ def processToDate(fecha):
     time.sleep(1) 
                    
     insert_only_new_pub('1977-09-01')
-
-    
+   
 def insertar_edicion_finde(fecha,edicion):
     lista_exp = []
     lista_id = []
@@ -1108,45 +1107,48 @@ class getClasificados():
             conn.close()
 
     def detalles(self,list_id):
-        try:
-            list_details = []
-            conn = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
-            cursor = conn.cursor()
-            cursor.execute(f"select * from detalle_clasificado where id in ({list_id})")    
-            row=cursor.fetchall()
-            for i in row:
-                list_details.append({
-                                        "id":i[0],
-                                        "num_orden":i[1],
-                                        "fecha_solicitud":i[2],
-                                        "hora_solicitud":i[3],
-                                        "tipo_solicitud":i[4],
-                                        "tipo_signo":i[5],
-                                        "tipo_marca":i[6],
-                                        "clase":i[7],
-                                        "denominacion":i[8],
-                                        "solicitante":i[9],
-                                        "direccion":i[10],
-                                        "pais":i[11],
-                                        "agente":i[12],
-                                        "descripcion":i[13],
-                                        "logo":i[14],
-                                        "expediente":i[15],
-                                        "nom_agente":i[16],
-                                        "user_login":i[17],
-                                        "edicion":i[18],
-                                        "estado":i[19],
-                                        "inicio":i[20],
-                                        "fin":i[21],
-                                        "fecha_pago":i[22],
-                                        "fec_reg":i[23],
-                                        "process_user":i[24],
-                                    }) 
-            return(list_details)
-        except Exception as e:
-            print(e)
-        finally:
-            conn.close()
+        if list_id != []:
+            try:
+                list_details = []
+                conn = psycopg2.connect(host = db_host,user = db_user,password = db_password,database = db_database)
+                cursor = conn.cursor()
+                cursor.execute(f"select * from detalle_clasificado where id in ({list_id});")    
+                row=cursor.fetchall()
+                for i in row:
+                    list_details.append({
+                                            "id":i[0],
+                                            "num_orden":i[1],
+                                            "fecha_solicitud":fecha_barra(str(i[2]+' 00:00:00')),
+                                            "hora_solicitud":i[3],
+                                            "tipo_solicitud":i[4],
+                                            "tipo_signo":i[5],
+                                            "tipo_marca":i[6],
+                                            "clase":i[7],
+                                            "denominacion":i[8],
+                                            "solicitante":i[9],
+                                            "direccion":i[10],
+                                            "pais":i[11],
+                                            "agente":i[12],
+                                            "descripcion":i[13],
+                                            "logo":i[14],
+                                            "expediente":i[15],
+                                            "nom_agente":i[16],
+                                            "user_login":i[17],
+                                            "edicion":i[18],
+                                            "estado":i[19],
+                                            "inicio":i[20],
+                                            "fin":i[21],
+                                            "fecha_pago":i[22],
+                                            "fec_reg":i[23],
+                                            "process_user":i[24],
+                                        }) 
+                return(list_details)
+            except Exception as e:
+                return([])
+            finally:
+                conn.close()
+        else:
+             return([])        
 
 
 #print(consulta_sfe_prueba('10/01/2023'))
