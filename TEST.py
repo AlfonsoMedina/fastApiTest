@@ -9,6 +9,10 @@ from dinapi.sfe import respuesta_sfe_campo
 import tools.connect as connex
 
 
+
+from zeep import Client
+import tools.connect as conn_serv
+
 #respuesta_sfe_campo('27228')
 
 #getFile('27328','2360799')
@@ -18,11 +22,388 @@ import tools.connect as connex
 
 
 
+try:
+	mark_service = 'http://192.168.50.194:8050'
+	wsdl = mark_service + "/IpasServices/IpasServices?wsdl"
+	clientMark = Client(wsdl)
+except Exception as e:
+	print('Error de coneccion IPAS Marcas!!')
 
 
 
 
 
+'''class Ipas():
+	
+	def File_Read(self, expediente):
+		data = {
+				"arg0": {
+					"fileNbr": {
+					"doubleValue": 2362970
+					},
+					"fileSeq": "PY",
+					"fileSeries": {
+					"doubleValue": 2023
+					},
+					"fileType": "M"
+				}
+				}
+		return clientMark.service.FileRead(**data)
+	
+	def Mark_Update(self,exp):
+		data = {
+					"fileId": {
+					"fileNbr": {
+						"doubleValue": "2364446"
+					},
+					"fileSeq": "PY",
+					"fileSeries": {
+						"doubleValue": "2023"
+					},
+					"fileType": "M"
+					},
+					"filingData": {
+					"applicationSubtype": "MS",
+					"applicationType": "REG",
+					"captureDate": {
+						"dateValue": "2023-08-11T12:39:50-04:00"
+					},
+					"captureUserId": {
+						"doubleValue": "26"
+					},
+					"corrFileNbr": "",
+					"corrFileSeq": "",
+					"corrFileSeries": "",
+					"corrFileType": "",
+					"externalOfficeCode": "",
+					"externalOfficeFilingDate": "",
+					"externalSystemId": "",
+					"filingDate": {
+						"dateValue": "2023-08-11T12:39:50-04:00"
+					},
+					"indIncorrRecpDeleted": "",
+					"indManualInterpretationRequired": "false",
+					"lawCode": {
+						"doubleValue": "1"
+					},
+					"novelty1Date": "",
+					"novelty2Date": "",
+					"paymentList": {
+						"currencyName": "Guaraníes",
+						"currencyType": "GS",
+						"receiptAmount": "206182",
+						"receiptDate": {
+						"dateValue": "2023-08-11T00:00:00-04:00"
+						},
+						"receiptNbr": "103398",
+						"receiptNotes": "Recibo SprintV2 SFE",
+						"receiptType": "1",
+						"receiptTypeName": "A1 - Solicitud de Registro de Marca"
+					},
+					"receptionDate": {
+						"dateValue": "2023-08-11T00:00:00-04:00"
+					},
+					"receptionDocument": {
+						"documentEdmsData": {
+						"edocDate": {
+							"dateValue": "2023-08-11T12:39:51-04:00"
+						},
+						"edocId": {
+							"doubleValue": "2900777"
+						},
+						"edocImageCertifDate": "",
+						"edocImageCertifUser": "",
+						"edocImageLinkingDate": "",
+						"edocImageLinkingUser": "",
+						"edocNbr": {
+							"doubleValue": "2364446"
+						},
+						"edocSeq": "1",
+						"edocSer": {
+							"doubleValue": "2023"
+						},
+						"edocTyp": "205",
+						"edocTypeName": "Marca de Servicio",
+						"efolderId": {
+							"doubleValue": "772597"
+						},
+						"efolderNbr": {
+							"doubleValue": "2364446"
+						},
+						"efolderSeq": "1",
+						"efolderSer": {
+							"doubleValue": "2023"
+						},
+						"indInterfaceEdoc": "true",
+						"indSpecificEdoc": "true"
+						},
+						"documentId": {
+						"docLog": "E",
+						"docNbr": {
+							"doubleValue": "656663"
+						},
+						"docOrigin": "1",
+						"docSeries": {
+							"doubleValue": "1"
+						},
+						"selected": ""
+						},
+						"documentSeqId": {
+						"docSeqName": "",
+						"docSeqNbr": "",
+						"docSeqSeries": "",
+						"docSeqType": ""
+						},
+						"externalSystemId": "",
+						"extraData": {
+						"dataCodeId1": "",
+						"dataCodeId2": "",
+						"dataCodeId3": "",
+						"dataCodeId4": "",
+						"dataCodeId5": "",
+						"dataCodeName1": "",
+						"dataCodeName2": "",
+						"dataCodeName3": "",
+						"dataCodeName4": "",
+						"dataCodeName5": "",
+						"dataCodeTyp1": "",
+						"dataCodeTyp2": "",
+						"dataCodeTyp3": "",
+						"dataCodeTyp4": "",
+						"dataCodeTyp5": "",
+						"dataCodeTypeName1": "",
+						"dataCodeTypeName2": "",
+						"dataCodeTypeName3": "",
+						"dataCodeTypeName4": "",
+						"dataCodeTypeName5": "",
+						"dataDate1": "",
+						"dataDate2": "",
+						"dataDate3": "",
+						"dataDate4": "",
+						"dataDate5": "",
+						"dataFlag1": "false",
+						"dataFlag2": "false",
+						"dataFlag3": "false",
+						"dataFlag4": "false",
+						"dataFlag5": "false",
+						"dataNbr1": "",
+						"dataNbr2": "",
+						"dataNbr3": "",
+						"dataNbr4": "",
+						"dataNbr5": "",
+						"dataText1": "",
+						"dataText2": "",
+						"dataText3": "",
+						"dataText4": "",
+						"dataText5": ""
+						},
+						"inputDocumentData": "",
+						"internalDocumentData": {
+						"description": "",
+						"offidocId": {
+							"offidocNbr": "",
+							"offidocOrigin": "",
+							"offidocSeries": "",
+							"selected": ""
+						},
+						"refNo": ""
+						},
+						"outputDocumentData": {
+						"officedocId": {
+							"offidocNbr": "",
+							"offidocOrigin": "",
+							"offidocSeries": "",
+							"selected": ""
+						}
+						},
+						"qtyPages": ""
+					},
+					"receptionUserId": "",
+					"validationDate": "",
+					"validationUserId": ""
+					},
+					"notes": "",
+					"ownershipData": {
+					"dummy": "",
+					"ownerList": {
+						"indService": "true",
+						"orderNbr": "",
+						"ownershipNotes": "",
+						"person": {
+						"addressStreet": "Km7. Alto Paraná Ciudad del Este",
+						"addressStreetInOtherLang": "",
+						"addressZone": "",
+						"agentCode": "",
+						"cityCode": "",
+						"cityName": "Ciudad del Este",
+						"companyRegisterRegistrationDate": "",
+						"companyRegisterRegistrationNbr": "",
+						"email": "Lucasrodrigoojeda86@gmail.com",
+						"indCompany": "false",
+						"individualIdNbr": "4355368",
+						"individualIdType": "CED",
+						"legalIdNbr": "",
+						"legalIdType": "",
+						"legalNature": "",
+						"legalNatureInOtherLang": "",
+						"nationalityCountryCode": "PY",
+						"personGroupCode": "",
+						"personGroupName": "",
+						"personName": "Lucas Rodrigo Ojeda",
+						"personNameInOtherLang": "",
+						"residenceCountryCode": "PY",
+						"stateCode": "",
+						"stateName": "",
+						"telephone": "994630831",
+						"zipCode": ""
+						}
+					}
+					},
+					"priorityData": {
+					"earliestAcceptedParisPriorityDate": "",
+					"exhibitionDate": "",
+					"exhibitionNotes": ""
+					},
+					"processId": {
+					"processNbr": {
+						"doubleValue": "2044686"
+					},
+					"processType": "1"
+					},
+					"publicationData": {
+					"journalCode": "",
+					"publicationDate": {
+						"dateValue": "2023-08-25T00:00:00-04:00"
+					},
+					"publicationNotes": "nota publicacion",
+					"specialPublicationDate": "",
+					"specialPublicationRequestDate": ""
+					},
+					"publicationData": {
+					"journalCode": "",
+					"publicationDate": "",
+					"publicationNotes": "",
+					"specialPublicationDate": "",
+					"specialPublicationRequestDate": ""
+					},
+					"registrationData": {
+					"entitlementDate": "",
+					"expirationDate": "",
+					"indRegistered": "false",
+					"registrationDate": "",
+					"registrationId": {
+						"registrationDup": "",
+						"registrationNbr": "",
+						"registrationSeries": "",
+						"registrationType": ""
+					}
+					},
+					"representationData": {
+					"documentId_PowerOfAttorneyRegister": {
+						"docLog": "",
+						"docNbr": "",
+						"docOrigin": "",
+						"docSeries": "",
+						"selected": ""
+					},
+					"referencedPOAData": {
+						"documentId": {
+						"docLog": "",
+						"docNbr": "",
+						"docOrigin": "",
+						"docSeries": "",
+						"selected": ""
+						},
+						"poaDate": "",
+						"poaGrantor": {
+						"person": {
+							"addressStreet": "",
+							"addressStreetInOtherLang": "",
+							"addressZone": "",
+							"agentCode": "",
+							"cityCode": "",
+							"cityName": "",
+							"companyRegisterRegistrationDate": "",
+							"companyRegisterRegistrationNbr": "",
+							"email": "",
+							"indCompany": "false",
+							"individualIdNbr": "",
+							"individualIdType": "",
+							"legalIdNbr": "",
+							"legalIdType": "",
+							"legalNature": "",
+							"legalNatureInOtherLang": "",
+							"nationalityCountryCode": "",
+							"personGroupCode": "",
+							"personGroupName": "",
+							"personName": "",
+							"personNameInOtherLang": "",
+							"residenceCountryCode": "",
+							"stateCode": "",
+							"stateName": "",
+							"telephone": "",
+							"zipCode": ""
+						}
+						},
+						"poaRegNumber": "",
+						"scope": ""
+					},
+					"representativeList": {
+						"indService": "true",
+						"person": {
+						"addressStreet": "Lomas Valentinas entre Brasil y Félix Bogado",
+						"addressStreetInOtherLang": "",
+						"addressZone": "",
+						"agentCode": {
+							"doubleValue": "7391"
+						},
+						"cityCode": "",
+						"cityName": "Asunción",
+						"companyRegisterRegistrationDate": "",
+						"companyRegisterRegistrationNbr": "",
+						"email": "ojedaduartemarcos@gmail.com",
+						"indCompany": "true",
+						"individualIdNbr": "4405901",
+						"individualIdType": "CED",
+						"legalIdNbr": "",
+						"legalIdType": "",
+						"legalNature": "",
+						"legalNatureInOtherLang": "",
+						"nationalityCountryCode": "PY",
+						"personGroupCode": "",
+						"personGroupName": "",
+						"personName": "Marcos Antonio Ojeda Duarte",
+						"personNameInOtherLang": "",
+						"residenceCountryCode": "PY",
+						"stateCode": "",
+						"stateName": "",
+						"telephone": "982789029",
+						"zipCode": ""
+						},
+						"representativeType": "AG"
+					}
+					},
+					"rowVersion": "",
+					"stateValidityData": {
+					"dummy": ""
+					}
+				}
+				
+		clientMark.service.MarkUpdate(**data)
+
+
+
+fileData = Ipas()
+
+#convert = fileData.File_Read('2364446')
+
+convert = fileData.Mark_Update('exp')
+
+
+print(convert)
+
+primary = []
+secondary = []'''
 
 
 
@@ -135,7 +516,7 @@ def create_list(arg):
 	finally:
 		conn.close()	 
 
-#print(create_list('2023-07-25'))
+#print(create_list('2023-08-29'))
 
 def timer(step):
 	#print('')

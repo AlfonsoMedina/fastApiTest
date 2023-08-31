@@ -2171,11 +2171,13 @@ def TEST_MEA_ren(id_tramite):
 
 @app.post('/sfe/insert_mea_reg', summary="MEA", tags=["Insert registro de marcas MEA"])
 def insert_mea_reg(id_tramite):
-	return(insertReg(id_tramite))
+	executeInsert = insertReg(id_tramite)
+	return('listo')
 
 @app.post('/sfe/insert_mea_ren', summary="MEA", tags=["Insert renovacion de marcas MEA"])
 def insert_mea_ren(id_tramite):
-	return(insertRen(id_tramite))
+	executeInsert = insertRen(id_tramite)
+	return('listo')
 
 @app.post('/sfe/getTime', summary="MEA", tags=["Tiempo de busqueda para capturar pendientes en tabla tramites en segundos"])
 def get_time():
@@ -2239,7 +2241,8 @@ class insert_n_doc(BaseModel):
 	arg1:str = ""
 @app.post('/sfe/insert_new_doc', summary="API", tags=["inserta documentos, testigo visual progressBar "])
 def auto_insert_mea(item:insert_n_doc):
-	return insert_list(item.arg0,item.arg1)
+	excecuteInsert = insert_list(item.arg0,item.arg1)
+	return('listo')
 
 class pendientes_fecha(BaseModel):
 	fecha:str              

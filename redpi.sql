@@ -262,12 +262,12 @@ SELECT * FROM publicacion_detalle_clasificado WHERE enviado_at like '2022-09-13 
 
 
 
-select pagado_at,  authorization_number , to_char(bancard_transactions.updated_at,'DD/MM/YYYY') as fecha_pago ,status, respuestas,expediente_id,enviado_at
+select pagado_at,  authorization_number, bancard_transactions.payable_id , to_char(bancard_transactions.updated_at,'DD/MM/YYYY') as fecha_pago ,status, respuestas,expediente_id,enviado_at
 from bancard_transactions left join public.tramites on public.tramites.id = bancard_transactions.payable_id
 where bancard_transactions.status = 1 
 and public.tramites.estado = 7 
 and  public.tramites.formulario_id = 29 
-and enviado_at >= '2023-07-17 00:59:00.0' and enviado_at <= '2023-08-03 22:59:00.0'
+and enviado_at >= '2023-05-18 00:59:00.0' and enviado_at <= '2023-05-19 22:59:00.0'
 
 
 SELECT * FROM public.tramites WHERE created_at >= '2023-07-26 00:59' and formulario_id in (27,29,4,70,3) and created_at <= '2023-07-26 20:59'
