@@ -407,13 +407,7 @@ secondary = []'''
 
 
 
-
-
-
-
-
-
-
+"""SELECT * FROM perfiles_agentes where habilitar = '1'"""
 
 
 
@@ -520,6 +514,7 @@ def create_list(arg):
 
 def timer(step):
 	#print('')
+	reset()
 	i = 0
 	while i < step:
 	##############################################################################################################                
@@ -529,6 +524,22 @@ def timer(step):
 			pass
 	##############################################################################################################
 		time.sleep(3)
+
+
+def reset():
+	try:
+		connUP = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = connUP.cursor()
+		cursor.execute("""UPDATE perfiles_agentes set habilitar='0'""")
+		cursor.rowcount
+		connUP.commit()
+		connUP.close()
+	except Exception as e:
+		print(e)
+	finally:
+		connUP.close()
+
+
 
 timer(59)
 
