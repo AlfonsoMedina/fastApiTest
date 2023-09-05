@@ -1,5 +1,6 @@
-from email_pdf_AG import envio_agente_recibido
+from email_pdf_AG import acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_affect
 from getFileDoc import compilePDF_DOCS, getFile
+from tools.send_mail import delete_file, enviar
 from tools.filing_date import capture_day, capture_full, capture_full_upd
 from dataclasses import replace
 import json
@@ -417,14 +418,19 @@ secondary = []'''
 
 
 
+#body = f'Su solicitud de ESCRITO ha ingresado satisfactoriamente a la Dirección Nacional de Propiedad Intelectual – DINAPI, bajo los siguientes datos:  (se adjunta archivo PDF de su solicitud).\n Seguimos Mejorando para brindarte un servicio de calidad. \n --- \n Saludos cordiales,\n DIRECCIÓN NACIONAL DE PROPIEDAD INTELECTUAL'
 
 
+#envio_agente_recibido_affect('28423','2370563','2023','2360059')																#Crear PDF
+#time.sleep(1)
+#delete_file(enviar('notificacion-DINAPI.pdf','agente10as@gmail.com','M.E.A',body))	#Enviar Correo Agente
 
 
+#acuse_from_AG_REG('S','28429','2370674')
 
+#acuse_from_AG_REN('S','28425','2370577')							# Crear PDF									
 
-
-
+#delete_file(enviar('notificacion-DINAPI.pdf','consultaslmpy@gmail.com','M.E.A',connex.msg_body_mail))
 
 
 
