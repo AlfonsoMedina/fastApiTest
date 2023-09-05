@@ -111,7 +111,7 @@ def user_doc_read(docLog, docNbr, docOrigin, docSeries): # {'docLog':'E','docNbr
 	try:
 		UserdocRead = {'arg0': {'docLog':docLog,'docNbr':{'doubleValue':docNbr},'docOrigin':docOrigin,'docSeries':{'doubleValue':docSeries}}}
 		ipas = clientMark.service.UserdocRead(**UserdocRead)
-		#print(ipas.userdocProcessId.processNbr.doubleValue)
+		print(ipas.filingData.userdocTypeList[0].userdocType)
 		try:
 			reception = str(ipas.filingData.receptionDate.dateValue)
 		except Exception as e:
@@ -130,7 +130,7 @@ def user_doc_read(docLog, docNbr, docOrigin, docSeries): # {'docLog':'E','docNbr
 			}]
 		except Exception as e:
 			pack_1 = []
-
+		print(f'pack_1 {pack_1}')
 		try:
 			pack_2 = {
 				"CUserdocs": [],
@@ -307,7 +307,7 @@ def user_doc_read(docLog, docNbr, docOrigin, docSeries): # {'docLog':'E','docNbr
 			}
 		except Exception as e:
 			pack_2 = []
-
+		print(f'pack_2 {pack_2}')
 		try:
 			payment = [{
 						"currencyName": str(ipas.filingData.paymentList[0].currencyName),
@@ -323,7 +323,7 @@ def user_doc_read(docLog, docNbr, docOrigin, docSeries): # {'docLog':'E','docNbr
 					}]
 		except Exception as e:
 			payment = []
-
+		print(f'payment {payment}')
 		try:
 			affectedDocumentId = {
 							"docLog": str(ipas.affectedDocumentId.docLog),
@@ -340,6 +340,8 @@ def user_doc_read(docLog, docNbr, docOrigin, docSeries): # {'docLog':'E','docNbr
 			"docSeries": "",
 			"selected": ""
 		}
+
+		print(f'affectedDocumentId {affectedDocumentId}')
 
 		try:
 			captDte = {
@@ -895,6 +897,7 @@ def user_doc_read(docLog, docNbr, docOrigin, docSeries): # {'docLog':'E','docNbr
 			"processType": processType
 		}
 	}
+		print(f'data {data}')
 		return(data)
 	except Exception as e:
 		return([])

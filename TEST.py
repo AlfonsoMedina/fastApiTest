@@ -13,6 +13,8 @@ import tools.connect as connex
 
 from zeep import Client
 import tools.connect as conn_serv
+from wipo.function_for_reception_in import user_doc_read
+
 
 #respuesta_sfe_campo('27228')
 
@@ -438,10 +440,10 @@ secondary = []'''
 
 
 
+#print(user_doc_read('E', '2370149', '1', '2023'))
 
 
-
-
+#['filingData']['userdocTypeList'][0]['userdocType']
 
 
 
