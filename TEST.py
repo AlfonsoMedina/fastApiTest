@@ -6,7 +6,7 @@ from dataclasses import replace
 import json
 import time
 import psycopg2
-from dinapi.sfe import respuesta_sfe_campo
+from dinapi.sfe import respuesta_sfe_campo, rule_notification
 import tools.connect as connex
 
 
@@ -434,6 +434,7 @@ secondary = []'''
 
 
 
+#rule_notification('ED','2360570')
 
 
 

@@ -792,3 +792,17 @@ contraseña= vnSF79upYUXX7VYD
 
 
 
+
+soporte:1 Access to XMLHttpRequest at 'https://mea-backend.dinapi.gov.py/sis/create_all_group' from origin 'https://mea.dinapi.gov.py' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+
+
+
+
+abgmarpat@gmail.com 11   28448  2370708
+
+
+mpuente.dinapi@gmail.com 49
+
+consultajpslm@gmail.com 53
+
+consultaslmpy@gmail.com 54
