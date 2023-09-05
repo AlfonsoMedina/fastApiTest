@@ -586,14 +586,14 @@ def insert_only_new_pub(fecha):
 		pass
 
 #->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->
-def processToDate(fecha):
+def processToDate(fecha,userId):
 
     #print(len(fileNbr_List(fecha)))
 
     for i in fileNbr_List(fecha):
         try:
             if update_inicio_fin(str(i)) == 'ok':
-                insert_clasificado(str(i),'4')
+                insert_clasificado(str(i),str(userId))
         except Exception as e:
             pass    
     

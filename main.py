@@ -124,8 +124,8 @@ def packageToDay(fecha):
 	return(full_package(fecha))
 
 @app.post('/api/processToDate', tags=["Procesar fecha"], summary="#", description="consulta pagos, inserta clasificados, actualiza form, inserta en ipas")
-def process_To_Date(fecha):
-	processToDate(fecha)
+def process_To_Date(fecha,userId):
+	processToDate(fecha,userId)
 	return('end')
 
 @app.post('/api/diaproceso_nuevo', tags=["Proceso nuevo"], summary="#", description="")
