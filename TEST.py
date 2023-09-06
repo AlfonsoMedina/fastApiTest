@@ -466,6 +466,112 @@ secondary = []'''
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def campo_scan(arg):
 	try:
 		list_campos = []
@@ -519,8 +625,6 @@ def create_list(arg):
 	finally:
 		conn.close()	 
 
-#print(create_list('2023-08-29'))
-
 def timer(step):
 	#print('')
 	reset()
@@ -533,7 +637,6 @@ def timer(step):
 			pass
 	##############################################################################################################
 		time.sleep(3)
-
 
 def reset():
 	try:
@@ -548,7 +651,7 @@ def reset():
 	finally:
 		connUP.close()
 
-
+#print(create_list('2023-08-29'))
 
 timer(59)
 

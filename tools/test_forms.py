@@ -8,8 +8,7 @@ from os import getcwd
 import barcode
 from barcode.writer import ImageWriter
 import psycopg2
-
-
+import tools.connect as connex
 
 global_data = {}
 
@@ -260,4 +259,4 @@ def new_document(arg):
 		conn.close()
 	return(global_data)
 
-print(new_document("24224"))
+#print(new_document("24224"))
