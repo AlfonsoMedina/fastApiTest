@@ -1,12 +1,8 @@
-from email_pdf_AG import acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_affect
-from getFileDoc import compilePDF_DOCS, getFile
 from tools.send_mail import delete_file, enviar
-from tools.filing_date import capture_day, capture_full, capture_full_upd
 from dataclasses import replace
 import json
 import time
 import psycopg2
-from dinapi.sfe import respuesta_sfe_campo, rule_notification
 import tools.connect as connex
 
 
