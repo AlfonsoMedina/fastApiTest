@@ -795,16 +795,6 @@ select  id,nexpedientes  from publicaciones_publicaciones pp order by id desc li
 
 
 
-SELECT * FROM perfiles_agentes where habilitar = '1';
-
-
-
-
-UPDATE perfiles_agentes set habilitar='0' and id = 71
-
-
-
-
 
 
 
