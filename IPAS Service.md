@@ -806,3 +806,78 @@ mpuente.dinapi@gmail.com 49
 consultajpslm@gmail.com 53
 
 consultaslmpy@gmail.com 54
+
+
+
+
+
+
+
+
+
+MEA BACKEND cambio de contraseña (user-sprint--201901)
+			- sfe.py
+			- Publicaciones.py
+			- connect.py
+			- pdf_history.py
+			- test_forms.py
+
+REDPI BACKEND cambio de contraseña (user-sprint--201901)
+			- Clasificas.py
+			- connect.py
+			- pdf_history_nuevo.py
+
+SprintV2 BACKEND (user-sprint--201901)
+			- email_opo_sfe.py
+			- email_reg_sfe.py
+			- email_ren_sfe.py
+			- sfe_no_presencial_opo.py
+			- sfe_no_presencial_reg_local.py
+			- sfe_no_presencial_ren_local.py
+			- sfe_no_presencial_reg_mail.py
+			- sfe_no_presencial_reg.py
+			- sfe_no_presencial_ren.py
+			- Publicaciones.py
+			- Clasificados.py
+			- connect.py
+			- pdf_history_nuevo.py
+
+
+
+
+
+user-sprint--201901
+user-developer--201901
+
+r9|%"T}z2*V&5lU-At0ilctt$\j"@s
+
+
+
+
+Start Services
+
+
+- systemctl start redpi_backend.service
+- 
+- systemctl start api_mea.service
+- 
+- systemctl start api_sprintv2.service
+- 
+- systemctl start caja_tesoreria.service
+- 
+- systemctl start microservicio_edo.service
+- 
+- systemctl start microservicio_octopus.service
+- 
+- systemctl start dof_backend.service
+- 
+- systemctl reload nginx.service
+- 
+- systemctl reload tomcat.service
+
+Ver ultimos registros de la aplicacion 
+- journalctl -xeu api_mea
+
+
+
+

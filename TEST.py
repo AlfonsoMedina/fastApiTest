@@ -430,9 +430,9 @@ secondary = []'''
 
 #acuse_from_AG_REG('S','28429','2370674')
 
-#acuse_from_AG_REN('S','28425','2370577')							# Crear PDF									
+#acuse_from_AG_REN('S','28458','2371908')							# Crear PDF									
 
-#delete_file(enviar('notificacion-DINAPI.pdf','consultaslmpy@gmail.com','M.E.A',connex.msg_body_mail))
+#delete_file(enviar('notificacion-DINAPI.pdf','agente10as@gmail.com','M.E.A',connex.msg_body_mail))
 
 
 
@@ -653,7 +653,7 @@ def reset():
 
 #print(create_list('2023-08-29'))
 
-timer(59)
+timer(20000)
 
 
 
