@@ -448,7 +448,7 @@ secondary = []'''
 
 
 
-
+ 
 #Exceute enpoint from url apiRest
 def create_groups(url):
 	response = requests.get(url)
