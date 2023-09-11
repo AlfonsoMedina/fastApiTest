@@ -875,9 +875,21 @@ Start Services
 - 
 - systemctl reload tomcat.service
 
+- systemctl start sfe-tp-backend.service
+
 Ver ultimos registros de la aplicacion 
 - journalctl -xeu api_mea
 
 
 
+api/auth/login_with_email
 
+
+r9|%"T}z2*V&5lU-At0ilctt$\j"@s
+
+
+BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N
+
+
+
+https://cssloaders.github.io/
