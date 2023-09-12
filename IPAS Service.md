@@ -849,8 +849,12 @@ SprintV2 BACKEND (user-sprint--201901)
 user-sprint--201901
 user-developer--201901
 
-r9|%"T}z2*V&5lU-At0ilctt$\j"@s
 
+Remito usuarios y contraseñas para servidores
+192.168.50.221 y el 192.168.50.228 
+* Alfonso Medina
+usuario= alfonso.medina
+contraseña = vnSF79upYUXX7VYD
 
 
 
@@ -893,3 +897,10 @@ BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N
 
 
 https://cssloaders.github.io/
+
+
+
+
+
+
+/publicaciones/enviarNotificaciones/enviar/notificacion

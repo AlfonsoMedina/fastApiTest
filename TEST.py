@@ -10,7 +10,8 @@ import psycopg2
 from dinapi.sfe import respuesta_sfe_campo, rule_notification
 import tools.connect as connex
 
-
+import aiohttp
+import asyncio
 
 from zeep import Client
 import tools.connect as conn_serv
@@ -463,6 +464,22 @@ def create_groups(url):
 
 
 
+
+"""async def fetch_data(url):
+	async with aiohttp.ClientSession() as apiRest:
+		async with apiRest.get(url) as response:
+			return await response.text()
+
+async def main():
+	try:
+		url = "http://192.168.50.228:8077/sis/create_all_group"  # Sustituye con tu URL de API
+		response_data = await fetch_data(url)
+		print(response_data)
+	except Exception as e:
+		print('Create groups successfuly')
+
+# Ejecutar el loop de eventos de asyncio
+asyncio.run(main())"""
 
 
 
