@@ -904,3 +904,7 @@ https://cssloaders.github.io/
 
 
 /publicaciones/enviarNotificaciones/enviar/notificacion
+
+Error en solicitud, tabla tramites: La fecha de solicitud no puede ser nula:
+
+
