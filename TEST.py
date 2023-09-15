@@ -1,20 +1,22 @@
+import aiohttp
+import asyncio
 import requests
 from email_pdf_AG import acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_affect
-from getFileDoc import compilePDF_DOCS, getFile
+from getFileDoc import compilePDF_DOCS, getFile, getFile_reg_and_ren
 from tools.send_mail import delete_file, enviar
 from tools.filing_date import capture_day, capture_full, capture_full_upd
 from dataclasses import replace
+
 import json
 import time
 import psycopg2
 from dinapi.sfe import respuesta_sfe_campo, rule_notification
 import tools.connect as connex
-
-
-
+import zeep
 from zeep import Client
 import tools.connect as conn_serv
 from wipo.function_for_reception_in import user_doc_read
+
 
 
 #respuesta_sfe_campo('27228')
@@ -414,10 +416,9 @@ secondary = []'''
 """SELECT * FROM perfiles_agentes where habilitar = '1'"""
 
 
-
-
-
-
+'''
+28246/2370699 , 28247/2370690 , 28248/2370684
+'''
 
 
 
@@ -429,11 +430,11 @@ secondary = []'''
 #delete_file(enviar('notificacion-DINAPI.pdf','agente10as@gmail.com','M.E.A',body))	#Enviar Correo Agente
 
 
-#acuse_from_AG_REG('S','28429','2370674')
+#acuse_from_AG_REG('S','28246','2370699')
 
 #acuse_from_AG_REN('S','28458','2371908')							# Crear PDF									
 
-#delete_file(enviar('notificacion-DINAPI.pdf','agente10as@gmail.com','M.E.A',connex.msg_body_mail))
+#delete_file(enviar('notificacion-DINAPI.pdf','mpuente.dinapi@gmail.com','M.E.A',connex.msg_body_mail))
 
 
 
@@ -481,3 +482,108 @@ async def main():
 asyncio.run(main())"""
 
 
+
+
+
+
+
+
+
+import zeep
+from zeep import Client
+
+
+
+
+def mark_getlist(fileNbr):
+	try:
+		MarkGetList = {'arg0': {'criteriaFileId': {'fileNbrFrom': {'doubleValue':fileNbr,},'fileNbrTo': {'doubleValue':fileNbr}},},}
+		return clientMark.service.MarkGetList(**MarkGetList)
+	except zeep.exceptions.Fault as e:
+		return([])	
+
+def mark_read(fileNbr, fileSeq, fileSeries, fileType):
+	MarkRead = {'arg0': {'fileNbr': {'doubleValue': fileNbr,},'fileSeq': fileSeq,'fileSeries': {'doubleValue': fileSeries, },'fileType': fileType, }, 'arg1':'?', 'arg2':'?',	}
+	#print(clientMark.service.MarkRead(**MarkRead))
+	return clientMark.service.MarkRead(**MarkRead)
+
+def fetch_all_user_mark(login):
+	query = {
+				"arg0": "SELECT USER_ID,LOGIN FROM IP_USER IU where LOGIN='"+login+"'",
+				"arg1": {
+						"sqlColumnList":[
+											{"sqlColumnType": "String", "sqlColumnValue":"LOGIN"},
+											{"sqlColumnType": "String", "sqlColumnValue":"USER_ID"},
+										]
+				}
+		}  
+	return(clientMark.service.SqlFetchAll(**query))
+
+def Process_Read_EventList(processNbr,processType):
+	eventList = {"arg0": {"processNbr": {"doubleValue": processNbr},"processType": processType}}
+	return(clientMark.service.ProcessReadEventList(**eventList))
+
+class data_insert():
+
+	dataList:str = []
+
+	#CAPTURAMOS PROCESSNBR Y PROCESSTYP
+	def mark_data_base(self,exp):
+		dataMark = mark_getlist(exp)
+		processMark = mark_read(
+				dataMark[0]['fileId']['fileNbr']['doubleValue'],
+				dataMark[0]['fileId']['fileSeq'],
+				dataMark[0]['fileId']['fileSeries']['doubleValue'],
+				dataMark[0]['fileId']['fileType']
+			)
+		if processMark['file']['filingData']['applicationType'] == 'REG':
+			self.dataList.append(exp)
+			self.dataList.append('549')
+		else:
+			self.dataList.append(exp)
+			self.dataList.append('550')	
+		return([processMark['file']['processId']['processNbr']['doubleValue'],processMark['file']['processId']['processType']])
+
+	#DATOS DE USUARIO
+	def mark_user(self,userName):
+		data = fetch_all_user_mark(userName)
+		self.dataList.append(f"{data[0]['sqlColumnList'][1]['sqlColumnValue']}_RE")
+		return(f"{data[0]['sqlColumnList'][1]['sqlColumnValue']}_RE") 
+
+	#NUMERO DE CERTIFICACION
+	def certifyNbr(self,pNbr:str,pTyp:str):
+		data=Process_Read_EventList(pNbr,pTyp)
+		print(data)
+		for i in range(0,len(data)):
+			if data[i]['eventProcessId']['processType'] == 'OFI':
+				self.dataList.append(data[i]['eventProcessId']['processNbr']['doubleValue'])
+				return([
+						data[i]['eventProcessId']['processNbr']['doubleValue'],
+						data[i]['eventProcessId']['processType']
+					])
+
+	def send_order(self,exp:str,usr:str,orden:str,cert:str):
+		url = f"https://octopus-backend.dinapi.gov.py/publicaciones/enviarOrdenesPublicacion/enviar/ordenPublicacion?nroExpediente={exp}&usuario={usr}&ordenPublicacion={orden}&nroCertificacion={cert}"  # Sustituye con tu URL de API
+		print(url)
+		response = requests.get(url)
+		if response.status_code == 200: # status de la peticion
+			datos = response.json() # respuesta
+			print(datos)
+
+
+
+
+
+testForCorrectionData = data_insert()
+
+listExp = [2370412]
+
+for i in listExp:
+	testForCorrectionData.dataList = []
+	proceso = testForCorrectionData.mark_data_base(i)
+	usuario = testForCorrectionData.mark_user('RBEJARANO')
+	certificacion = testForCorrectionData.certifyNbr(proceso[0],proceso[1])
+	print(testForCorrectionData.dataList)
+
+
+#testForCorrectionData.send_order(testForCorrectionData.dataList[0],testForCorrectionData.dataList[2],testForCorrectionData.dataList[1],testForCorrectionData.dataList[3])

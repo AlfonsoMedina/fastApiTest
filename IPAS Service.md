@@ -860,29 +860,41 @@ contraseña = vnSF79upYUXX7VYD
 
 Start Services
 
-
 - systemctl start redpi_backend.service
-- 
+ 
 - systemctl start api_mea.service
-- 
+ 
 - systemctl start api_sprintv2.service
-- 
+ 
 - systemctl start caja_tesoreria.service
-- 
+ 
 - systemctl start microservicio_edo.service
-- 
+ 
 - systemctl start microservicio_octopus.service
-- 
+ 
 - systemctl start dof_backend.service
-- 
+ 
 - systemctl reload nginx.service
-- 
+
 - systemctl reload tomcat.service
 
 - systemctl start sfe-tp-backend.service
 
+
 Ver ultimos registros de la aplicacion 
-- journalctl -xeu api_mea
+- journalctl -xeu redpi_backend.service
+- journalctl -xeu api_mea.service
+- journalctl -xeu api_sprintv2.service
+- journalctl -xeu caja_tesoreria.service
+- journalctl -xeu microservicio_edo.service
+- journalctl -xeu microservicio_octopus.service
+- journalctl -xeu dof_backend.service
+- journalctl -xeu sfe-tp-backend.service
+
+
+
+
+2051183 - 304 - 549 - 1479806
 
 
 
@@ -895,11 +907,7 @@ r9|%"T}z2*V&5lU-At0ilctt$\j"@s
 BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N
 
 
-
 https://cssloaders.github.io/
-
-
-
 
 
 
@@ -908,3 +916,35 @@ https://cssloaders.github.io/
 Error en solicitud, tabla tramites: La fecha de solicitud no puede ser nula:
 
 
+
+		PAQUETE DE DATOS EDO ENVIO DE ORDEN
+{
+	'fileNbr': '2370747', 
+	'statusDate': '12/09/2023', 
+	'applicationType': 'REG', 
+	'signType': 'B', 
+	'signTypeNotFormat': 'Mixta', 
+	'fileSummaryClasses': 'NCL(12-2023.01) 21 ', 
+	'fileSummaryDescription': 'ORCA COATINGS', 
+	'filingDate': '04/09/2023', 
+	'status': 'Pendiente', 
+	'statusName': 'Documento PDF Certificado', 
+	'niceClassNbr': '21', 
+	'agenCode': '25', 
+	'fileSeq': 'PY', 
+	'fileSeries': '2023', 
+	'fileType': 'M', 
+	'offidocNbr': '121070', 
+	'offidocOrigin': '1', 
+	'offidocSeries': '2023', 
+	'statusDateNotFormat': datetime.datetime(2023, 9, 12, 7, 38, 6, tzinfo=<FixedOffset '-04:00'>), 
+	'userIdNbr': '112', 
+	'lastActionUsername': 'Claudio Alberto Garcia Riveros', 
+	'topFileStatusName': 'Orden de Publicación Emitida', 
+	'officedocTypeName': 'Emisión de Orden de Publicación', 
+	'sendStatus': True, 
+	'firstProcessNbr': '2061408', 
+	'firstProcessType': '1', 
+	'processNbr': '2066584', 
+	'processType': 'OFI'
+}
