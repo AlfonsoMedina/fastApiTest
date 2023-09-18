@@ -10,12 +10,13 @@ from dataclasses import replace
 import json
 import time
 import psycopg2
-from dinapi.sfe import respuesta_sfe_campo, rule_notification
+from dinapi.sfe import  rule_notification
 import tools.connect as connex
 import zeep
 from zeep import Client
 import tools.connect as conn_serv
 from wipo.function_for_reception_in import user_doc_read
+from wipo.ipas import Process_Read_EventList, fetch_all_user_mark, mark_getlist, mark_read
 
 
 
@@ -29,7 +30,7 @@ from wipo.function_for_reception_in import user_doc_read
 
 
 try:
-	mark_service = 'http://192.168.50.194:8050'
+	mark_service = 'http://192.168.50.182:8050'
 	wsdl = mark_service + "/IpasServices/IpasServices?wsdl"
 	clientMark = Client(wsdl)
 except Exception as e:
@@ -448,8 +449,6 @@ secondary = []'''
 #['filingData']['userdocTypeList'][0]['userdocType']
 
 
-
- 
 #Exceute enpoint from url apiRest
 def create_groups(url):
 	response = requests.get(url)
@@ -461,8 +460,6 @@ def create_groups(url):
 		print(f'Error {response.status_code}: {response.text}')
 
 #create_groups('http://192.168.50.228:8002/api/post_view?date_post=2023-08-14')
-
-
 
 
 """async def fetch_data(url):
@@ -483,18 +480,12 @@ asyncio.run(main())"""
 
 
 
-
-
-
-
-
-
 import zeep
 from zeep import Client
 
 
 
-
+'''
 def mark_getlist(fileNbr):
 	try:
 		MarkGetList = {'arg0': {'criteriaFileId': {'fileNbrFrom': {'doubleValue':fileNbr,},'fileNbrTo': {'doubleValue':fileNbr}},},}
@@ -522,6 +513,9 @@ def fetch_all_user_mark(login):
 def Process_Read_EventList(processNbr,processType):
 	eventList = {"arg0": {"processNbr": {"doubleValue": processNbr},"processType": processType}}
 	return(clientMark.service.ProcessReadEventList(**eventList))
+'''
+
+
 
 class data_insert():
 
@@ -553,7 +547,7 @@ class data_insert():
 	#NUMERO DE CERTIFICACION
 	def certifyNbr(self,pNbr:str,pTyp:str):
 		data=Process_Read_EventList(pNbr,pTyp)
-		print(data)
+		#print(data)
 		for i in range(0,len(data)):
 			if data[i]['eventProcessId']['processType'] == 'OFI':
 				self.dataList.append(data[i]['eventProcessId']['processNbr']['doubleValue'])
@@ -563,20 +557,18 @@ class data_insert():
 					])
 
 	def send_order(self,exp:str,usr:str,orden:str,cert:str):
-		url = f"https://octopus-backend.dinapi.gov.py/publicaciones/enviarOrdenesPublicacion/enviar/ordenPublicacion?nroExpediente={exp}&usuario={usr}&ordenPublicacion={orden}&nroCertificacion={cert}"  # Sustituye con tu URL de API
-		print(url)
+		url = f"http://192.168.50.228:10005/publicaciones/enviarOrdenesPublicacion/enviar/ordenPublicacion?nroExpediente={exp}&usuario={usr}&ordenPublicacion={orden}&nroCertificacion={cert}"  # Sustituye con tu URL de API
+		#print(url)
 		response = requests.get(url)
 		if response.status_code == 200: # status de la peticion
 			datos = response.json() # respuesta
-			print(datos)
-
-
+			#print(datos)
 
 
 
 testForCorrectionData = data_insert()
 
-listExp = [2370412]
+listExp = [2368480,2368496,2368504]
 
 for i in listExp:
 	testForCorrectionData.dataList = []
@@ -585,5 +577,71 @@ for i in listExp:
 	certificacion = testForCorrectionData.certifyNbr(proceso[0],proceso[1])
 	print(testForCorrectionData.dataList)
 
+testForCorrectionData.send_order(testForCorrectionData.dataList[0],testForCorrectionData.dataList[2],testForCorrectionData.dataList[1],testForCorrectionData.dataList[3])
 
-#testForCorrectionData.send_order(testForCorrectionData.dataList[0],testForCorrectionData.dataList[2],testForCorrectionData.dataList[1],testForCorrectionData.dataList[3])
+
+'''
+##CONEXION A SFE POSGRESSQL 14 (TODAVIA NO ME FUNCIONA)
+def respuesta_sfe_campo(arg):
+	try:
+		list_campos = []
+		list_valores = {}
+		conn = psycopg2.connect(host  = 'db-sfe-beta.dinapi.gov.py', user = 'user-sfe', password  ='sfe-201901!',	database  = 'sb_sfe_development' )
+		cursor = conn.cursor()
+		cursor.execute("""select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
+			from tramites where expediente_electronico = true and id = {}
+		""".format(arg))
+		row=cursor.fetchall()
+		list_valores['id'] = row[0][0]
+		list_valores['fecha'] = row[0][1]
+		list_valores['formulario_id'] = row[0][2]
+		list_valores['estado'] = row[0][3]
+		list_valores['created_at'] = str(row[0][4])
+		list_valores['updated_at'] = str(row[0][5])
+		list_valores['costo'] = str(row[0][7])
+		list_valores['usuario_id'] = str(row[0][8])
+		list_valores['codigo'] = str(row[0][10])
+		list_valores['expediente_id'] = str(row[0][13])
+		list_valores['firmado_at'] = str(row[0][11])
+		list_valores['pagado_at'] = str(row[0][12])
+		list_valores['enviado_at'] = str(row[0][15])
+		list_valores['expediente_afectado'] = str(row[0][19])
+		list_valores['tipo_documento_id'] = str(row[0][25])
+		for i in range(0,len(row[0][6])):
+			list_campos.append(row[0][6][i]['campo'])
+		
+		print(" ")
+		print('[[[[[[[Lista de campos]]]]]]]]]')
+		print(list_campos)
+
+		#print(" ")
+		#print('(((((((((]Lista de valores[)))))))))')
+
+		for item in range(0,len(list_campos)):
+			for x in list_campos:
+				if row[0][6][item]['campo'] == x:
+					try:
+						list_valores[x] = row[0][6][item]['valor']
+					except Exception as e:
+						list_valores[x] = ''
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+	return(list_valores)
+
+
+print(respuesta_sfe_campo('28762'))
+
+'''
+
+
+'''
+from datetime import datetime, timedelta
+
+fecha_hora_actual = datetime.now()
+fecha_hora_ajustada = fecha_hora_actual - timedelta(hours=3)
+fecha_hora_formateada = fecha_hora_ajustada.strftime("%d/%m/%Y %H:%M")
+
+print(fecha_hora_formateada)
+'''

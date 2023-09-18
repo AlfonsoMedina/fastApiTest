@@ -141,14 +141,19 @@ def insert_list(arg0:string,arg1:string):
 #insert for doc relation with main file or not relation 
 def compileAndInsert(form_Id,typ,in_group):
 	print('F1')
-	cheking = catch_toError(form_Id)
+	cheking = catch_toError(form_Id) # VERIFICAR DATOS DE TRAMITE
 	if cheking != 'E99':
 		insert_doc = userDocModel()
 		insert_doc.setData(form_Id)
 		# start INSERT USERDOC ####################################################################################
 		try:
+			##ULTIMO NUMERO EN DIA PROCESO
 			new_Nbr = str(COMMIT_NBR())
-			getFile(str(form_Id),str(new_Nbr))
+
+			##VERIFICAR ADJUNTO
+			getFile(str(form_Id),str(new_Nbr)) 
+
+			##INSERTA ESCRITO EN IPAS
 			estado_ins = insert_user_doc_escritos(
 						insert_doc.affectedFileIdList_fileNbr,
 						insert_doc.affectedFileIdList_fileSeq,
@@ -362,7 +367,6 @@ def compileAndInsert(form_Id,typ,in_group):
 				print('ENVIA PDF')
 
 				if str(insert_doc.affectedFileIdList_fileNbr).replace(".0","") != "":
-					#print(str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""))
 					rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""))
 				else:
 					print(str(new_Nbr))
@@ -565,8 +569,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 			data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id)
-		# end CHECK USERDOC ######################################################################################
-		
+		# end CHECK USERDOC ######################################################################################		
 def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 		print('F3')		
 		cheking = catch_toError(form_Id)

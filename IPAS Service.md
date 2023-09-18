@@ -948,3 +948,16 @@ Error en solicitud, tabla tramites: La fecha de solicitud no puede ser nula:
 	'processNbr': '2066584', 
 	'processType': 'OFI'
 }
+
+
+
+
+nueva 2366797
+http://dof-backend.dinapi.gov.py/DOF/buzon?documento=gAAAAABlCIDtM111PXWlMMf587pn80DdiHeuNeIgvpsvOC6I3n9yC5qOBIG2z9lz5cXt6z_zUKDrrQTIz7P4TsP_a7HlrfESpsobuAYbZu1JEgvlfntPT5nqL4uMsuBnYhp8dSbrcPYl9MR-xtsxvfLkPFfzhswC_MyuXu6GIRlbvS3LJDBDjeI=
+
+
+
+
+
+actual 2366797
+http://dof-backend.dinapi.gov.py/DOF/buzon?documento=gAAAAABlCHEPe8vCxDEsNfn1_pOvrVkcWNoR1z-8DFtANCZsCUXirtU8a_1aMEGiqUgWt1Ptgd7V7KA2BV8EErIXSsF64yK2lbZ6PPRSki-uo2D5jhHIJ8qJY1PFHdZbyEwaGlIXZM3_kLnS4cj1el36aPOCgdlUPCHY4Zvi6BgUWCvxS001s9E=
