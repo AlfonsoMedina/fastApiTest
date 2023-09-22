@@ -857,6 +857,12 @@ usuario= alfonso.medina
 contraseña = vnSF79upYUXX7VYD
 
 
+pgsql-14 192.168.50.216 user_app_caja ojTnRUivhOFZ7QfbwNnWeq4iHa
+pgsql-14 192.168.50.216 user_app_publicacion SSridvVTcmGvfpoZ7B7HHsk74Y
+pgsql-14 192.168.50.216 user_app_recepcion  bEL19ZBN1mQUxSRxYc2NV3EL9f
+pgsql-14 192.168.50.216 user_app_octopus 2yCZOjAO7csNkO53BWvMQOLIie
+pgsql-14 db-sfe.dinapi.gov.py user_dev  lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
+
 
 Start Services
 
@@ -911,6 +917,23 @@ https://cssloaders.github.io/
 
 
 
+
+		for i in rows:
+			if i[4] == system:
+				data_list.append({
+					"db":i[1],
+					"usr":i[2],
+					"pass":i[3],
+					"sys":i[4]
+				})
+			return(f'{system}:{data_list}')
+
+
+
+
+
+
+
 /publicaciones/enviarNotificaciones/enviar/notificacion
 
 Error en solicitud, tabla tramites: La fecha de solicitud no puede ser nula:
@@ -961,3 +984,9 @@ http://dof-backend.dinapi.gov.py/DOF/buzon?documento=gAAAAABlCIDtM111PXWlMMf587p
 
 actual 2366797
 http://dof-backend.dinapi.gov.py/DOF/buzon?documento=gAAAAABlCHEPe8vCxDEsNfn1_pOvrVkcWNoR1z-8DFtANCZsCUXirtU8a_1aMEGiqUgWt1Ptgd7V7KA2BV8EErIXSsF64yK2lbZ6PPRSki-uo2D5jhHIJ8qJY1PFHdZbyEwaGlIXZM3_kLnS4cj1el36aPOCgdlUPCHY4Zvi6BgUWCvxS001s9E=
+
+
+
+
+
+TRAMITES ID 28985

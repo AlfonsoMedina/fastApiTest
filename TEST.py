@@ -1,5 +1,6 @@
 import aiohttp
 import asyncio
+import phonetics
 import requests
 from email_pdf_AG import acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_affect
 from getFileDoc import compilePDF_DOCS, getFile, getFile_reg_and_ren
@@ -17,7 +18,7 @@ from zeep import Client
 import tools.connect as conn_serv
 from wipo.function_for_reception_in import user_doc_read
 from wipo.ipas import Process_Read_EventList, fetch_all_user_mark, mark_getlist, mark_read
-
+from cryptography.fernet import Fernet
 
 
 #respuesta_sfe_campo('27228')
@@ -480,8 +481,7 @@ asyncio.run(main())"""
 
 
 
-import zeep
-from zeep import Client
+
 
 
 
@@ -516,6 +516,7 @@ def Process_Read_EventList(processNbr,processType):
 '''
 
 
+#EDO
 
 class data_insert():
 
@@ -530,6 +531,7 @@ class data_insert():
 				dataMark[0]['fileId']['fileSeries']['doubleValue'],
 				dataMark[0]['fileId']['fileType']
 			)
+		#print(processMark)
 		if processMark['file']['filingData']['applicationType'] == 'REG':
 			self.dataList.append(exp)
 			self.dataList.append('549')
@@ -547,7 +549,7 @@ class data_insert():
 	#NUMERO DE CERTIFICACION
 	def certifyNbr(self,pNbr:str,pTyp:str):
 		data=Process_Read_EventList(pNbr,pTyp)
-		#print(data)
+		print(data)
 		for i in range(0,len(data)):
 			if data[i]['eventProcessId']['processType'] == 'OFI':
 				self.dataList.append(data[i]['eventProcessId']['processNbr']['doubleValue'])
@@ -568,7 +570,7 @@ class data_insert():
 
 testForCorrectionData = data_insert()
 
-listExp = [2368480,2368496,2368504]
+listExp = [2319725]
 
 for i in listExp:
 	testForCorrectionData.dataList = []
@@ -580,13 +582,13 @@ for i in listExp:
 testForCorrectionData.send_order(testForCorrectionData.dataList[0],testForCorrectionData.dataList[2],testForCorrectionData.dataList[1],testForCorrectionData.dataList[3])
 
 
-'''
+
 ##CONEXION A SFE POSGRESSQL 14 (TODAVIA NO ME FUNCIONA)
 def respuesta_sfe_campo(arg):
 	try:
 		list_campos = []
 		list_valores = {}
-		conn = psycopg2.connect(host  = 'db-sfe-beta.dinapi.gov.py', user = 'user-sfe', password  ='sfe-201901!',	database  = 'sb_sfe_development' )
+		conn = psycopg2.connect(host="db-sfe-beta.dinapi.gov.py",database="db_sfe_development",user="user-sfe",password="sfe-201901!")
 		cursor = conn.cursor()
 		cursor.execute("""select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
 			from tramites where expediente_electronico = true and id = {}
@@ -611,32 +613,62 @@ def respuesta_sfe_campo(arg):
 			list_campos.append(row[0][6][i]['campo'])
 		
 		print(" ")
-		print('[[[[[[[Lista de campos]]]]]]]]]')
-		print(list_campos)
+		print(f'[[[[[[[Lista de campos correspondiente al ID {arg}]]]]]]]]]')
+		#print(list_campos)
 
 		#print(" ")
 		#print('(((((((((]Lista de valores[)))))))))')
-
 		for item in range(0,len(list_campos)):
 			for x in list_campos:
 				if row[0][6][item]['campo'] == x:
 					try:
+						#print(row[0][6][item]['valor'])
 						list_valores[x] = row[0][6][item]['valor']
 					except Exception as e:
+						#print(row[0][6][item]['valor'])
 						list_valores[x] = ''
 	except Exception as e:
 		print(e)
 	finally:
 		conn.close()
+
 	return(list_valores)
 
+#print(respuesta_sfe_campo('28694'))
 
-print(respuesta_sfe_campo('28762'))
 
+
+
+'''
+# Parámetros de conexión
+conexion = psycopg2.connect(
+    host="db-sfe-beta.dinapi.gov.py",
+    database="db_sfe_development",
+    user="user-sfe",
+    password="sfe-201901!")
+
+# Crear un cursor para ejecutar consultas
+cursor = conexion.cursor()
+
+# Ejemplo de consulta
+cursor.execute("SELECT id FROM tramites")
+
+# Obtener los resultados
+resultados = cursor.fetchall()
+
+# Imprimir los resultados
+for fila in resultados:
+    print(fila)
+
+# Cerrar la conexión y el cursor
+cursor.close()
+conexion.close()
 '''
 
 
+
 '''
+#Fecha y Hora con retraso de 3 días
 from datetime import datetime, timedelta
 
 fecha_hora_actual = datetime.now()
@@ -645,3 +677,53 @@ fecha_hora_formateada = fecha_hora_ajustada.strftime("%d/%m/%Y %H:%M")
 
 print(fecha_hora_formateada)
 '''
+
+##############################################################################################################################
+
+# BUSQUEDA FONETICA
+#word1 = "Alfonso"
+#word2 = "Alphonzo"
+	# Usando Soundex
+#soundex_word1 = phonetics.soundex(word1)
+#soundex_word2 = phonetics.soundex(word2)
+#print(f"{word1}: {soundex_word1}")
+#print(f"{word2}: {soundex_word2}")
+#print("similar" if soundex_word1 == soundex_word2 else "no similar")
+
+
+
+
+##############################################################################################################################
+
+
+# Generar una clave secreta para Fernet
+def generar_clave():
+    return Fernet.generate_key()
+
+# Encriptar un mensaje
+def encriptar(mensaje, clave):
+    f = Fernet(clave)
+    return f.encrypt(mensaje.encode())
+
+# Desencriptar un mensaje
+def desencriptar(mensaje_encriptado, clave):
+    f = Fernet(clave)
+    return f.decrypt(mensaje_encriptado).decode()
+
+## Uso de las funciones
+#clave = generar_clave()
+#print(f"Clave: {clave}")
+
+#mensaje_original = "Hola Mundo"
+#mensaje_encriptado = encriptar(mensaje_original, clave)
+#print(f"Mensaje encriptado: {mensaje_encriptado}")
+
+#mensaje_desencriptado = desencriptar(mensaje_encriptado, clave)
+#print(f"Mensaje desencriptado: {mensaje_desencriptado}")
+
+
+##############################################################################################################################
+
+
+
+
