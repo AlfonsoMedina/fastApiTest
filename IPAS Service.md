@@ -990,3 +990,35 @@ http://dof-backend.dinapi.gov.py/DOF/buzon?documento=gAAAAABlCHEPe8vCxDEsNfn1_pO
 
 
 TRAMITES ID 28985
+
+
+
+  {
+    "fecha": "20/09/2023",
+    "recibo": 45349,
+    "expediente": 2366575,
+    "status": 80,
+    "ftabla": "2023-09-20",
+    "tipo_movimiento": "549",
+    "movimiento": "29/08/2023",
+    "tipo_solicitud": "REG",
+    "fecha_pago": "04/09/2023",
+    "fecha_inicio": "05/09/2023",
+    "fecha_fin": "07/09/2023"
+  },
+
+    {
+    "fecha": "04/09/2023",
+    "recibo": 44616,
+    "expediente": 2366575,
+    "status": 80,
+    "ftabla": "2023-09-04",
+    "tipo_movimiento": "549",
+    "movimiento": "29/08/2023",
+    "tipo_solicitud": "REG",
+    "fecha_pago": "04/09/2023",
+    "fecha_inicio": "05/09/2023",
+    "fecha_fin": "07/09/2023"
+  },
+
+
