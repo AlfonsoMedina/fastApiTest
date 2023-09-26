@@ -128,9 +128,6 @@ def mark_read(fileNbr, fileSeq, fileSeries, fileType):
 	#print(clientMark.service.MarkRead(**MarkRead))
 	return clientMark.service.MarkRead(**MarkRead)
 
-#print(mark_read('2359548','PY','2023','M'))
-
-
 # Envio => POST = {"arg0": {"fileNbr":  "2017020","fileSeq": "PY","fileSeries": "2020","fileType": "M"},"arg1": "","arg2": ""}
 def file_read(fileNbr, fileSeq, fileSeries, fileType):
 	FileRead = {'arg0': {'fileNbr': {'doubleValue': fileNbr,},'fileSeq': fileSeq,'fileSeries': {'doubleValue': fileSeries, },'fileType': fileType, }, 'arg1':'?', 'arg2':'?',	}

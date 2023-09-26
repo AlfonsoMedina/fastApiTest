@@ -1,0 +1,20 @@
+[Unit] 
+Description= Este servicio hace referencia a api_mea backend
+After=network.target 
+
+[Service] 
+User=root 
+
+
+RuntimeDirectory=api_mea 
+WorkingDirectory=/mnt/data/xtrt/projects/python/api_mea
+ExecStart=/bin/bash /mnt/data/xtrt/projects/python/api_mea/.SprintV2_MEA_System/run-api_mea.sh
+ExecStop=/bin/bash /mnt/data/xtrt/projects/python/api_mea/.SprintV2_MEA_System/run-api_mea-stop.sh 
+ExecReload=/bin/bash /mnt/data/xtrt/projects/python/api_mea.SprintV2_MEA_System/run-api_mea-restart.sh 
+
+Type=forking 
+KillMode=process 
+PrivateTmp=true 
+
+[Install] 
+WantedBy=multi-user.target

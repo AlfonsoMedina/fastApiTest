@@ -13,7 +13,7 @@ def get_parametros():
 		conn = psycopg2.connect(
 			host = "192.168.50.216",
 			user = "user_app_recepcion",
-			password="user_app_recepcion-202201!",
+			password="bEL19ZBN1mQUxSRxYc2NV3EL9f",
 			database="db_sfe_presencial"
 		)
 		cursor = conn.cursor()
@@ -42,7 +42,7 @@ def get_parametros_mea():
 		conn = psycopg2.connect(
 			host = "192.168.50.216",
 			user = "user_app_recepcion",
-			password="user_app_recepcion-202201!",
+			password="bEL19ZBN1mQUxSRxYc2NV3EL9f",
 			database="db_sfe_presencial"
 		)
 		cursor = conn.cursor()
@@ -72,7 +72,7 @@ def get_parametro(id):
 		conn = psycopg2.connect(
 			host = "192.168.50.216",
 			user = "user_app_recepcion",
-			password="user_app_recepcion-202201!",
+			password="bEL19ZBN1mQUxSRxYc2NV3EL9f",
 			database="db_sfe_presencial"
 		)
 		cursor = conn.cursor()
@@ -100,7 +100,7 @@ def upDate_parametro(param_id:int,origen:str,descripcion:str,valor1:str,valor2:s
 		conn = psycopg2.connect(
 					host = "192.168.50.216",
 					user = "user_app_recepcion",
-					password="user_app_recepcion-202201!",
+					password="bEL19ZBN1mQUxSRxYc2NV3EL9f",
 					database="db_sfe_presencial"
 				)
 		cursor = conn.cursor()

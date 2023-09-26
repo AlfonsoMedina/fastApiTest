@@ -35,7 +35,7 @@ MEA_OFICINA_ORIGEN_cap = config_parametro('64')['valor3']
 #Base de datos PUBLICACIONES posgresSql v14 
 db_host = '192.168.50.216'
 db_user='user_app_publicacion'
-db_password='user_app_publicacion-202201!'
+db_password='SSridvVTcmGvfpoZ7B7HHsk74Y'
 db_database='db_publicacion'
 
 ###################################################################
@@ -43,7 +43,7 @@ db_database='db_publicacion'
 #Base de datos PUBLICACIONES posgresSql v9
 #db_host = 'pgsql-sprint.dinapi.gov.py'
 #db_user = 'user-sprint'
-#db_password ='user-sprint--201901'
+#db_password ='BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N'
 #db_database = 'publicaciones'
 
 ###################################################################
@@ -51,7 +51,7 @@ db_database='db_publicacion'
 #Base de datos MESA DE ENTRADA posgresSql v14
 hostME = '192.168.50.216'
 userME='user_app_recepcion'
-passwordME='user_app_recepcion-202201!'
+passwordME='bEL19ZBN1mQUxSRxYc2NV3EL9f'
 databaseME='db_sfe_presencial'
 
 ###################################################################
@@ -67,7 +67,7 @@ databaseME='db_sfe_presencial'
 #tablas viejas de Mesa de entrada posgresSql v9
 #hostME='pgsql-sprint.dinapi.gov.py'
 #userME='user-sprint'
-#passwordME='user-sprint--201901'
+#passwordME='BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N'
 #databaseME='mesa_entrada'
 
 ###################################################################
@@ -75,7 +75,7 @@ databaseME='db_sfe_presencial'
 #Base de datos CAJA posgresSql v14 
 hostCJ = '192.168.50.216'
 userCJ='user_app_caja'
-passwordCJ='user_app_caja-202201!'
+passwordCJ=' ojTnRUivhOFZ7QfbwNnWeq4iHa'
 databaseCJ='db_caja_dinapi'
 
 ###################################################################
@@ -101,7 +101,7 @@ ipas_produccion_disenio = config_parametro('54')['valor1']
 #pagos SFE
 host_SFE_conn = 'pgsql-sprint.dinapi.gov.py'
 user_SFE_conn = 'user-sprint'
-password_SFE_conn ='user-sprint--201901'
+password_SFE_conn ='BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N'
 database_SFE_conn = 'db_sfe_production'
 '''
 ###################################################################

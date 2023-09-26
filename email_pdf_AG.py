@@ -32,7 +32,7 @@ def envio_agente_recibido(arg0,arg1):
 			hora_recep = hora(str(form_id(arg0)[2])).split(".")
 			print(hora_recep)
 
-			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=15)
+			pdf.image('static/IMG.PNG',x=12,y=27,w=49,h=15)
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=76, y=20, txt='Formulario')
@@ -162,7 +162,7 @@ def envio_agente_recibido_reg(arg0,fileNbr):
 			hora_envio = hora(str(form_id(arg0)[1])).split(".")
 			hora_recep = hora(str(form_id(arg0)[2])).split(".")
 
-			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=15)
+			pdf.image('static/IMG.PNG',x=12,y=27,w=49,h=15)
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=76, y=20, txt='Formulario')
@@ -1833,9 +1833,8 @@ def ajuste_hora(hora):
 
 #print(ajuste_hora("14:37:00"))
 
+acuse_from_AG_REG('S',26855,2177877)
+
 #envio_agente_recibido('27645','2363526')
 
 #envio_agente_recibido_affect('27645','2363526','2020','2362084')
-
-
-#acuse_from_AG_REG('S','27764','2365156')

@@ -1,4 +1,10 @@
 
+- sudo systemctl start api_mea.service
+
+
+
+
+
 
 
 -----------------------------1547 - IO - form 69------------------------ 

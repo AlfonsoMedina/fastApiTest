@@ -110,8 +110,6 @@ def ProcessGroupGetList(userNbr):
 	except zeep.exceptions.Fault as e:
 		return(e)
 
-#print(ProcessGroupGetList('147')) #buscar grupo de tramite por usuario
-
 def valid_group(userNbr,groupName,typ):
 	try:
 		for i in range(len(ProcessGroupGetList(userNbr))):
@@ -173,10 +171,6 @@ def main_State(exp):
 	status_exp = Process_Read(data_exp_process.file.processId.processNbr.doubleValue, data_exp_process.file.processId.processType)
 	return(status_exp.status.statusId.statusCode)
 
-
-#print(main_State('2359548'))
-
-
 def group_typ(num):
 	list = {'1':'[Expediente]','10':'[Escrito+expediente]','11':'[Escrito]'}
 	group_name = str(fecha_barra(str(time.strftime("%Y-%m-%d")+" 00:00:00"))+" "+list[str(num)])
@@ -235,8 +229,6 @@ def Process_Get_List(userdocSeqNbrFrom,userdocSeqNbrTo,userdocSeqSeries,userdocT
 				}
 	data = clientMark.service.ProcessGetList(**data_exp)
 	return(data)
-
-#print(Process_Get_List('2364500','2364500','2023','ED'))	
 
 def SIGLA_DE_ESTADO(sig,exp):
 	#print(sig)

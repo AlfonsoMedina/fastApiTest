@@ -141,19 +141,14 @@ def insert_list(arg0:string,arg1:string):
 #insert for doc relation with main file or not relation 
 def compileAndInsert(form_Id,typ,in_group):
 	print('F1')
-	cheking = catch_toError(form_Id) # VERIFICAR DATOS DE TRAMITE
+	cheking = catch_toError(form_Id)
 	if cheking != 'E99':
 		insert_doc = userDocModel()
 		insert_doc.setData(form_Id)
 		# start INSERT USERDOC ####################################################################################
 		try:
-			##ULTIMO NUMERO EN DIA PROCESO
 			new_Nbr = str(COMMIT_NBR())
-
-			##VERIFICAR ADJUNTO
-			getFile(str(form_Id),str(new_Nbr)) 
-
-			##INSERTA ESCRITO EN IPAS
+			getFile(str(form_Id),str(new_Nbr))
 			estado_ins = insert_user_doc_escritos(
 						insert_doc.affectedFileIdList_fileNbr,
 						insert_doc.affectedFileIdList_fileSeq,
@@ -345,7 +340,7 @@ def compileAndInsert(form_Id,typ,in_group):
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
-			rule_notification('SOP',form_Id)
+			rule_notification('SOP',form_Id,'')
 		# end INSERT USERDOC ####################################################################################
 
 		# start CHECK USERDOC ####################################################################################		
@@ -367,10 +362,11 @@ def compileAndInsert(form_Id,typ,in_group):
 				print('ENVIA PDF')
 
 				if str(insert_doc.affectedFileIdList_fileNbr).replace(".0","") != "":
-					rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""))
+					#print(str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""))
+					rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr).replace(".0",new_Nbr))
 				else:
 					print(str(new_Nbr))
-					rule_notification(typ,str(new_Nbr)) 
+					rule_notification(typ,str(new_Nbr),'')
 																	
 				print('CORREO FUNCIONARIO')
 			
@@ -384,7 +380,7 @@ def compileAndInsert(form_Id,typ,in_group):
 		except Exception as e:
 			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
-			rule_notification('SOP',form_Id)
+			rule_notification('SOP',form_Id,'')
 		# start CHECK USERDOC ####################################################################################			
 def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 	print('F2')	
@@ -433,7 +429,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
-			rule_notification('SOP',form_Id)
+			rule_notification('SOP',form_Id,'')
 		# end USERDOCRECEIVE ####################################################################################
 
 		sigla_desc = str(escrito_relacionado.filingData_userdocTypeList_userdocType).split("- ")
@@ -512,7 +508,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 			print(e)
 			data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
-			rule_notification('SOP',form_Id)
+			rule_notification('SOP',form_Id,'')
 		# end USERDOCUPDATE ###################################################################################
 		time.sleep(2)
 		# start USERDOCADDAFFECTEDFILE ###################################################################################		
@@ -555,7 +551,7 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 
 			delete_file(enviar('notificacion-DINAPI.pdf',escrito_relacionado.representationData_representativeList_person_email,'M.E.A',connex.msg_body_ESC))	#Enviar Correo Electronico
 			print('ENVIA PDF')
-			rule_notification(typ,new_Nbr)# Correo al funcionario
+			rule_notification(typ,new_Nbr,'')# Correo al funcionario
 			print('CORREO FUNCIONARIO')
 		
 			try:
@@ -568,8 +564,9 @@ def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 		else:
 			data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
-			rule_notification('SOP',form_Id)
-		# end CHECK USERDOC ######################################################################################		
+			rule_notification('SOP',form_Id,'')
+		# end CHECK USERDOC ######################################################################################
+		
 def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 		print('F3')		
 		cheking = catch_toError(form_Id)
@@ -617,7 +614,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 			except zeep.exceptions.Fault as e:
 				data_validator(f'Error de IPAS receive => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
-				rule_notification('SOP',form_Id)
+				rule_notification('SOP',form_Id,'')
 			# end USERDOCRECEIVE ####################################################################################
 
 			sigla_desc = str(escrito_escrito_pago.filingData_userdocTypeList_userdocName).split("- ")
@@ -693,7 +690,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 			except zeep.exceptions.Fault as e:
 				data_validator(f'Error de IPAS update => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
-				rule_notification('SOP',form_Id)		
+				rule_notification('SOP',form_Id,'')
 			# end USERDOCUPDATE ###################################################################################
 
 			# start USERDOCADDAFFECTEDFILE ###################################################################################	
@@ -737,7 +734,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 				print('CREA PDF')
 				delete_file(enviar('notificacion-DINAPI.pdf',escrito_escrito_pago.representationData_representativeList_person_email,'M.E.A',connex.msg_body_ESC))#Enviar Correo Electronico
 				print('ENVIA PDF')
-				rule_notification(typ,new_Nbr)# Correo al funcionario
+				rule_notification(typ,new_Nbr,'')# Correo al funcionario
 				print('CORREO FUNCIONARIO')
 				try:
 					print(typ,'',str(new_Nbr))
@@ -749,7 +746,7 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 			else:
 				data_validator(f'Error de esc. N° {new_Nbr},ipas: {udr} - {updt}, tabla tramites ID: {form_Id}','false',form_Id)
 				cambio_estado_soporte(form_Id)
-				rule_notification('SOP',form_Id)
+				rule_notification('SOP',form_Id,'')
 		# end CHECK USERDOC ######################################################################################
 def insertReg(form_Id):
 	flow_request = stop_request()
@@ -810,9 +807,9 @@ def insertReg(form_Id):
 			)
 			print('INSERTO EL REGISTRO => ' + insertRegState)
 			if insertRegState == 'true':
-				subsequent_list.append({"fileNbr":new_Nbr,"tram_id":form_Id,"fecha":insert_mark.file_filingData_captureDate,"email":insert_mark.ag_email,"sigla":"REG"})
+				#subsequent_list.append({"fileNbr":new_Nbr,"tram_id":form_Id,"fecha":insert_mark.file_filingData_captureDate,"email":insert_mark.ag_email,"sigla":"REG"})
 				others_process_REG(form_Id,new_Nbr,insert_mark.ag_email,'REG')
-				print(subsequent_list)
+				#print(subsequent_list)
 			else:
 				error_process(form_Id,f'Error en solicitud, tabla tramites: {insertRegState}','true')
 		except Exception as e:
@@ -833,7 +830,7 @@ def insertRen(form_Id):
 		except Exception as e:
 			data_validator(f'Tiempo agotado, carga datos de ipas para renovacion, ID: {form_Id}','true',form_Id)
 			cambio_estado_soporte(form_Id)
-			rule_notification('SOP',form_Id)
+			rule_notification('SOP',form_Id,'')
 
 		try:
 			new_Nbr = str(COMMIT_NBR())
@@ -882,9 +879,9 @@ def insertRen(form_Id):
 						insert_mark_ren.signData_signType)			
 			print('INSERTO EL RENOVACION => ' + insertRenState)
 			if insertRenState == 'true':
-				subsequent_list.append({"fileNbr":new_Nbr,"tram_id":form_Id,"fecha":insert_mark_ren.file_filingData_captureDate,"email":insert_mark_ren.ag_email,"sigla":"REN"})
+				#subsequent_list.append({"fileNbr":new_Nbr,"tram_id":form_Id,"fecha":insert_mark_ren.file_filingData_captureDate,"email":insert_mark_ren.ag_email,"sigla":"REN"})
 				others_process_REN(form_Id,new_Nbr,insert_mark_ren.ag_email,'REN')
-				print(subsequent_list)
+				#print(subsequent_list)
 			else:
 				error_process(form_Id,'Tiempo agotado, carga datos de ipas para renovacion, ID','true')
 		except Exception as e:
@@ -1096,7 +1093,7 @@ def catch_toError(form_Id):
 		if data_list[i] == "E99":
 			data_validator(f'dato requerido: {E99_code[i]}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
-			rule_notification('SOP',form_Id)
+			rule_notification('SOP',form_Id,'')
 			return("E99")
 		else:
 			pass
@@ -1117,7 +1114,7 @@ def others_process_REG(tramite_Id,new_Nbr,ag_email,sigla):
 	print('CREA PDF DE FORMULARIO')
 	compilePDF(new_Nbr)																				# Crear pdf compilado de todos los ficheros
 	print('COMPILA PDFs')
-	rule_notification(sigla,str(new_Nbr))															# Correo al funcionario
+	rule_notification(sigla,str(new_Nbr),'')															# Correo al funcionario
 	print('NOTIFICA AL FUNCIONARIO')
 	try:
 		insertar_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))								# Crear grupo o inserta en grupo
@@ -1141,7 +1138,7 @@ def others_process_REN(tramite_Id,new_Nbr,ag_email,sigla):
 	print('CREA PDF DE FORMULARIO')
 	compilePDF(new_Nbr)															# Crear pdf compilado de todos los ficheros
 	print('COMPILA PDFs')
-	rule_notification(sigla,str(new_Nbr))										# Correo al funcionario
+	rule_notification(sigla,str(new_Nbr),'')										# Correo al funcionario
 	print('NOTIFICA AL FUNCIONARIO')
 	try:
 		insertar_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))				# Crear grupo o inserta en grupo
@@ -1152,7 +1149,7 @@ def others_process_REN(tramite_Id,new_Nbr,ag_email,sigla):
 def error_process(form_Id,error_msg,bool_estado):
 	data_validator(f'{error_msg}: {form_Id}',bool_estado,form_Id)
 	cambio_estado_soporte(form_Id)
-	rule_notification('SOP',form_Id)	
+	rule_notification('SOP',form_Id,'')
 
 """
 
@@ -1176,7 +1173,6 @@ def error_process(form_Id,error_msg,bool_estado):
 #envio_agente_recibido('1540','2277877')
 
 #https://sfe-beta.dinapi.gov.py/dashboard/expedientes/tramites/1547
-
 
 
 """

@@ -8,17 +8,18 @@ from os import getcwd
 import barcode
 from barcode.writer import ImageWriter
 import psycopg2
-import tools.connect as connex
+
+
 
 global_data = {}
 
 def new_document(arg):
 	try:
 		conn = psycopg2.connect(
-					host = 'pgsql-sprint.dinapi.gov.py',
-					user= 'user-sprint',
-					password = 'user-sprint--201901',
-					database = connex.MEA_DB_ORIGEN_database
+                        host = 'db-sfe.dinapi.gov.py',
+                        user= 'user_dev',
+                        password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
+                        database='db_sfe_production'
 				)
 		cursor = conn.cursor()
 		cursor.execute("""select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formulario ,t.estado as estado_id,case when t.estado =7 then 'Enviado' when t.estado =8 then 'Recepcionado' end estado_desc,
@@ -259,4 +260,4 @@ def new_document(arg):
 		conn.close()
 	return(global_data)
 
-#print(new_document("24224"))
+print(new_document("24224"))

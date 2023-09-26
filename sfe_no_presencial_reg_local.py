@@ -710,15 +710,15 @@ def registro_pdf_sfe_local(arg):
 			
 
 
-			pdf.output(getcwd()+f"/temp_pdf/{str(global_data['expediente'])}/{str(global_data['expediente'])}-0.pdf") 
-			#pdf.output(getcwd()+"/pdf/SFE_REGISTRO_"+str(arg)+"_local.pdf")
+			#pdf.output(getcwd()+f"/temp_pdf/{str(global_data['expediente'])}/{str(global_data['expediente'])}-0.pdf") 
+			pdf.output(getcwd()+"/pdf/SFE_REGISTRO_"+str(arg)+"_local.pdf")
 
 		traer_datos_pdf(arg)
 	except Exception as e:
 		print(e)
 	
 
-#registro_pdf_sfe_local('28694')
+#registro_pdf_sfe_local('27264')
 
 
 

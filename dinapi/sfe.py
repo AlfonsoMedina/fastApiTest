@@ -670,9 +670,9 @@ def oposicion_sfe(arg):
 			global_data = {}
 			try:
 				conn = psycopg2.connect(
-					host = 'pgsql-sprint.dinapi.gov.py',
-					user= 'user-sprint',
-					password = 'user-sprint--201901',
+					host = 'db-sfe.dinapi.gov.py',
+					user= 'user_dev',
+					password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
 					database = connex.MEA_DB_ORIGEN_database
 				)
 				cursor = conn.cursor()
@@ -1894,23 +1894,23 @@ def exist_main_mark(sig):
 	finally:
 		conn.close()
 
-def rule_notification(sig,exp):
+def rule_notification(sig,exp,this_mbr):
 	if exist_main_mark(sig) == 'S' and main_State(exp) != False:
 		try:	
 			status_exp = main_State(exp)
 			rule = email_receiver(str(status_exp))
-			print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")
-			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")
+			#print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}") [n] en status [s] con el número [n]
+			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} en status {str(status_exp)} con el número {this_mbr}")
 		except Exception as e:
 			status_exp = main_State(exp)
 			rule = email_receiver('GEN')
-			print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")
-			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")			
+			#print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} status {str(status_exp)}")
+			enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp} en status {str(status_exp)} con el número {this_mbr}")			
 	else:
 		if exist_notifi(sig) != 'null':
 			rule = email_receiver(str(sig))
 			try:
-				print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp}")	
+				#print(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp}")	
 				enviar_back_notFile(str(rule[0][0]), str(rule[0][2]), f"{str(rule[0][1])} {exp}")
 			except Exception as e:
 				pass

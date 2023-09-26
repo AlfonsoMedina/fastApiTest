@@ -75,7 +75,7 @@ host: pgsql-sprint.dinapi.gov.py
 Puerto: 5432
 DB: kuriju_produccion
 Usuario: user-sprint
-Password: user-sprint--201901
+Password: BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N
 #
 #
 #
@@ -84,7 +84,7 @@ host: pgsql-sprint.dinapi.gov.py
 Puerto: 5432
 DB: db_sfe_production
 Usuario: user-sprint
-Password: user-sprint--201901 
+Password: BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N 
 #
 #
 #
@@ -126,14 +126,14 @@ host: pgsql-sprint.dinapi.gov.py
 Puerto: 5432
 DB: kuriju_produccion
 Usuario: user-sprint
-Password: user-sprint--201901
+Password: BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N
 #
 # PostgreSQL
 host: pgsql-sprint.dinapi.gov.py
 Puerto: 5432
 DB: db_sfe_production
 Usuario: user-sprint
-Password: user-sprint--201901 
+Password: BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N 
 #
 # SqlServer
 host: 192.168.50.14
@@ -200,14 +200,14 @@ host: pgsql-sprint.dinapi.gov.py
 Puerto: 5432
 DB: kuriju_produccion
 Usuario: user-sprint
-Password: user-sprint--201901
+Password: BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N
 
 # PostgreSQL
 host: pgsql-sprint.dinapi.gov.py
 Puerto: 5432
 DB: db_sfe_production
 Usuario: user-sprint
-Password: user-sprint--201901 
+Password: BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N 
 
 # SqlServer
 host: 192.168.50.14

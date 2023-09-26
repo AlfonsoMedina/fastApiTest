@@ -411,9 +411,9 @@ def getGenerado(exp):
     pub_state = 0
     try:
         connX = psycopg2.connect(
-                        host='pgsql-sprint.dinapi.gov.py',
-                        user='user-sprint',
-                        password='user-sprint--201901',
+                        host = 'db-sfe.dinapi.gov.py',
+                        user= 'user_dev',
+                        password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'
                         )
         cursor = connX.cursor()
@@ -499,9 +499,9 @@ def getGeneradoHistorico(exp):
     pub_state = 0
     try:
         connX = psycopg2.connect(
-                        host='pgsql-sprint.dinapi.gov.py',
-                        user='user-sprint',
-                        password='user-sprint--201901',
+                        host = 'db-sfe.dinapi.gov.py',
+                        user= 'user_dev',
+                        password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'
                         )
         cursor = connX.cursor()
@@ -642,10 +642,10 @@ def Enviar_buzon(exp,user):
             ##insert registro en notificaciones
             try:
                 connX = psycopg2.connect(
-                                host='pgsql-sprint.dinapi.gov.py',
-                                user='user-sprint',
-                                password='user-sprint--201901',
-                                database='db_sfe_production'
+                            host = 'db-sfe.dinapi.gov.py',
+                            user= 'user_dev',
+                            password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
+                            database='db_sfe_production'
                                 )
                 cursor = connX.cursor()
                 cursor.execute("INSERT INTO notificaciones(created_at, updated_at, expediente, agente, denominacion, clase, estado, notas, tiponotificacion, tipotramite, adjuntos, recibido_at, enviado_at, firmado_at, datos_pdf, signo, tramite, cabecera_id, usuario_id, adjuntos2)VALUES('"+str(todaypub)+"', '"+str(todaypub)+"', "+item[position].sqlColumnList[0].sqlColumnValue+", "+item[position].sqlColumnList[9].sqlColumnValue+", '"+str(item[position].sqlColumnList[6].sqlColumnValue).replace("'","\'")+"', '"+str(item[position].sqlColumnList[5].sqlColumnValue)+"', 2, NULL, 1, 1, 'https://sfe-tp.dinapi.gov.py/orden_publicacion/"+str(id_url)+"/', NULL, '"+str(todaypub)+"', NULL, '{}', '"+str(signo_format(item[position].sqlColumnList[4].sqlColumnValue))+"', '"+tip_sol+"', NULL, NULL, NULL);")    
@@ -687,9 +687,9 @@ def Estado_notify(exp):
     try:
         pub_state = 0
         connX = psycopg2.connect(
-                        host='pgsql-sprint.dinapi.gov.py',
-                        user='user-sprint',
-                        password='user-sprint--201901',
+                        host = 'db-sfe.dinapi.gov.py',
+                        user= 'user_dev',
+                        password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'
                         )
         cursor = connX.cursor()
@@ -809,7 +809,7 @@ def migrar_cucaracha():
         connA = psycopg2.connect(
                         host='pgsql-sprint.dinapi.gov.py',
                         user='user-sprint',
-                        password='user-sprint--201901',
+                        password='BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N',
                         database='kuriju_produccion'
                     )
         cursorA = connA.cursor()
@@ -905,9 +905,9 @@ def insert_notificaciones(exp):
             tip_sol = "SOP"
 
         connX = psycopg2.connect(
-                        host='pgsql-sprint.dinapi.gov.py',
-                        user='user-sprint',
-                        password='user-sprint--201901',
+                        host = 'db-sfe.dinapi.gov.py',
+                        user= 'user_dev',
+                        password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'
                         )
         cursor = connX.cursor()
