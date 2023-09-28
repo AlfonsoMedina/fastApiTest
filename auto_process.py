@@ -55,12 +55,14 @@ def captura_pendientes():
 #arg0 id and arg1 sigla in state 7
 #this func insert a doc whatever to case: payment, not payment, mark or userDoc...
 def insert_list(arg0:string,arg1:string):
+	#VALIDACION DE PAGO
 	try:
 		pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
 	except Exception as e:
 		data_validator(f'Regla inactiva , tabla tramites ID: {arg0}','false',int(arg0))
 		cambio_estado_soporte(arg0)	
 		return()	
+	
 	pago_auth:str = str(pago_id(arg0)).replace("None","sin dato en bancar")
 	valid_rules:str = []
 
@@ -69,6 +71,7 @@ def insert_list(arg0:string,arg1:string):
 	#print(str(arg1)) #TIPO DE DOCUMENTO
 
 	#////////////////////////////////////////||||||||||||||||||||||||||||||||||||||||///////////////////////////////////////#
+	# VALIDA ADJUNTO
 	exceptions = userDocModel()
 	if exceptions.exist_split(arg0,'observacion_documentos') == False:
 		data_validator(f'No existe documento adjunto, tabla tramites ID: {arg0}','false',arg0)
@@ -78,8 +81,13 @@ def insert_list(arg0:string,arg1:string):
 
 	#new_Nbr = str(COMMIT_NBR())
 	#getFile(arg0,str(int(process_day_Nbr())+1))
-		
-	#CONSULTA SI HAY RELACION DE EXPEDIENTE__________________________________________________________________________________________ 
+
+	# VALIDA SI EL TRAMITE SE PROCESO
+	if pendiente_sfe(arg0)[0]['expediente_id'] != 'None':
+		return('El tramite ya fue procesado!')
+
+
+	#CONSULTA SI HAY RELACION DE EXPEDIENTE
 	if exp_relation(arg1)[0] == 'S': 
 		if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None': 
 			valid_rules.append('Ok')
@@ -88,8 +96,9 @@ def insert_list(arg0:string,arg1:string):
 			valid_rules.append('Error')
 			cambio_estado_soporte(arg0)
 	else:
-		valid_rules.append('Not')
-	#FIN_____________________________________________________________________________________________________________________________ 
+		valid_rules.append('Not') 
+
+
 
 	#CONSULTA SI HAY RELACION DE ESCRITO______________________________________________________________________________________________	
 	if esc_relation(arg1)[0] == 'S':

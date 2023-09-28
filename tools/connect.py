@@ -176,7 +176,7 @@ TRAMITE_REG = """select t.id,t.fecha,t.formulario_id,f.nombre as nombre_formular
 						from tramites t join formularios f on t.formulario_id  = f.id  
 						join usuarios u on u.id = t.usuario_id  
 						join perfiles_agentes pa on pa.usuario_id = u.id         
-						where t.id = {};"""
+						where  t.id = {};"""
 ###################################################################
 #Consulta ultimo dia de proceso
 LAST_DAY_PROCESS = """select  fec_proceso from dia_proceso order by fec_proceso desc limit 1"""

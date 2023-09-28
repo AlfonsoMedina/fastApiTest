@@ -32,7 +32,7 @@ def envio_agente_recibido(arg0,arg1):
 			hora_recep = hora(str(form_id(arg0)[2])).split(".")
 			print(hora_recep)
 
-			pdf.image('static/IMG.PNG',x=12,y=27,w=49,h=15)
+			pdf.image('static/IMG.PNG',x=12,y=22,w=43,h=12)
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=76, y=20, txt='Formulario')
@@ -94,7 +94,7 @@ def envio_agente_recibido_affect(arg0,arg1,ser_afect,afect):
 			hora_recep = hora(str(form_id(arg0)[2])).split(".")
 			print(hora_recep)
 
-			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=15)
+			pdf.image('static/IMG.PNG',x=12,y=22,w=43,h=12)
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=76, y=20, txt='Formulario')
@@ -162,7 +162,7 @@ def envio_agente_recibido_reg(arg0,fileNbr):
 			hora_envio = hora(str(form_id(arg0)[1])).split(".")
 			hora_recep = hora(str(form_id(arg0)[2])).split(".")
 
-			pdf.image('static/IMG.PNG',x=12,y=27,w=49,h=15)
+			pdf.image('static/IMG.PNG',x=12,y=22,w=43,h=12)
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=76, y=20, txt='Formulario')
@@ -496,7 +496,7 @@ def registro_pdf_con_acuse(arg):
 
 
 
-			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=15)
+			pdf.image('static/IMG.PNG',x=12,y=22,w=43,h=12)
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=76, y=20, txt='Formulario')
@@ -538,7 +538,7 @@ def registro_pdf_con_acuse(arg):
 			#############################################################################################################################################################
 
 			pdf.set_font("helvetica", "B", 12)
-			pdf.image('static/IMG.PNG',x=76,y=65,w=70,h=25)
+			pdf.image('static/IMG.PNG',x=76,y=65,w=63,h=19)
 			pdf.cell(0, 40, "________________________________________________________________________________________________________", align='c',ln=1)
 			pdf.cell(0, -20, str(global_data['nombre_formulario']), align='c',ln=1)
 			pdf.set_font('helvetica', 'I', 8)
@@ -1004,7 +1004,7 @@ def envio_agente_recibido_ren(arg0,fileNbr):
 			hora_envio = hora(str(form_id(arg0)[1])).split(".")
 			hora_recep = hora(str(form_id(arg0)[2])).split(".")
 
-			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=15)
+			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=13)
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=76, y=20, txt='Formulario')
@@ -1405,7 +1405,7 @@ def renovacion_pdf_con_acuse(arg):
 			#############################################################################################################################################################
 
 			pdf.set_font("helvetica", "B", 12)
-			pdf.image('static/IMG.PNG',x=76,y=65,w=70,h=25)
+			pdf.image('static/IMG.PNG',x=76,y=65,w=63,h=19)
 			pdf.cell(0, 40, "________________________________________________________________________________________________________", align='c',ln=1)
 			
 			pdf.cell(0, -20, str(global_data['nombre_formulario']), align='c',ln=1)
@@ -1833,7 +1833,7 @@ def ajuste_hora(hora):
 
 #print(ajuste_hora("14:37:00"))
 
-acuse_from_AG_REG('S',26855,2177877)
+#acuse_from_AG_REG('S',26855,2177877)
 
 #envio_agente_recibido('27645','2363526')
 

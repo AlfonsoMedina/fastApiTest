@@ -4,8 +4,8 @@ from getFileDoc import compilePDF_DOCS, getFile, getFile_reg_and_ren
 from tools.send_mail import delete_file, enviar
 from tools.filing_date import capture_day, capture_full, capture_full_upd
 from dataclasses import replace
-
-
+import tools.connect as connex
+import psycopg2
 from cryptography.fernet import Fernet
 
 import asyncio
@@ -75,6 +75,70 @@ def maping_data():
 #from tools.service_system import connectsDAO as connectsDAO
 
 #DECLARAR
-print(maping_data()['PUBLICACIONES'])
+#print(maping_data()['PUBLICACIONES'])
 
+#expediente_id = null and and formulario_id in (3,4,27,100,101) and enviado_at >= '2023-09-27 00:59:59' and  expediente_electronico = true and enviado_at <= '2023-09-27 23:59:59' order by enviado_at asc
+
+def cambio_():
+	try:
+		connA = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursorA = connA.cursor()
+		cursorA.execute("""select id from tramites where expediente_id = 2378490 """)
+		row=cursorA.fetchall()
+		for i in row:
+			print(i)
+	except Exception as e:
+		print(e)
+	finally:
+		connA.close()
+
+
+#cambio_()
+
+
+
+
+
+def cambio_estadoXXXXXX(estado):
+	try:
+		connA = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursorA = connA.cursor()
+		cursorA.execute("""select * from tramites where expediente_id = {}""".format(estado))
+		row=cursorA.fetchall()
+		for i in row:
+			print(i)
+
+	except Exception as e:
+		print(e)
+	finally:
+		connA.close()
+
+#print(cambio_estadoXXXXXX('2378663'))
+
+
+
+# CONSULTAR LISTA DE ERRORES SI EXISTE SOPORTE
+"""
+?
+"""
+#EGECUTAR ESTA ACCION SI ES 99 PERO NO ESTA EN LISTA DE ERRORES
+def cambio_estado(estado):
+	try:
+		connA = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursorA = connA.cursor()
+		cursorA.execute("""select * from tramites where estado = {}""".format(estado))
+		row=cursorA.fetchall()
+		for i in row:
+			conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+			cursor = conn.cursor()
+			cursor.execute("""UPDATE public.tramites set estado = 8 WHERE estado = {};""".format(estado))
+			cursor.rowcount
+			conn.commit()
+			conn.close()
+	except Exception as e:
+		print(e)
+	finally:
+		connA.close()
+
+#cambio_estado('99')
 

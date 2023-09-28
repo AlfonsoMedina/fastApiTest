@@ -276,7 +276,7 @@ def registro_pdf_sfe_local(arg):
 			pdf = FPDF()
 			pdf.add_page()
 			pdf.set_font("helvetica", "B", 12)
-			pdf.image('static/IMG.PNG',x=76,y=5,w=70,h=25)
+			pdf.image('static/IMG.PNG',x=76,y=5,w=63,h=19) 
 			pdf.cell(0, 40, "________________________________________________________________________________________________________", align='c',ln=1)
 			pdf.cell(0, -20, str(global_data['nombre_formulario']), align='c',ln=1)
 			pdf.set_font('helvetica', 'I', 8)

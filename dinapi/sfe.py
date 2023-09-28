@@ -891,8 +891,11 @@ def pendientes_sfe_not_pag(fecha:string):
 select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,
 codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
 to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,
-notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id, enviado_at as bruto from tramites where estado in ({}) and formulario_id in ({}) 
-and enviado_at >= '{} 00:59:59' and expediente_electronico = true and enviado_at <= '{} 23:59:59' order by enviado_at asc 
+notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id, enviado_at as bruto from tramites where estado in ({}) 
+and formulario_id in ({}) 
+and enviado_at >= '{} 00:59:59' 
+and expediente_electronico = true 
+and enviado_at <= '{} 23:59:59' order by enviado_at asc 
 		""".format(connex.MEA_SFE_FORMULARIOS_ID_estado,connex.MEA_SFE_FORMULARIOS_ID_tipo,fecha,fecha))
 		row=cursor.fetchall()
 		for i in row:
@@ -990,7 +993,7 @@ def pendiente_sfe(arg):
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
 		cursor.execute("""select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usuario_id,deleted_at,codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id 
-			from tramites where expediente_electronico = true and id = {}
+			from tramites where expediente_electronico = true and expediente_id is null and id = {}
 		""".format(arg))
 		row=cursor.fetchall()
 		for i in row:

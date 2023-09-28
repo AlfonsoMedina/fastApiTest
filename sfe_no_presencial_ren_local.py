@@ -335,7 +335,7 @@ def renovacion_pdf_sfe_local(arg):
 			pdf = FPDF()
 			pdf.add_page()
 			pdf.set_font("helvetica", "B", 12)
-			pdf.image('static/IMG.PNG',x=76,y=4,w=70,h=25)
+			pdf.image('static/IMG.PNG',x=76,y=4,w=63,h=19)
 			pdf.cell(0, 40, "________________________________________________________________________________________________________", align='c',ln=1)
 			
 			pdf.cell(0, -20, str(global_data['nombre_formulario']), align='c',ln=1)
@@ -722,5 +722,5 @@ def renovacion_pdf_sfe_local(arg):
 		print(e)
 			
 
-#renovacion_pdf_sfe_local("26919")
+#renovacion_pdf_sfe_local("29186")
 #renovacion_pdf_sfe_local("22106266")
