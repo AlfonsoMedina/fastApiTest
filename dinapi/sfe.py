@@ -11,7 +11,9 @@ from wipo.insertGroupProcessMEA import crear_grupo, crear_grupo_fecha
 
 from wipo.ipas import Process_Read, mark_getlist, mark_read, personAgente
 import qrcode
+import logging
 
+logging.basicConfig(filename=f'logs/app_mea_xxxxxxxx.log', level=logging.INFO)
 
 create_userdoc = {}
 default_val = lambda arg: arg if arg == "null" else "" 
@@ -1105,21 +1107,16 @@ def estado(arg):
 
 def cambio_estado(Id,exp):
 	try:
-		connA = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
-		cursorA = connA.cursor()
-		cursorA.execute("""select * from tramites where id = {}""".format(Id))
-		row=cursorA.fetchall()
-		for i in row:
-			conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
-			cursor = conn.cursor()
-			cursor.execute("""UPDATE public.tramites set estado = 8, expediente_id = {},recepcionado_at = '{}' WHERE id={};""".format( exp , captureDate.capture_full_upd(), Id))
-			cursor.rowcount
-			conn.commit()
-			conn.close()
+		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursor = conn.cursor()
+		cursor.execute("""UPDATE public.tramites set estado = 8, expediente_id = {},recepcionado_at = '{}' WHERE id={};""".format( exp , captureDate.capture_full_upd(), Id))
+		cursor.rowcount
+		conn.commit()
+		conn.close()
+		logging.info(f'Tramite Id: {Id}, Expediente Nro: {exp}, Fecha registro: {captureDate.capture_full_upd()}')
 	except Exception as e:
-		print(e)
-	finally:
-		connA.close()	
+		print(e)	
+		logging.error(f'Error en tramite Id: {Id}, Expediente Nro: {exp}, Fecha registro: {captureDate.capture_full_upd()}')
 
 def cambio_estado_soporte(Id):
 	try:

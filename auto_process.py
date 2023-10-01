@@ -372,7 +372,7 @@ def compileAndInsert(form_Id,typ,in_group):
 
 				if str(insert_doc.affectedFileIdList_fileNbr).replace(".0","") != "":
 					#print(str(insert_doc.affectedFileIdList_fileNbr).replace(".0",""))
-					rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr).replace(".0",new_Nbr))
+					rule_notification(typ,str(insert_doc.affectedFileIdList_fileNbr).replace(".0"),new_Nbr)
 				else:
 					print(str(new_Nbr))
 					rule_notification(typ,str(new_Nbr),'')
@@ -759,6 +759,11 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 		# end CHECK USERDOC ######################################################################################
 def insertReg(form_Id):
 	flow_request = stop_request()
+
+	# VALIDA SI EL TRAMITE SE PROCESO
+	if registro_sfe(form_Id)['expediente'] != 'None':
+		return('El tramite ya fue procesado!')
+
 	if flow_request == 0:
 		insert_mark = insertRegModel()
 		insert_mark.setData(form_Id)
@@ -828,6 +833,11 @@ def insertReg(form_Id):
 
 def insertRen(form_Id):
 	flow_request = stop_request()
+
+	# VALIDA SI EL TRAMITE SE PROCESO
+	if renovacion_sfe(form_Id)['expediente'] != 'None':
+		return('El tramite ya fue procesado!')	
+
 	if flow_request == 0:
 		try:
 			insert_mark_ren = insertRenModel()
@@ -1123,7 +1133,7 @@ def others_process_REG(tramite_Id,new_Nbr,ag_email,sigla):
 	print('CREA PDF DE FORMULARIO')
 	compilePDF(new_Nbr)																				# Crear pdf compilado de todos los ficheros
 	print('COMPILA PDFs')
-	rule_notification(sigla,str(new_Nbr),'')															# Correo al funcionario
+	rule_notification(sigla,str(new_Nbr),'')														# Correo al funcionario
 	print('NOTIFICA AL FUNCIONARIO')
 	try:
 		insertar_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))								# Crear grupo o inserta en grupo

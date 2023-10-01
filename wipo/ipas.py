@@ -67,6 +67,7 @@ def getPoder(registro):
 						"doubleValue": registro
 					}}}}
 		find_data = clientMark.service.UserdocGetList(**data)
+		print(find_data)
 		if find_data != []:
 			return True
 		else:
