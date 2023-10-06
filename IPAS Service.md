@@ -813,6 +813,34 @@ consultaslmpy@gmail.com 54
 
 
 
+###################################################################
+'''
+prod_server='192.168.50.188' 
+prod_user='ADMIN' 
+prod_password='ipas4PY$' 
+prod_database='MARCAS_PY'
+'''
+###################################################################
+
+'''
+prod_server='192.168.80.41' 
+prod_user='ADMIN' 
+prod_password='ipas4PY$' 
+prod_database='MARCAS_PY
+'''
+
+###################################################################
+
+'''
+prod_server='192.168.50.195' 
+prod_user='ADMIN' 
+prod_password='ipas4PY$' 
+prod_database='MARCAS_PY
+'''
+
+
+
+
 
 
 MEA BACKEND cambio de contraseña (user-sprint--201901)
@@ -855,6 +883,11 @@ Remito usuarios y contraseñas para servidores
 * Alfonso Medina
 usuario= alfonso.medina
 contraseña = vnSF79upYUXX7VYD
+
+
+Servidor=192.168.80.228
+usuario= alfonso.medina
+contraseña = M0ajgurnE896c4G6A6BVfMwfeKLew9
 
 
 pgsql-14 192.168.50.216 user_app_caja ojTnRUivhOFZ7QfbwNnWeq4iHa
@@ -954,11 +987,11 @@ def maping_data():
 
 
 
+2378472
 
 
 
-
-
+\\192.168.70.56
 
 
 
@@ -1154,13 +1187,14 @@ pdf.image('static/IMG.PNG',x=76,y=65,w=63,h=19)
 
 
 
--2379121-
+
 -2378879-
 -2378888-
--2378931-
+-2378931-/
 
 
 
+2379121		2379121
 2378744     2378744 
 2378745     2378745 
 2378746     2378746 
@@ -1208,3 +1242,29 @@ pdf.image('static/IMG.PNG',x=76,y=65,w=63,h=19)
 
 
 
+	try:
+		connA = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursorA = connA.cursor()
+		cursorA.execute("""select * from tramites where id = {}""".format(Id))
+		row=cursorA.fetchall()
+		for i in row:
+			conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+			cursor = conn.cursor()
+			cursor.execute("""UPDATE public.tramites set estado = 8, expediente_id = {},recepcionado_at = '{}' WHERE id={};""".format( exp , captureDate.capture_full_upd(), Id))
+			cursor.rowcount
+			conn.commit()
+			conn.close()
+	except Exception as e:
+		print(e)
+	finally:
+		connA.close()
+
+
+
+
+
+
+
+
+
+[(29327, 2379616, 99), (29328, 2379617, 99), (29329, 2379618, 99)]

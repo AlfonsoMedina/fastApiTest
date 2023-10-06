@@ -21,7 +21,7 @@ def getFile(doc_id,fileNbr):
 
 	try:	
 		remote_url = respuesta_sfe_campo(doc_id)['descripcion_documentos2']['archivo']['url'] #
-		local_file = 'temp_pdf/DOCS/'+str('3')+str(fileNbr)+'-1.pdf' 		
+		local_file = 'temp_pdf/DOCS/'+str(fileNbr)+'-1.pdf'
 		request.urlretrieve(remote_url, local_file)
 	except Exception as e:
 		pass

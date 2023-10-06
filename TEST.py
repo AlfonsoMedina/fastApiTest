@@ -1,28 +1,27 @@
 
+from tools.data_format import date_not_hour
 from email_pdf_AG import acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_affect
 from getFileDoc import compilePDF_DOCS, getFile, getFile_reg_and_ren
-from dinapi.sfe import pendiente_sfe, registro_sfe, renovacion_sfe, rule_notification
+from dinapi.sfe import pendiente_sfe, registro_sfe, renovacion_sfe, respuesta_sfe_campo, rule_notification
 from tools.send_mail import delete_file, enviar
 from tools.filing_date import capture_day, capture_full, capture_full_upd
 from dataclasses import replace
 import tools.connect as connex
 import psycopg2
 from cryptography.fernet import Fernet
-
+import time
 import asyncio
 import configparser
 import httpx
-
 from wipo.insertGroupProcessMEA import group_addressing
 from wipo.ipas import getPoder
-
 import logging as logs
 
 
 ###################################################################
 ###################################################################
 ###################################################################
-###################################################################
+########################### 94 ####################################
 ###################################################################
 ###################################################################
 ###################################################################
@@ -68,8 +67,7 @@ getConnects = loop.run_until_complete(consultar_api(app_name,tokenApp))
 def maping_data():
     for i in getConnects:
         getThisConn[i['connName']] = i
-    return(getThisConn) 
-    
+    return(getThisConn)    
 """
 ####################################################################################################################################
 ####################################################################################################################################
@@ -86,55 +84,14 @@ def maping_data():
 
 #expediente_id = null and and formulario_id in (3,4,27,100,101) and enviado_at >= '2023-09-27 00:59:59' and  expediente_electronico = true and enviado_at <= '2023-09-27 23:59:59' order by enviado_at asc
 
-def cambio_():
-	try:
-		connA = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
-		cursorA = connA.cursor()
-		cursorA.execute("""select id from tramites where expediente_id = 2378490 """)
-		row=cursorA.fetchall()
-		for i in row:
-			print(i)
-	except Exception as e:
-		print(e)
-	finally:
-		connA.close()
 
-
-#cambio_()
-
-
-
-def cambio_estadoXXXXXX(estado):
-	try:
-		connA = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
-		cursorA = connA.cursor()
-		cursorA.execute("""select * from tramites where id = {}""".format(estado))
-		row=cursorA.fetchall()
-		for i in row:
-			print(i[0])
-			conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
-			cursor = conn.cursor()
-			cursor.execute("""UPDATE public.tramites set estado = 8 WHERE id = {};""".format(estado))
-			cursor.rowcount
-			conn.commit()
-			conn.close()
-	except Exception as e:
-		print(e)
-	finally:
-		connA.close()
-
-#cambio_estadoXXXXXX()
 
 # EJECUTAR CONSULTAS
 def queryfind():
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""SELECT id, expediente_id  FROM tramites WHERE estado in (8)
-		and formulario_id = 4 		
-		and enviado_at >= '2023-09-25 00:59:59' 
-		and expediente_electronico = true 
-		and enviado_at <= '2023-09-28 23:59:59';""")
+		cursor.execute("""SELECT id FROM tramites where estado = 7 and expediente_electronico = true and enviado_at >= '2023-10-05'; """)
 		row=cursor.fetchall()
 		print(row)
 		for i in row:
@@ -143,14 +100,26 @@ def queryfind():
 		print(e)
 	finally:
 		conn.close()
+
+"""SELECT id, expediente_id, formulario_id, estado  FROM tramites where estado = 7 and expediente_electronico = true and enviado_at >= '2023-10-03';"""
+
 #print(queryfind())
 
 
-# CONSULTAR LISTA DE ERRORES SI EXISTE SOPORTE
-"""
-?
-"""
-#EGECUTAR ESTA ACCION SI ES 99 PERO NO ESTA EN LISTA DE ERRORES
+
+#VERIFICAR CAMPOS EN RESPUESTA DE LA TABLA TRAMITES
+#print(respuesta_sfe_campo('29386'))
+
+
+
+#getFile('29386','2380107')
+
+
+
+
+
+
+#EJECUTAR ESTA ACCION SI ES 99 PERO NO ESTA EN LISTA DE ERRORES
 def cambio_estado(estado):
 	try:
 		connA = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
@@ -160,7 +129,7 @@ def cambio_estado(estado):
 		for i in row:
 			conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 			cursor = conn.cursor()
-			cursor.execute("""UPDATE public.tramites set estado = 7 WHERE estado = {};""".format(estado))
+			cursor.execute("""UPDATE public.tramites set estado = 7  WHERE estado = {};""".format(estado))
 			cursor.rowcount
 			conn.commit()
 			conn.close()
@@ -168,72 +137,41 @@ def cambio_estado(estado):
 		print(e)
 	finally:
 		connA.close()
+
 #cambio_estado('99')
+
+
 
 
 # CONSULTAR DATOS DE RENOVACION POR ID TRAMITE
 #print(renovacion_sfe('29146')['expediente'])
 
 
-#####################################################################################################################
-#####################################################################################################################
-#####################################################################################################################
-#####################################################################################################################
-
-# ENVIAR CORREO AL FUNCIONARIO
-#rule_notification('SRD','2363896','2378761')
-
-# INSERTAR EN GRUPO DE TRAMITES
-#group_addressing('SRD','2363896','2378761')
 
 
 #####################################################################################################################
+############## REGISTRAR ID DE TRAMITE EN LOG DE PROCESO ############################################################
 #####################################################################################################################
 #####################################################################################################################
-#####################################################################################################################
-
-
-
-
-
-
-#print(getPoder('63570'))
-
-
-
-
-
-
-
-"""
-CREAR ARCHIVO CON LA FECHA DE HOY
-
-ESCRIBIR EN ARCHIVO
-
-LEER ARCHIVO
-
-
-
-
-"""
-
-
 
 # Configurar el nivel de registro
-logs.basicConfig(filename='procesados_.log', level=logs.INFO)
+#LOG_FILENAME = f'logs/app_mea_{date_not_hour()}.log'
+#logs.basicConfig(filename=LOG_FILENAME,level=logs.INFO)
 
 def test():
 	# Ejemplo de uso de los logs
-	logs.info('2780')
+	logs.info('2777')
+	
+#test()
 
-test()
 
 
-
-# Buscador para saber si ya fue procesado un ID 
-# Guardado en el archivo log de procesos
+###########################################################################
+############# Buscador para saber si ya fue procesado un ID ###############
+################ Guardado en el archivo log de procesos ###################
+###########################################################################
 def ifExistId(findId):
-	archivo = open("logs/app_mea_xxxxxxxx.log", "r")  # Abrir el archivo en modo lectura
+	archivo = open(f"logs/app_mea_{date_not_hour()}.log", "r")  # Abrir el archivo en modo lectura
 	contenido = archivo.read()  # Leer el contenido del archivo
 	archivo.close()  # Cerrar el archivo
 
@@ -242,4 +180,60 @@ def ifExistId(findId):
 
 	return(f"La palabra '{palabra_buscar}' se encontró {ocurrencias} veces en el archivo.")
 
-print(ifExistId('2781'))
+#print(ifExistId('2777'))
+
+###########################################################################
+################### ELIMINAR UN REGISTRO DE LISTA DE PROCESOS #############
+###########################################################################
+
+def delete_id_file(nombre_archivo, palabra):
+    with open(nombre_archivo, 'r') as archivo:
+        contenido = archivo.read()
+        contenido_modificado = contenido.replace(palabra, '')
+
+    with open(nombre_archivo, 'w') as archivo:
+        archivo.write(contenido_modificado)
+
+#delete_id_file(f'logs/app_mea_{date_not_hour()}.log', f'INFO:root:2777')
+
+
+###########################################################################
+####################BUSCAR SI EXISTE LOG DEL ERROR 99######################
+###########################################################################
+
+query_error ="SELECT id_tramite FROM public.log_error where evento = 'E00' and id_tramite ="
+
+def data_validator(arg:str):
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute(f"""{query_error} {arg}; """)
+		row=cursor.fetchall()
+		for i in range(0,len(row)):
+			print(row[i][0])
+				
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+#data_validator('29239')
+
+
+
+
+def logging_me(arg0,arg1):
+	# Configurar el nivel de registro y el archivo de salida
+	logs.basicConfig(filename=arg0, level=logs.DEBUG)
+
+	# Capturar todos los registros en el archivo
+	logs.captureWarnings(True)
+
+	# Ejemplo de uso de los logs
+	#logs.debug('Este es un mensaje de debug')
+	logs.info(arg1)
+	#logs.warning('Este es un mensaje de advertencia')
+	#logs.error('Este es un mensaje de error')
+	#logs.critical('Este es un mensaje crítico')
+
+logging_me('log_File1.log','Este es un mensaje informativo')

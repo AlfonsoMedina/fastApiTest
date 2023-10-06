@@ -3,17 +3,18 @@ from math import ceil
 import string
 import time
 import psycopg2
-from tools.data_format import fecha_barra,hora
+from tools.data_format import date_not_hour, fecha_barra,hora
 from tools.send_mail import enviar_back_notFile
 import tools.filing_date as captureDate
 import tools.connect as connex
 from wipo.insertGroupProcessMEA import crear_grupo, crear_grupo_fecha
-
+import logging
 from wipo.ipas import Process_Read, mark_getlist, mark_read, personAgente
 import qrcode
-import logging
 
-logging.basicConfig(filename=f'logs/app_mea_xxxxxxxx.log', level=logging.INFO)
+
+LOG_FILENAME = f'logs/app_mea_{date_not_hour()}.log'
+logging.basicConfig(filename=LOG_FILENAME, level=logging.INFO)
 
 create_userdoc = {}
 default_val = lambda arg: arg if arg == "null" else "" 
@@ -894,6 +895,7 @@ select id,fecha,formulario_id,estado,created_at,updated_at,respuestas,costo,usua
 codigo,firmado_at,pagado_at,expediente_id,pdf_url,to_char(enviado_at,'DD/MM/YYYY hh24:mi:ss') as enviado_at,
 to_char(recepcionado_at,'DD/MM/YYYY hh24:mi:ss') as recepcionado_at,nom_funcionario,pdf,expediente_afectado,
 notificacion_id,expedientes_autor,autorizado_por_id,locked_at,locked_by_id,tipo_documento_id, enviado_at as bruto from tramites where estado in ({}) 
+ 
 and formulario_id in ({}) 
 and enviado_at >= '{} 00:59:59' 
 and expediente_electronico = true 
@@ -1107,16 +1109,21 @@ def estado(arg):
 
 def cambio_estado(Id,exp):
 	try:
-		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
-		cursor = conn.cursor()
-		cursor.execute("""UPDATE public.tramites set estado = 8, expediente_id = {},recepcionado_at = '{}' WHERE id={};""".format( exp , captureDate.capture_full_upd(), Id))
-		cursor.rowcount
-		conn.commit()
-		conn.close()
-		logging.info(f'Tramite Id: {Id}, Expediente Nro: {exp}, Fecha registro: {captureDate.capture_full_upd()}')
+		connA = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+		cursorA = connA.cursor()
+		cursorA.execute("""select * from tramites where id = {}""".format(Id))
+		row=cursorA.fetchall()
+		for i in row:
+			conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
+			cursor = conn.cursor()
+			cursor.execute("""UPDATE public.tramites set estado = 8, expediente_id = {},recepcionado_at = '{}' WHERE id={};""".format( exp , captureDate.capture_full_upd(), Id))
+			cursor.rowcount
+			conn.commit()
+			conn.close()
 	except Exception as e:
-		print(e)	
-		logging.error(f'Error en tramite Id: {Id}, Expediente Nro: {exp}, Fecha registro: {captureDate.capture_full_upd()}')
+		print(e)
+	finally:
+		connA.close()	
 
 def cambio_estado_soporte(Id):
 	try:

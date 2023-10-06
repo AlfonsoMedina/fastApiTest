@@ -18,7 +18,7 @@ import tools.connect as connex
 global_data = {}
 def envio_agente_recibido(arg0,arg1):
 	try:
-		qr_code('https://sfe-beta.dinapi.gov.py/dashboard/expedientes/tramites/'+str(arg0))
+		qr_code(connex.MEA_QR_DIR+str(arg0))
 
 		def traer_datos_pdf():
 				
@@ -80,7 +80,7 @@ def envio_agente_recibido(arg0,arg1):
 
 def envio_agente_recibido_affect(arg0,arg1,ser_afect,afect):
 	try:
-		qr_code('https://sfe-beta.dinapi.gov.py/dashboard/expedientes/tramites/'+str(arg0))
+		qr_code(connex.MEA_QR_DIR+str(arg0))
 
 		def traer_datos_pdf():
 				
@@ -147,7 +147,7 @@ def envio_agente_recibido_affect(arg0,arg1,ser_afect,afect):
 
 def envio_agente_recibido_reg(arg0,fileNbr):
 	try:
-		qr_code('https://sfe-beta.dinapi.gov.py/dashboard/expedientes/tramites/'+str(arg0))
+		qr_code(connex.MEA_QR_DIR+str(arg0))
 
 		def traer_datos_pdf():
 
@@ -989,7 +989,7 @@ def registro_pdf_con_acuse(arg):
 
 def envio_agente_recibido_ren(arg0,fileNbr):
 	try:
-		qr_code('https://sfe-beta.dinapi.gov.py/dashboard/expedientes/tramites/'+str(arg0))
+		qr_code(connex.MEA_QR_DIR+str(arg0))
 
 		def traer_datos_pdf():
 
@@ -1004,7 +1004,7 @@ def envio_agente_recibido_ren(arg0,fileNbr):
 			hora_envio = hora(str(form_id(arg0)[1])).split(".")
 			hora_recep = hora(str(form_id(arg0)[2])).split(".")
 
-			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=13)
+			pdf.image('static/IMG.PNG',x=12,y=22,w=43,h=12)
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=76, y=20, txt='Formulario')
@@ -1362,8 +1362,8 @@ def renovacion_pdf_con_acuse(arg):
 
 			#hora_envio = hora(str(form_id(arg)[1])).split(".")
 			#hora_recep = hora(str(form_id(arg)[2])).split(".")
-			
-			pdf.image('static/IMG.PNG',x=12,y=22,w=49,h=15)
+
+			pdf.image('static/IMG.PNG',x=12,y=22,w=43,h=12)
 
 			pdf.set_font("helvetica", "B", 9)
 			pdf.text(x=76, y=20, txt='Formulario')
@@ -1832,8 +1832,6 @@ def ajuste_hora(hora):
 	return(str(int(huor_split[0])-4).rjust(2,'0')+":"+str(int(huor_split[1])).rjust(2,'0')+":"+huor_split[2])	
 
 #print(ajuste_hora("14:37:00"))
-
-#acuse_from_AG_REG('S',26855,2177877)
 
 #envio_agente_recibido('27645','2363526')
 

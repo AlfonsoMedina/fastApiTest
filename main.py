@@ -1,9 +1,11 @@
 from time import sleep
 from urllib import request
-from fastapi import  FastAPI
+from fastapi import  FastAPI, Request
+import logging
 from pydantic import BaseModel
 from fastapi.responses import FileResponse
 from auto_process import insert_list, insertReg, insertRen
+from tools.data_format import date_not_hour
 from models.insertRegModel import insertRegModel
 from models.insertRenModel import insertRenModel
 from tools.send_mail import enviar
@@ -18,6 +20,10 @@ from wipo.function_for_reception_in import insert_user_doc_escritos, user_doc_re
 import zeep
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
+
+LOG_FILENAME = f'logs/app_mea_{date_not_hour()}.log'
+logging.basicConfig(filename=LOG_FILENAME,level=logging.WARN)
+
 
 description = """
 Version 2023 
@@ -2060,7 +2066,8 @@ def TEST_MEA(id_tramite):
 	create_userdoc['representationData_representativeList_person_stateName'] = catch_data.representationData_representativeList_person_stateName 
 	create_userdoc['representationData_representativeList_person_telephone'] = catch_data.representationData_representativeList_person_telephone 
 	create_userdoc['representationData_representativeList_person_zipCode'] = catch_data.representationData_representativeList_person_zipCode 
-	create_userdoc['representationData_representativeList_representativeType'] = catch_data.representationData_representativeList_representativeType 
+	create_userdoc['representationData_representativeList_representativeType'] = catch_data.representationData_representativeList_representativeType
+	logging.basicConfig(filename=LOG_FILENAME)
 	return(create_userdoc)
 	#return(format_userdoc(id_tramite))
 

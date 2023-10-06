@@ -4,12 +4,6 @@ import base64
 import psycopg2
 
 
-
-
-
-
-
-
 ####################################################################################################################################
 
 #Conexion con la tabla parametros
@@ -29,7 +23,4 @@ def config_parametro(id):
         conn.close()
 
 #print(config_parametro('49')['valor1'])
-
-
-
 

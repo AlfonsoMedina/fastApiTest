@@ -1,5 +1,4 @@
-from datetime import date, timedelta
-import datetime
+from datetime import date, timedelta, datetime
 from time import sleep
 import qrcode
 import base64
@@ -149,6 +148,19 @@ def Fecha_atras(fecha): # devuelve 10 dias atras a partir de la fecha establecid
     fecha_atras = today_date + td
     return(fecha_atras.date())
 
+def date_not_hour():
+
+    # Obtener la fecha actual
+    fecha_actual = datetime.now()
+
+    # Obtener el año, mes y día por separado
+    año_actual = fecha_actual.year
+    mes_actual = fecha_actual.month
+    dia_actual = fecha_actual.day
+
+    # Imprimir la fecha actual
+    return(f"{año_actual}-{str(mes_actual).zfill(2)}-{str(dia_actual).zfill(2)}")
+
 def qr_code(text): # convierte el texto en codigo QR y crea fichero .png
     img = qrcode.make(text)
     f = open("output.png", "wb")
@@ -158,7 +170,6 @@ def qr_code(text): # convierte el texto en codigo QR y crea fichero .png
     with open("output.png", "rb") as image2string: 
         converted_string = base64.b64encode(image2string.read()) 
     return(str(converted_string).replace("b'",'').replace("'","")) 
-
 
 def pais(arg):
     paises = ['PY - Paraguay','AD - Andorra','AE - Emiratos Arabes Unidos','AF - Afganistan','AG - Antigua y Barbuda','AI - Anguila','AL - Albania','AM - Armenia','AN - Antillas Neerlandesas','AO - Angola','AQ - Antartida','AR - Argentina','AS - Samoa Americana','AT - Austria','AU - Australia','AW - Aruba','AZ - Azerbaiyan','BA - Bosnia y Herzegovina','BB - Barbados','BD - Bangladesh','BE - Belgica','BF - Burkina Faso','BG - Bulgaria','BH - Bahrein','BI - Burundi','BJ - Benin','BM - Bermudas','BN - Brunei','BO - Bolivia','BR - Brasil','BS - Bahamas','BT - Butan','BU - Burma','BV - Isla Bouvet','BW - Botsuana','BX - Benelux','BY - Belarus','BZ - Belice','CA - Canada','CC - Islas Cocos','CF - Rep. Centroafricana','CG - Republica del Congo','CH - Suiza','CI - Costa de Marfil','CK - Islas Cook','CL - Chile','CM - Camerun','CN - China','CO - Colombia','CR - Costa Rica','CS - Czechoslovakia','CU - Cuba','CV - Cabo Verde','CW - Curazao','CX - Isla de Navidad','CY - Chipre','CZ - Republica Checa','DD - Germany Dem.Rep','DE - Alemania','DJ - Yibuti','DK - Dinamarca','DM - Dominica','DO - Republica Dominicana','DT - unknown','DZ - Argelia','EC - Ecuador','EE - Estonia','EG - Egipto','EH - Sahara Occidental','EM - EUIPO (Union Europea)','EP - Oficina Europea Patentes (OEP)','ER - Eritrea','ES - España','ET - Etiopia','FI - Finlandia','FJ - Fiyi','FK - Islas Falkland (Malvinas)','FM - Micronesia','FO - Islas Feroe','FR - Francia','FX - France Metropol','GA - Gabon','GB - Reino Unido','GC - Grand Caymans','GD - Granada','GE - Georgia']
