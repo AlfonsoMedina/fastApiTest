@@ -14,7 +14,7 @@ import asyncio
 import configparser
 import httpx
 from wipo.insertGroupProcessMEA import group_addressing
-from wipo.ipas import getPoder
+from wipo.ipas import getPoder, mark_getlistFecha
 import logging as logs
 
 
@@ -86,12 +86,12 @@ def maping_data():
 
 
 
-# EJECUTAR CONSULTAS
+# EJECUTAR CONSULTAS 29486
 def queryfind():
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""SELECT id FROM tramites where estado = 7 and expediente_electronico = true and enviado_at >= '2023-10-05'; """)
+		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (7,99) and formulario_id in (3,4) and expediente_electronico = true and enviado_at >= '2023-10-06'; """)
 		row=cursor.fetchall()
 		print(row)
 		for i in row:
@@ -189,12 +189,12 @@ def ifExistId(findId):
 def delete_id_file(nombre_archivo, palabra):
     with open(nombre_archivo, 'r') as archivo:
         contenido = archivo.read()
-        contenido_modificado = contenido.replace(palabra, '')
+        contenido_modificado = contenido.replace(f'INFO:root:{palabra}', '')
 
     with open(nombre_archivo, 'w') as archivo:
         archivo.write(contenido_modificado)
 
-#delete_id_file(f'logs/app_mea_{date_not_hour()}.log', f'INFO:root:2777')
+#delete_id_file(f'logs/app_mea_{date_not_hour()}.log', '2777')
 
 
 ###########################################################################
@@ -210,8 +210,7 @@ def data_validator(arg:str):
 		cursor.execute(f"""{query_error} {arg}; """)
 		row=cursor.fetchall()
 		for i in range(0,len(row)):
-			print(row[i][0])
-				
+			print(row[i][0])			
 	except Exception as e:
 		print(e)
 	finally:
@@ -236,4 +235,37 @@ def logging_me(arg0,arg1):
 	#logs.error('Este es un mensaje de error')
 	#logs.critical('Este es un mensaje crítico')
 
-logging_me('log_File1.log','Este es un mensaje informativo')
+#logging_me('log_File1.log','Este es un mensaje informativo')
+
+
+
+
+
+
+
+
+
+
+# INICIO DE PROCESO DE VALIDACION POR MARCAS DUPLICADAS
+
+def check_mark_ipas(fecha:str,desc:str,tipoM:str,subTipoM:str,claseM:str):
+	#METODO DE CONSULTA A IPAS
+	dataList = mark_getlistFecha(fecha, fecha)
+
+	# RECORRER RESULTADO DE dataList 
+	for i in range(0,len(dataList)):
+
+		# DATOS A EVALUAR
+		tipo = dataList[i]['filingData']['applicationType']
+		subTipo = dataList[i]['filingData']['applicationSubtype']
+		clase = str(dataList[i]['fileSummaryClasses'])[16:18]
+		descript = dataList[i]['fileSummaryDescription']
+		#print(descript)
+		#print(f'{descript} == {desc} {str(tipo).strip()} == {str(tipoM).strip()}  {str(subTipo).strip()} == {str(subTipoM).strip()}  {str(clase).strip()} == {str(claseM).strip()}')
+		
+		# CONDICIONAL QUE CONFIRMARA SI EXISTE
+		if str(descript).strip() == str(desc).strip() and str(tipoM).strip() == str(tipo).strip() and str(subTipo).strip() == str(subTipoM).strip() and str(clase).strip() == str(claseM).strip():
+			return(True)
+
+
+#print(check_mark_ipas('2023-10-06','AUTOMAX','REG','MP','12'))

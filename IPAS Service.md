@@ -887,7 +887,7 @@ contraseña = vnSF79upYUXX7VYD
 
 Servidor=192.168.80.228
 usuario= alfonso.medina
-contraseña = M0ajgurnE896c4G6A6BVfMwfeKLew9
+contraseña = M0ajgurnE896c4G6A6BVfMwfeKLew9 
 
 
 pgsql-14 192.168.50.216 user_app_caja ojTnRUivhOFZ7QfbwNnWeq4iHa
@@ -1263,8 +1263,3 @@ pdf.image('static/IMG.PNG',x=76,y=65,w=63,h=19)
 
 
 
-
-
-
-
-[(29327, 2379616, 99), (29328, 2379617, 99), (29329, 2379618, 99)]
