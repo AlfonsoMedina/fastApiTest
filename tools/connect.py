@@ -76,7 +76,7 @@ databaseME='db_sfe_presencial'
 #Base de datos CAJA posgresSql v14 
 hostCJ = '192.168.50.216'
 userCJ='user_app_caja'
-passwordCJ=' ojTnRUivhOFZ7QfbwNnWeq4iHa'
+passwordCJ='ojTnRUivhOFZ7QfbwNnWeq4iHa'
 databaseCJ='db_caja_dinapi'
 
 ###################################################################

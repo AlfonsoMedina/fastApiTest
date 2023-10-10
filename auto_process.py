@@ -56,8 +56,8 @@ def captura_pendientes():
 #arg0 id and arg1 sigla in state 7
 #this func insert a doc whatever to case: payment, not payment, mark or userDoc...
 def insert_list(arg0:string,arg1:string):
-	LOG_FILENAME = f'logs/app_mea_{date_not_hour()}.log'
-	logs.basicConfig(filename=LOG_FILENAME,level=logs.WARN)
+	#LOG_FILENAME = f'logs/app_mea_{date_not_hour()}.log'
+	#logs.basicConfig(filename=LOG_FILENAME,level=logs.WARN)
 	try:
 		pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
 	except Exception as e:
@@ -799,6 +799,7 @@ def insertReg(form_Id):
 				insert_mark.protectionData_niceClassList_niceClassGlobalStatus,
 				insert_mark.protectionData_niceClassList_niceClassNbr,
 				insert_mark.protectionData_niceClassList_niceClassVersion,
+
 				insert_mark.documentId_PowerOfAttorneyRegister_docLog,
 				insert_mark.documentId_PowerOfAttorneyRegister_docNbr,
 				insert_mark.documentId_PowerOfAttorneyRegister_docOrigin,
@@ -819,6 +820,7 @@ def insertReg(form_Id):
 			if insertRegState == 'true':
 				#subsequent_list.append({"fileNbr":new_Nbr,"tram_id":form_Id,"fecha":insert_mark.file_filingData_captureDate,"email":insert_mark.ag_email,"sigla":"REG"})
 				others_process_REG(form_Id,new_Nbr,insert_mark.ag_email,'REG')
+			#print(subsequent_list)
 			else:
 				error_process(form_Id,f'Error en solicitud, tabla tramites: {insertRegState}','true')
 		except Exception as e:
@@ -827,41 +829,27 @@ def insertReg(form_Id):
 		error_process(form_Id,f'Error en solicitud, tabla tramites ID: {insertRegState}','true')
 
 def insertRen(form_Id):
-
-	# BUSCAR SI HAY UN CASO DE ERROR 99 PARA ESTE ID
 	flow_request = stop_request()
 
-	# VERIFICAR SI EL TRÁMITE YA FUE PROCESADO
+	# VALIDA SI EL TRAMITE SE PROCESO
 	if ifExistId(form_Id) > 0:
 		return('El tramite ya fue procesado!')
 
-	# INICIO DE FLUJO DE INSERCIÓN PARA RENOVACIÓN
 	if flow_request == 0:
 		try:
-			# DECLARACIÓN DE MODELO PARA ORGANIZAR LOS DATOS DE RENOVACIÓN
 			insert_mark_ren = insertRenModel()
 			insert_mark_ren.setData(form_Id)
 			try:
-				# CONVERSIÓN DE FORMATO PARA EL LOGO
 				b64_to_img(insert_mark_ren.logoData)
 			except Exception as e:
 				pass
-
 		except Exception as e:
-			# EN CASO DE ERROR, DESCRIBE EL ERROR EN LA TABLA log_error 
 			data_validator(f'Tiempo agotado 1, carga datos de ipas para renovacion, ID: {form_Id}','true',form_Id)
-			
-			# CAMBIA EL ESTADO A 99
 			cambio_estado_soporte(form_Id)
-			
-			# ENVÍA CORREO AL FUNCIONARIO DE SOPORTE
 			rule_notification('SOP',form_Id,'')
 
 		try:
-			# CAPTURA EL NÚMERO DE EXPEDIENTE
 			new_Nbr = str(COMMIT_NBR())
-
-			# CARGA EL METODO INSERT DE IPAS CON LOS DATOS DEL MODELO PARA INSERTAR
 			insertRenState = mark_insert_ren(
 				new_Nbr,
 				insert_mark_ren.file_fileId_fileSeq,
@@ -905,25 +893,13 @@ def insertRen(form_Id):
 				insert_mark_ren.logoType,
 				insert_mark_ren.signData_markName,
 				insert_mark_ren.signData_signType)
-
 			print('INSERTO EL RENOVACION => ' + insertRenState)
-
-			# REGISTRA EL ID DE TRÁMITE COMO YA PROCESADO
 			logs.info(form_Id)
-
-			# CONSULTA SI LA RESPUESTA DE IPAS POSITIVA
 			if insertRenState == 'true':
-
-				# LISTA PARA EJECUCION DE PROCESOS SECUNDARIOS MEA V2
 				#subsequent_list.append({"fileNbr":new_Nbr,"tram_id":form_Id,"fecha":insert_mark_ren.file_filingData_captureDate,"email":insert_mark_ren.ag_email,"sigla":"REN"})
-				
-				# EJECUTA TODOS PROCESOS POSTERIORES A LA INSERCIÓN EXITOSA DE UNA RENOVACIÓN
 				others_process_REN(form_Id,new_Nbr,insert_mark_ren.ag_email,'REN')
-			
 			#print(subsequent_list)
-			
 			else:
-				# EJECUTA TODOS LOS PROCESOS EN CASO DE ERROR
 				error_process(form_Id,'Tiempo agotado 2, carga datos de ipas para renovacion, ID','true')
 		except Exception as e:
 			print(e)
@@ -1164,25 +1140,25 @@ def others_process_REG(tramite_Id,new_Nbr,ag_email,sigla):
 	print('INSERT EN EL GRUPO DEL FUNCIONARIO')
 
 def others_process_REN(tramite_Id,new_Nbr,ag_email,sigla):
-	cambio_estado(tramite_Id,new_Nbr)																# Cambio de estado
+	cambio_estado(tramite_Id,new_Nbr)											# Cambio de estado
 	print('CAMBIO DE ESTADO')
-	acuse_from_AG_REN(str(connex.MEA_ACUSE_FORMULARIO),tramite_Id,new_Nbr)							# Crear PDF									
+	acuse_from_AG_REN(str(connex.MEA_ACUSE_FORMULARIO),tramite_Id,new_Nbr)									# Crear PDF									
 	print('CREO PDF')
 	delete_file(enviar('notificacion-DINAPI.pdf',ag_email,'M.E.A',connex.msg_body_mail))			# Enviar Correo Electronico
 	print('ENVIO AL AG')
-	getFile_reg_and_ren(tramite_Id,new_Nbr) 														# Descargar pdfs de respuesta 
+	getFile_reg_and_ren(tramite_Id,new_Nbr) 									# Descargar pdfs de respuesta 
 	print('CAPTURA PDF DE TRAMITES')
 	if sigla == 'REG':
-		registro_pdf_sfe_local(tramite_Id)															# Crear formulario completo REG
+		registro_pdf_sfe_local(tramite_Id)										# Crear formulario completo REG
 	if sigla == 'REN':
-		renovacion_pdf_sfe_local(tramite_Id)														# Crear formulario completo	REN										
+		renovacion_pdf_sfe_local(tramite_Id)									# Crear formulario completo	REN										
 	print('CREA PDF DE FORMULARIO')
-	compilePDF(new_Nbr)																				# Crear pdf compilado de todos los ficheros
+	compilePDF(new_Nbr)															# Crear pdf compilado de todos los ficheros
 	print('COMPILA PDFs')
-	rule_notification(sigla,str(new_Nbr),'')														# Correo al funcionario
+	rule_notification(sigla,str(new_Nbr),'')										# Correo al funcionario
 	print('NOTIFICA AL FUNCIONARIO')
 	try:
-		insertar_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))								# Crear grupo o inserta en grupo
+		insertar_grupo_expediente(str(USER_GROUP(sigla)),str(new_Nbr))				# Crear grupo o inserta en grupo
 	except Exception as e:
 		print('no se inserto en grupo de trmites')
 	print('INSERT EN EL GRUPO DEL FUNCIONARIO')

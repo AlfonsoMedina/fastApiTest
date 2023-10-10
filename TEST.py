@@ -1,4 +1,5 @@
 
+from ast import Num
 from tools.data_format import date_not_hour
 from email_pdf_AG import acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_affect
 from getFileDoc import compilePDF_DOCS, getFile, getFile_reg_and_ren
@@ -50,24 +51,24 @@ getItemConn = {}
 
 ## FUNCTION THAT CONSULTS THE DATA ACCESS SERVICE
 async def consultar_api(appName:str, tokenApp:str):
-    url = f"{urlBase}?appName={appName}&tokenApp={tokenApp}"
-    async with httpx.AsyncClient() as client:
-        response = await client.post(url)
-        if response.status_code == 200:
-            data = response.json()
-            return(data)
-        else:
-            print("Error al consultar la API:", response.status_code)
-            return([])
+	url = f"{urlBase}?appName={appName}&tokenApp={tokenApp}"
+	async with httpx.AsyncClient() as client:
+		response = await client.post(url)
+		if response.status_code == 200:
+			data = response.json()
+			return(data)
+		else:
+			print("Error al consultar la API:", response.status_code)
+			return([])
 
 loop = asyncio.get_event_loop()
 getConnects = loop.run_until_complete(consultar_api(app_name,tokenApp))
 
 ## I MAP THE ANSWER IN THE DICTIONARIES
 def maping_data():
-    for i in getConnects:
-        getThisConn[i['connName']] = i
-    return(getThisConn)    
+	for i in getConnects:
+		getThisConn[i['connName']] = i
+	return(getThisConn)    
 """
 ####################################################################################################################################
 ####################################################################################################################################
@@ -86,12 +87,12 @@ def maping_data():
 
 
 
-# EJECUTAR CONSULTAS 29486
+# EJECUTAR CONSULTAS 29486 29553
 def queryfind():
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (7,99) and formulario_id in (3,4) and expediente_electronico = true and enviado_at >= '2023-10-06'; """)
+		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (7,99) and expediente_electronico = true and enviado_at >= '2023-10-10'; """)
 		row=cursor.fetchall()
 		print(row)
 		for i in row:
@@ -100,8 +101,8 @@ def queryfind():
 		print(e)
 	finally:
 		conn.close()
-
-"""SELECT id, expediente_id, formulario_id, estado  FROM tramites where estado = 7 and expediente_electronico = true and enviado_at >= '2023-10-03';"""
+"""
+SELECT id, expediente_id, formulario_id, estado  FROM tramites where estado = 7 and expediente_electronico = true and enviado_at >= '2023-10-03';"""
 
 #print(queryfind())
 
@@ -129,7 +130,7 @@ def cambio_estado(estado):
 		for i in row:
 			conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 			cursor = conn.cursor()
-			cursor.execute("""UPDATE public.tramites set estado = 7  WHERE estado = {};""".format(estado))
+			cursor.execute("""UPDATE public.tramites set estado = 99  WHERE estado = {};""".format(estado))
 			cursor.rowcount
 			conn.commit()
 			conn.close()
@@ -187,12 +188,12 @@ def ifExistId(findId):
 ###########################################################################
 
 def delete_id_file(nombre_archivo, palabra):
-    with open(nombre_archivo, 'r') as archivo:
-        contenido = archivo.read()
-        contenido_modificado = contenido.replace(f'INFO:root:{palabra}', '')
+	with open(nombre_archivo, 'r') as archivo:
+		contenido = archivo.read()
+		contenido_modificado = contenido.replace(f'INFO:root:{palabra}', '')
 
-    with open(nombre_archivo, 'w') as archivo:
-        archivo.write(contenido_modificado)
+	with open(nombre_archivo, 'w') as archivo:
+		archivo.write(contenido_modificado)
 
 #delete_id_file(f'logs/app_mea_{date_not_hour()}.log', '2777')
 
@@ -235,7 +236,7 @@ def logging_me(arg0,arg1):
 	#logs.error('Este es un mensaje de error')
 	#logs.critical('Este es un mensaje crítico')
 
-#logging_me('log_File1.log','Este es un mensaje informativo')
+#logging_me('log_File1.log','Este es un mensaje informativo 2023')
 
 
 
@@ -269,3 +270,36 @@ def check_mark_ipas(fecha:str,desc:str,tipoM:str,subTipoM:str,claseM:str):
 
 
 #print(check_mark_ipas('2023-10-06','AUTOMAX','REG','MP','12'))
+
+
+
+
+
+#print(respuesta_sfe_campo('29553')['observacion_documentos'])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+intentos:Num = 5
+for i in range(intentos):
+	try:
+		# FUNCION A EJECUTAR
+		break  # Si la función se ejecuta correctamente, salir del bucle
+	except Exception as e:
+		print(f"Error en el intento {i+1}: {str(e)}")
+else:
+	print("Se ha alcanzado el máximo número de intentos sin éxito")"""
