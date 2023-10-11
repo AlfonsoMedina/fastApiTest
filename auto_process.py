@@ -56,37 +56,39 @@ def captura_pendientes():
 #arg0 id and arg1 sigla in state 7
 #this func insert a doc whatever to case: payment, not payment, mark or userDoc...
 def insert_list(arg0:string,arg1:string):
-	#LOG_FILENAME = f'logs/app_mea_{date_not_hour()}.log'
-	#logs.basicConfig(filename=LOG_FILENAME,level=logs.WARN)
+
+	# VERIFICA SI EL TRÁMITE A PROCESAR ES CON O SIN PAGO_____________________________________________________________________________________
 	try:
 		pago = str(paymentYeasOrNot(arg1)[0]).replace("None","N")
 	except Exception as e:
 		data_validator(f'Regla inactiva , tabla tramites ID: {arg0}','false',int(arg0))
 		cambio_estado_soporte(arg0)
 		return()
+	
+	# REEMPLAZAR None POR CADENA DESCRIPTIVA AL PAGO__________________________________________________________________________________________ 
 	pago_auth:str = str(pago_id(arg0)).replace("None","sin dato en bancar")
+
+	# VARIABLE QUE DEFINE EL METO PARA INSERTAR UN TRAMITE
 	valid_rules:str = []
 
-	#print(' ')
-	#print(arg0) #tramite ID	
-	#print(str(arg1)) #TIPO DE DOCUMENTO
-
-	#////////////////////////////////////////||||||||||||||||||||||||||||||||||||||||///////////////////////////////////////#
-	exceptions = userDocModel()
-	if exceptions.exist_split(arg0,'observacion_documentos') == False:
-		data_validator(f'No existe documento adjunto, tabla tramites ID: {arg0}','false',arg0)
+	# VALIDACIÓN PARA DOCUMENTOS ADJUNTOS__________________________________________________________________________________________ 
+	try:
+		exceptions = userDocModel()
+		if exceptions.exist_split(arg0,'observacion_documentos') == False:
+			data_validator(f'No existe documento adjunto, tabla tramites ID: {arg0}','false',arg0)
+			cambio_estado_soporte(arg0)
+			#listar()
+			return("E99")
+	except Exception as e:
+		data_validator(f'verificar documentos adjunto, tabla tramites ID: {arg0}','false',int(arg0))
 		cambio_estado_soporte(arg0)
-		#listar()
-		return("E99")
+		return()				
 
-	#new_Nbr = str(COMMIT_NBR())
-	#getFile(arg0,str(int(process_day_Nbr())+1))
-
-	# VALIDA SI EL TRAMITE SE PROCESO
+	# VALIDA SI EL TRAMITE SE PROCESO__________________________________________________________________________________________ 
 	if ifExistId(arg0) > 0:
 		return('El tramite ya fue procesado!')
 
-	#CONSULTA SI HAY RELACION DE EXPEDIENTE__________________________________________________________________________________________ 
+	# CONSULTA SI HAY RELACION DE EXPEDIENTE___________________________________________________________________________________ 
 	if exp_relation(arg1)[0] == 'S':
 		if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None':
 			valid_rules.append('Ok')
@@ -96,9 +98,9 @@ def insert_list(arg0:string,arg1:string):
 			cambio_estado_soporte(arg0)
 	else:
 		valid_rules.append('Not')
-	#FIN_____________________________________________________________________________________________________________________________ 
+	# FIN_____________________________________________________________________________________________________________________________ 
 
-	#CONSULTA SI HAY RELACION DE ESCRITO______________________________________________________________________________________________	
+	# CONSULTA SI HAY RELACION DE ESCRITO_____________________________________________________________________________________________	
 	if esc_relation(arg1)[0] == 'S':
 		if pendiente_sfe(arg0)[0]['expediente_afectad'] != 'None':
 			valid_rules.append('Ok')
@@ -108,9 +110,9 @@ def insert_list(arg0:string,arg1:string):
 			cambio_estado_soporte(arg0)
 	else:
 		valid_rules.append('Not')
-	#FIN_____________________________________________________________________________________________________________________________
+	# FIN_____________________________________________________________________________________________________________________________
 
-	#CONSULTA SI EL TIPO ES CON PAGO_____________________________________________________________________________________________________
+	# CONSULTA SI EL TIPO DE TRAMITE ES CON PAGO______________________________________________________________________________________
 	if pago == 'S':
 		if pago_auth != 'sin dato en bancar':
 			valid_rules.append('Ok')
@@ -120,7 +122,7 @@ def insert_list(arg0:string,arg1:string):
 			cambio_estado_soporte(arg0)
 	else:
 		valid_rules.append('Not')
-	#FIN_____________________________________________________________________________________________________________________________	
+	# FIN_____________________________________________________________________________________________________________________________	
 
 	####################################################################################################################################
 	####################################################################################################################################
@@ -129,16 +131,22 @@ def insert_list(arg0:string,arg1:string):
 	####################################################################################################################################
 
 	if valid_rules == ['Ok', 'Not', 'Not']:
+		# SI EL ESCRITO ES CON PAGO SIN RELACIÓN
 		state_in = compileAndInsert(arg0,arg1,'esc_exp')
 	elif valid_rules == ['Ok', 'Not', 'Ok']:
+		# SI EL ESCRITO ES CON PAGO Y RELACIÓN A EXPEDIENTE
 		state_in = compileAndInsert(arg0,arg1,'esc_exp')
 	elif valid_rules == ['Not', 'Ok', 'Not']:
+		# SI EL ESCRITO ES SIN PAGO Y RELACIÓN A ESCRITO
 		state_in = compileAndInsertUserDocUserDoc(arg0,arg1,'esc-esc')
 	elif valid_rules == ['Not', 'Ok', 'Ok']:
+		# SI EL ESCRITO ES SIN PAGO CON RELACIÓN A ESCRITO Y DEVUEVE ESTADO DE SU PRINCIPAL
 		state_in = compileAndInsertUserDocUserDocPago(arg0,arg1,'esc-esc')
 	elif valid_rules == ['Not', 'Not', 'Ok']:
+		# ESCRITO SIN PAGO RELACIÓN A EXPEDIENTE
 		state_in = compileAndInsert(arg0,arg1,'esc')
 	elif valid_rules == ['Not', 'Not', 'Not']:
+		# ESCRITO SIN PAGO SIN RELACIÓN
 		state_in = compileAndInsert(arg0,arg1,'esc')
 	else:
 		pass
@@ -753,7 +761,10 @@ def compileAndInsertUserDocUserDocPago(form_Id,typ,in_group):
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id,'')
 # end CHECK USERDOC ######################################################################################
+
 def insertReg(form_Id):
+
+	#SI EXISTE UNA SOLICITUD PRINCIPAL EN SOPORTE CON ESTADO 99
 	flow_request = stop_request()
 
 	# VALIDA SI EL TRAMITE SE PROCESO
@@ -763,7 +774,7 @@ def insertReg(form_Id):
 	if flow_request == 0:
 		insert_mark = insertRegModel()
 		insert_mark.setData(form_Id)
-		print(insert_mark.file_filingData_captureDate)
+		#print(insert_mark.file_filingData_captureDate)
 		try:
 			new_Nbr = str(COMMIT_NBR())
 			insertRegState = mark_insert_reg(
@@ -829,6 +840,8 @@ def insertReg(form_Id):
 		error_process(form_Id,f'Error en solicitud, tabla tramites ID: {insertRegState}','true')
 
 def insertRen(form_Id):
+
+	#SI EXISTE UNA SOLICITUD PRINCIPAL EN SOPORTE CON ESTADO 99
 	flow_request = stop_request()
 
 	# VALIDA SI EL TRAMITE SE PROCESO
@@ -1188,8 +1201,6 @@ def ifExistId(findId):
 		return(ocurrencias)
 	except Exception as e:
 		return(1)
-
-
 
 
 """

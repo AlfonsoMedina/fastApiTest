@@ -104,7 +104,7 @@ def queryfind():
 """
 SELECT id, expediente_id, formulario_id, estado  FROM tramites where estado = 7 and expediente_electronico = true and enviado_at >= '2023-10-03';"""
 
-#print(queryfind())
+print(queryfind())
 
 
 
@@ -302,4 +302,6 @@ for i in range(intentos):
 	except Exception as e:
 		print(f"Error en el intento {i+1}: {str(e)}")
 else:
-	print("Se ha alcanzado el máximo número de intentos sin éxito")"""
+	print("Se ha alcanzado el máximo número de intentos sin éxito")
+	
+"""
