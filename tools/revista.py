@@ -172,9 +172,3 @@ def crear_pub(fecha):
 
     revista_data()    
     return(dia_mas_nom)
-
-
-
-
-
-    
