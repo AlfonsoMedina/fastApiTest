@@ -71,20 +71,20 @@ Usuario: pidamaster
 Password: D3v*2019 
 #
 # PostgreSQL
-host: pgsql-sprint.dinapi.gov.py
+host: db-sfe.dinapi.gov.py
 Puerto: 5432
 DB: kuriju_produccion
-Usuario: user-sprint
-Password: user-sprint--201901
+Usuario: user_dev
+Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
 #
 #
 #
 # PostgreSQL
-host: pgsql-sprint.dinapi.gov.py
+host: db-sfe.dinapi.gov.py
 Puerto: 5432
 DB: db_sfe_production
-Usuario: user-sprint
-Password: user-sprint--201901 
+Usuario: user_dev
+Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi 
 #
 #
 #
@@ -122,18 +122,18 @@ Usuario: pidamaster
 Password: D3v*2019 
 #
 # PostgreSQL
-host: pgsql-sprint.dinapi.gov.py
+host: db-sfe.dinapi.gov.py
 Puerto: 5432
 DB: kuriju_produccion
-Usuario: user-sprint
-Password: user-sprint--201901
+Usuario: user_dev
+Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
 #
 # PostgreSQL
-host: pgsql-sprint.dinapi.gov.py
+host: db-sfe.dinapi.gov.py
 Puerto: 5432
 DB: db_sfe_production
-Usuario: user-sprint
-Password: user-sprint--201901 
+Usuario: user_dev
+Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi 
 #
 # SqlServer
 host: 192.168.50.14
@@ -146,7 +146,7 @@ password: W1P0w1p0
 'NAME': 'db_sfe_production',
 'USER': 'user-developer',
 'PASSWORD': 'user-developer--201901',
-'HOST': 'pgsql-sprint.dinapi.gov.py',
+'HOST': 'db-sfe.dinapi.gov.py',
 'PORT':'5432',
 #
 #
@@ -196,18 +196,18 @@ Usuario: pidamaster
 Password: D3v*2019 
 #
 # PostgreSQL
-host: pgsql-sprint.dinapi.gov.py
+host: db-sfe.dinapi.gov.py
 Puerto: 5432
 DB: kuriju_produccion
-Usuario: user-sprint
-Password: user-sprint--201901
+Usuario: user_dev
+Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
 
 # PostgreSQL
-host: pgsql-sprint.dinapi.gov.py
+host: db-sfe.dinapi.gov.py
 Puerto: 5432
 DB: db_sfe_production
-Usuario: user-sprint
-Password: user-sprint--201901 
+Usuario: user_dev
+Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi 
 
 # SqlServer
 host: 192.168.50.14

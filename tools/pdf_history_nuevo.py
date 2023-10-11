@@ -13,9 +13,9 @@ datos = ""
 def traer_data(exp):
     try:
         conn = psycopg2.connect(
-                        host='pgsql-sprint.dinapi.gov.py',
-                        user='user-sprint',
-                        password='user-sprint--201901',
+                        host='db-sfe.dinapi.gov.py',
+                        user='user_dev',
+                        password='lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='kuriju_produccion'
                     )
         cursor = conn.cursor()

@@ -14,7 +14,7 @@ def traer_data(exp):
         conn = psycopg2.connect(
                                 host = '192.168.50.216',
                                 user = 'user_app_publicacion',
-                                password = 'user_app_publicacion-202201!',
+                                password = 'SSridvVTcmGvfpoZ7B7HHsk74Y',
                                 database = 'db_publicacion'
                     )
         cursor = conn.cursor()

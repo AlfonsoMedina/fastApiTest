@@ -99,8 +99,13 @@ def crear_pub(fecha):
                         # Printing page number:
                         self.cell(330, 10, f"Page {self.page_no()}/{{nb}}", align="C")
                 pdf = PDF()
+
                 pdf.add_page()
                 pdf.image("static/redpi2.png", 0, 0, 210)
+
+                pdf.add_page()
+                pdf.image("static/redpi2detall.png", 0, 0, 210)
+
                 pdf.add_page()
                 pdf.image("static/page2.png", 0, 0, 210)
                 pdf.set_font("Arial", size=16)

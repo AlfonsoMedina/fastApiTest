@@ -22,7 +22,7 @@ def consulta_Fop(exp):
         conn = psycopg2.connect(
                                 host = '192.168.50.216',
                                 user='user_app_publicacion',
-                                password='user_app_publicacion-202201!',
+                                password='SSridvVTcmGvfpoZ7B7HHsk74Y',
                                 database='db_publicacion'
         )
         cursor = conn.cursor()
@@ -46,7 +46,7 @@ def consulta_Fop_out(exp):
         conn = psycopg2.connect(
                                 host = '192.168.50.216',
                                 user='user_app_publicacion',
-                                password='user_app_publicacion-202201!',
+                                password='SSridvVTcmGvfpoZ7B7HHsk74Y',
                                 database='db_publicacion'
         )
         cursor = conn.cursor()
@@ -185,7 +185,7 @@ def consulta_Fop_fecha(facha):
         conn = psycopg2.connect(
                                 host = '192.168.50.216',
                                 user='user_app_publicacion',
-                                password='user_app_publicacion-202201!',
+                                password='SSridvVTcmGvfpoZ7B7HHsk74Y',
                                 database='db_publicacion'
         )
         cursor = conn.cursor()
@@ -768,9 +768,9 @@ def user_admin_redpi():
     lista_user = []
     try:    
         conn = psycopg2.connect(
-                        host='pgsql-sprint.dinapi.gov.py',
-                        user='user-sprint',
-                        password='user-sprint--201901',
+                        host='db-sfe.dinapi.gov.py',
+                        user='user_dev',
+                        password='lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='kuriju_produccion'
                     )
         cursor = conn.cursor()
@@ -1201,11 +1201,11 @@ class getClasificados():
 #edicion_cont()
 
 '''
-        host: pgsql-sprint.dinapi.gov.py
+        host: db-sfe.dinapi.gov.py
         Puerto: 5432
         DB: kuriju_produccion
-        Usuario: user-sprint
-        Password: user-sprint--201901
+        Usuario: user_dev
+        Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
 
 select     tr.pagado_at, bt.authorization_number, to_char(bt.updated_at,'dd/mm/yyyy') as FECHA_PAGO, to_char(tr.enviado_at,'dd/mm/yyyy') as FECHA_envio,
 bt.status as ESTADO_PAGOS, tr.respuestas, tr.estado as ESTADOS_TRAMITES, TR.enviado_at from  bancard_transactions bt

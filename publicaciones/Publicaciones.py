@@ -411,9 +411,9 @@ def getGenerado(exp):
     pub_state = 0
     try:
         connX = psycopg2.connect(
-                        host='pgsql-sprint.dinapi.gov.py',
-                        user='user-sprint',
-                        password='user-sprint--201901',
+                        host='db-sfe.dinapi.gov.py',
+                        user='user_dev',
+                        password='lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'
                         )
         cursor = connX.cursor()
@@ -499,9 +499,9 @@ def getGeneradoHistorico(exp):
     pub_state = 0
     try:
         connX = psycopg2.connect(
-                        host='pgsql-sprint.dinapi.gov.py',
-                        user='user-sprint',
-                        password='user-sprint--201901',
+                        host='db-sfe.dinapi.gov.py',
+                        user='user_dev',
+                        password='lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'
                         )
         cursor = connX.cursor()
@@ -642,9 +642,9 @@ def Enviar_buzon(exp,user):
             ##insert registro en notificaciones
             try:
                 connX = psycopg2.connect(
-                                host='pgsql-sprint.dinapi.gov.py',
-                                user='user-sprint',
-                                password='user-sprint--201901',
+                                host='db-sfe.dinapi.gov.py',
+                                user='user_dev',
+                                password='lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                                 database='db_sfe_production'
                                 )
                 cursor = connX.cursor()
@@ -687,9 +687,9 @@ def Estado_notify(exp):
     try:
         pub_state = 0
         connX = psycopg2.connect(
-                        host='pgsql-sprint.dinapi.gov.py',
-                        user='user-sprint',
-                        password='user-sprint--201901',
+                        host='db-sfe.dinapi.gov.py',
+                        user='user_dev',
+                        password='lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'
                         )
         cursor = connX.cursor()
@@ -807,9 +807,9 @@ def getText_Pub(exp):
 def migrar_cucaracha():
     try:    
         connA = psycopg2.connect(
-                        host='pgsql-sprint.dinapi.gov.py',
-                        user='user-sprint',
-                        password='user-sprint--201901',
+                        host='db-sfe.dinapi.gov.py',
+                        user='user_dev',
+                        password='lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='kuriju_produccion'
                     )
         cursorA = connA.cursor()
@@ -905,9 +905,9 @@ def insert_notificaciones(exp):
             tip_sol = "SOP"
 
         connX = psycopg2.connect(
-                        host='pgsql-sprint.dinapi.gov.py',
-                        user='user-sprint',
-                        password='user-sprint--201901',
+                        host='db-sfe.dinapi.gov.py',
+                        user='user_dev',
+                        password='lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'
                         )
         cursor = connX.cursor()

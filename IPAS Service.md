@@ -71,20 +71,20 @@ Usuario: pidamaster
 Password: D3v*2019 
 #
 # PostgreSQL
-host: pgsql-sprint.dinapi.gov.py
+host: db-sfe.dinapi.gov.py
 Puerto: 5432
 DB: kuriju_produccion
-Usuario: user-sprint
-Password: user-sprint--201901
+Usuario: user_dev
+Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
 #
 #
 #
 # PostgreSQL
-host: pgsql-sprint.dinapi.gov.py
+host: db-sfe.dinapi.gov.py
 Puerto: 5432
 DB: db_sfe_production
-Usuario: user-sprint
-Password: user-sprint--201901 
+Usuario: user_dev
+Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi 
 #
 #
 #
@@ -122,18 +122,18 @@ Usuario: pidamaster
 Password: D3v*2019 
 #
 # PostgreSQL
-host: pgsql-sprint.dinapi.gov.py
+host: db-sfe.dinapi.gov.py
 Puerto: 5432
 DB: kuriju_produccion
-Usuario: user-sprint
-Password: user-sprint--201901
+Usuario: user_dev
+Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
 #
 # PostgreSQL
-host: pgsql-sprint.dinapi.gov.py
+host: db-sfe.dinapi.gov.py
 Puerto: 5432
 DB: db_sfe_production
-Usuario: user-sprint
-Password: user-sprint--201901 
+Usuario: user_dev
+Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi 
 #
 # SqlServer
 host: 192.168.50.14
@@ -146,7 +146,7 @@ password: W1P0w1p0
 'NAME': 'db_sfe_production',
 'USER': 'user-developer',
 'PASSWORD': 'user-developer--201901',
-'HOST': 'pgsql-sprint.dinapi.gov.py',
+'HOST': 'db-sfe.dinapi.gov.py',
 'PORT':'5432',
 #
 #
@@ -196,18 +196,18 @@ Usuario: pidamaster
 Password: D3v*2019 
 #
 # PostgreSQL
-host: pgsql-sprint.dinapi.gov.py
+host: db-sfe.dinapi.gov.py
 Puerto: 5432
 DB: kuriju_produccion
-Usuario: user-sprint
-Password: user-sprint--201901
+Usuario: user_dev
+Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
 
 # PostgreSQL
-host: pgsql-sprint.dinapi.gov.py
+host: db-sfe.dinapi.gov.py
 Puerto: 5432
 DB: db_sfe_production
-Usuario: user-sprint
-Password: user-sprint--201901 
+Usuario: user_dev
+Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi 
 
 # SqlServer
 host: 192.168.50.14
@@ -354,9 +354,9 @@ npm install --save-dev @angular/cli@lates
 
 
 Credenciales Base de Datos (BD) Pgsql v14.
-user_app_caja ---> user_app_caja-202201!
-user_app_publicacion ---> user_app_publicacion-202201!
-user_app_recepcion ---> user_app_recepcion-202201!
+user_app_caja ---> ojTnRUivhOFZ7QfbwNnWeq4iHa
+user_app_publicacion ---> SSridvVTcmGvfpoZ7B7HHsk74Y
+user_app_recepcion ---> bEL19ZBN1mQUxSRxYc2NV3EL9f
 
 
 
@@ -811,19 +811,19 @@ consultaslmpy@gmail.com 54
 
 
 
-MEA BACKEND cambio de contraseña (user-sprint--201901)
+MEA BACKEND cambio de contraseña (lP1zZIq7DIhP1wY1bLTxbTEu56JsSi)
 			- sfe.py
 			- Publicaciones.py
 			- connect.py
 			- pdf_history.py
 			- test_forms.py
 
-REDPI BACKEND cambio de contraseña (user-sprint--201901)
+REDPI BACKEND cambio de contraseña (lP1zZIq7DIhP1wY1bLTxbTEu56JsSi)
 			- Clasificas.py
 			- connect.py
 			- pdf_history_nuevo.py
 
-SprintV2 BACKEND (user-sprint--201901)
+SprintV2 BACKEND (lP1zZIq7DIhP1wY1bLTxbTEu56JsSi)
 			- email_opo_sfe.py
 			- email_reg_sfe.py
 			- email_ren_sfe.py
