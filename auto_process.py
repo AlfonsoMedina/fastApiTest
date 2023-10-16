@@ -6,7 +6,7 @@ from tools.data_format import date_not_hour
 from tools.base64Decode import b64_to_img
 from email_pdf_AG import  acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_affect, envio_agente_recibido_reg, envio_agente_recibido_ren
 from models.InsertUserDocModel import userDocModel
-from dinapi.sfe import  COMMIT_NBR, USER_GROUP, cambio_estado, cambio_estado_soporte, data_validator, esc_relation,  exp_relation, notification_package,  pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, rule_notification, status_typ, stop_request, tasa_id, tip_doc
+from dinapi.sfe import  COMMIT_NBR, USER_GROUP, cambio_estado, cambio_estado_soporte, data_validator, esc_relation,  exp_relation, notification_package,  pago_id, paymentYeasOrNot, pendiente_sfe, pendientes_sfe, pendientes_sfe_not_pag, process_day_Nbr, process_day_commit_Nbr, registro_sfe, reglas_me_ttasa, renovacion_sfe, respuesta_sfe_campo, rule_notification, status_typ, stop_request, tasa_id, tip_doc
 from getFileDoc import  compilePDF, getFile, getFile_reg_and_ren
 from sfe_no_presencial_reg_local import registro_pdf_sfe_local
 from models.insertRegModel import insertRegModel
@@ -138,33 +138,49 @@ def insert_list(arg0:string,arg1:string):
 		state_in = compileAndInsert(arg0,arg1,'esc_exp')
 	elif valid_rules == ['Not', 'Ok', 'Not']:
 		# SI EL ESCRITO ES SIN PAGO Y RELACIÓN A ESCRITO
-		state_in = compileAndInsertUserDocUserDoc(arg0,arg1,'esc-esc')
+		#state_in = compileAndInsertUserDocUserDoc(arg0,arg1,'esc-esc')
+		pass
 	elif valid_rules == ['Not', 'Ok', 'Ok']:
 		# SI EL ESCRITO ES SIN PAGO CON RELACIÓN A ESCRITO Y DEVUEVE ESTADO DE SU PRINCIPAL
-		state_in = compileAndInsertUserDocUserDocPago(arg0,arg1,'esc-esc')
+		#state_in = compileAndInsertUserDocUserDocPago(arg0,arg1,'esc-esc')
+		pass
 	elif valid_rules == ['Not', 'Not', 'Ok']:
 		# ESCRITO SIN PAGO RELACIÓN A EXPEDIENTE
-		state_in = compileAndInsert(arg0,arg1,'esc')
+		#state_in = compileAndInsert(arg0,arg1,'esc')
+		pass
 	elif valid_rules == ['Not', 'Not', 'Not']:
 		# ESCRITO SIN PAGO SIN RELACIÓN
-		state_in = compileAndInsert(arg0,arg1,'esc')
+		#state_in = compileAndInsert(arg0,arg1,'esc')
+		pass
 	else:
 		pass
 	logs.info(arg0)
 	return("Ok")
 
-#insert for doc relation with main file or not relation 
+
 def compileAndInsert(form_Id,typ,in_group):
 	print('F1')
+
+	# ULTIMO NUMERO EN DIA PROCESO
+	new_Nbr = str(COMMIT_NBR())
+
+	# CAMBIO DE ESTADO A TRAMITE EN PROCESO
+	cambio_estado(form_Id,new_Nbr)
+	
+	# CONSULTA EL NUMERO DE EXPEDIENTE DEL ID EN PROCESO
+	number_commit = respuesta_sfe_campo(form_Id)['expediente_id']
+
+	# VERIFICAR QUE LOS DATOS REQUERIDOS PARA INSERT EXISTEN
 	cheking = catch_toError(form_Id)
 	if cheking != 'E99':
 		insert_doc = userDocModel()
 		insert_doc.setData(form_Id)
-		# start INSERT USERDOC ####################################################################################
 
 		try:
-			new_Nbr = str(COMMIT_NBR())
-			getFile(str(form_Id),str(new_Nbr))
+			# COMPILAR DOCUMENTOS ADJUNTOS EN UN SOLO PDF
+			getFile(str(form_Id),str(number_commit))
+
+			# DECLARACION DE VARIABLE DE ESTADO PARA INSERT DE IPAS 
 			estado_ins = insert_user_doc_escritos(
 				insert_doc.affectedFileIdList_fileNbr,
 				insert_doc.affectedFileIdList_fileSeq,
@@ -214,12 +230,12 @@ def compileAndInsert(form_Id,typ,in_group):
 				insert_doc.applicant_person_telephone,
 				insert_doc.applicant_person_zipCode,
 				insert_doc.documentId_docLog,
-				new_Nbr,#insert_doc.documentId_docNbr,
+				number_commit,#insert_doc.documentId_docNbr,
 				str(connex.MEA_SFE_FORMULARIOS_ID_Origin),
 				insert_doc.documentId_docSeries,
 				insert_doc.documentId_selected,
 				insert_doc.documentSeqId_docSeqName,
-				new_Nbr,#insert_doc.documentSeqId_docSeqNbr,
+				number_commit,#insert_doc.documentSeqId_docSeqNbr,
 				insert_doc.documentSeqId_docSeqSeries,
 				insert_doc.documentSeqId_docSeqType,
 				insert_doc.filingData_applicationSubtype,
@@ -352,20 +368,37 @@ def compileAndInsert(form_Id,typ,in_group):
 				insert_doc.representationData_representativeList_person_telephone,
 				insert_doc.representationData_representativeList_person_zipCode,
 				insert_doc.representationData_representativeList_representativeType)
+
+			# SE EJECUTA ESPERANDO TRUE PARA CONTINUAR CON EL FLUJO (5 INTENTOS ANTES DE DECLARAR ERROR)
+			intentos:int = 5
+			for i in range(intentos):
+				try:
+					if estado_ins == 'true':
+						break  # SI EL INSERT DE IPAD DEVUELVE TRUE, SALIR DEL BUCLE
+				except Exception as e:
+					print(f"Error en el intento {i+1}: {str(e)}")
+			else:
+				data_validator(f'Error de IPAS => NO SE PUDO INSERTAR EL TRAMITE ID: {form_Id}, EXPEDIENTE RESERVADO','false',form_Id)
+				cambio_estado_soporte(form_Id)
+				rule_notification('SOP',form_Id,'')
+
 			print(estado_ins)
+
 		except zeep.exceptions.Fault as e:
 			data_validator(f'Error de IPAS => {str(e)}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id,'')
-		# end INSERT USERDOC ####################################################################################
+
 
 		# start CHECK USERDOC ####################################################################################		
 		try:
 			print('check')
-			exists = str(user_doc_read_min('E',str(new_Nbr),str(connex.MEA_SFE_FORMULARIOS_ID_Origin),str(insert_doc.documentId_docSeries))['documentId']['docNbr']['doubleValue']).replace(".0","")
-			if exists == new_Nbr:
-				cambio_estado(form_Id,insert_doc.documentId_docNbr)
-				print('CAMBIO DE ESTADO')
+
+			# CONSULTA EL ESCRITO INSERTADO PREVIAMENTE EN IPAS
+			exists = str(user_doc_read_min('E',str(number_commit),str(connex.MEA_SFE_FORMULARIOS_ID_Origin),str(insert_doc.documentId_docSeries))['documentId']['docNbr']['doubleValue']).replace(".0","")
+			
+			# EN CASO DE ÉXITO CONTINUA EL FLUJO DE NOTIFICACIONES
+			if exists == number_commit:
 
 				if insert_doc.affectedFileIdList_fileNbr == "":																	# Cambio de estado
 					envio_agente_recibido(form_Id,insert_doc.documentId_docNbr)
@@ -378,23 +411,25 @@ def compileAndInsert(form_Id,typ,in_group):
 				print('ENVIA PDF')
 
 				if insert_doc.affectedFileIdList_fileNbr != "":
-					rule_notification(typ,insert_doc.affectedFileIdList_fileNbr,new_Nbr)
+					rule_notification(typ,insert_doc.affectedFileIdList_fileNbr,number_commit)
 				else:
-					rule_notification(typ,str(new_Nbr),'')
+					rule_notification(typ,str(number_commit),'')
 
 				print('CORREO FUNCIONARIO')
 
 				try:
-					group_addressing(typ,insert_doc.affectedFileIdList_fileNbr,str(new_Nbr))
+					group_addressing(typ,insert_doc.affectedFileIdList_fileNbr,str(number_commit))
 				except Exception as e:
 					print(e)
 
-				print('INSERTA GRUPO')																			
+				print('INSERTA GRUPO')
+
 		except Exception as e:
 			data_validator(f'Error al cambiar estado de esc. N° {insert_doc.documentId_docNbr}, tabla tramites ID: {form_Id}','false',form_Id)
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id,'')
-	# start CHECK USERDOC ####################################################################################
+
+
 def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 	print('F2')
 	cheking = catch_toError(form_Id)

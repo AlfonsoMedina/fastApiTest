@@ -19,17 +19,6 @@ from wipo.ipas import getPoder, mark_getlistFecha
 import logging as logs
 
 
-###################################################################
-###################################################################
-###################################################################
-########################### 94 ####################################
-###################################################################
-###################################################################
-###################################################################
-###################################################################
-###################################################################
-
-
 ####################################################################################################################################
 ####################################################################################################################################
 ########################################## CONSULTA PASSWORD SERVICE ###############################################################
@@ -92,7 +81,7 @@ def queryfind():
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (7,99) and expediente_electronico = true and enviado_at >= '2023-10-10'; """)
+		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (8,7,99) and expediente_electronico = true and enviado_at >= '2023-10-13'; """)
 		row=cursor.fetchall()
 		print(row)
 		for i in row:
@@ -104,7 +93,9 @@ def queryfind():
 """
 SELECT id, expediente_id, formulario_id, estado  FROM tramites where estado = 7 and expediente_electronico = true and enviado_at >= '2023-10-03';"""
 
-print(queryfind())
+#queryfind()
+
+print(respuesta_sfe_campo('29850')['expediente_id'])
 
 
 
@@ -114,8 +105,6 @@ print(queryfind())
 
 
 #getFile('29386','2380107')
-
-
 
 
 
@@ -164,7 +153,6 @@ def test():
 	logs.info('2777')
 	
 #test()
-
 
 
 ###########################################################################
@@ -220,8 +208,6 @@ def data_validator(arg:str):
 #data_validator('29239')
 
 
-
-
 def logging_me(arg0,arg1):
 	# Configurar el nivel de registro y el archivo de salida
 	logs.basicConfig(filename=arg0, level=logs.DEBUG)
@@ -237,12 +223,6 @@ def logging_me(arg0,arg1):
 	#logs.critical('Este es un mensaje crítico')
 
 #logging_me('log_File1.log','Este es un mensaje informativo 2023')
-
-
-
-
-
-
 
 
 
@@ -297,10 +277,13 @@ def check_mark_ipas(fecha:str,desc:str,tipoM:str,subTipoM:str,claseM:str):
 intentos:Num = 5
 for i in range(intentos):
 	try:
-		# FUNCION A EJECUTAR
-		break  # Si la función se ejecuta correctamente, salir del bucle
+		if i == 4:
+			print('Cuarta iteracion ==> ok')
+			break  # Si la función se ejecuta correctamente, salir del bucle
+		print(f'Iteracion {i}')
 	except Exception as e:
 		print(f"Error en el intento {i+1}: {str(e)}")
+	time.sleep(1)
 else:
 	print("Se ha alcanzado el máximo número de intentos sin éxito")
 	

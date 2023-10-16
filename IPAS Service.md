@@ -1131,113 +1131,11 @@ TRAMITES ID 28985
 
 
 
-
-
-2378490
-2378461
-2378463
-2378491
-2378493
-2378466
-2378468
-2378471
-2378472
-2378499
-2378474
-2378475
-2378481
-2378483
-2378485
-
-
-							
-2378461
-2378463							
-2378466
-2378468
-2378471
-2378472							
-2378474
-2378475
-2378481
-2378483
-2378485
-2378490
-2378491
-2378493									
-2378499
-
-
-
-
-2378460-
-2378464-
-2378465-
-2378473-
-2378497-
-
-
-
-
-
 pdf.image('static/IMG.PNG',x=12,y=22,w=43,h=12)
 
 pdf.image('static/IMG.PNG',x=76,y=65,w=63,h=19)
 
 
-
-
-
--2378879-
--2378888-
--2378931-/
-
-
-
-2379121		2379121
-2378744     2378744 
-2378745     2378745 
-2378746     2378746 
-2378751     2378751 
-2378752     2378752 
-2378753     2378753 
-2378754     2378754 
-2378755     2378755 
-2378756     2378756 
-2378757     2378757 
-2378758     2378758 
-2378759     2378759 
-2378760     2378760 
-2378761     2378761 
-2378772     2378772 
-2378777     2378777 
-2378779     2378779 
-2378784     2378784 
-2378801     2378801 
-2378808     2378808 
-2378823     2378823 
-2378826     2378826 
-2378837     2378837 
-2378864     2378864 
-2378876     2378876 
-2378880     2378880 
-2378889     2378889 
-2378906     2378906 
-2378965     2378965 
-2378969     2378969 
-2378970     2378970 
-2378974     2378974 
-2378975     2378975 
-2378976     2378976 
-2378988     2378988 
-2378991     2378991 
-2379019     2379019 
-2379022     2379022 
-2379025     2379025 
-2379043     2379043 
-2379046     2379046 
-2379074     2379074 
-2379078     2379078 
 
 
 
@@ -1263,3 +1161,19 @@ pdf.image('static/IMG.PNG',x=76,y=65,w=63,h=19)
 
 
 
+
+
+INSERTO EL RENOVACION => Unexpected exception has been generated. Please take note of this message and contact the Administrator. Exception class name:or>
+694243]: Internal Exception: com.microsoft.sqlserver.jdbc.SQLServerException: La transacción (id. de proceso 73) quedó en interbloqueo en bloqueo recursos con otr>
+694243]: Error Code: 1205
+694243]: Call: SELECT APPL_SUBTYP, AUXIL1_NBR, DATA_DATE1, DATA_DATE2, DATA_DATE3, DATA_DATE4, DATA_DATE5, DATA_FLAG1, DATA_FLAG2, DATA_FLAG3, DATA_FLAG4, DATA_FL>
+694243]:         bind => [1, 660676, 3, E]
+694243]: Query: ReadAllQuery(name="file:/C:/glassfish3/glassfish/domains/MARCAS/applications/IpasEar/IpasEjbJpa-3.5.0_jar/_IpasPU" referenceClass=IpDoc sql="SELEC>
+694243]: E99
+
+
+
+
+
+RESTFULL
+gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 192.168.50.228:8010 manage:app

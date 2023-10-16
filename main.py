@@ -2403,6 +2403,37 @@ def get_pdf_esc(serie,fileName):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 app.openapi = custom_openapi
-
