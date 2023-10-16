@@ -673,7 +673,7 @@ def oposicion_sfe(arg):
 			global_data = {}
 			try:
 				conn = psycopg2.connect(
-					host = 'db-sfe.dinapi.gov.py',
+					host = '192.168.50.215',
 					user= 'user_dev',
 					password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
 					database = connex.MEA_DB_ORIGEN_database

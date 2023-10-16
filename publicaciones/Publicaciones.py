@@ -411,7 +411,7 @@ def getGenerado(exp):
     pub_state = 0
     try:
         connX = psycopg2.connect(
-                        host = 'db-sfe.dinapi.gov.py',
+                        host = '192.168.50.215',
                         user= 'user_dev',
                         password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'
@@ -499,7 +499,7 @@ def getGeneradoHistorico(exp):
     pub_state = 0
     try:
         connX = psycopg2.connect(
-                        host = 'db-sfe.dinapi.gov.py',
+                        host = '192.168.50.215',
                         user= 'user_dev',
                         password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'
@@ -642,7 +642,7 @@ def Enviar_buzon(exp,user):
             ##insert registro en notificaciones
             try:
                 connX = psycopg2.connect(
-                            host = 'db-sfe.dinapi.gov.py',
+                            host = '192.168.50.215',
                             user= 'user_dev',
                             password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                             database='db_sfe_production'
@@ -687,7 +687,7 @@ def Estado_notify(exp):
     try:
         pub_state = 0
         connX = psycopg2.connect(
-                        host = 'db-sfe.dinapi.gov.py',
+                        host = '192.168.50.215',
                         user= 'user_dev',
                         password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'
@@ -905,7 +905,7 @@ def insert_notificaciones(exp):
             tip_sol = "SOP"
 
         connX = psycopg2.connect(
-                        host = 'db-sfe.dinapi.gov.py',
+                        host = '192.168.50.215',
                         user= 'user_dev',
                         password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'

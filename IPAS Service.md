@@ -890,11 +890,11 @@ usuario= alfonso.medina
 contraseña = M0ajgurnE896c4G6A6BVfMwfeKLew9 
 
 
-pgsql-14 192.168.50.216 user_app_caja ojTnRUivhOFZ7QfbwNnWeq4iHa
-pgsql-14 192.168.50.216 user_app_publicacion SSridvVTcmGvfpoZ7B7HHsk74Y
-pgsql-14 192.168.50.216 user_app_recepcion  bEL19ZBN1mQUxSRxYc2NV3EL9f
-pgsql-14 192.168.50.216 user_app_octopus 2yCZOjAO7csNkO53BWvMQOLIie
-pgsql-14 db-sfe.dinapi.gov.py user_dev  lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
+pgsql-14 192.168.50.215 user_app_caja ojTnRUivhOFZ7QfbwNnWeq4iHa
+pgsql-14 192.168.50.215 user_app_publicacion SSridvVTcmGvfpoZ7B7HHsk74Y
+pgsql-14 192.168.50.215 user_app_recepcion  bEL19ZBN1mQUxSRxYc2NV3EL9f
+pgsql-14 192.168.50.215 user_app_octopus 2yCZOjAO7csNkO53BWvMQOLIie
+pgsql-14 192.168.50.215 user_dev  lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
 
 
 Start Services

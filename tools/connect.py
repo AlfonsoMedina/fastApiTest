@@ -26,7 +26,7 @@ MEA_QR_DIR = config_parametro('77')['valor2']
 ###################################################################
 
 #Base de datos PUBLICACIONES posgresSql v14 
-#db_host = '192.168.50.216'
+#db_host = '192.168.50.215'
 #db_user='user_app_publicacion'
 #db_password='user_app_publicacion-202201!'
 #db_database='db_publicacion'
@@ -34,7 +34,7 @@ MEA_QR_DIR = config_parametro('77')['valor2']
 ###################################################################
 
 #Base de datos PUBLICACIONES posgresSql v14 
-db_host = '192.168.50.216'
+db_host = '192.168.50.215'
 db_user='user_app_publicacion'
 db_password='SSridvVTcmGvfpoZ7B7HHsk74Y'
 db_database='db_publicacion'
@@ -50,7 +50,7 @@ db_database='db_publicacion'
 ###################################################################
 
 #Base de datos MESA DE ENTRADA posgresSql v14
-hostME = '192.168.50.216'
+hostME = '192.168.50.215'
 userME='user_app_recepcion'
 passwordME='bEL19ZBN1mQUxSRxYc2NV3EL9f'
 databaseME='db_sfe_presencial'
@@ -58,7 +58,7 @@ databaseME='db_sfe_presencial'
 ###################################################################
 
 #Base de datos MESA DE ENTRADA posgresSql v14
-#hostME = '192.168.50.216'
+#hostME = '192.168.50.215'
 #userME='user_app_recepcion'
 #passwordME='user_app_recepcion-202201!'
 #databaseME='db_sfe_presencial'
@@ -74,7 +74,7 @@ databaseME='db_sfe_presencial'
 ###################################################################
 
 #Base de datos CAJA posgresSql v14 
-hostCJ = '192.168.50.216'
+hostCJ = '192.168.50.215'
 userCJ='user_app_caja'
 passwordCJ='ojTnRUivhOFZ7QfbwNnWeq4iHa'
 databaseCJ='db_caja_dinapi'
