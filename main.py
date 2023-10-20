@@ -21,6 +21,8 @@ import zeep
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 
+
+
 LOG_FILENAME = f'logs/app_mea_{date_not_hour()}.log'
 logging.basicConfig(filename=LOG_FILENAME,level=logging.WARN)
 
@@ -66,6 +68,7 @@ def custom_openapi():
 
 #https://sfe.dinapi.gov.py/assets/home/dinapilogo4-5eef9860ea6bb48707a76c1d97e2438b195bd72171233946a40177bb27cc7f11.png	
 #https://sfe.dinapi.gov.py/assets/logo_sprint-85d552f35942e4152f997bb4875b6283a05d34f7b9b7b6126e84414c924bb041.png
+
 
 class agent_code(BaseModel):
 	code:str = ""

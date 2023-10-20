@@ -5,7 +5,7 @@ DATABASE_CONFIG = {
                     'dbname': 'db_sfe_production',
 					'user': 'user_dev',
 					'password': 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
-					'host': '192.168.50.215',
+					'host': '192.168.50.216',
 					'port': '5432'}
 
 def monitor_table_traffic():

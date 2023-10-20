@@ -10,7 +10,7 @@ import psycopg2
 def config_parametro(id):
     params = []
     try:
-        conn = psycopg2.connect(host = "192.168.50.215",user = "user_app_recepcion",password="bEL19ZBN1mQUxSRxYc2NV3EL9f",database="db_sfe_presencial")
+        conn = psycopg2.connect(host = "192.168.50.216",user = "user_app_recepcion",password="bEL19ZBN1mQUxSRxYc2NV3EL9f",database="db_sfe_presencial")
         cursor = conn.cursor()
         cursor.execute("select * from parametros where id = "+id)
         row=cursor.fetchall()

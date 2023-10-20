@@ -258,8 +258,16 @@ def registro_pdf_sfe_local(arg):
 				return(str(fecha_formatE+" "+str(hora_guionE[0])))		
 		recorrer_sfe(arg)
 		
+		tituPck = []
 		try:
-			multitu = titulare_reg(arg,global_data["titu_cant"])
+			for i in range(len(titulare_reg(arg,global_data["titu_cant"]))):
+				if titulare_reg(arg,global_data["titu_cant"])[i]['person']['personName'] != '':
+					tituPck.append(titulare_reg(arg,global_data["titu_cant"])[i])
+		except Exception as e:
+			tituPck = []
+
+		try:
+			multitu = tituPck
 			if multitu != []:
 				if multitu[0]['person']['personName'] == '':
 					multitu = []
@@ -718,7 +726,7 @@ def registro_pdf_sfe_local(arg):
 		print(e)
 	
 
-#registro_pdf_sfe_local('27264')
+registro_pdf_sfe_local('30031')
 
 
 

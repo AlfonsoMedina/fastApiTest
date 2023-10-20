@@ -16,7 +16,7 @@ global_data = {}
 def new_document(arg):
 	try:
 		conn = psycopg2.connect(
-                        host = '192.168.50.215',
+                        host = '192.168.50.216',
                         user= 'user_dev',
                         password = 'lP1zZIq7DIhP1wY1bLTxbTEu56JsSi',
                         database='db_sfe_production'

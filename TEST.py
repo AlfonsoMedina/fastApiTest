@@ -3,7 +3,7 @@ from ast import Num
 from tools.data_format import date_not_hour
 from email_pdf_AG import acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_affect
 from getFileDoc import compilePDF_DOCS, getFile, getFile_reg_and_ren
-from dinapi.sfe import pendiente_sfe, registro_sfe, renovacion_sfe, respuesta_sfe_campo, rule_notification
+from dinapi.sfe import pendiente_sfe, registro_sfe, renovacion_sfe, respuesta_sfe_campo, rule_notification, titulare_reg
 from tools.send_mail import delete_file, enviar
 from tools.filing_date import capture_day, capture_full, capture_full_upd
 from dataclasses import replace
@@ -17,6 +17,9 @@ import httpx
 from wipo.insertGroupProcessMEA import group_addressing
 from wipo.ipas import getPoder, mark_getlistFecha
 import logging as logs
+
+import os
+
 
 
 ####################################################################################################################################
@@ -81,7 +84,7 @@ def queryfind():
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (7,99) and expediente_electronico = true and enviado_at >= '2023-10-13'; """)
+		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (7,99) and expediente_electronico = true and enviado_at >= '2023-10-20'; """)
 		row=cursor.fetchall()
 		print(row)
 		for i in row:
@@ -95,7 +98,17 @@ SELECT id, expediente_id, formulario_id, estado  FROM tramites where estado = 7 
 
 queryfind()
 
-#print(respuesta_sfe_campo('29850')['expediente_id'])
+#print(respuesta_sfe_campo('30031'))
+
+
+"""tituPck = []
+for i in range(len(titulare_reg('30031','5'))):
+	if titulare_reg('30031','5')[i]['person']['personName'] != '':
+		tituPck.append(titulare_reg('30031','5')[i])
+	else:
+		pass
+
+print(tituPck)"""
 
 
 
@@ -253,21 +266,7 @@ def check_mark_ipas(fecha:str,desc:str,tipoM:str,subTipoM:str,claseM:str):
 
 
 
-
-
 #print(respuesta_sfe_campo('29553')['observacion_documentos'])
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -287,4 +286,42 @@ for i in range(intentos):
 else:
 	print("Se ha alcanzado el máximo número de intentos sin éxito")
 	
+"""
+
+
+
+"""
+class magazine_redpi():
+	
+	def __init__(self) -> None:
+		pass
+
+	def pages(self,arg:str):
+		carpeta = f'revistas/{arg}'
+		archivos = os.listdir(carpeta)
+		archivos = [archivo for archivo in archivos if os.path.isfile(os.path.join(carpeta, archivo))]
+		return(archivos)
+
+	def folders(self,arg:str):
+		carpeta = arg
+		elementos = os.listdir(carpeta)
+		carpetas = [elemento for elemento in elementos if os.path.isdir(os.path.join(carpeta, elemento))]
+		return(carpetas)
+
+	def editions(self):
+		edit_list = []
+		folder = self.folders('revistas')
+		for i in range(len(folder)):
+			edit_dataill = {}
+			urls = []
+			edit_dataill['edicion'] = folder[i]
+			for x in self.pages(folder[i]):
+				urls.append(f'/pagina/{folder[i]}/{x}')
+			edit_dataill['paginas'] = urls
+			edit_list.append(edit_dataill)
+		return(edit_list)
+
+revistas = magazine_redpi()
+
+print(revistas.editions())
 """
