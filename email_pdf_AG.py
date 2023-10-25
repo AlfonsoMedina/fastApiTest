@@ -250,13 +250,11 @@ def registro_pdf_con_acuse(arg):
 				get_List = mark_getlistReg('386104')
 				
 				get_data_mark = mark_read(
-					get_List[0].fileId.fileNbr.doubleValue, 
-					get_List[0].fileId.fileSeq, 
-					get_List[0].fileId.fileSeries.doubleValue, 
-					get_List[0].fileId.fileType
+						get_List[0].fileId.fileNbr.doubleValue, 
+						get_List[0].fileId.fileSeq, 
+						get_List[0].fileId.fileSeries.doubleValue, 
+						get_List[0].fileId.fileType
 					)
-
-								
 
 				for i in row[0][8]:
 
@@ -538,7 +536,7 @@ def registro_pdf_con_acuse(arg):
 			#############################################################################################################################################################
 
 			pdf.set_font("helvetica", "B", 12)
-			pdf.image('static/IMG.PNG',x=76,y=65,w=63,h=19)
+			pdf.image('static/IMG.PNG',x=70,y=65,w=75,h=20)
 			pdf.cell(0, 40, "________________________________________________________________________________________________________", align='c',ln=1)
 			pdf.cell(0, -20, str(global_data['nombre_formulario']), align='c',ln=1)
 			pdf.set_font('helvetica', 'I', 8)
@@ -672,14 +670,15 @@ def registro_pdf_con_acuse(arg):
 			
 			pdf.set_font("helvetica", "", 7)
 			pdf.multi_cell(w=160, h=8, txt=global_data['espe'], border=1, align='l' )	
-			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
+			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 5),w=35,h=15)
 			
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
+
 			#############################################################################################################################
 			#############################################################################################################################			
 			#############################################################################################################################
 			#############################################################################################################################			
-			pdf.add_page()
+			#pdf.add_page()
 			
 			pdf.set_font("helvetica", "B", 12)
 			pdf.image("static/sfe_no_pres_head.png",x=145,y=(pdf.get_y() + 4),w=30,h=15)
@@ -1337,7 +1336,6 @@ def renovacion_pdf_con_acuse(arg):
 		
 
 		def traer_datos_pdf(arg):
-
 			get_data_mark_ren = mark_read(
 			get_List[0].fileId.fileNbr.doubleValue, 
 			get_List[0].fileId.fileSeq, 
@@ -1405,7 +1403,7 @@ def renovacion_pdf_con_acuse(arg):
 			#############################################################################################################################################################
 
 			pdf.set_font("helvetica", "B", 12)
-			pdf.image('static/IMG.PNG',x=76,y=65,w=63,h=19)
+			pdf.image('static/IMG.PNG',x=70,y=65,w=75,h=20)
 			pdf.cell(0, 40, "________________________________________________________________________________________________________", align='c',ln=1)
 			
 			pdf.cell(0, -20, str(global_data['nombre_formulario']), align='c',ln=1)
@@ -1492,14 +1490,12 @@ def renovacion_pdf_con_acuse(arg):
 			pdf.set_font("helvetica", "B", 9) 
 			pdf.cell(w=60, h=8, txt='Productos o Servicios que distingue:', border=1 , align='c' )
 			
-
 			try:
 				pdf.multi_cell(w=130, h=4, txt=str(global_data['distingue']), border=1, align='L',ln=1)
 			except Exception as e:
 				pdf.multi_cell(w=130, h=4, txt="", border=1, align='L',ln=1) 
 			
 			########################################################################################################################################
-
 
 			pdf.cell(w=0, h=5, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
@@ -1510,7 +1506,6 @@ def renovacion_pdf_con_acuse(arg):
 				pdf.image('./'+global_data['expediente']+'.png',x=123,y=(pdf.get_y()-27),w=25,h=25)
 			except Exception as e:
 				pdf.image("static/sfe_default.PNG",x=123,y=(pdf.get_y()-27),w=25,h=25)
-
 
 			########################################################################################################################################
 
@@ -1581,7 +1576,6 @@ def renovacion_pdf_con_acuse(arg):
 			else:
 				pdf.cell(w=50, h=8, txt="-", border=1, align='l')			
 			
-
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=50, h=8, txt='Codigo Postal', border=1, align='c')
 			
@@ -1607,7 +1601,6 @@ def renovacion_pdf_con_acuse(arg):
 			else:
 				pdf.cell(w=60, h=8, txt="-", border=1, align='l')			
 			
-
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 
 			pdf.set_font("helvetica", "B", 12)
@@ -1721,9 +1714,8 @@ def renovacion_pdf_con_acuse(arg):
 			"""
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
 			
-			
-			pdf.output('pdf/notificacion-DINAPI.pdf')
 
+			pdf.output('pdf/notificacion-DINAPI.pdf')
 
 		traer_datos_pdf(str(global_data['expediente']))
 

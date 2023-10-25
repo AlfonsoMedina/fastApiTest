@@ -157,7 +157,7 @@ def insert_list(arg0:string,arg1:string):
 	logs.info(arg0)
 	return("Ok")
 
-
+## Modificaciones de flujo 25/10/2023
 def compileAndInsert(form_Id,typ,in_group):
 	print('F1')
 
@@ -372,11 +372,12 @@ def compileAndInsert(form_Id,typ,in_group):
 			# SE EJECUTA ESPERANDO TRUE PARA CONTINUAR CON EL FLUJO (5 INTENTOS ANTES DE DECLARAR ERROR)
 			intentos:int = 5
 			for i in range(intentos):
+				time.sleep(2)
 				try:
 					if estado_ins == 'true':
 						break  # SI EL INSERT DE IPAD DEVUELVE TRUE, SALIR DEL BUCLE
 				except Exception as e:
-					print(f"Error en el intento {i+1}: {str(e)}")
+					print(f"Error en el intento {i+1}: {str(e)}")				
 			else:
 				data_validator(f'Error de IPAS => NO SE PUDO INSERTAR EL TRAMITE ID: {form_Id}, EXPEDIENTE RESERVADO','false',form_Id)
 				cambio_estado_soporte(form_Id)

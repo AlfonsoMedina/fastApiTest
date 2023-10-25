@@ -320,15 +320,14 @@ class insertRegModel(object):
 				self.documentId_PowerOfAttorneyRegister_docSeries = str(self.data['regserie'])
 		except Exception as e:
 			pass
-		try:
-			if self.data['soltipo'] != "":
-				self.documentId_PowerOfAttorneyRegister_docLog = self.data['soltipo']
-				self.documentId_PowerOfAttorneyRegister_docNbr = str(self.data['solexpediente']) 
-				self.documentId_PowerOfAttorneyRegister_docOrigin = str(self.data['solorigen'])
-				self.documentId_PowerOfAttorneyRegister_docSeries = str(self.data['solserie'])
-		except Exception as e:
-			pass
-
+		##try:
+		##	if self.data['soltipo'] != "":
+		##		self.documentId_PowerOfAttorneyRegister_docLog = self.data['soltipo']
+		##		self.documentId_PowerOfAttorneyRegister_docNbr = str(self.data['solexpediente']) 
+		##		self.documentId_PowerOfAttorneyRegister_docOrigin = str(self.data['solorigen'])
+		##		self.documentId_PowerOfAttorneyRegister_docSeries = str(self.data['solserie'])
+		##except Exception as e:
+		##	pass
 
 		self.limitationData_disclaimer = self.data['reivindicaciones']
 

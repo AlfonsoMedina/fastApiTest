@@ -843,37 +843,6 @@ prod_database='MARCAS_PY
 
 
 
-MEA BACKEND cambio de contraseña (user-sprint--201901)
-			- sfe.py
-			- Publicaciones.py
-			- connect.py
-			- pdf_history.py
-			- test_forms.py
-
-REDPI BACKEND cambio de contraseña (user-sprint--201901)
-			- Clasificas.py
-			- connect.py
-			- pdf_history_nuevo.py
-
-SprintV2 BACKEND (user-sprint--201901)
-			- email_opo_sfe.py
-			- email_reg_sfe.py
-			- email_ren_sfe.py
-			- sfe_no_presencial_opo.py
-			- sfe_no_presencial_reg_local.py
-			- sfe_no_presencial_ren_local.py
-			- sfe_no_presencial_reg_mail.py
-			- sfe_no_presencial_reg.py
-			- sfe_no_presencial_ren.py
-			- Publicaciones.py
-			- Clasificados.py
-			- connect.py
-			- pdf_history_nuevo.py
-
-
-
-
-
 user-sprint--201901
 user-developer--201901
 
@@ -894,7 +863,7 @@ pgsql-14 192.168.50.216 user_app_caja ojTnRUivhOFZ7QfbwNnWeq4iHa
 pgsql-14 192.168.50.216 user_app_publicacion SSridvVTcmGvfpoZ7B7HHsk74Y
 pgsql-14 192.168.50.216 user_app_recepcion  bEL19ZBN1mQUxSRxYc2NV3EL9f
 pgsql-14 192.168.50.216 user_app_octopus 2yCZOjAO7csNkO53BWvMQOLIie
-pgsql-14 192.168.50.216 user_dev  lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
+pgsql-14 db-sfe.dinapi.gov.py user_dev  lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
 
 
 Start Services
@@ -1177,3 +1146,58 @@ INSERTO EL RENOVACION => Unexpected exception has been generated. Please take no
 
 RESTFULL
 gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 192.168.50.228:8010 manage:app
+
+http://192.168.71.189:4901/mesaEntradaAutomatica/recepcion
+
+
+            if (form.usuario.data.upper() == "GBRITEZ" or
+                    form.usuario.data.upper() == "AMEDINA" or
+                    form.usuario.data.upper() == "GSEGOVIA" or
+                    form.usuario.data.upper() == "SCRUZANS" or
+                    form.usuario.data.upper() == "JGONZALEZ"):
+
+            Job for visor_redpi.service failed because the control process exited with error code.
+See "systemctl status visor_redpi.service" and "journalctl -xeu visor_redpi.service" for details.
+
+
+
+
+
+
+29850
+
+
+
+
+
+                    <ImageView  
+                        style={styles.order}
+                        images={i.paginas.sort().map((item)=>({ uri: item }))} 
+                        imageIndex={index}
+                        visible={visible}
+                        onRequestClose={() => setVisible(false)}
+                        transform = {-1}
+                    />
+
+
+
+
+<Stack.Screen name="MicroZoom" component={PantallaInicial} options={{title: 'MicroZoom', headerStyle: { backgroundColor: '#333' }, headerTintColor: '#fff', }} />
+<Stack.Screen name="Home" component={HomeScreen} options={{ title: (props) => (<Image source={require('./assets/log.png')} style={{ width: 100, height: 30 }} />), headerStyle: { backgroundColor: 'blue' },  headerTintColor: '#fff',}} />
+
+
+
+
+
+
+
+23/10/2023 
+	SELECT IM.FILING_DATE, IF2.FILE_NBR, if2.TITLE, typ1.APPL_TYPE_NAME, typ2.APPL_SUBTYPE_NAME, loc.LOCARNO_CLASS_CODE, per.NATIONALITY_COUNTRY_CODE, pais.COUNTRY_NAME, im.REGISTRATION_DATE, sta.STATUS_NAME FROM DISENIOS.DIS1.IP_FILE if2 LEFT join DISENIOS.DIS1.IP_PATENT im on im.FILE_NBR = if2.FILE_NBR LEFT JOIN DISENIOS.DIS1.IP_PERSON per ON PER.PERSON_NBR = IM.MAIN_OWNER_PERSON_NBR LEFT JOIN DISENIOS.DIS1.IP_PERSON age ON AGE.PERSON_NBR = IM.SERVICE_PERSON_NBR LEFT JOIN DISENIOS.DIS1.CF_APPLICATION_TYPE typ1 ON typ1.APPL_TYP = if2.APPL_TYP LEFT JOIN DISENIOS.DIS1.CF_APPLICATION_SUBTYPE typ2 ON typ2.APPL_SUBTYP = if2.APPL_SUBTYP and typ2.APPL_TYP  = typ1.APPL_TYP LEFT JOIN DISENIOS.DIS1.CF_GEO_COUNTRY pais ON pais.COUNTRY_CODE = per.NATIONALITY_COUNTRY_CODE left join DISENIOS.DIS1.IP_PROC ip ON ip.FILE_NBR = im.FILE_NBR and ip.FILE_NBR = if2.FILE_NBR left join DISENIOS.DIS1.CF_STATUS sta ON sta.STATUS_CODE = ip.STATUS_CODE and sta.PROC_TYP = ip.PROC_TYP left join DISENIOS.DIS1.IP_PATENT_LOCARNO_CLASSES loc on loc.FILE_NBR = if2.FILE_NBR and loc.FILE_NBR = im.FILE_NBR WHERE datepart (YEAR, IM.REGISTRATION_DATE) = '2023' ORDER BY IM.FILE_NBR;
+
+
+
+
+
+
+MEA BACKEND BETA
+uvicorn main:app --host 192.168.80.221 --port 8077 --reload 

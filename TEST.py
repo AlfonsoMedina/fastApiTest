@@ -1,7 +1,7 @@
 
 from ast import Num
 from tools.data_format import date_not_hour
-from email_pdf_AG import acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_affect
+from email_pdf_AG import acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_affect, registro_pdf_con_acuse
 from getFileDoc import compilePDF_DOCS, getFile, getFile_reg_and_ren
 from dinapi.sfe import pendiente_sfe, registro_sfe, renovacion_sfe, respuesta_sfe_campo, rule_notification, titulare_reg
 from tools.send_mail import delete_file, enviar
@@ -84,7 +84,7 @@ def queryfind():
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (7,99) and expediente_electronico = true and enviado_at >= '2023-10-20'; """)
+		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (7,99) and expediente_electronico = true and enviado_at >= '2023-10-23'; """)
 		row=cursor.fetchall()
 		print(row)
 		for i in row:
@@ -95,10 +95,11 @@ def queryfind():
 		conn.close()
 """
 SELECT id, expediente_id, formulario_id, estado  FROM tramites where estado = 7 and expediente_electronico = true and enviado_at >= '2023-10-03';"""
+#queryfind()
 
-queryfind()
+#print(respuesta_sfe_campo('30219'))
 
-#print(respuesta_sfe_campo('30031'))
+#registro_pdf_con_acuse('30278')
 
 
 """tituPck = []
@@ -325,3 +326,22 @@ revistas = magazine_redpi()
 
 print(revistas.editions())
 """
+
+
+
+
+#Reenviar correo con acuse
+#acuse_from_AG_REG('S','30278','2386574')
+
+#delete_file(enviar('notificacion-DINAPI.pdf','email','M.E.A',connex.msg_body_mail))
+
+
+
+iteraciones = 5
+
+for i in range(iteraciones):
+    print("Iteración", i+1)
+    time.sleep(2)
+    print("Pausa de 2 segundos")
+
+print("Finalizado")
