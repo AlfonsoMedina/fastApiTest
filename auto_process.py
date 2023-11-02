@@ -430,7 +430,6 @@ def compileAndInsert(form_Id,typ,in_group):
 			cambio_estado_soporte(form_Id)
 			rule_notification('SOP',form_Id,'')
 
-
 def compileAndInsertUserDocUserDoc(form_Id,typ,in_group):
 	print('F2')
 	cheking = catch_toError(form_Id)
@@ -831,10 +830,23 @@ def insertReg(form_Id):
 				insert_mark.file_filingData_paymentList_receiptNotes,
 				insert_mark.file_filingData_paymentList_receiptType,
 				insert_mark.file_filingData_receptionUserId,
+
+
+				insert_mark.file_ownershipData_ownerList_person_telephone,
+				insert_mark.file_ownershipData_ownerList_person_zipCode, 
+				insert_mark.file_ownershipData_ownerList_person_email, 
+				insert_mark.file_ownershipData_ownerList_person_individualIdType, 
+				insert_mark.file_ownershipData_ownerList_person_individualIdNbr, 
+				insert_mark.file_ownershipData_ownerList_person_legalIdType, 
+				insert_mark.file_ownershipData_ownerList_person_legalIdNbr, 
+				insert_mark.file_ownershipData_ownerList_person_cityName, 
+				insert_mark.file_ownershipData_ownerList_person_addressZone,
 				insert_mark.file_ownershipData_ownerList_person_addressStreet,
 				insert_mark.file_ownershipData_ownerList_person_nationalityCountryCode,
 				insert_mark.file_ownershipData_ownerList_person_personName,
 				insert_mark.file_ownershipData_ownerList_person_residenceCountryCode,
+
+
 				insert_mark.file_rowVersion,
 				insert_mark.agentCode,
 				insert_mark.file_representationData_representativeList_representativeType,

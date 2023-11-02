@@ -358,10 +358,10 @@ def registro_pdf_con_acuse(arg):
 					except Exception as e:
 						global_data['pais'] = ""					
 					try:
-						if(i['descripcion'] == "Código Postal"):
+						if(i['campo'] == "datospersonales_codigopostal"):
 							global_data['codigo_postal']=i['valor']
 					except Exception as e:
-						global_data['codigo_postal'] = ""					
+						global_data['codigo_postal'] = ""				
 					try:
 						if(i['descripcion'] == "Teléfono" and i['campo'] == 'datospersonales_telefono'):
 							global_data['telefono']=i['valor']
@@ -707,7 +707,7 @@ def registro_pdf_con_acuse(arg):
 			pdf.cell(w=50, h=8, txt='Calle', border=1 , align='c' )
 			
 			try:	
-				pdf.multi_cell(w=140, h=4, txt=str(global_data['direccion']), border=1, align='l',ln=1) 	
+				pdf.multi_cell(w=140, h=8, txt=str(global_data['direccion']), border=1, align='l',ln=1) 	
 			except Exception as e:
 				pdf.multi_cell(w=140, h=8, txt="", border=1, align='l',ln=1) 	
 			
@@ -731,10 +731,11 @@ def registro_pdf_con_acuse(arg):
 			pdf.set_font("helvetica", "B", 9)	
 			pdf.cell(w=55, h=8, txt='Codigo Postal', border=1, align='c' )
 			
-			try:	
-				pdf.cell(w=50, h=8, txt="", border=1, align='c' )
+			try:
+				pdf.cell(w=50, h=8, txt=str(global_data['codigo_postal']), border=1, align='c' )
 			except Exception as e:
-				pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
+				pdf.cell(w=50, h=8, txt="", border=1, align='c' )
+					
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
 			pdf.set_font("helvetica", "B", 9)
 			pdf.cell(w=35, h=8, txt='Telefono', border=1 , align='c' )

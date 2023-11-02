@@ -1,5 +1,7 @@
 
 from ast import Num
+from email_reg_sfe import envio_agente_reg
+from email_ren_sfe import envio_agente_ren
 from tools.data_format import date_not_hour
 from email_pdf_AG import acuse_from_AG_REG, acuse_from_AG_REN, envio_agente_recibido, envio_agente_recibido_affect, registro_pdf_con_acuse
 from getFileDoc import compilePDF_DOCS, getFile, getFile_reg_and_ren
@@ -84,7 +86,7 @@ def queryfind():
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (7,99) and expediente_electronico = true and enviado_at >= '2023-10-23'; """)
+		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (7,99) and expediente_electronico = true and enviado_at >= '2023-11-01'; """)
 		row=cursor.fetchall()
 		print(row)
 		for i in row:
@@ -337,11 +339,82 @@ print(revistas.editions())
 
 
 
-iteraciones = 5
+"""iteraciones = 5
 
 for i in range(iteraciones):
-    print("Iteración", i+1)
-    time.sleep(2)
-    print("Pausa de 2 segundos")
+	print("Iteración", i+1)
+	time.sleep(2)
+	print("Pausa de 2 segundos")
 
-print("Finalizado")
+print("Finalizado")"""
+
+
+
+
+
+
+
+
+
+def titulares_TP(codigo_barra):
+	titulares=[]
+	personas = {}
+	global_data_persona = {}    
+	cont = 0
+
+	try:
+		conn = psycopg2.connect(host = connex.hostME,user= connex.userME,password = connex.passwordME,database = connex.databaseME)
+		cursor = conn.cursor()
+		cursor.execute('''select frm.id_form001,ft.id_form_t,ft.cod_titular,ft.cedula,ft.nom_titular,ft.ruc,ft.dir_titular,ft.email,ft.telefono,ft.cod_pais,ft.ciudad,ft.sexo,ft.tipo_titular,ft.cod_postal 
+from form001_reg_marca frm  
+left join public.form001_titulares fst on fst.id_form001 =frm.id_form001 
+left join public.form_titular ft on ft.id_form_t = fst.id_form_t 
+where frm.id_form001 =164818''')
+		row=cursor.fetchall()
+		for i in range(len(row)):
+			global_data_persona = {} 
+			personas = {}
+			global_data_persona['nationalityCountryCode'] = row[i][9]
+			global_data_persona['residenceCountryCode'] = row[i][9]
+			global_data_persona['telephone'] = row[i][8]
+			global_data_persona['zipCode'] = row[i][13]
+			global_data_persona['personName'] = row[i][4]                        
+			global_data_persona['email'] = row[i][7] 
+			if(row[i][12] == 'F') :              
+					global_data_persona['individualIdType'] = 'CED'
+					global_data_persona['individualIdNbr'] = row[i][3]
+					global_data_persona['legalIdType'] = ''
+					global_data_persona['legalIdNbr'] = ''
+			else:
+					global_data_persona['legalIdType'] = 'RUC'
+					global_data_persona['legalIdNbr'] = row[i][5]
+					global_data_persona['individualIdType'] = ''
+					global_data_persona['individualIdNbr'] = ''         
+							
+			global_data_persona['cityName'] = row[i][10]
+			global_data_persona['addressStreet'] = row[i][6]
+			global_data_persona['addressZone']=''
+
+
+			personas['indService'] = "true"
+			personas['orderNbr'] = i
+			personas['ownershipNotes'] = ""
+			personas["person"] = global_data_persona
+
+			titulares.append(personas)
+
+		return titulares
+
+	except Exception as e:
+		print(e)
+	finally:
+		conn.close()
+
+#print(titulares_TP(164818))
+
+
+
+
+
+#PDF DE REGISTRO
+registro_pdf_con_acuse('30293')

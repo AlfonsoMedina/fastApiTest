@@ -2096,10 +2096,23 @@ def TEST_MEA_reg(id_tramite):
 	create_userdoc['file_filingData_paymentList_receiptNotes'] = catch_data.file_filingData_paymentList_receiptNotes
 	create_userdoc['file_filingData_paymentList_receiptType'] = catch_data.file_filingData_paymentList_receiptType
 	create_userdoc['file_filingData_receptionUserId'] = catch_data.file_filingData_receptionUserId
+
+
+	create_userdoc['file_ownershipData_ownerList_person_telephone'] = catch_data.file_ownershipData_ownerList_person_telephone
+	create_userdoc['file_ownershipData_ownerList_person_zipCode'] = catch_data.file_ownershipData_ownerList_person_zipCode 
+	create_userdoc['file_ownershipData_ownerList_person_email'] = catch_data.file_ownershipData_ownerList_person_email 
+	create_userdoc['file_ownershipData_ownerList_person_individualIdType'] = catch_data.file_ownershipData_ownerList_person_individualIdType 
+	create_userdoc['file_ownershipData_ownerList_person_individualIdNbr'] = catch_data.file_ownershipData_ownerList_person_individualIdNbr 
+	create_userdoc['file_ownershipData_ownerList_person_legalIdType'] = catch_data.file_ownershipData_ownerList_person_legalIdType 
+	create_userdoc['file_ownershipData_ownerList_person_legalIdNbr'] = catch_data.file_ownershipData_ownerList_person_legalIdNbr 
+	create_userdoc['file_ownershipData_ownerList_person_cityName'] = catch_data.file_ownershipData_ownerList_person_cityName 
+	create_userdoc['file_ownershipData_ownerList_person_addressZone'] = catch_data.file_ownershipData_ownerList_person_addressZone
 	create_userdoc['file_ownershipData_ownerList_person_addressStreet'] = catch_data.file_ownershipData_ownerList_person_addressStreet
 	create_userdoc['file_ownershipData_ownerList_person_nationalityCountryCode'] = catch_data.file_ownershipData_ownerList_person_nationalityCountryCode
 	create_userdoc['file_ownershipData_ownerList_person_personName'] = catch_data.file_ownershipData_ownerList_person_personName
 	create_userdoc['file_ownershipData_ownerList_person_residenceCountryCode'] = catch_data.file_ownershipData_ownerList_person_residenceCountryCode
+
+
 	create_userdoc['file_rowVersion'] = catch_data.file_rowVersion
 	create_userdoc['agentCode'] = catch_data.agentCode
 	create_userdoc['file_representationData_representativeList_representativeType'] = catch_data.file_representationData_representativeList_representativeType

@@ -55,23 +55,30 @@ def registro_pdf_sfe_local(arg):
 							#print('SERVICIOS')
 							global_data['clasificacion']= 'SERVICIOS'
 
+
+
+
 					try:
 						if(i['campo'] == "marca_distintivo"):
 							global_data['distintivo'] = i['valor']['archivo']['url']
 					except Exception as e:
 						global_data['distintivo'] = ""
 
+
 					try:
 						if(i['campo'] == "marca_deslogotipo"):
-							global_data['deslogotipo'] = i['valor']
+							global_data['deslogotipo'] = i['valor']['valor']['archivo']['url']
 					except Exception as e:
 						global_data['deslogotipo'] = ""
 
+
+
 					try:
 						if(i['campo'] == "marca_deslogotipofg"):
-							global_data['deslogotipofg'] = i['valor']
+							global_data['deslogotipofg'] = i['valor']['archivo']['url']
 					except Exception as e:
 						global_data['deslogotipofg'] = ""
+
 
 					try:
 						if(i['campo'] == "marca_distintivofg"):
@@ -79,6 +86,8 @@ def registro_pdf_sfe_local(arg):
 					except Exception as e:
 						global_data['distintivofg'] = ""
 					
+
+
 					try:
 						if(i['descripcion'] == "N° de Documento" and i['campo'] == "datospersonales_nrodocumento"):
 							global_data['documento'] = i['valor']
@@ -104,7 +113,7 @@ def registro_pdf_sfe_local(arg):
 						global_data['reivindicaciones'] = ""	
 
 					try:
-						if(i['descripcion'] == "Tipo de Marca" and i['campo'] == 'marca_tipomarca'):
+						if(i['campo'] == 'marca_tipomarca'):
 							global_data["tipo_on"] = i['valor']
 					except Exception as e:
 						global_data['tipo_on'] = ""	
@@ -148,7 +157,7 @@ def registro_pdf_sfe_local(arg):
 					except Exception as e:
 						global_data['pais'] = ""					
 					try:
-						if(i['descripcion'] == "Código Postal"):
+						if(i['campo'] == "datospersonales_codigopostal"):
 							global_data['codigo_postal']=i['valor']
 					except Exception as e:
 						global_data['codigo_postal'] = ""					
@@ -258,16 +267,8 @@ def registro_pdf_sfe_local(arg):
 				return(str(fecha_formatE+" "+str(hora_guionE[0])))		
 		recorrer_sfe(arg)
 		
-		tituPck = []
 		try:
-			for i in range(len(titulare_reg(arg,global_data["titu_cant"]))):
-				if titulare_reg(arg,global_data["titu_cant"])[i]['person']['personName'] != '':
-					tituPck.append(titulare_reg(arg,global_data["titu_cant"])[i])
-		except Exception as e:
-			tituPck = []
-
-		try:
-			multitu = tituPck
+			multitu = titulare_reg(arg,global_data["titu_cant"])
 			if multitu != []:
 				if multitu[0]['person']['personName'] == '':
 					multitu = []
@@ -284,7 +285,7 @@ def registro_pdf_sfe_local(arg):
 			pdf = FPDF()
 			pdf.add_page()
 			pdf.set_font("helvetica", "B", 12)
-			pdf.image('static/IMG.PNG',x=76,y=5,w=63,h=19)
+			pdf.image('static/IMG.PNG',x=76,y=5,w=63,h=17)
 			pdf.cell(0, 40, "________________________________________________________________________________________________________", align='c',ln=1)
 			pdf.cell(0, -20, str(global_data['nombre_formulario']), align='c',ln=1)
 			pdf.set_font('helvetica', 'I', 8)
@@ -373,8 +374,10 @@ def registro_pdf_sfe_local(arg):
 			pdf.cell(w=70, h=28, txt='Referencia de Distintivo:', border=1 , align='c' )
 
 			pdf.multi_cell(w=120, h=28, txt="", border=1, align='L',ln=1) 
+			
+
 			try:
-				pdf.image(str(global_data['distintivo']) + str(global_data['distintivofg']),x=123,y=(pdf.get_y()-27),w=25,h=25)
+				pdf.image(str(global_data['distintivo'] + global_data['deslogotipofg']),x=123,y=(pdf.get_y()-27),w=25,h=25)
 			except Exception as e:
 				pdf.image("static/sfe_default.PNG",x=123,y=(pdf.get_y()-27),w=25,h=25)
 
@@ -477,9 +480,9 @@ def registro_pdf_sfe_local(arg):
 				pdf.cell(w=50, h=8, txt="", border=1, align='c' )
 			pdf.set_font("helvetica", "B", 9)	
 			pdf.cell(w=55, h=8, txt='Codigo Postal', border=1, align='c' )
-			
-			try:	
-				pdf.cell(w=50, h=8, txt="", border=1, align='c' )
+
+			try:
+				pdf.cell(w=50, h=8, txt=str(global_data['codigo_postal']), border=1, align='c' )
 			except Exception as e:
 				pdf.cell(w=50, h=8, txt="", border=1, align='c' )	
 			pdf.cell(w=0, h=12, txt='', border=0,ln=1 )
@@ -715,18 +718,17 @@ def registro_pdf_sfe_local(arg):
 			"""	
 
 			pdf.image("static/sfe_no_pres_foot.png",x=85,y=(pdf.get_y() + 15),w=35,h=15)
-			
 
 
-			pdf.output(getcwd()+f"/temp_pdf/{str(global_data['expediente'])}/{str(global_data['expediente'])}-0.pdf") 
-			#pdf.output(getcwd()+"/pdf/SFE_REGISTRO_"+str(arg)+"_local.pdf")
+			#pdf.output(getcwd()+f"/temp_pdf/{str(global_data['expediente'])}/{str(global_data['expediente'])}-0.pdf") 
+			pdf.output(getcwd()+"/pdf/SFE_REGISTRO_"+str(arg)+"_local.pdf")
 
 		traer_datos_pdf(arg)
 	except Exception as e:
 		print(e)
 	
 
-registro_pdf_sfe_local('30031')
+registro_pdf_sfe_local('27493')
 
 
 

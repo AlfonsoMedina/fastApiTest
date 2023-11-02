@@ -612,6 +612,15 @@ def mark_insert_reg(
 					file_filingData_paymentList_receiptNotes,
 					file_filingData_paymentList_receiptType,
 					file_filingData_receptionUserId,
+					file_ownershipData_ownerList_person_telephone,
+					file_ownershipData_ownerList_person_zipCode, 
+					file_ownershipData_ownerList_person_email, 
+					file_ownershipData_ownerList_person_individualIdType, 
+					file_ownershipData_ownerList_person_individualIdNbr, 
+					file_ownershipData_ownerList_person_legalIdType, 
+					file_ownershipData_ownerList_person_legalIdNbr, 
+					file_ownershipData_ownerList_person_cityName, 
+					file_ownershipData_ownerList_person_addressZone,
 					file_ownershipData_ownerList_person_addressStreet,
 					file_ownershipData_ownerList_person_nationalityCountryCode,
 					file_ownershipData_ownerList_person_personName,
@@ -709,13 +718,20 @@ def mark_insert_reg(
           'ownershipData': {
             'ownerList': {
               'person': {
-                'addressStreet': file_ownershipData_ownerList_person_addressStreet,
-                'nationalityCountryCode': file_ownershipData_ownerList_person_nationalityCountryCode,
-                'personName': file_ownershipData_ownerList_person_personName,
-                'residenceCountryCode': file_ownershipData_ownerList_person_residenceCountryCode
-              },
-              
-              
+						'telephone': file_ownershipData_ownerList_person_telephone, 
+						'zipCode': file_ownershipData_ownerList_person_zipCode, 
+						'email': file_ownershipData_ownerList_person_email, 
+						'individualIdType': file_ownershipData_ownerList_person_individualIdType, 
+						'individualIdNbr': file_ownershipData_ownerList_person_individualIdNbr, 
+						'legalIdType': file_ownershipData_ownerList_person_legalIdType, 
+						'legalIdNbr': file_ownershipData_ownerList_person_legalIdNbr, 
+						'cityName': file_ownershipData_ownerList_person_cityName, 
+						'addressZone': file_ownershipData_ownerList_person_addressZone,
+						'addressStreet': file_ownershipData_ownerList_person_addressStreet,
+						'nationalityCountryCode': file_ownershipData_ownerList_person_nationalityCountryCode,
+						'personName': file_ownershipData_ownerList_person_personName,
+						'residenceCountryCode': file_ownershipData_ownerList_person_residenceCountryCode
+					},
             },
      
           },

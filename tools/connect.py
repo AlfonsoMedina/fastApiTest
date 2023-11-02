@@ -50,7 +50,7 @@ db_database='db_publicacion'
 ###################################################################
 
 #Base de datos MESA DE ENTRADA posgresSql v14
-hostME = '192.168.50.216'
+hostME = '192.168.50.215'
 userME='user_app_recepcion'
 passwordME='bEL19ZBN1mQUxSRxYc2NV3EL9f'
 databaseME='db_sfe_presencial'

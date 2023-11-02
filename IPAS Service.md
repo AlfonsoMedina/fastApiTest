@@ -1201,3 +1201,83 @@ See "systemctl status visor_redpi.service" and "journalctl -xeu visor_redpi.serv
 
 MEA BACKEND BETA
 uvicorn main:app --host 192.168.80.221 --port 8077 --reload 
+
+
+
+
+
+
+Unexpected exception has been generated. Please take note of this message and contact the Administrator. Exception class name:org.ipas.runtime.exception.CSqlException text:Cannot execute statement.
+Oct 31 10:53:55 vm050228--sprint-group--el09-jvm11-py39--prod bash[1810968]: La transacción (id. de proceso 56) quedó en interbloqueo en bloqueo recursos con otro proceso y fue elegida como sujeto del interbloqueo. Ejecute de nuevo la transacción.
+
+
+
+
+				global_data_persona['residenceCountryCode'] = row[x][9]
+				global_data_persona['telephone'] = row[x][8]
+				global_data_persona['zipCode'] = row[x][13]
+				global_data_persona['personName'] = row[x][4]                        
+				global_data_persona['email'] = row[x][7]         
+				
+				if(row[x][12] == 'F') :              
+					global_data_persona['individualIdType'] = 'CED'
+					global_data_persona['individualIdNbr'] = row[x][3]
+					global_data_persona['legalIdType'] = ''
+					global_data_persona['legalIdNbr'] = ''
+				else:
+					global_data_persona['legalIdType'] = 'RUC'
+					global_data_persona['legalIdNbr'] = row[x][5]
+					global_data_persona['individualIdType'] = ''
+					global_data_persona['individualIdNbr'] = ''         
+							
+				global_data_persona['cityName'] = row[x][10]
+				global_data_persona['addressStreet'] = row[x][6]
+				global_data_persona['addressZone']=''
+
+
+				personas['indService'] = "true"
+				personas['orderNbr'] = cont
+				personas['ownershipNotes'] = ""
+				personas["person"] = global_data_persona
+
+
+
+
+[
+	{0: 'CARLOS ALBERTO RIVAS VERA ', 1: 'MARTA EUGENIA RIVAS DE APONTE ', 2: 'IV▒N DAR▒O RIVAS MALDONADO ', 3: 'VALERIA LUC▒A RIVAS MORENO '}, 
+	{0: 'CARLOS ALBERTO RIVAS VERA ', 1: 'MARTA EUGENIA RIVAS DE APONTE ', 2: 'IV▒N DAR▒O RIVAS MALDONADO ', 3: 'VALERIA LUC▒A RIVAS MORENO '}, 
+	{0: 'CARLOS ALBERTO RIVAS VERA ', 1: 'MARTA EUGENIA RIVAS DE APONTE ', 2: 'IV▒N DAR▒O RIVAS MALDONADO ', 3: 'VALERIA LUC▒A RIVAS MORENO '}, 
+	{0: 'CARLOS ALBERTO RIVAS VERA ', 1: 'MARTA EUGENIA RIVAS DE APONTE ', 2: 'IV▒N DAR▒O RIVAS MALDONADO ', 3: 'VALERIA LUC▒A RIVAS MORENO '}
+]
+
+[
+	{
+		0: 'CARLOS ALBERTO RIVAS VERA ', 
+		1: 'MARTA EUGENIA RIVAS DE APONTE ', 
+		2: 'IV▒N DAR▒O RIVAS MALDONADO ', 
+		3: 'VALERIA LUC▒A RIVAS MORENO '
+	}
+]
+
+
+
+{
+	'indService': 'true', 
+	'orderNbr': 0, 
+	'ownershipNotes': '', 
+		'person': {
+			'nationalityCountryCode': 'PY', 
+			'residenceCountryCode': 'PY', 
+			'telephone': '021-226970', 
+			'zipCode': '', 
+			'personName': 'VALERIA LUC▒A RIVAS MORENO ', 
+			'email': 'info@aumarkgroup.com.py', 
+			'individualIdType': 'CED', 
+			'individualIdNbr': '4985598', 
+			'legalIdType': '', 
+			'legalIdNbr': '', 
+			'cityName': 'Asunci▒n', 
+			'addressStreet': 'Eligio Ayala esq. Constituci▒n, Asunci▒n ', 
+			'addressZone': ''
+		}
+	}, 

@@ -30,10 +30,23 @@ class insertRegModel(object):
 	file_filingData_paymentList_receiptNotes:str = ""
 	file_filingData_paymentList_receiptType:str = ""
 	file_filingData_receptionUserId:str = ""
+
+
+	file_ownershipData_ownerList_person_telephone:str = ""
+	file_ownershipData_ownerList_person_zipCode:str = "" 
+	file_ownershipData_ownerList_person_email:str = "" 
+	file_ownershipData_ownerList_person_individualIdType:str = "" 
+	file_ownershipData_ownerList_person_individualIdNbr:str = "" 
+	file_ownershipData_ownerList_person_legalIdType:str = "" 
+	file_ownershipData_ownerList_person_legalIdNbr:str = "" 
+	file_ownershipData_ownerList_person_cityName:str = "" 
+	file_ownershipData_ownerList_person_addressZone:str = ""
 	file_ownershipData_ownerList_person_addressStreet:str = ""
 	file_ownershipData_ownerList_person_nationalityCountryCode:str = ""
 	file_ownershipData_ownerList_person_personName:str = ""
 	file_ownershipData_ownerList_person_residenceCountryCode:str = ""
+
+
 	file_rowVersion:str = ""
 	agentCode:str = ""
 	file_representationData_representativeList_representativeType:str = ""
@@ -275,6 +288,50 @@ class insertRegModel(object):
 		self.file_filingData_paymentList_receiptType = "1"
 		self.file_filingData_receptionUserId = str(self.user_responsible)
 
+
+		try:	
+			self.file_ownershipData_ownerList_person_telephone = self.data['telefono']
+		except Exception as e:		
+			self.file_ownershipData_ownerList_person_telephone = ""
+
+		try:	
+			self.file_ownershipData_ownerList_person_zipCode = self.data['codigopostal'] 
+		except Exception as e:		
+			self.file_ownershipData_ownerList_person_zipCode = ""
+
+		try:	
+			self.file_ownershipData_ownerList_person_email = self.data['email']
+		except Exception as e:
+			self.file_ownershipData_ownerList_person_email = ""
+
+		try:	
+			self.file_ownershipData_ownerList_person_individualIdType = self.data['persona_fisica'] 
+		except Exception as e:		
+			self.file_ownershipData_ownerList_person_individualIdType = ""
+
+		try:	
+			self.file_ownershipData_ownerList_person_individualIdNbr = self.data['documento'] 
+		except Exception as e:		
+			self.file_ownershipData_ownerList_person_individualIdNbr = ""
+
+		try:	
+			self.file_ownershipData_ownerList_person_legalIdType = self.data['persona_juridica'] 
+		except Exception as e:
+			self.file_ownershipData_ownerList_person_legalIdType = ""
+
+		try:	
+			self.file_ownershipData_ownerList_person_legalIdNbr = self.data['RUC']
+		except Exception as e:
+			self.file_ownershipData_ownerList_person_legalIdNbr = ""
+
+		try:	
+			self.file_ownershipData_ownerList_person_cityName = self.data['ciudad'] 
+		except Exception as e:
+			self.file_ownershipData_ownerList_person_cityName = ""
+
+		self.file_ownershipData_ownerList_person_addressZone = ""
+
+
 		try:
 			self.file_ownershipData_ownerList_person_addressStreet = dir_titu(doc_Id)[0] #self.dir_variant
 		except Exception as e:
@@ -289,6 +346,8 @@ class insertRegModel(object):
 			self.file_ownershipData_ownerList_person_personName = ""
 
 		self.file_ownershipData_ownerList_person_residenceCountryCode = self.data['pais']
+
+
 
 		if self.multitu != []:
 			self.ownerList = self.multitu
