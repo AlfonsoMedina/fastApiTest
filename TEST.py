@@ -86,7 +86,7 @@ def queryfind():
 	try:
 		conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
 		cursor = conn.cursor()
-		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (7,99) and expediente_electronico = true and enviado_at >= '2023-11-01'; """)
+		cursor.execute("""SELECT id,expediente_id,estado FROM tramites where estado in (7,99) and expediente_electronico = true and enviado_at >= '2023-11-06'; """)
 		row=cursor.fetchall()
 		print(row)
 		for i in row:
@@ -417,4 +417,4 @@ where frm.id_form001 =164818''')
 
 
 #PDF DE REGISTRO
-registro_pdf_con_acuse('30293')
+registro_pdf_con_acuse('27493')

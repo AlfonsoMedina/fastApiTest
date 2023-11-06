@@ -728,6 +728,8 @@ def registro_pdf_sfe_local(arg):
 		print(e)
 	
 
+# 27509,27501,27493 
+
 registro_pdf_sfe_local('27493')
 
 

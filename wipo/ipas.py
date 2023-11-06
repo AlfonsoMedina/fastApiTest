@@ -647,7 +647,8 @@ def mark_insert_reg(
 					signData_markName,
 					signData_signType,
 					ownerList):
-  try:
+  AG_DATA = personAgente(agentCode) # test de captura de datos 
+  try: 
     logo = logoData
     if ownerList == "":
       markinsertreg = { 
@@ -731,7 +732,7 @@ def mark_insert_reg(
 						'nationalityCountryCode': file_ownershipData_ownerList_person_nationalityCountryCode,
 						'personName': file_ownershipData_ownerList_person_personName,
 						'residenceCountryCode': file_ownershipData_ownerList_person_residenceCountryCode
-					},
+				},
             },
      
           },
@@ -750,34 +751,34 @@ def mark_insert_reg(
             'representativeList': {
             'indService': "",
                 'person': {
-                    'addressStreet': str(personAgente(agentCode)[0].addressStreet).replace("None",""),
-                    'addressStreetInOtherLang': str(personAgente(agentCode)[0].addressStreetInOtherLang).replace("None",""),
-                    'addressZone': str(personAgente(agentCode)[0].addressZone).replace("None",""),
+                    'addressStreet': str(AG_DATA[0].addressStreet).replace("None",""),
+                    'addressStreetInOtherLang': str(AG_DATA[0].addressStreetInOtherLang).replace("None",""),
+                    'addressZone': str(AG_DATA[0].addressZone).replace("None",""),
                     'agentCode': {
-                    'doubleValue':str(personAgente(agentCode)[0].agentCode.doubleValue).replace("None","")
+                    'doubleValue':str(AG_DATA[0].agentCode.doubleValue).replace("None","")
                     },
-                    'cityCode': str(personAgente(agentCode)[0].cityCode).replace("None",""),
-                    'cityName': str(personAgente(agentCode)[0].cityName).replace("None",""),
-                    'companyRegisterRegistrationDate': str(personAgente(agentCode)[0].companyRegisterRegistrationDate).replace("None",""),
-                    'companyRegisterRegistrationNbr': str(personAgente(agentCode)[0].companyRegisterRegistrationNbr).replace("None",""),
-                    'email': str(personAgente(agentCode)[0].email).replace("None",""),
+                    'cityCode': str(AG_DATA[0].cityCode).replace("None",""),
+                    'cityName': str(AG_DATA[0].cityName).replace("None",""),
+                    'companyRegisterRegistrationDate': str(AG_DATA[0].companyRegisterRegistrationDate).replace("None",""),
+                    'companyRegisterRegistrationNbr': str(AG_DATA[0].companyRegisterRegistrationNbr).replace("None",""),
+                    'email': str(AG_DATA[0].email).replace("None",""),
                     'indCompany': str(personAgente(str(agentCode))[0].indCompany),
-                    'individualIdNbr': str(personAgente(agentCode)[0].individualIdNbr).replace("None",""),
-                    'individualIdType': str(personAgente(agentCode)[0].individualIdType).replace("None",""),
-                    'legalIdNbr': str(personAgente(agentCode)[0].legalIdNbr).replace("None",""),
-                    'legalIdType': str(personAgente(agentCode)[0].legalIdType).replace("None",""),
-                    'legalNature': str(personAgente(agentCode)[0].legalNature).replace("None",""),
-                    'legalNatureInOtherLang': str(personAgente(agentCode)[0].legalNatureInOtherLang).replace("None",""),
-                    'nationalityCountryCode': str(personAgente(agentCode)[0].nationalityCountryCode).replace("None",""),
+                    'individualIdNbr': str(AG_DATA[0].individualIdNbr).replace("None",""),
+                    'individualIdType': str(AG_DATA[0].individualIdType).replace("None",""),
+                    'legalIdNbr': str(AG_DATA[0].legalIdNbr).replace("None",""),
+                    'legalIdType': str(AG_DATA[0].legalIdType).replace("None",""),
+                    'legalNature': str(AG_DATA[0].legalNature).replace("None",""),
+                    'legalNatureInOtherLang': str(AG_DATA[0].legalNatureInOtherLang).replace("None",""),
+                    'nationalityCountryCode': str(AG_DATA[0].nationalityCountryCode).replace("None",""),
                     'personGroupCode': "",
-                    'personGroupName': str(personAgente(agentCode)[0].personGroupName).replace("None",""),
-                    'personName': str(personAgente(agentCode)[0].personName).replace("None",""),
-                    'personNameInOtherLang': str(personAgente(agentCode)[0].personNameInOtherLang).replace("None",""),
-                    'residenceCountryCode': str(personAgente(agentCode)[0].residenceCountryCode).replace("None",""),
-                    'stateCode': str(personAgente(agentCode)[0].stateCode).replace("None",""),
-                    'stateName': str(personAgente(agentCode)[0].stateName).replace("None",""),
-                    'telephone': str(personAgente(agentCode)[0].telephone).replace("None",""),
-                    'zipCode': str(personAgente(agentCode)[0].zipCode).replace("None","")
+                    'personGroupName': str(AG_DATA[0].personGroupName).replace("None",""),
+                    'personName': str(AG_DATA[0].personName).replace("None",""),
+                    'personNameInOtherLang': str(AG_DATA[0].personNameInOtherLang).replace("None",""),
+                    'residenceCountryCode': str(AG_DATA[0].residenceCountryCode).replace("None",""),
+                    'stateCode': str(AG_DATA[0].stateCode).replace("None",""),
+                    'stateName': str(AG_DATA[0].stateName).replace("None",""),
+                    'telephone': str(AG_DATA[0].telephone).replace("None",""),
+                    'zipCode': str(AG_DATA[0].zipCode).replace("None","")
                     },
             'representativeType': file_representationData_representativeList_representativeType
             }
