@@ -859,6 +859,12 @@ usuario= alfonso.medina
 contraseña = M0ajgurnE896c4G6A6BVfMwfeKLew9 
 
 
+
+juliaanalia@gmail.com
+
+
+
+
 pgsql-14 192.168.50.216 user_app_caja ojTnRUivhOFZ7QfbwNnWeq4iHa
 pgsql-14 192.168.50.216 user_app_publicacion SSridvVTcmGvfpoZ7B7HHsk74Y
 pgsql-14 192.168.50.216 user_app_recepcion  bEL19ZBN1mQUxSRxYc2NV3EL9f
@@ -913,235 +919,6 @@ Codigo para conectar con el servicio de contraseñas
 ####################################################################################################################################
 
 
-## CAPTURE ENVIRONMENT VARIABLES
-config = configparser.ConfigParser()
-config.read('config.ini')
-app_name = config['general']['app_name']
-version = config['general']['version']
-tokenApp = config['general']['tokenApp']
-urlBase = config['general']['url']
-
-## CREATE DICTIONARIES TO STORE CONNECTIONS
-getThisConn = {}
-getItemConn = {}
-
-## FUNCTION THAT CONSULTS THE DATA ACCESS SERVICE
-async def consultar_api(appName:str, tokenApp:str):
-    url = f"{urlBase}?appName={appName}&tokenApp={tokenApp}"
-    async with httpx.AsyncClient() as client:
-        response = await client.post(url)
-        if response.status_code == 200:
-            data = response.json()
-            return(data)
-        else:
-            print("Error al consultar la API:", response.status_code)
-            return([])
-
-loop = asyncio.get_event_loop()
-getConnects = loop.run_until_complete(consultar_api(app_name,tokenApp))
-
-## I MAP THE ANSWER IN THE DICTIONARIES
-def maping_data():
-    for i in getConnects:
-        getThisConn[i['connName']] = i
-    return(getThisConn) 
-    
-
-####################################################################################################################################
-####################################################################################################################################
-########################################## CONSULTA PASSWORD SERVICE ###############################################################
-####################################################################################################################################
-####################################################################################################################################
-
-
-
-
-2378472
-
-
-
-\\192.168.70.56
-
-
-
-
-
-
-
-
-
-
-2051183 - 304 - 549 - 1479806
-
-
-
-api/auth/login_with_email
-
-
-r9|%"T}z2*V&5lU-At0ilctt$\j"@s
-
-
-BdnwaqdJPcVKR2kAcg3qP0C5HFrM1N
-
-
-https://cssloaders.github.io/
-
-
-
-
-		for i in rows:
-			if i[4] == system:
-				data_list.append({
-					"db":i[1],
-					"usr":i[2],
-					"pass":i[3],
-					"sys":i[4]
-				})
-			return(f'{system}:{data_list}')
-
-
-
-
-/publicaciones/enviarNotificaciones/enviar/notificacion
-
-Error en solicitud, tabla tramites: La fecha de solicitud no puede ser nula:
-
-
-
-		PAQUETE DE DATOS EDO ENVIO DE ORDEN
-{
-	'fileNbr': '2370747', 
-	'statusDate': '12/09/2023', 
-	'applicationType': 'REG', 
-	'signType': 'B', 
-	'signTypeNotFormat': 'Mixta', 
-	'fileSummaryClasses': 'NCL(12-2023.01) 21 ', 
-	'fileSummaryDescription': 'ORCA COATINGS', 
-	'filingDate': '04/09/2023', 
-	'status': 'Pendiente', 
-	'statusName': 'Documento PDF Certificado', 
-	'niceClassNbr': '21', 
-	'agenCode': '25', 
-	'fileSeq': 'PY', 
-	'fileSeries': '2023', 
-	'fileType': 'M', 
-	'offidocNbr': '121070', 
-	'offidocOrigin': '1', 
-	'offidocSeries': '2023', 
-	'statusDateNotFormat': datetime.datetime(2023, 9, 12, 7, 38, 6, tzinfo=<FixedOffset '-04:00'>), 
-	'userIdNbr': '112', 
-	'lastActionUsername': 'Claudio Alberto Garcia Riveros', 
-	'topFileStatusName': 'Orden de Publicación Emitida', 
-	'officedocTypeName': 'Emisión de Orden de Publicación', 
-	'sendStatus': True, 
-	'firstProcessNbr': '2061408', 
-	'firstProcessType': '1', 
-	'processNbr': '2066584', 
-	'processType': 'OFI'
-}
-
-
-
-
-nueva 2366797
-http://dof-backend.dinapi.gov.py/DOF/buzon?documento=gAAAAABlCIDtM111PXWlMMf587pn80DdiHeuNeIgvpsvOC6I3n9yC5qOBIG2z9lz5cXt6z_zUKDrrQTIz7P4TsP_a7HlrfESpsobuAYbZu1JEgvlfntPT5nqL4uMsuBnYhp8dSbrcPYl9MR-xtsxvfLkPFfzhswC_MyuXu6GIRlbvS3LJDBDjeI=
-
-
-
-
-
-actual 2366797
-http://dof-backend.dinapi.gov.py/DOF/buzon?documento=gAAAAABlCHEPe8vCxDEsNfn1_pOvrVkcWNoR1z-8DFtANCZsCUXirtU8a_1aMEGiqUgWt1Ptgd7V7KA2BV8EErIXSsF64yK2lbZ6PPRSki-uo2D5jhHIJ8qJY1PFHdZbyEwaGlIXZM3_kLnS4cj1el36aPOCgdlUPCHY4Zvi6BgUWCvxS001s9E=
-
-
-
-
-
-TRAMITES ID 28985
-
-
-
-  {
-    "fecha": "20/09/2023",
-    "recibo": 45349,
-    "expediente": 2366575,
-    "status": 80,
-    "ftabla": "2023-09-20",
-    "tipo_movimiento": "549",
-    "movimiento": "29/08/2023",
-    "tipo_solicitud": "REG",
-    "fecha_pago": "04/09/2023",
-    "fecha_inicio": "05/09/2023",
-    "fecha_fin": "07/09/2023"
-  },
-
-    {
-    "fecha": "04/09/2023",
-    "recibo": 44616,
-    "expediente": 2366575,
-    "status": 80,
-    "ftabla": "2023-09-04",
-    "tipo_movimiento": "549",
-    "movimiento": "29/08/2023",
-    "tipo_solicitud": "REG",
-    "fecha_pago": "04/09/2023",
-    "fecha_inicio": "05/09/2023",
-    "fecha_fin": "07/09/2023"
-  },
-
-
-
-
-
-
-,include_in_schema=False
-
-
-
-
-
-pdf.image('static/IMG.PNG',x=12,y=22,w=43,h=12)
-
-pdf.image('static/IMG.PNG',x=76,y=65,w=63,h=19)
-
-
-
-
-
-
-	try:
-		connA = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
-		cursorA = connA.cursor()
-		cursorA.execute("""select * from tramites where id = {}""".format(Id))
-		row=cursorA.fetchall()
-		for i in row:
-			conn = psycopg2.connect(host = connex.host_SFE_conn,user= connex.user_SFE_conn,password = connex.password_SFE_conn,database = connex.database_SFE_conn)
-			cursor = conn.cursor()
-			cursor.execute("""UPDATE public.tramites set estado = 8, expediente_id = {},recepcionado_at = '{}' WHERE id={};""".format( exp , captureDate.capture_full_upd(), Id))
-			cursor.rowcount
-			conn.commit()
-			conn.close()
-	except Exception as e:
-		print(e)
-	finally:
-		connA.close()
-
-
-
-
-
-
-
-INSERTO EL RENOVACION => Unexpected exception has been generated. Please take note of this message and contact the Administrator. Exception class name:or>
-694243]: Internal Exception: com.microsoft.sqlserver.jdbc.SQLServerException: La transacción (id. de proceso 73) quedó en interbloqueo en bloqueo recursos con otr>
-694243]: Error Code: 1205
-694243]: Call: SELECT APPL_SUBTYP, AUXIL1_NBR, DATA_DATE1, DATA_DATE2, DATA_DATE3, DATA_DATE4, DATA_DATE5, DATA_FLAG1, DATA_FLAG2, DATA_FLAG3, DATA_FLAG4, DATA_FL>
-694243]:         bind => [1, 660676, 3, E]
-694243]: Query: ReadAllQuery(name="file:/C:/glassfish3/glassfish/domains/MARCAS/applications/IpasEar/IpasEjbJpa-3.5.0_jar/_IpasPU" referenceClass=IpDoc sql="SELEC>
-694243]: E99
-
-
-
 
 
 RESTFULL
@@ -1150,134 +927,23 @@ gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 192.168.50.228:8010 manage
 http://192.168.71.189:4901/mesaEntradaAutomatica/recepcion
 
 
-            if (form.usuario.data.upper() == "GBRITEZ" or
-                    form.usuario.data.upper() == "AMEDINA" or
-                    form.usuario.data.upper() == "GSEGOVIA" or
-                    form.usuario.data.upper() == "SCRUZANS" or
-                    form.usuario.data.upper() == "JGONZALEZ"):
 
-            Job for visor_redpi.service failed because the control process exited with error code.
-See "systemctl status visor_redpi.service" and "journalctl -xeu visor_redpi.service" for details.
-
-
-
-
-
-
-29850
-
-
-
-
-
-                    <ImageView  
-                        style={styles.order}
-                        images={i.paginas.sort().map((item)=>({ uri: item }))} 
-                        imageIndex={index}
-                        visible={visible}
-                        onRequestClose={() => setVisible(false)}
-                        transform = {-1}
-                    />
-
-
-
-
-<Stack.Screen name="MicroZoom" component={PantallaInicial} options={{title: 'MicroZoom', headerStyle: { backgroundColor: '#333' }, headerTintColor: '#fff', }} />
-<Stack.Screen name="Home" component={HomeScreen} options={{ title: (props) => (<Image source={require('./assets/log.png')} style={{ width: 100, height: 30 }} />), headerStyle: { backgroundColor: 'blue' },  headerTintColor: '#fff',}} />
-
-
-
-
-
-
-
-23/10/2023 
-	SELECT IM.FILING_DATE, IF2.FILE_NBR, if2.TITLE, typ1.APPL_TYPE_NAME, typ2.APPL_SUBTYPE_NAME, loc.LOCARNO_CLASS_CODE, per.NATIONALITY_COUNTRY_CODE, pais.COUNTRY_NAME, im.REGISTRATION_DATE, sta.STATUS_NAME FROM DISENIOS.DIS1.IP_FILE if2 LEFT join DISENIOS.DIS1.IP_PATENT im on im.FILE_NBR = if2.FILE_NBR LEFT JOIN DISENIOS.DIS1.IP_PERSON per ON PER.PERSON_NBR = IM.MAIN_OWNER_PERSON_NBR LEFT JOIN DISENIOS.DIS1.IP_PERSON age ON AGE.PERSON_NBR = IM.SERVICE_PERSON_NBR LEFT JOIN DISENIOS.DIS1.CF_APPLICATION_TYPE typ1 ON typ1.APPL_TYP = if2.APPL_TYP LEFT JOIN DISENIOS.DIS1.CF_APPLICATION_SUBTYPE typ2 ON typ2.APPL_SUBTYP = if2.APPL_SUBTYP and typ2.APPL_TYP  = typ1.APPL_TYP LEFT JOIN DISENIOS.DIS1.CF_GEO_COUNTRY pais ON pais.COUNTRY_CODE = per.NATIONALITY_COUNTRY_CODE left join DISENIOS.DIS1.IP_PROC ip ON ip.FILE_NBR = im.FILE_NBR and ip.FILE_NBR = if2.FILE_NBR left join DISENIOS.DIS1.CF_STATUS sta ON sta.STATUS_CODE = ip.STATUS_CODE and sta.PROC_TYP = ip.PROC_TYP left join DISENIOS.DIS1.IP_PATENT_LOCARNO_CLASSES loc on loc.FILE_NBR = if2.FILE_NBR and loc.FILE_NBR = im.FILE_NBR WHERE datepart (YEAR, IM.REGISTRATION_DATE) = '2023' ORDER BY IM.FILE_NBR;
-
-
-
-
-
+OCTOPUS
+uvicorn manage:app --host 192.168.80.221 --port 10003 --reload
 
 MEA BACKEND BETA
 uvicorn main:app --host 192.168.80.221 --port 8077 --reload 
 
+REDPI
+uvicorn main:app  --reload --host 192.168.80.221 --port 8002
+
+EDO
+uvicorn manage:app --host 192.168.80.221 --port 9001 --workers 4
+
+DOF (BACKEND)
+uvicorn manage:app --host 192.168.80.221 --port 10008 --workers 4
+
+REDPI
+uvicorn main:app  --reload --host 192.168.80.221 --port 8002
 
 
-
-
-
-Unexpected exception has been generated. Please take note of this message and contact the Administrator. Exception class name:org.ipas.runtime.exception.CSqlException text:Cannot execute statement.
-Oct 31 10:53:55 vm050228--sprint-group--el09-jvm11-py39--prod bash[1810968]: La transacción (id. de proceso 56) quedó en interbloqueo en bloqueo recursos con otro proceso y fue elegida como sujeto del interbloqueo. Ejecute de nuevo la transacción.
-
-
-
-
-				global_data_persona['residenceCountryCode'] = row[x][9]
-				global_data_persona['telephone'] = row[x][8]
-				global_data_persona['zipCode'] = row[x][13]
-				global_data_persona['personName'] = row[x][4]                        
-				global_data_persona['email'] = row[x][7]         
-				
-				if(row[x][12] == 'F') :              
-					global_data_persona['individualIdType'] = 'CED'
-					global_data_persona['individualIdNbr'] = row[x][3]
-					global_data_persona['legalIdType'] = ''
-					global_data_persona['legalIdNbr'] = ''
-				else:
-					global_data_persona['legalIdType'] = 'RUC'
-					global_data_persona['legalIdNbr'] = row[x][5]
-					global_data_persona['individualIdType'] = ''
-					global_data_persona['individualIdNbr'] = ''         
-							
-				global_data_persona['cityName'] = row[x][10]
-				global_data_persona['addressStreet'] = row[x][6]
-				global_data_persona['addressZone']=''
-
-
-				personas['indService'] = "true"
-				personas['orderNbr'] = cont
-				personas['ownershipNotes'] = ""
-				personas["person"] = global_data_persona
-
-
-
-
-[
-	{0: 'CARLOS ALBERTO RIVAS VERA ', 1: 'MARTA EUGENIA RIVAS DE APONTE ', 2: 'IV▒N DAR▒O RIVAS MALDONADO ', 3: 'VALERIA LUC▒A RIVAS MORENO '}, 
-	{0: 'CARLOS ALBERTO RIVAS VERA ', 1: 'MARTA EUGENIA RIVAS DE APONTE ', 2: 'IV▒N DAR▒O RIVAS MALDONADO ', 3: 'VALERIA LUC▒A RIVAS MORENO '}, 
-	{0: 'CARLOS ALBERTO RIVAS VERA ', 1: 'MARTA EUGENIA RIVAS DE APONTE ', 2: 'IV▒N DAR▒O RIVAS MALDONADO ', 3: 'VALERIA LUC▒A RIVAS MORENO '}, 
-	{0: 'CARLOS ALBERTO RIVAS VERA ', 1: 'MARTA EUGENIA RIVAS DE APONTE ', 2: 'IV▒N DAR▒O RIVAS MALDONADO ', 3: 'VALERIA LUC▒A RIVAS MORENO '}
-]
-
-[
-	{
-		0: 'CARLOS ALBERTO RIVAS VERA ', 
-		1: 'MARTA EUGENIA RIVAS DE APONTE ', 
-		2: 'IV▒N DAR▒O RIVAS MALDONADO ', 
-		3: 'VALERIA LUC▒A RIVAS MORENO '
-	}
-]
-
-
-
-{
-	'indService': 'true', 
-	'orderNbr': 0, 
-	'ownershipNotes': '', 
-		'person': {
-			'nationalityCountryCode': 'PY', 
-			'residenceCountryCode': 'PY', 
-			'telephone': '021-226970', 
-			'zipCode': '', 
-			'personName': 'VALERIA LUC▒A RIVAS MORENO ', 
-			'email': 'info@aumarkgroup.com.py', 
-			'individualIdType': 'CED', 
-			'individualIdNbr': '4985598', 
-			'legalIdType': '', 
-			'legalIdNbr': '', 
-			'cityName': 'Asunci▒n', 
-			'addressStreet': 'Eligio Ayala esq. Constituci▒n, Asunci▒n ', 
-			'addressZone': ''
-		}
-	}, 

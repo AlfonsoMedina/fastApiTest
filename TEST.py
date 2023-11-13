@@ -417,4 +417,4 @@ where frm.id_form001 =164818''')
 
 
 #PDF DE REGISTRO
-registro_pdf_con_acuse('27493')
+#registro_pdf_con_acuse('27493')

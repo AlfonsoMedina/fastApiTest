@@ -161,23 +161,23 @@ def insert_list(arg0:string,arg1:string):
 def compileAndInsert(form_Id,typ,in_group):
 	print('F1')
 
-	# ULTIMO NUMERO EN DIA PROCESO
+	# ULTIMO NUMERO EN DIA PROCESO (test nuevo flujo)
 	new_Nbr = str(COMMIT_NBR())
 
-	# CAMBIO DE ESTADO A TRAMITE EN PROCESO
+	# CAMBIO DE ESTADO A TRAMITE EN PROCESO (test nuevo flujo)
 	cambio_estado(form_Id,new_Nbr)
 	
-	# CONSULTA EL NUMERO DE EXPEDIENTE DEL ID EN PROCESO
+	# CONSULTA EL NUMERO DE EXPEDIENTE DEL ID EN PROCESO (test nuevo flujo)
 	number_commit = respuesta_sfe_campo(form_Id)['expediente_id']
 
-	# VERIFICAR QUE LOS DATOS REQUERIDOS PARA INSERT EXISTEN
+	# VERIFICAR QUE LOS DATOS REQUERIDOS PARA INSERT EXISTEN (test nuevo flujo)
 	cheking = catch_toError(form_Id)
 	if cheking != 'E99':
 		insert_doc = userDocModel()
 		insert_doc.setData(form_Id)
 
 		try:
-			# COMPILAR DOCUMENTOS ADJUNTOS EN UN SOLO PDF
+			# COMPILAR DOCUMENTOS ADJUNTOS EN UN SOLO PDF (test nuevo flujo)
 			getFile(str(form_Id),str(number_commit))
 
 			# DECLARACION DE VARIABLE DE ESTADO PARA INSERT DE IPAS 
@@ -369,13 +369,13 @@ def compileAndInsert(form_Id,typ,in_group):
 				insert_doc.representationData_representativeList_person_zipCode,
 				insert_doc.representationData_representativeList_representativeType)
 
-			# SE EJECUTA ESPERANDO TRUE PARA CONTINUAR CON EL FLUJO (5 INTENTOS ANTES DE DECLARAR ERROR)
+			# SE EJECUTA ESPERANDO TRUE PARA CONTINUAR CON EL FLUJO (5 INTENTOS ANTES DE DECLARAR ERROR) (test nuevo flujo)
 			intentos:int = 5
 			for i in range(intentos):
 				time.sleep(2)
 				try:
 					if estado_ins == 'true':
-						break  # SI EL INSERT DE IPAD DEVUELVE TRUE, SALIR DEL BUCLE
+						break  # SI EL INSERT DE IPAD DEVUELVE TRUE, SALIR DEL BUCLE (test nuevo flujo)
 				except Exception as e:
 					print(f"Error en el intento {i+1}: {str(e)}")				
 			else:
