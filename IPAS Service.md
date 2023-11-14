@@ -783,6 +783,8 @@ data-bs-target="#staticBackdrop"
 
 
 
+
+
 Remito usuarios y contraseñas para servidores
 192.168.50.221 y el 192.168.50.228 
 * Alfonso Medina
@@ -797,7 +799,6 @@ soporte:1 Access to XMLHttpRequest at 'https://mea-backend.dinapi.gov.py/sis/cre
 
 
 
-
 abgmarpat@gmail.com 11   28448  2370708
 
 
@@ -806,8 +807,6 @@ mpuente.dinapi@gmail.com 49
 consultajpslm@gmail.com 53
 
 consultaslmpy@gmail.com 54
-
-
 
 
 
@@ -845,6 +844,8 @@ prod_database='MARCAS_PY
 
 user-sprint--201901
 user-developer--201901
+
+
 
 
 Remito usuarios y contraseñas para servidores
@@ -945,5 +946,39 @@ uvicorn manage:app --host 192.168.80.221 --port 10008 --workers 4
 
 REDPI
 uvicorn main:app  --reload --host 192.168.80.221 --port 8002
+
+
+
+
+
+X MOBA TERMINAL
+
+
+- uvicorn main:app  --reload --host 192.168.80.221 --port 8002 => REDPI BETA
+
+- uvicorn manage:app --host 192.168.80.221 --port 9001 --workers 4 => EDO BETA
+
+- uvicorn manage:app --host 192.168.80.221 --port 10008 --workers 4 => DOF BETA
+
+- uvicorn main:app --host 192.168.80.221 --port 8077 --reload => MEA BETA
+
+- uvicorn manage:app --host 192.168.80.221 --port 10003 --reload => OCTOPUS BETA
+
+- journalctl -xeu api_mea.service => MEA STATUS
+
+- 192.168.50.217 htop => TP STATUS
+
+- gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 192.168.50.228:8010 manage:app --reload => API RESTFULL 50.228
+
+- npm run dev -- -H 192.168.50.228 => REDPI NEXT13
+
+- terminal 50.177 => DOF 
+
+
+
+
+
+
+
 
 
