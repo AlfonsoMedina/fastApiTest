@@ -951,8 +951,7 @@ uvicorn main:app  --reload --host 192.168.80.221 --port 8002
 
 
 
-X MOBA TERMINAL
-
+ ####################### X MOBA TERMINAL ############################################################################
 
 - uvicorn main:app  --reload --host 192.168.80.221 --port 8002 => REDPI BETA
 
@@ -964,7 +963,8 @@ X MOBA TERMINAL
 
 - uvicorn manage:app --host 192.168.80.221 --port 10003 --reload => OCTOPUS BETA
 
-- journalctl -xeu api_mea.service => MEA STATUS
+
+- journalctl -xeu api_mea.service => MEA STATUS 50.228
 
 - 192.168.50.217 htop => TP STATUS
 
