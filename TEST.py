@@ -9,6 +9,7 @@ import tools.connect as connex
 
 from zeep import Client
 import tools.connect as conn_serv
+from wipo.ipas import mark_read
 
 #respuesta_sfe_campo('27228')
 
@@ -437,9 +438,9 @@ secondary = []'''
 
 
 
+data = mark_read('2355491','PY','2023','M')
 
-
-
+print(data.file.ownershipData.ownerList[0].person.nationalityCountryCode)
 
 
 

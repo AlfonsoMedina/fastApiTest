@@ -386,7 +386,7 @@ def insert_clasificado(exp,userp):# Inserta la info del clasificado segun iterad
             data = mark_read(params[3],params[0],params[2],params[1])
             respuesta = {
                             'fileNbr':data['file']['fileId']['fileNbr']['doubleValue'],
-                            'fileSeq':data['file']['fileId']['fileSeq'],
+                            'fileSeq':data['file']['ownershipData']['ownerList'][0]['person']['nationalityCountryCode'],
                             'fileSeries':data['file']['fileId']['fileSeries']['doubleValue'],
                             'applicationSubtype':data['file']['filingData']['applicationSubtype'] ,
                             'applicationType':data['file']['filingData']['applicationType'] ,

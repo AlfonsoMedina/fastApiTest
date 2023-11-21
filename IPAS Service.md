@@ -71,20 +71,20 @@ Usuario: pidamaster
 Password: D3v*2019 
 #
 # PostgreSQL
-host: db-sfe.dinapi.gov.py
+host: pgsql-sprint.dinapi.gov.py
 Puerto: 5432
 DB: kuriju_produccion
-Usuario: user_dev
-Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
+Usuario: user-sprint
+Password: user-sprint--201901
 #
 #
 #
 # PostgreSQL
-host: db-sfe.dinapi.gov.py
+host: pgsql-sprint.dinapi.gov.py
 Puerto: 5432
 DB: db_sfe_production
-Usuario: user_dev
-Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi 
+Usuario: user-sprint
+Password: user-sprint--201901 
 #
 #
 #
@@ -122,18 +122,18 @@ Usuario: pidamaster
 Password: D3v*2019 
 #
 # PostgreSQL
-host: db-sfe.dinapi.gov.py
+host: pgsql-sprint.dinapi.gov.py
 Puerto: 5432
 DB: kuriju_produccion
-Usuario: user_dev
-Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
+Usuario: user-sprint
+Password: user-sprint--201901
 #
 # PostgreSQL
-host: db-sfe.dinapi.gov.py
+host: pgsql-sprint.dinapi.gov.py
 Puerto: 5432
 DB: db_sfe_production
-Usuario: user_dev
-Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi 
+Usuario: user-sprint
+Password: user-sprint--201901 
 #
 # SqlServer
 host: 192.168.50.14
@@ -146,7 +146,7 @@ password: W1P0w1p0
 'NAME': 'db_sfe_production',
 'USER': 'user-developer',
 'PASSWORD': 'user-developer--201901',
-'HOST': 'db-sfe.dinapi.gov.py',
+'HOST': 'pgsql-sprint.dinapi.gov.py',
 'PORT':'5432',
 #
 #
@@ -196,18 +196,18 @@ Usuario: pidamaster
 Password: D3v*2019 
 #
 # PostgreSQL
-host: db-sfe.dinapi.gov.py
+host: pgsql-sprint.dinapi.gov.py
 Puerto: 5432
 DB: kuriju_produccion
-Usuario: user_dev
-Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
+Usuario: user-sprint
+Password: user-sprint--201901
 
 # PostgreSQL
-host: db-sfe.dinapi.gov.py
+host: pgsql-sprint.dinapi.gov.py
 Puerto: 5432
 DB: db_sfe_production
-Usuario: user_dev
-Password: lP1zZIq7DIhP1wY1bLTxbTEu56JsSi 
+Usuario: user-sprint
+Password: user-sprint--201901 
 
 # SqlServer
 host: 192.168.50.14
@@ -354,9 +354,9 @@ npm install --save-dev @angular/cli@lates
 
 
 Credenciales Base de Datos (BD) Pgsql v14.
-user_app_caja ---> ojTnRUivhOFZ7QfbwNnWeq4iHa
-user_app_publicacion ---> SSridvVTcmGvfpoZ7B7HHsk74Y
-user_app_recepcion ---> bEL19ZBN1mQUxSRxYc2NV3EL9f
+user_app_caja ---> user_app_caja-202201!
+user_app_publicacion ---> user_app_publicacion-202201!
+user_app_recepcion ---> user_app_recepcion-202201!
 
 
 
@@ -783,6 +783,8 @@ data-bs-target="#staticBackdrop"
 
 
 
+
+
 Remito usuarios y contraseñas para servidores
 192.168.50.221 y el 192.168.50.228 
 * Alfonso Medina
@@ -794,7 +796,6 @@ contraseña= vnSF79upYUXX7VYD
 
 
 soporte:1 Access to XMLHttpRequest at 'https://mea-backend.dinapi.gov.py/sis/create_all_group' from origin 'https://mea.dinapi.gov.py' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
-
 
 
 
@@ -811,34 +812,173 @@ consultaslmpy@gmail.com 54
 
 
 
-MEA BACKEND cambio de contraseña (lP1zZIq7DIhP1wY1bLTxbTEu56JsSi)
-			- sfe.py
-			- Publicaciones.py
-			- connect.py
-			- pdf_history.py
-			- test_forms.py
+###################################################################
+'''
+prod_server='192.168.50.188' 
+prod_user='ADMIN' 
+prod_password='ipas4PY$' 
+prod_database='MARCAS_PY'
+'''
+###################################################################
 
-REDPI BACKEND cambio de contraseña (lP1zZIq7DIhP1wY1bLTxbTEu56JsSi)
-			- Clasificas.py
-			- connect.py
-			- pdf_history_nuevo.py
+'''
+prod_server='192.168.80.41' 
+prod_user='ADMIN' 
+prod_password='ipas4PY$' 
+prod_database='MARCAS_PY
+'''
 
-SprintV2 BACKEND (lP1zZIq7DIhP1wY1bLTxbTEu56JsSi)
-			- email_opo_sfe.py
-			- email_reg_sfe.py
-			- email_ren_sfe.py
-			- sfe_no_presencial_opo.py
-			- sfe_no_presencial_reg_local.py
-			- sfe_no_presencial_ren_local.py
-			- sfe_no_presencial_reg_mail.py
-			- sfe_no_presencial_reg.py
-			- sfe_no_presencial_ren.py
-			- Publicaciones.py
-			- Clasificados.py
-			- connect.py
-			- pdf_history_nuevo.py
+###################################################################
+
+'''
+prod_server='192.168.50.195' 
+prod_user='ADMIN' 
+prod_password='ipas4PY$' 
+prod_database='MARCAS_PY
+'''
 
 
-2372857,2372861,2372869,2372868,2372866,2374946,2373285,2373958,2373325,2373959,2374772,2373962,2341388,2341389,2346457,2346460,2346463,2346464,2346598,2250684,2273866,2273872,2273875,2273986,2275983,2275985,2275989,2276416,2341925,2341927,2341930,2341941,2342673,2342677,2342678,2343339,2343341,2343344,2343610,2343616,2343622,2343626,2210725,2338450,2346712,2346717,2370274,2370342,2370684,2370690,2370699,2371057,2371059,2210865,2317518,2344093,2344094,2344096,2344101,2344114,2344123,2344129,2344134,2344138,2344141,2344145,2344154,2344161,2344166,2344169,2344173,2344178,2344181,2344359,2344360,2344361,2345161,2345174,2345178,2345183,2345185,2345186,2345187,2345189,2345197,2345198,2345459,2345470,2345486,2345490,2345495,2345498,2345502,2345505,2371462,2322132285,2334988,2340563,2340565,2340567,2210865,2363665,2345190,2345194,2345195,2345196,2345665
 
-22107256
+
+
+
+user-sprint--201901
+user-developer--201901
+
+
+
+
+Remito usuarios y contraseñas para servidores
+192.168.50.221 y el 192.168.50.228 
+* Alfonso Medina
+usuario= alfonso.medina
+contraseña = vnSF79upYUXX7VYD
+
+
+Servidor=192.168.80.228
+usuario= alfonso.medina
+contraseña = M0ajgurnE896c4G6A6BVfMwfeKLew9 
+
+
+
+juliaanalia@gmail.com
+
+
+
+
+pgsql-14 192.168.50.216 user_app_caja ojTnRUivhOFZ7QfbwNnWeq4iHa
+pgsql-14 192.168.50.216 user_app_publicacion SSridvVTcmGvfpoZ7B7HHsk74Y
+pgsql-14 192.168.50.216 user_app_recepcion  bEL19ZBN1mQUxSRxYc2NV3EL9f
+pgsql-14 192.168.50.216 user_app_octopus 2yCZOjAO7csNkO53BWvMQOLIie
+pgsql-14 db-sfe.dinapi.gov.py user_dev  lP1zZIq7DIhP1wY1bLTxbTEu56JsSi
+
+
+Start Services
+
+- systemctl start redpi_backend.service
+ 
+- systemctl start api_mea.service
+ 
+- systemctl start api_sprintv2.service
+ 
+- systemctl start caja_tesoreria.service
+ 
+- systemctl start microservicio_edo.service
+ 
+- systemctl start microservicio_octopus.service
+ 
+- systemctl start dof_backend.service
+ 
+- systemctl reload nginx.service
+
+- systemctl reload tomcat.service
+
+- systemctl start sfe-tp-backend.service
+
+
+Ver ultimos registros de la aplicacion 
+- journalctl -xeu redpi_backend.service
+- journalctl -xeu api_mea.service
+- journalctl -xeu api_sprintv2.service
+- journalctl -xeu caja_tesoreria.service
+- journalctl -xeu microservicio_edo.service
+- journalctl -xeu microservicio_octopus.service
+- journalctl -xeu dof_backend.service
+- journalctl -xeu sfe-tp-backend.service
+
+
+
+Levantar ipas_restfull
+- gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 192.168.50.228:8010 manage:app
+
+
+Codigo para conectar con el servicio de contraseñas
+####################################################################################################################################
+####################################################################################################################################
+########################################## CONSULTA PASSWORD SERVICE ###############################################################
+####################################################################################################################################
+####################################################################################################################################
+
+
+
+
+RESTFULL
+gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 192.168.50.228:8010 manage:app
+
+http://192.168.71.189:4901/mesaEntradaAutomatica/recepcion
+
+
+
+OCTOPUS
+uvicorn manage:app --host 192.168.80.221 --port 10003 --reload
+
+MEA BACKEND BETA
+uvicorn main:app --host 192.168.80.221 --port 8077 --reload 
+
+REDPI
+uvicorn main:app  --reload --host 192.168.80.221 --port 8002
+
+EDO
+uvicorn manage:app --host 192.168.80.221 --port 9001 --workers 4
+
+DOF (BACKEND)
+uvicorn manage:app --host 192.168.80.221 --port 10008 --workers 4
+
+REDPI
+uvicorn main:app  --reload --host 192.168.80.221 --port 8002
+
+
+
+
+
+ ####################### X MOBA TERMINAL ############################################################################
+
+- uvicorn main:app  --reload --host 192.168.80.221 --port 8002 => REDPI BETA
+
+- uvicorn manage:app --host 192.168.80.221 --port 9001 --workers 4 => EDO BETA
+
+- uvicorn manage:app --host 192.168.80.221 --port 10008 --workers 4 => DOF BETA
+
+- uvicorn main:app --host 192.168.80.221 --port 8077 --reload => MEA BETA
+
+- uvicorn manage:app --host 192.168.80.221 --port 10003 --reload => OCTOPUS BETA
+
+
+- journalctl -xeu api_mea.service => MEA STATUS 50.228
+
+- 192.168.50.217 htop => TP STATUS
+
+- gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 192.168.50.228:8010 manage:app --reload => API RESTFULL 50.228
+
+- npm run dev -- -H 192.168.50.228 => REDPI NEXT13
+
+- terminal 50.177 => DOF 
+
+
+
+
+
+'fileSeq':data['file']['ownershipData']['ownerList'][0]['person']['nationalityCountryCode'],
+
+
+
