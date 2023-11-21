@@ -587,23 +587,17 @@ def insert_only_new_pub(fecha):
 
 #->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->
 def processToDate(fecha,userId):
-
     #print(len(fileNbr_List(fecha)))
-
     for i in fileNbr_List(fecha):
         try:
             if update_inicio_fin(str(i)) == 'ok':
                 insert_clasificado(str(i),str(userId))
         except Exception as e:
             pass    
-    
     time.sleep(1) 
-
     masUno = timedelta(1)                 
     insertar_edicion(date.today() + masUno, str(edicion_cont()))        
-    
     time.sleep(1) 
-                   
     insert_only_new_pub('1977-09-01')
    
 def insertar_edicion_finde(fecha,edicion):

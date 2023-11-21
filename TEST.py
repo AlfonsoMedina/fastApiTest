@@ -438,13 +438,11 @@ secondary = []'''
 
 
 
-data = mark_read('2355491','PY','2023','M')
+"""data = mark_read('2355491','PY','2023','M')
 
 print(data.file.ownershipData.ownerList[0].person.nationalityCountryCode)
 
-
-
-
+"""
 
 
 
