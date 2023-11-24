@@ -17,7 +17,7 @@ import asyncio
 import configparser
 import httpx
 from wipo.insertGroupProcessMEA import group_addressing
-from wipo.ipas import getPoder, mark_getlist, mark_getlistFecha
+from wipo.ipas import Fech_All_Exp_pais, getPoder, mark_getlist, mark_getlistFecha
 import logging as logs
 
 import os
@@ -426,3 +426,6 @@ for i in list_exp:
 	print(str(mark_getlist(i)[0]['registrationData']['registrationDate']['dateValue']),end=f' - {i}')
 	print('')
 """
+
+
+#print(Fech_All_Exp_pais())

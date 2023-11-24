@@ -855,7 +855,7 @@ usuario= alfonso.medina
 contraseña = vnSF79upYUXX7VYD
 
 
-Servidor=192.168.80.228
+Servidor=192.168.80.221
 usuario= alfonso.medina
 contraseña = M0ajgurnE896c4G6A6BVfMwfeKLew9 
 
@@ -973,12 +973,5 @@ uvicorn main:app  --reload --host 192.168.80.221 --port 8002
 - npm run dev -- -H 192.168.50.228 => REDPI NEXT13
 
 - terminal 50.177 => DOF 
-
-
-
-
-
-
-
 
 
