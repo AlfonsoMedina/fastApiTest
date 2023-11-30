@@ -480,7 +480,7 @@ def insert_clasificado(exp,userp):# Inserta la info del clasificado segun iterad
                     fecha_pago, 
                     fec_reg, 
                     process_user)
-                    VALUES('0','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','DESCRIPCION ','{}',{},'','','','1','{}','{}','','','{}');""".format(fecha_exp[0],hora_exp[0], str(respuesta['applicationType']), str(tipo_signo),str(tipo_signo),str(clase[0]), str(marca), str(nombre), str(direccion).replace("'","\'"), str(pais), str(agente)+" -  "+str(agente_nombre), str(logo_m_mark),str(expediente[0]), str(fecha_mañana), str(fin_pub),userp))    
+                    VALUES('0','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','DESCRIPCION ','{}',{},'','','','1','{}','{}','','','{}');""".format(fecha_exp[0],hora_exp[0], str(respuesta['applicationType']), str(tipo_signo),str(tipo_signo),str(clase[0]), str(marca), str(nombre), str(direccion).replace("'","´"), str(pais), str(agente)+" -  "+str(agente_nombre), str(logo_m_mark),str(expediente[0]), str(fecha_mañana), str(fin_pub),userp))    
                 cursor.rowcount
                 conn.commit()
                 conn.close()
