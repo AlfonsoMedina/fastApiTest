@@ -429,3 +429,42 @@ for i in list_exp:
 
 
 #print(Fech_All_Exp_pais())
+
+
+
+"""
+import hashlib
+
+password = "PassDeUsuario"
+
+# Crear un objeto hash SHA-256
+hash_object = hashlib.sha256()
+
+# Convertir la contraseña a bytes
+password_bytes = password.encode('utf-8')
+
+# Actualizar el objeto hash con la contraseña
+hash_object.update(password_bytes)
+
+# Obtener el hash en formato hexadecimal
+password_hash = hash_object.hexdigest()
+
+print(password_hash)"""
+
+
+
+def newUser(password,last_login,username,email,date_joined):
+	try:
+		conn = psycopg2.connect(host = '192.168.50.215',user= '',password = '',database = 'db_simple_development')
+		cursor = conn.cursor()
+		cursor.execute(f"""INSERT INTO public.users_customusers("password", last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined, institucion_id)
+		VALUES
+		('{password}', '{last_login}', false, '{username}', '', '', '{email}', true, true, '{date_joined}', NULL);""")
+		cursor.rowcount
+		conn.commit()
+		conn.close()
+		return(True)
+	except Exception as e:
+		return(e)
+
+

@@ -21,8 +21,6 @@ import zeep
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 
-
-
 LOG_FILENAME = f'logs/app_mea_{date_not_hour()}.log'
 logging.basicConfig(filename=LOG_FILENAME,level=logging.WARN)
 
