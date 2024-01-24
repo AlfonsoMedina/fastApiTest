@@ -119,7 +119,7 @@ def crear_pub(fecha):
                 pdf.cell(0,10, f'Renovación de Marcas:  {ren}', new_x="LMARGIN", new_y="NEXT")            
                 pdf.add_page()
                 pdf.set_font("Arial", size=10)
-
+                #print(lista_exp)
                 cont = 0
                 pdf.image("static/g1004.png", 0, 0, 210)
                 for i in range(0, len(lista_exp)):
@@ -137,24 +137,67 @@ def crear_pub(fecha):
                     fecha_pub = str(lista_exp[i][20])
                     #print(fecha_pub)
                     cont = cont + 1
-                    pdf.cell(0, 5, f"Número de Orden:................. {unicodedata.normalize('NFKD', str(lista_exp[i][0])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
-                    pdf.cell(0, 5, f"(210) Expediente:.................. {unicodedata.normalize('NFKD', str(lista_exp[i][14])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
-                    pdf.cell(0, 5, f"Tipo Solicitud:........................ {unicodedata.normalize('NFKD', str(tipo_text)).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
-                    pdf.cell(0, 5, f"(220) Fecha de Solicitud:....... {unicodedata.normalize('NFKD', str(str(sol_fech[2])+'/'+str(sol_fech[1])+'/'+str(sol_fech[0]))).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
-                    pdf.cell(0, 5, f"Hora de Solicitud:.................. {unicodedata.normalize('NFKD', str(hor_sol[0])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
+                    try:
+                        pdf.cell(0, 5, f"Número de Orden:................. {unicodedata.normalize('NFKD', str(lista_exp[i][0])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pdf.cell(0, 5, f"Número de Orden:................. ", new_x="LMARGIN", new_y="NEXT")
+                    try:
+                        pdf.cell(0, 5, f"(210) Expediente:.................. {unicodedata.normalize('NFKD', str(lista_exp[i][14])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pdf.cell(0, 5, f"(210) Expediente:.................. ", new_x="LMARGIN", new_y="NEXT")
+                    try:    
+                        pdf.cell(0, 5, f"Tipo Solicitud:........................ {unicodedata.normalize('NFKD', str(tipo_text)).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pdf.cell(0, 5, f"Tipo Solicitud:........................ ", new_x="LMARGIN", new_y="NEXT")
+                    try:    
+                        pdf.cell(0, 5, f"(220) Fecha de Solicitud:....... {unicodedata.normalize('NFKD', str(str(sol_fech[2])+'/'+str(sol_fech[1])+'/'+str(sol_fech[0]))).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pdf.cell(0, 5, f"(220) Fecha de Solicitud:....... ", new_x="LMARGIN", new_y="NEXT")
+                    try:    
+                        pdf.cell(0, 5, f"Hora de Solicitud:.................. {unicodedata.normalize('NFKD', str(hor_sol[0])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pdf.cell(0, 5, f"Hora de Solicitud:.................. ", new_x="LMARGIN", new_y="NEXT")
                     try:
                         pdf.image(("data:image/png;base64,"+str(lista_exp[i][13])), 110, pdf.get_y()-24, w=18)
                     except Exception as e:
                         pass
-                    pdf.cell(0, 5, f"Tipo Signo:........................... {unicodedata.normalize('NFKD', str(lista_exp[i][4])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
-                    pdf.cell(0, 5, f"(511) Clase:........................... {unicodedata.normalize('NFKD', str(lista_exp[i][6])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
-                    pdf.cell(0, 5, f"(540) Denominación:............. {unicodedata.normalize('NFKD', str(lista_exp[i][7])).encode('ascii', 'ignore').decode().replace('None','')}", new_x="LMARGIN", new_y="NEXT")
-                    pdf.cell(0, 5, f"(731) Solicitante/s:................. {unicodedata.normalize('NFKD', str(lista_exp[i][8])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
-                    pdf.multi_cell(w=0,h=4, align='L', txt= f"Dirección:............................... {unicodedata.normalize('NFKD', str(lista_exp[i][9])).encode('ascii', 'ignore').decode()}",new_x="LMARGIN", new_y="NEXT" )
-                    pdf.cell(0, 5, f"País:....................................... {unicodedata.normalize('NFKD', pais(str(lista_exp[i][10]))).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
-                    pdf.cell(0, 5, f"Agente:.................................. {unicodedata.normalize('NFKD', str(lista_exp[i][11])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
-                    pdf.cell(0, 4, "_______________________________________________________________________________", new_x="LMARGIN", new_y="NEXT")
-                    pdf.cell(0, 3, "", new_x="LMARGIN", new_y="NEXT")
+
+                    try:
+                        pdf.cell(0, 5, f"Tipo Signo:........................... {unicodedata.normalize('NFKD', str(lista_exp[i][4])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pdf.cell(0, 5, f"Tipo Signo:........................... ", new_x="LMARGIN", new_y="NEXT")
+                    try:    
+                        pdf.cell(0, 5, f"(511) Clase:........................... {unicodedata.normalize('NFKD', str(lista_exp[i][6])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pdf.cell(0, 5, f"(511) Clase:........................... ", new_x="LMARGIN", new_y="NEXT")
+                    try:    
+                        pdf.cell(0, 5, f"(540) Denominación:............. {unicodedata.normalize('NFKD', str(lista_exp[i][7])).encode('ascii', 'ignore').decode().replace('None','')}", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pdf.cell(0, 5, f"(540) Denominación:............. ", new_x="LMARGIN", new_y="NEXT")
+                    try:    
+                        pdf.cell(0, 5, f"(731) Solicitante/s:................. {unicodedata.normalize('NFKD', str(lista_exp[i][8])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pdf.cell(0, 5, f"(731) Solicitante/s:................. ", new_x="LMARGIN", new_y="NEXT")
+                    try:    
+                        pdf.multi_cell(w=0,h=4, align='L', txt= f"Dirección:............................... {unicodedata.normalize('NFKD', str(lista_exp[i][9])).encode('ascii', 'ignore').decode()}",new_x="LMARGIN", new_y="NEXT" )
+                    except Exception as e:
+                        pdf.multi_cell(w=0,h=4, align='L', txt= f"Dirección:............................... ",new_x="LMARGIN", new_y="NEXT" )
+                    try:    
+                        pdf.cell(0, 5, f"País:....................................... {unicodedata.normalize('NFKD', pais(str(lista_exp[i][10]))).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pdf.cell(0, 5, f"País:....................................... ", new_x="LMARGIN", new_y="NEXT")
+                    try:    
+                        pdf.cell(0, 5, f"Agente:.................................. {unicodedata.normalize('NFKD', str(lista_exp[i][11])).encode('ascii', 'ignore').decode()}", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pdf.cell(0, 5, f"Agente:.................................. ", new_x="LMARGIN", new_y="NEXT")
+                    try:    
+                        pdf.cell(0, 4, "_______________________________________________________________________________", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pass
+                    try:    
+                        pdf.cell(0, 3, "", new_x="LMARGIN", new_y="NEXT")
+                    except Exception as e:
+                        pass
                     if cont < len(lista_exp):
                         if(cont == 3):
                             pdf.add_page()
@@ -171,4 +214,5 @@ def crear_pub(fecha):
                 print(e)
 
     revista_data()    
-    return(dia_mas_nom)
+    return(dia_mas_nom.strip())
+

@@ -1,0 +1,10 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+/venv
+__pycache__/
+wipo/__pycache__
+tools/__pycache__
+redpi/__pycache__
+publicaciones/__pycache__
+login/__pycache__
+

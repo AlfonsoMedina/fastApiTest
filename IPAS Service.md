@@ -855,9 +855,9 @@ usuario= alfonso.medina
 contraseña = vnSF79upYUXX7VYD
 
 
-Servidor=192.168.80.228
+Servidor=192.168.80.221
 usuario= alfonso.medina
-contraseña = M0ajgurnE896c4G6A6BVfMwfeKLew9 
+contraseña = YuaNHVxeDMzkNhEtb1MkhNZ6NbRQ75 
 
 
 
@@ -895,6 +895,9 @@ Start Services
 
 - systemctl start sfe-tp-backend.service
 
+- systemctl start visor_redpi.service
+
+
 
 Ver ultimos registros de la aplicacion 
 - journalctl -xeu redpi_backend.service
@@ -908,7 +911,7 @@ Ver ultimos registros de la aplicacion
 
 
 
-Levantar ipas_restfull
+Levantar ipas_restfull 50.228
 - gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 192.168.50.228:8010 manage:app
 
 
@@ -978,7 +981,156 @@ uvicorn main:app  --reload --host 192.168.80.221 --port 8002
 
 
 
-'fileSeq':data['file']['ownershipData']['ownerList'][0]['person']['nationalityCountryCode'],
 
 
 
+
+Asunción , 07 diciembre 2023 = 92
+
+select * from detalle_clasificado where inicio = '2023-12-07' and fin = '2023-12-07' --REN
+union 
+select * from detalle_clasificado where inicio = '2023-12-07' and fin = '2023-12-09' --REG
+union 
+select * from detalle_clasificado where inicio = '2023-12-05' and fin = '2023-12-07' --REG fin de publicacion
+union 
+select * from detalle_clasificado where inicio = '2023-12-06' and fin = '2023-12-08' --REG en publicacion
+
+
+
+Asunción , 08 diciembre 2023 = 68
+
+select * from detalle_clasificado where inicio = '2023-12-08' and fin = '2023-12-08' --REN
+union 
+select * from detalle_clasificado where inicio = '2023-12-08' and fin = '2023-12-10' --REG
+union 
+select * from detalle_clasificado where inicio = '2023-12-06' and fin = '2023-12-08' --REG fin de publicacion
+union 
+select * from detalle_clasificado where inicio = '2023-12-07' and fin = '2023-12-09' --REG en publicacion
+
+
+
+Asunción , 09 diciembre 2023 = 36
+
+select * from detalle_clasificado where inicio = '2023-12-09' and fin = '2023-12-09' --REN
+union 
+select * from detalle_clasificado where inicio = '2023-12-09' and fin = '2023-12-11' --REG
+union 
+select * from detalle_clasificado where inicio = '2023-12-07' and fin = '2023-12-09' --REG fin de publicacion
+union 
+select * from detalle_clasificado where inicio = '2023-12-08' and fin = '2023-12-10' --REG en publicacion
+
+
+
+
+
+
+/ipas/rest_api/custom_methods/direct_fetch_all_database/patentes
+
+
+
+
+
+
+
+
+- systemctl start redpi_backend.service
+ 
+- systemctl start api_mea.service
+ 
+- systemctl start api_sprintv2.service
+ 
+- systemctl start caja_tesoreria.service
+ 
+- systemctl start microservicio_edo.service
+ 
+- systemctl start microservicio_octopus.service
+ 
+- systemctl start dof_backend.service
+ 
+- systemctl reload nginx.service
+
+- systemctl reload tomcat.service
+
+- systemctl start sfe-tp-backend.service
+
+- systemctl start visor_redpi.service
+
+
+
+Ver ultimos registros de la aplicacion 
+- journalctl -xeu redpi_backend.service
+- journalctl -xeu api_mea.service
+- journalctl -xeu api_sprintv2.service
+- journalctl -xeu caja_tesoreria.service
+- journalctl -xeu microservicio_edo.service
+- journalctl -xeu microservicio_octopus.service
+- journalctl -xeu dof_backend.service
+- journalctl -xeu sfe-tp-backend.service
+
+
+
+Levantar ipas_restfull 50.228
+- gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 192.168.50.228:8010 manage:app
+
+
+Inicio de proceso MEA http://192.168.50.228:11004/mesaEntradaAutomatica/recepcion -  https://mea.dinapi.gov.py/
+USER: MEA_CAP
+PASS: MEA_CAP2023
+
+
+
+https://redpi-editor.dinapi.gov.py/clasificados/clasificadosyrevista
+
+
+
+
+
+
+
+
+
+
+{
+  "sigla": "ASDAS",
+  "obs": "ESTA ES UNA PRUEBA DE ",
+  "escrito": "00000",
+  "expediente": "000000",
+  "registros": "00000",
+  "fecha": "1977-09-01",
+  "signo": "mixta",
+  "clase": "30",
+  "denominacion": "denominacion",
+  "tipo": "tipo solicitud",
+  "CIRUC": "000000-0",
+  "sexo": "masculino",
+  "fullName": "nombre completo",
+  "pais": "paraguay",
+  "ciudad": "asuncion",
+  "postal": "2001",
+  "direcc": "addstreet",
+  "tel": "00000000",
+  "email": "sdfsd@xsdfsdf.sdfs",
+  "nombre": "nombre",
+  "numero": "00000",
+  "domicilio": "domicilio"
+}
+
+
+
+
+
+
+
+
+encrypted_password
+
+
+user 
+victor.ibarra@dinapi.gov.py
+
+pass
+$2a$10$pwm2gttvES1wPAtl8qI3KOazZ1R6oPeWxYxuv1XZQfD8OVlF8fGkK
+
+
+
+2390990,2389148,2385217,2384122
