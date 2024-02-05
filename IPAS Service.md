@@ -1029,7 +1029,8 @@ select * from detalle_clasificado where inicio = '2023-12-08' and fin = '2023-12
 
 
 
-
+Cola de procesos en ejecucion de IPAS (CAMBIAR)
+- http://192.168.80.42:8050/Stat/stat?type=loggedUser
 
 
 
