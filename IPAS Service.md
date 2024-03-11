@@ -855,6 +855,14 @@ usuario= alfonso.medina
 contraseña = vnSF79upYUXX7VYD
 
 
+
+
+SFE_TP_STORAGE_IP=192.168.50.210
+SFE_TP_STORAGE_USER=user_python
+SFE_TP_STORAGE_PASSWORD=vGn3ZG32LKFjury5dYXxzcLD0eb264
+
+
+
 Servidor=192.168.80.221
 usuario= alfonso.medina
 contraseña = YuaNHVxeDMzkNhEtb1MkhNZ6NbRQ75 
