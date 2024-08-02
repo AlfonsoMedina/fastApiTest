@@ -10,7 +10,7 @@ from tools.service_system import config_parametro
 ###################################################################
 
 #Base de datos PUBLICACIONES posgresSql v14 
-db_host = '192.168.50.216'
+db_host = '192.168.50.215'
 db_user='user_app_publicacion'
 db_password='SSridvVTcmGvfpoZ7B7HHsk74Y'
 db_database='db_publicacion'
@@ -25,7 +25,7 @@ db_database='db_publicacion'
 
 ###################################################################
 #Base de datos MESA DE ENTRADA posgresSql v14
-hostME = '192.168.50.216'
+hostME = '192.168.50.215'
 userME='user_app_recepcion'
 passwordME='bEL19ZBN1mQUxSRxYc2NV3EL9f'
 databaseME='db_sfe_presencial'
@@ -47,7 +47,7 @@ databaseME='db_sfe_presencial'
 
 ###################################################################
 #Base de datos CAJA posgresSql v14 
-hostCJ = '192.168.50.216'
+hostCJ = '192.168.50.215'
 userCJ='user_app_caja'
 passwordCJ='ojTnRUivhOFZ7QfbwNnWeq4iHa'
 databaseCJ='db_caja_dinapi'
@@ -55,7 +55,7 @@ databaseCJ='db_caja_dinapi'
 ###################################################################
 #ipas Beta
 #                                192.168.80.42
-ipas_sprint = config_parametro('50')['valor1']
+ipas_sprint = config_parametro('49')['valor2']
 
 #                                     192.168.50.182
 ipas_produccion_A = config_parametro('50')['valor1']
@@ -71,10 +71,10 @@ ipas_produccion_disenio = config_parametro('54')['valor1']
 
 ###################################################################
 #pagos SFE
-host_SFE_conn = 'db-sfe.dinapi.gov.py'
-user_SFE_conn = 'user_dev'
-password_SFE_conn ='lP1zZIq7DIhP1wY1bLTxbTEu56JsSi'
-database_SFE_conn = 'db_sfe_production'
+host_SFE_conn = '192.168.50.215'
+user_SFE_conn = 'user_app_octopus'
+password_SFE_conn ='2yCZOjAO7csNkO53BWvMQOLIie'
+database_SFE_conn = 'db_sfe_development'
 
 ###################################################################
 #centura

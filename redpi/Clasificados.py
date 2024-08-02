@@ -20,7 +20,7 @@ def consulta_Fop(exp):
     orden = []
     try:
         conn = psycopg2.connect(
-                                host = '192.168.50.216',
+                                host = '192.168.50.215',
                                 user='user_app_publicacion',
                                 password='SSridvVTcmGvfpoZ7B7HHsk74Y',
                                 database='db_publicacion'
@@ -44,7 +44,7 @@ def consulta_Fop_out(exp):
     orden_out = []
     try:
         conn = psycopg2.connect(
-                                host = '192.168.50.216',
+                                host = '192.168.50.215',
                                 user='user_app_publicacion',
                                 password='SSridvVTcmGvfpoZ7B7HHsk74Y',
                                 database='db_publicacion'
@@ -67,9 +67,6 @@ def consulta_Fop_out(exp):
 
 #Pagos SFE enviados
 def consulta_sfe(fecha):
-    #data_fecha = str(fecha).split("/")
-    #fecha_uno = data_fecha[2]+"-"+data_fecha[1]+"-"+data_fecha[0]
-    #print(fecha_uno)
     temp = []
     try:
         conn = psycopg2.connect(host = host_SFE_conn,user= user_SFE_conn,password = password_SFE_conn,database = database_SFE_conn)
@@ -85,7 +82,7 @@ def consulta_sfe(fecha):
         for i in row:
             pag_exp = ""
             for x in range(0,len(i[4])):
-                if i[4][x]['campo'] == 'marcaredpi_expediente' and i[4][x]['descripcion'] == 'Buscar Solicitud N°':
+                if i[4][x]['campo'] == 'marcaredpi_expediente':
                     pag_exp = str(str(i[4][x]['valor']))
                     Form_order = consulta_Fop_out(str(str(i[4][x]['valor'])))
             temp.append({'respuesta':i[3]})
@@ -183,7 +180,7 @@ def consulta_Fop_fecha(facha):
     orden = []
     try:
         conn = psycopg2.connect(
-                                host = '192.168.50.216',
+                                host = '192.168.50.215',
                                 user='user_app_publicacion',
                                 password='SSridvVTcmGvfpoZ7B7HHsk74Y',
                                 database='db_publicacion'
@@ -393,7 +390,7 @@ def insert_clasificado(exp,userp):# Inserta la info del clasificado segun iterad
                             'filingDate':data['file']['filingData']['filingDate']['dateValue'],
                             'signData':data['signData']['signType'],
                             'niceClassNbr':data['protectionData']['niceClassList'][0]['niceClassNbr']['doubleValue'],
-                            'markName':str(data['signData']['markName']).replace("'","\'"),
+                            'markName':str(data['signData']['markName']).replace("'","´"),
                             'ownerPerson':data['file']['ownershipData']['ownerList'][0]['person']['personName'],
                             'owneraddress':data['file']['ownershipData']['ownerList'][0]['person']['addressStreet'],
                             'representativeList':data['file']['representationData']['representativeList'][0]['person']['personName'],
@@ -480,7 +477,7 @@ def insert_clasificado(exp,userp):# Inserta la info del clasificado segun iterad
                     fecha_pago, 
                     fec_reg, 
                     process_user)
-                    VALUES('0','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','DESCRIPCION ','{}',{},'','','','1','{}','{}','','','{}');""".format(fecha_exp[0],hora_exp[0], str(respuesta['applicationType']), str(tipo_signo),str(tipo_signo),str(clase[0]), str(marca), str(nombre), str(direccion).replace("'","´"), str(pais), str(agente)+" -  "+str(agente_nombre), str(logo_m_mark),str(expediente[0]), str(fecha_mañana), str(fin_pub),userp))    
+                    VALUES('0','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','DESCRIPCION ','{}',{},'','','','1','{}','{}','','','{}');""".format(fecha_exp[0],hora_exp[0], str(respuesta['applicationType']), str(tipo_signo),str(tipo_signo),str(clase[0]), str(marca), str(nombre).replace("'","´"), str(direccion).replace("'","´"), str(pais), str(agente)+" -  "+str(agente_nombre), str(logo_m_mark),str(expediente[0]), str(fecha_mañana), str(fin_pub),userp))
                 cursor.rowcount
                 conn.commit()
                 conn.close()
@@ -498,7 +495,7 @@ def insert_clasificado(exp,userp):# Inserta la info del clasificado segun iterad
         finally:
             pass
 
-def insertar_edicion(fecha,edicion):# inserta la edicion despues de iterar todo el paque
+def insertar_edicion(fecha,edicion):# inserta la edicion despues de iterar todo el paquete
     lista_exp = []
     lista_id = []
     edicion_id = 0
@@ -1177,9 +1174,9 @@ class getClasificados():
 
 ####################################################################################################################################
 
-#data_clas = [2127817,2127831,2127811,2127815,2129741,21100186,2172679,21106543,21106538,21106551,21106553,2140935,2132167,2140952,2140939,21106569,228931,227421,2272473,2251903,2322200,2322197,2322198,1994000]
+#data_clas = [2301661,2341049,2449200,2449266,2449268,2450324,2450331,2450335,2450036,2422432,2448154,2448155,2449716,2449718,2449719,2449723,2449725,2449728,2450906,2387879,2433950,2450225,2450232,2450449,2450453,2458116]
 #for i in data_clas:
-    #print(insert_clasificado(str(i),'AMEDINA'))
+    #print(insert_clasificado(str(i),'152'))
 
 
 #data_REG = [2300011,2283743,22111110,22111025,22111024]

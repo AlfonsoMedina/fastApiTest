@@ -1,3 +1,4 @@
+from redpi.Clasificados import consulta_Fop, consulta_Fop_out, consulta_caja, consulta_sfe, fileNbr_List
 from tools.send_mail import delete_file, enviar
 from dataclasses import replace
 import json
@@ -409,12 +410,6 @@ secondary = []'''
 
 
 
-
-
-
-
-
-
 #body = f'Su solicitud de ESCRITO ha ingresado satisfactoriamente a la Dirección Nacional de Propiedad Intelectual – DINAPI, bajo los siguientes datos:  (se adjunta archivo PDF de su solicitud).\n Seguimos Mejorando para brindarte un servicio de calidad. \n --- \n Saludos cordiales,\n DIRECCIÓN NACIONAL DE PROPIEDAD INTELECTUAL'
 
 
@@ -431,13 +426,6 @@ secondary = []'''
 #rule_notification('ED','2360570')
 
 
-
-
-
-
-
-
-
 """data = mark_read('2355491','PY','2023','M')
 
 print(data.file.ownershipData.ownerList[0].person.nationalityCountryCode)
@@ -445,17 +433,7 @@ print(data.file.ownershipData.ownerList[0].person.nationalityCountryCode)
 """
 
 
-
-
-
-
-
-
-
-
-
-
-
+'''
 def campo_scan(arg):
 	try:
 		list_campos = []
@@ -539,8 +517,65 @@ def reset():
 		connUP.close()
 
 
-
-timer(59)
-
+timer(59)'''
 
 
+
+
+
+## system after hour process payment
+
+# paymet list
+payment_sfe = consulta_sfe('2023-07-17')
+payment_caja = consulta_caja('2023-07-17')
+
+
+for i in payment_sfe:
+	print(i)
+
+for i in payment_caja:
+	print(i)
+
+
+print(fileNbr_List('2023-07-17'))
+
+
+
+
+
+
+
+
+
+"""
+		PAGOS DE SFE
+{
+	'fecha': '17/07/2023', # Fecha a ser procesada 
+	'recibo': '158995', 
+	'expediente': '2350278', 
+	'status': 1, 
+	'ftabla': '2023-07-17', 
+	'tipo_movimiento': '549', 
+	'movimiento': '11/07/2023', 
+	'tipo_solicitud': 'REG', 
+	'fecha_pago': '17/07/2023', 
+	'fecha_inicio': '18/07/2023', 
+	'fecha_fin': '20/07/2023'
+}
+
+		PAGOS DE CAJA
+{
+	'fecha': '17/07/2023', 
+	'recibo': 42691, 
+	'expediente': 2344813, 
+	'status': 80, 
+	'ftabla': '2023-07-17', 
+	'tipo_movimiento': '549', 
+	'movimiento': '10/07/2023', 
+	'tipo_solicitud': 'REG', 
+	'fecha_pago': '17/07/2023', 
+	'fecha_inicio': '18/07/2023', 
+	'fecha_fin': '20/07/2023'
+}
+
+"""
